@@ -1,0 +1,373 @@
+<!doctype html><html lang="az"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fəsil 19 — Dərin öyrənmə əsaslı kompüter görməsi və obyektlərin tanınması</title>
+<style>
+:root{--ink:#17243a;--muted:#5e6d82;--blue:#155eef;--teal:#0b8f87;--line:#dbe3ef;--bg:#f3f6fb}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.72 system-ui,"Segoe UI",Arial,sans-serif}
+header{background:linear-gradient(120deg,#10264b,#155eef 72%,#0b8f87);color:white;padding:42px max(22px,calc((100% - 1200px)/2))}
+header h1{font-size:clamp(2rem,4vw,3.2rem);line-height:1.15;margin:.5rem 0}header p{max-width:900px;color:#e7efff}
+.layout{max-width:1200px;margin:22px auto;padding:0 16px;display:grid;grid-template-columns:280px minmax(0,1fr);gap:22px}
+nav{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;background:white;border:1px solid var(--line);border-radius:15px;padding:16px}
+nav a{display:block;padding:5px 7px;border-radius:7px;text-decoration:none;color:#33445f;font-size:.87rem}nav a:hover{background:#edf4ff;color:var(--blue)}
+section{background:white;border:1px solid var(--line);border-radius:16px;padding:clamp(18px,3vw,30px);margin-bottom:18px;box-shadow:0 5px 20px #1c355508}
+h2{font-size:1.55rem;line-height:1.3;border-bottom:2px solid #edf4ff;padding-bottom:12px;margin:0 0 16px}h3{color:#123d76;margin:24px 0 8px}
+p{margin:9px 0}li{margin:5px 0}table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.93rem}td,th{border:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}th{background:#edf4ff}
+pre{background:#101c2f;color:#f1f5ff;padding:18px;border-radius:12px;overflow:auto;line-height:1.65;font-size:.9rem;border:1px solid #263852;white-space:pre}
+pre code{background:transparent!important;color:#f1f5ff!important;padding:0!important;font:inherit}code{background:#eef2f8;color:#18324f;padding:2px 5px;border-radius:4px}
+.codehead{display:flex;justify-content:space-between;color:#c8d7ee;font-size:.8rem;margin:0 0 5px}.copy{background:#314766;color:white;padding:5px 10px;border:0;border-radius:7px;cursor:pointer}
+.note{background:#eef7ff;border-left:4px solid var(--blue);padding:12px 15px;border-radius:8px;margin:14px 0}.warn{background:#fff7e8;border-left:4px solid #d78a13;padding:12px 15px;border-radius:8px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.tile{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fbfdff}
+.chartbox{border:1px solid var(--line);border-radius:13px;padding:15px;margin:16px 0;background:#fbfdff}.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}.grid2 label{display:flex;flex-direction:column;font-size:.88rem}
+input,select{padding:8px;border:1px solid #bdc9d8;border-radius:7px;font:inherit;max-width:100%}button{background:var(--blue);color:white;border:0;border-radius:8px;padding:9px 13px;cursor:pointer}
+canvas{max-width:100%;height:auto;border:1px solid var(--line);border-radius:9px;background:white;display:block;margin:8px auto}.result{background:#eef6ff;border-radius:9px;padding:10px;margin:10px 0}.small{font-size:.88rem;color:var(--muted)}
+.quizq{border-top:1px solid var(--line);padding:14px 0}.quizq label{display:block;margin:6px 0}.good{color:#087c50;font-weight:700}.bad{color:#b42318;font-weight:700}
+@media(max-width:850px){.layout{display:block}nav{position:relative;max-height:280px;margin-bottom:16px}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style></head><body>
+<header><div>MDU · Riyaziyyat və İnformasiya texnologiyaları fakültəsi · Magistratura</div>
+<h1>Fəsil 19. Dərin öyrənmə əsaslı kompüter görməsi və obyektlərin tanınması</h1>
+<p>Elmi izahlar, interaktiv CNN və IoU qrafikləri, real datasetlər, YOLO praktikası, video analitikası və Google Colab laboratoriyası.</p><div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="layout"><nav><b>Mündəricat</b><a href="#s1">19.1. Dərin öyrənmədə kompüter görməsinin yeri və tətbiq sahələri</a><a href="#s2">19.2. Təsvirlərin maşın öyrənməsi üçün hazırlanması</a><a href="#s3">19.3. Konvolyusional neyron şəbəkələrinin (CNN) kompüter görməsində rolu</a><a href="#s4">19.4. CNN arxitekturasında Convolution, Pooling və Fully Connected qatları</a><a href="#s5">19.5. Təsvirlərin təsnifatı (Image Classification)</a><a href="#s6">19.6. Transfer Learning və əvvəlcədən öyrədilmiş modellər</a><a href="#s7">19.7. Obyektlərin aşkarlanması (Object Detection) anlayışı</a><a href="#s8">19.8. Region-based yanaşmalar: R-CNN, Fast R-CNN və Faster R-CNN</a><a href="#s9">19.9. YOLO alqoritminin arxitekturası və iş prinsipi</a><a href="#s10">19.10. Obyektlərin lokallaşdırılması və Bounding Box anlayışı</a><a href="#s11">19.11. Non-Maximum Suppression və aşkarlama nəticələrinin süzgəcdən keçirilməsi</a><a href="#s12">19.12. Təsvirlərin semantik və instans seqmentasiyası</a><a href="#s13">19.13. Mask R-CNN və seqmentasiya modelləri</a><a href="#s14">19.14. Üz aşkarlanması və üz tanıma sistemləri</a><a href="#s15">19.15. Video axınında obyektlərin izlənməsi (Object Tracking)</a><a href="#s16">19.16. Real vaxt rejimində kompüter görmə sistemlərinin qurulması</a><a href="#s17">19.17. Modelin dəqiqliyinin qiymətləndirilməsi: IoU, Precision, Recall və mAP</a><a href="#s18">19.18. TensorFlow, Keras və PyTorch ilə kompüter görmə modellərinin tətbiqi</a><a href="#s19">19.19. Kompüter görməsində məlumat dəstləri və annotasiya prosesi</a><a href="#s20">19.20. Kompüter görməsinin sənaye, təhlükəsizlik, robototexnika və digər sahələrdə tətbiqi</a><a href="#lab">Laboratoriya işi №19</a><a href="#tasks">Praktiki tapşırıqlar</a><a href="#quiz">Özünü yoxlama sualları</a><a href="#refs">İstifadə olunan ədəbiyyat</a></nav><main><section><h2>Fəslin məqsədi və öyrənmə nəticələri</h2><p>Bu fəsil dərin öyrənmə ilə təsvirlərin təsnifatı, obyektlərin aşkarlanması, lokallaşdırılması, seqmentasiyası və video izlənməsini birləşdirir. Tələbə modelin yalnız kodunu işə salmayacaq; datasetin necə qurulduğunu, proqnozun necə qiymətləndirildiyini və real sistemdə hansı risklərin yarandığını da əsaslandıracaq.</p><div class="grid"><div class="tile"><b>Arxitektura</b><p>CNN, transfer learning, R-CNN ailəsi, YOLO, Mask R-CNN.</p></div><div class="tile"><b>Ölçmə</b><p>IoU, Precision, Recall, AP, mAP, FPS.</p></div><div class="tile"><b>Praktika</b><p>Colab, PyTorch, TensorFlow/Keras, Ultralytics.</p></div></div><div class="note"><b>Vacib fərq:</b> təsnifat “şəkildə nə var?”, aşkarlama “nə var və haradadır?”, seqmentasiya “obyektin hansı piksellərdən ibarət olduğunu”, izləmə isə “eyni obyekt zamanla harada hərəkət edir?” sualını cavablandırır.</div></section><section id="s1"><h2>19.1. Dərin öyrənmədə kompüter görməsinin yeri və tətbiq sahələri</h2>
+<p>Dərin öyrənmə kompüter görməsində təsvirin içindəki faydalı xüsusiyyətləri əl ilə yazılmış qaydalarla deyil, çoxsaylı nümunələrdən öyrənir. Klassik yanaşmada mühəndis kənar, tekstura, rəng histogramı kimi xüsusiyyətləri seçir; CNN isə təlim zamanı sadə xətlərdən başlayaraq mürəkkəb formalar və obyekt hissələrinə qədər iyerarxik təsvirlər qurur.</p>
+<p>Bu yanaşma tibbi görüntülərdə şiş sahələrinin aşkarlanması, istehsalatda qüsurlu məhsulun tapılması, kənd təsərrüfatında bitki xəstəliklərinin tanınması, nəqliyyatda avtomobil/piyada aşkarlanması, robototexnikada maneələrdən yayınma və peyk təsvirlərində obyekt xəritələşdirilməsi üçün istifadə olunur.</p>
+<div class="note"><b>Elmi məntiq:</b> modelin öyrəndiyi xüsusiyyətlər datasetin paylanmasından asılıdır. Laboratoriya şəraitində yüksək nəticə göstərən model real zavodda fərqli işıq, kamera bucağı və məhsul növündə zəifləyə bilər. Buna domain shift deyilir.</div>
+</section><section id="s2"><h2>19.2. Təsvirlərin maşın öyrənməsi üçün hazırlanması</h2>
+<p>Modelə verilən şəkil rəqəmsal tensor şəklində təqdim olunur. Rəngli şəkil adətən H×W×C ölçülüdür. Batch əlavə edildikdə N×H×W×C (TensorFlow) və ya N×C×H×W (PyTorch) düzülüşü istifadə oluna bilər. Piksel qiymətləri 0–255 diapazonundan 0–1 diapazonuna keçirilə və ya pretrained modelin gözlədiyi orta qiymət/standart kənarlaşma ilə normallaşdırıla bilər.</p>
+<p>Hazırlıq mərhələləri: faylları oxumaq; korlanmış faylları yoxlamaq; sinif etiketlərini kodlaşdırmaq; şəkilləri ölçüləndirmək; train/validation/test bölmək; augmentation tətbiq etmək; sinif balansını yoxlamaq. Detection üçün şəkil ilə yanaşı bounding box koordinatları da eyni çevrilmələrə uyğun dəyişdirilməlidir.</p>
+<pre><code>import torch
+from torchvision import transforms
+
+train_tfms = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.RandomHorizontalFlip(p=0.5),
+    transforms.ColorJitter(brightness=0.15, contrast=0.15),
+    transforms.ToTensor(),  # [0,1]
+    transforms.Normalize(
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
+    )
+])</code></pre>
+<p>Augmentation yalnız təlim məlumatına tətbiq olunur. Test məlumatını süni şəkildə dəyişərək nəticəni yaxşı göstərmək olmaz. Tibbi və sənaye şəkillərində horizontal flip və rotation hər zaman məna baxımından düzgün deyil; məsələn, yazı olan təsviri çevirmək etiketi dəyişə bilər.</p>
+</section><section id="s3"><h2>19.3. Konvolyusional neyron şəbəkələrinin (CNN) kompüter görməsində rolu</h2>
+<p>CNN təsvirlərdə lokal əlaqələri nəzərə alan neyron şəbəkəsidir. Tam əlaqəli şəbəkədə hər giriş neyronu çoxlu çıxışlarla əlaqələnə bilər. Konvolyusiyada isə kiçik filtr (kernel) təsvir üzərində sürüşür və hər mövqedə eyni çəkilərdən istifadə edir. Bu, parametr sayını azaldır və kənar/tekstura kimi lokal nümunələri tapmağa kömək edir.</p>
+<p>İlk qatlar çox vaxt kənar və rəng keçidləri kimi sadə nümunələrə, dərin qatlar isə hissələrə və obyekt səviyyəli kombinasiyalara həssas olur. Bu izah konseptualdır: konkret filtrin nə öyrəndiyini yalnız çəkiləri və aktivasiya xəritələrini analiz etməklə yoxlamaq olar.</p>
+</section><section id="s4"><h2>19.4. CNN arxitekturasında Convolution, Pooling və Fully Connected qatları</h2>
+<p><b>Convolution:</b> kernel giriş üzərində sürüşərək feature map yaradır. <b>Pooling:</b> məkan ölçüsünü azaldaraq lokal sahənin maksimum və ya orta qiymətini saxlayır. <b>Fully Connected:</b> çıxarılan xüsusiyyətləri sinif skorlarına çevirir. Müasir arxitekturalarda Global Average Pooling və residual bağlantılar da geniş yayılıb.</p>
+<p>Konvolyusiya çıxış ölçüsü: <code>O = floor((I + 2P − K)/S) + 1</code>. Burada I giriş ölçüsü, K kernel, P padding, S stride-dir. Məsələn, I=32, K=3, P=1, S=1 olduqda O=32; padding ölçünü saxlayır.</p>
+<div class="chartbox"><canvas id="cnnCanvas" width="760" height="250"></canvas><p class="small">İnteraktiv arxitektura: qatlardakı ölçüləri dəyişmək üçün parametrləri aşağıda sınayın.</p>
+<label>Giriş ölçüsü <input id="cnnI" type="number" value="32" min="8" max="128"></label>
+<label>Kernel <select id="cnnK"><option>3</option><option>5</option><option>7</option></select></label>
+<label>Padding <select id="cnnP"><option>0</option><option selected>1</option><option>2</option></select></label>
+<label>Stride <select id="cnnS"><option selected>1</option><option>2</option></select></label>
+<div class="result" id="cnnResult"></div></div>
+</section><section id="s5"><h2>19.5. Təsvirlərin təsnifatı (Image Classification)</h2>
+<p>Təsnifat bütöv təsvirə sinif etiketi və sinif ehtimalları verir. Məsələn, bitki yarpağının “sağlam”, “pas xəstəliyi”, “ləkə xəstəliyi” siniflərindən hansına aid olduğunu müəyyən edir. Çoxsinifli təsnifatda softmax funksiyası logitləri ehtimala çevirir: <code>pᵢ = exp(zᵢ)/Σⱼ exp(zⱼ)</code>. Binary tapşırıqda sigmoid geniş istifadə olunur.</p>
+<p>Əsas qiymətləndirmə göstəriciləri accuracy, precision, recall, F1 və confusion matrix-dir. Siniflər balanssız olduqda yalnız accuracy-yə güvənmək olmaz. Məsələn, nümunələrin 95%-i sağlam, 5%-i xəstədirsə, hamısına “sağlam” deyən model 95% accuracy ala bilər, lakin xəstələri tapmaya bilər.</p>
+</section><section id="s6"><h2>19.6. Transfer Learning və əvvəlcədən öyrədilmiş modellər</h2>
+<p>Transfer learning böyük datasetdə öyrədilmiş modelin biliklərini yeni, daha kiçik tapşırığa daşımaqdır. Praktikada iki strategiya var: (1) feature extraction — backbone qatlarını dondurub yalnız yeni classifier qatını öyrətmək; (2) fine-tuning — əvvəlcə yeni başlığı öyrədib sonra backbone-un bir hissəsini kiçik learning rate ilə yenidən öyrətmək.</p>
+<p>ImageNet çəkiləri ilə başlayan ResNet/EfficientNet kimi modellər az nümunəli tapşırıqlarda sıfırdan təlimə nisbətən daha tez nəticə verə bilər. Lakin yeni datasetin domeni fərqlidirsə (məsələn, adi foto ilə rentgen), uyğunlaşdırma və ayrıca test vacibdir.</p>
+<pre><code>from torchvision.models import resnet18, ResNet18_Weights
+import torch.nn as nn
+
+weights = ResNet18_Weights.DEFAULT
+model = resnet18(weights=weights)
+for p in model.parameters():
+    p.requires_grad = False
+model.fc = nn.Linear(model.fc.in_features, num_classes)
+# Optimizer yalnız trainable parametrləri yeniləyir.</code></pre>
+</section><section id="s7"><h2>19.7. Obyektlərin aşkarlanması (Object Detection) anlayışı</h2>
+<p>Object detection bir təsvir daxilində bir və ya bir neçə obyektin sinfini və yerini müəyyən edir. Nəticə adətən <b>(class, confidence, x₁, y₁, x₂, y₂)</b> formasındadır. Təsnifat bütün şəkilə etiket verir; detection isə hər obyekt üçün ayrıca çərçivə verir.</p>
+<p>Detection modeli obyektin fonla qarışdığı, qismən örtüldüyü və müxtəlif ölçüdə göründüyü səhnələrdə çətinlik çəkə bilər. Kiçik obyektlər üçün yüksək giriş çözünürlüğü və uyğun dataset xüsusilə əhəmiyyətlidir.</p>
+</section><section id="s8"><h2>19.8. Region-based yanaşmalar: R-CNN, Fast R-CNN və Faster R-CNN</h2>
+<p>R-CNN ailəsi əvvəlcə mümkün obyekt sahələrini (region proposals) tapır, sonra regionları CNN ilə təhlil edir. Orijinal R-CNN hər region üçün CNN xüsusiyyətlərini ayrıca çıxardığına görə yavaşdır. Fast R-CNN bütün təsvir üçün feature map yaradır və regionlardan RoI pooling ilə xüsusiyyət götürür. Faster R-CNN Region Proposal Network (RPN) əlavə edərək təklifləri şəbəkənin daxilində öyrənir.</p>
+<table><tr><th>Model</th><th>Əsas ideya</th><th>Üstünlük</th><th>Məhdudiyyət</th></tr><tr><td>R-CNN</td><td>Region təklifləri + hər region üçün CNN</td><td>Region əsaslı detection konsepsiyasını formalaşdırdı</td><td>Hesablama təkrarı və yavaşlıq</td></tr><tr><td>Fast R-CNN</td><td>Bir feature map, RoI pooling</td><td>Daha səmərəli xüsusiyyət çıxarılması</td><td>Region proposals ayrıca mərhələdir</td></tr><tr><td>Faster R-CNN</td><td>Öyrənilən RPN</td><td>End-to-end-ə yaxın inteqrasiya</td><td>Real-vaxt məhdud cihazlarda ağır ola bilər</td></tr></table>
+</section><section id="s9"><h2>19.9. YOLO alqoritminin arxitekturası və iş prinsipi</h2>
+<p>YOLO (You Only Look Once) bir mərhələli detection ailəsidir. Giriş təsviri backbone vasitəsilə xüsusiyyətlərə çevirir, neck müxtəlif ölçülü xüsusiyyət xəritələrini birləşdirir, head isə bounding box, sinif və confidence proqnozları verir. “Bir mərhələli” ifadəsi region proposal və ayrıca region classifier mərhələlərinə ehtiyac olmadan birbaşa proqnoz verməsini bildirir.</p>
+<p>YOLO versiyaları arasında arxitektura və loss detalları dəyişir. Ona görə bütün YOLO modelləri üçün eyni qat sayı və eyni çıxış forması iddia etmək düzgün deyil. Təlimdə box regression, classification və bəzi versiyalarda objectness/quality ilə bağlı itki komponentləri optimallaşdırılır.</p>
+<div class="diagram"><svg viewBox="0 0 820 210" role="img" aria-label="YOLO arxitektura sxemi"><defs><marker id="arr19" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#155eef"/></marker></defs><g font-family="Arial" text-anchor="middle"><rect x="15" y="65" width="120" height="80" rx="10" fill="#eaf2ff" stroke="#155eef" stroke-width="2"/><text x="75" y="98" fill="#173b70">Giriş</text><text x="75" y="120" font-size="12" fill="#334">Image tensor</text><rect x="180" y="65" width="140" height="80" rx="10" fill="#eaf8f5" stroke="#0b8f87" stroke-width="2"/><text x="250" y="98" fill="#075e59">Backbone</text><text x="250" y="120" font-size="12" fill="#334">Feature extraction</text><rect x="365" y="65" width="120" height="80" rx="10" fill="#fff5e7" stroke="#c17a13" stroke-width="2"/><text x="425" y="98" fill="#80500b">Neck</text><text x="425" y="120" font-size="12" fill="#334">Multi-scale</text><rect x="530" y="65" width="120" height="80" rx="10" fill="#f3edff" stroke="#7753b5" stroke-width="2"/><text x="590" y="98" fill="#52358a">Head</text><text x="590" y="120" font-size="12" fill="#334">Box + class</text><rect x="695" y="65" width="110" height="80" rx="10" fill="#edf8ee" stroke="#29934b" stroke-width="2"/><text x="750" y="98" fill="#17602e">Nəticə</text><text x="750" y="120" font-size="12" fill="#334">Detections</text><g stroke="#155eef" stroke-width="3" fill="none" marker-end="url(#arr19)"><path d="M135 105H175M320 105H360M485 105H525M650 105H690"/></g></g></svg></div>
+</section><section id="s10"><h2>19.10. Obyektlərin lokallaşdırılması və Bounding Box anlayışı</h2>
+<p>Bounding box obyektin ətrafını əhatə edən düzbucaqlıdır. Koordinatlar (x₁,y₁,x₂,y₂) və ya (x_center,y_center,width,height) formatında verilə bilər. YOLO dataset formatında koordinatlar çox vaxt təsvirin eninə/hündürlüyünə bölünərək 0–1 aralığında normallaşdırılır.</p>
+<p>Qutunun sahəsi: <code>A=(x₂−x₁)(y₂−y₁)</code>. Koordinatlar piksel ölçüsündədirsə, x en, y hündürlük istiqamətidir. Şəkil resize/letterbox ediləndə qutu koordinatları da eyni transformasiyaya uyğun çevrilməlidir.</p>
+</section><section id="s11"><h2>19.11. Non-Maximum Suppression və aşkarlama nəticələrinin süzgəcdən keçirilməsi</h2>
+<p>Model eyni obyekt üçün bir neçə üst-üstə düşən qutu proqnozlaşdıra bilər. NMS əvvəlcə confidence-a görə qutuları sıralayır, ən yüksək skorlu qutunu saxlayır, onunla IoU həddi üzərində üst-üstə düşən eyni sinif qutularını silir və prosesi davam etdirir. NMS iki fərqli obyektin qutuları üst-üstə düşəndə ehtiyatla tətbiq edilməlidir.</p>
+<p>NMS həddi çox aşağı olsa, yaxın obyektlərdən biri səhvən silinə bilər; çox yüksək olsa, eyni obyekt üçün təkrarlanan qutular qala bilər. Confidence threshold və IoU threshold ayrı parametrlərdir: biri proqnoz skorunu, digəri qutuların üst-üstə düşməsini idarə edir.</p>
+</section><section id="s12"><h2>19.12. Təsvirlərin semantik və instans seqmentasiyası</h2>
+<p>Semantic segmentation hər pikselə sinif etiketi verir. Eyni sinifə aid iki avtomobilin pikselləri eyni “car” sinfinə daxildir. Instance segmentation isə obyekt nümunələrini ayırır: avtomobil A və avtomobil B ayrı maskalar alır. Panoptic segmentation bu iki yanaşmanı birləşdirir.</p>
+<p>Seqmentasiya maskası binary və ya çoxsinifli ola bilər. Pixel accuracy ümumi düzgün piksel faizidir, lakin sinif balanssızlığında yanıltıcı ola bilər. IoU və Dice/F1 maska keyfiyyətini qiymətləndirmək üçün geniş istifadə olunur.</p>
+</section><section id="s13"><h2>19.13. Mask R-CNN və seqmentasiya modelləri</h2>
+<p>Mask R-CNN Faster R-CNN detektorunu hər aşkarlanan obyekt üçün maska proqnozlaşdıran əlavə budaqla genişləndirir. Model eyni zamanda sinif, bounding box və instance maska verir. Mask head adətən hər RoI üçün kiçik konvolyusional şəbəkə kimi işləyir. U-Net isə encoder-decoder arxitekturası və skip connection-larla xüsusilə tibbi görüntü seqmentasiyasında geniş tətbiq olunub.</p>
+<p>Mask keyfiyyəti IoU və Dice ilə ölçülə bilər: <code>Dice=2|A∩B|/(|A|+|B|)</code>. Kiçik obyektlərdə bir neçə piksel fərq göstəriciyə ciddi təsir edə bilər.</p>
+</section><section id="s14"><h2>19.14. Üz aşkarlanması və üz tanıma sistemləri</h2>
+<p>Üz aşkarlanması şəkildə üzün yerini tapır. Üz tanıma isə üz təsvirindən biometrik şablon/embedding çıxarıb şəxsin kimliyini yoxlama və ya namizədlərlə müqayisə etmə tapşırığıdır. Bunlar eyni deyil. Üz aşkarlanması “üz haradadır?” sualına, tanıma isə “bu üz kimə uyğun gəlir?” sualına cavab verir.</p>
+<p>Üz tanıma yüksək məxfilik və hüquqi risk daşıyır. Tədris laboratoriyasında üz aşkarlanması ilə məhdudlaşmaq, şəxsi identifikasiya aparmamaq, razılıq alınmış və hüquqi istifadəsi aydın məlumatlardan istifadə etmək tövsiyə olunur. Biometrik sistemlərdə false accept/false reject, demographic performance variation, spoofing və data protection ayrıca təhlil edilməlidir.</p>
+</section><section id="s15"><h2>19.15. Video axınında obyektlərin izlənməsi (Object Tracking)</h2>
+<p>Detection hər kadrda obyektləri tapır; tracking isə ardıcıl kadrlarda eyni obyektə eyni ID-ni verməyə çalışır. Tracking-by-detection yanaşmasında detektor kadr başına qutuları verir, tracker isə qutuları zaman üzrə əlaqələndirir. SORT Kalman filter və Hungarian assignment kimi mexanizmlərdən istifadə edir; Deep SORT görünüş embedding-i əlavə edir. ByteTrack aşağı confidence aşkarlamalarını da əlaqələndirmə prosesində nəzərə alır.</p>
+<p>İzləmə keyfiyyəti ID switch, track fragmentation, HOTA, MOTA və IDF1 kimi göstəricilərlə qiymətləndirilə bilər. Kamera hərəkəti, örtülmə və oxşar görünüşlü obyektlər identifikasiya ardıcıllığını çətinləşdirir.</p>
+</section><section id="s16"><h2>19.16. Real vaxt rejimində kompüter görmə sistemlərinin qurulması</h2>
+<p>Real-vaxt sistemində təkcə modelin dəqiqliyi deyil, kadr gecikməsi və davamlılıq da vacibdir. Ümumi gecikmə: capture + preprocess + inference + postprocess + display/transfer. FPS təxmini olaraq emal olunan kadr sayının saniyəyə nisbətidir. 30 FPS hədəfi üçün orta emal müddəti təxminən 33.3 ms-dən çox olmamalıdır; bu, bütün sistem gecikməsinin sərhədi kimi qəbul edilməməlidir.</p>
+<p>Edge cihazlarda model quantization, pruning, TensorRT/ONNX optimallaşdırması və input ölçüsünün seçilməsi ilə sürət artırıla bilər. Ancaq optimallaşdırma dəqiqliyə təsir edə bilər; hər dəyişiklikdən sonra test aparılmalıdır.</p>
+</section><section id="s17"><h2>19.17. Modelin dəqiqliyinin qiymətləndirilməsi: IoU, Precision, Recall və mAP</h2>
+<p>IoU proqnoz qutusu ilə ground-truth qutusunun kəsişməsinin birləşməyə nisbətidir: <code>IoU=|A∩B|/|A∪B|</code>. IoU 1-ə yaxın olduqca qutular daha çox üst-üstə düşür. Precision = TP/(TP+FP), Recall = TP/(TP+FN). TP doğru aşkarlama, FP yanlış müsbət, FN buraxılmış obyekt deməkdir.</p>
+<p>AP precision-recall əyrisi altında sahənin hesablanması ilə əlaqəlidir. mAP müxtəlif siniflər üzrə AP-nin ortasıdır. mAP@0.5 IoU həddi 0.5 olduqda, mAP@0.5:0.95 isə adətən 0.50-dən 0.95-ə qədər müxtəlif IoU hədlərinin ortalamasını ifadə edir. Konkret implementasiyada interpolasiya və matching qaydaları fərqlənə bilər.</p>
+<div class="chartbox"><h4>İnteraktiv IoU kalkulyatoru</h4><div class="grid2"><label>Qutu A x1 <input id="ax1" type="number" value="30"></label><label>Qutu A y1 <input id="ay1" type="number" value="30"></label><label>Qutu A x2 <input id="ax2" type="number" value="150"></label><label>Qutu A y2 <input id="ay2" type="number" value="130"></label><label>Qutu B x1 <input id="bx1" type="number" value="70"></label><label>Qutu B y1 <input id="by1" type="number" value="50"></label><label>Qutu B x2 <input id="bx2" type="number" value="180"></label><label>Qutu B y2 <input id="by2" type="number" value="150"></label></div><canvas id="iouCanvas" width="520" height="260"></canvas><div class="result" id="iouResult"></div></div>
+<div class="chartbox"><h4>Precision və Recall kalkulyatoru</h4><div class="grid2"><label>TP <input id="tp" type="number" value="72" min="0"></label><label>FP <input id="fp" type="number" value="8" min="0"></label><label>FN <input id="fn" type="number" value="18" min="0"></label></div><div class="result" id="prResult"></div><canvas id="prCanvas" width="650" height="220"></canvas></div>
+</section><section id="s18"><h2>19.18. TensorFlow, Keras və PyTorch ilə kompüter görmə modellərinin tətbiqi</h2>
+<p>TensorFlow/Keras yüksək səviyyəli model qurma və təlim API-ləri təqdim edir. PyTorch dinamik hesablama qrafiki və geniş model ekosistemi ilə tədqiqatda geniş istifadə olunur. Hər üç ekosistemdə əsas proses eynidir: dataset → model → loss → optimizer → training loop → validation → checkpoint → test.</p>
+<pre><code># Keras ilə transfer learning üçün minimal skelet
+import tensorflow as tf
+base = tf.keras.applications.MobileNetV2(
+    input_shape=(224,224,3), include_top=False,
+    weights="imagenet"
+)
+base.trainable = False
+inputs = tf.keras.Input(shape=(224,224,3))
+x = tf.keras.applications.mobilenet_v2.preprocess_input(inputs)
+x = base(x, training=False)
+x = tf.keras.layers.GlobalAveragePooling2D()(x)
+outputs = tf.keras.layers.Dense(num_classes, activation="softmax")(x)
+model = tf.keras.Model(inputs, outputs)
+model.compile(optimizer="adam",
+              loss="sparse_categorical_crossentropy",
+              metrics=["accuracy"])</code></pre>
+<p>Detection üçün yalnız image classification modelini çağırmaq kifayət etmir: bounding box etiketləri, detection loss, matching, NMS və uyğun qiymətləndirmə proseduru lazımdır. Hazır Ultralytics API-si bu mərhələlərin çoxunu birləşdirir.</p>
+</section><section id="s19"><h2>19.19. Kompüter görməsində məlumat dəstləri və annotasiya prosesi</h2>
+<p>Dataset şəkillər/video və onlara uyğun annotasiyalardan ibarətdir. Detection annotasiyası sinif + bounding box, segmentation annotasiyası maska/polygon, classification annotasiyası isə şəkil üçün sinif etiketi ola bilər. Annotasiyanın keyfiyyəti modelin öyrənə biləcəyi sərhədi müəyyən edir.</p>
+<table><tr><th>Dataset</th><th>Tipik istifadə</th><th>Nəzərə alınmalı məqam</th></tr><tr><td>COCO</td><td>Ümumi obyekt detection/segmentation</td><td>Çoxsinifli gündəlik səhnələr</td></tr><tr><td>Pascal VOC</td><td>Detection və classification benchmark</td><td>Klassik, daha məhdud sinif dəsti</td></tr><tr><td>Open Images</td><td>Böyük miqyaslı vizual tanıma</td><td>Annotasiya formatı və alt dəst seçimi</td></tr><tr><td>VisDrone</td><td>Drone görüntülərində detection/tracking</td><td>Kiçik obyektlər və sıx səhnələr</td></tr><tr><td>BDD100K</td><td>Avtonom sürüş səhnələri</td><td>Video, hava və yol şəraiti müxtəlifliyi</td></tr></table>
+<p>Annotasiya protokolu əvvəlcədən yazılmalıdır: obyektin sərhədi necə çəkilir, örtülmüş obyekt necə işarələnir, çox kiçik obyekt saxlanılırmı, “ignore” sahəsi varmı? Annotatorlar arasında uyğunluğu ölçmək və nümunələri ikinci annotatorla yoxlamaq faydalıdır.</p>
+</section><section id="s20"><h2>19.20. Kompüter görməsinin sənaye, təhlükəsizlik, robototexnika və digər sahələrdə tətbiqi</h2>
+<p><b>Sənaye:</b> səth qüsuru, ölçü nəzarəti, montaj yoxlaması. <b>Təhlükəsizlik:</b> təhlükəli zonaya daxilolma, PPE (dəbilqə/jilet) aşkarlanması; şəxsin identifikasiyası olmadan da təhlükəsizlik analitikası mümkündür. <b>Robototexnika:</b> obyektin lokallaşdırılması, grasping, maneə aşkarlanması. <b>Kənd təsərrüfatı:</b> xəstəlik, alaq otu, meyvə yetişkənliyi. <b>Tibb:</b> radioloji görüntü təhlili — klinik qərarı müstəqil əvəz etməməlidir.</p>
+<p>İstehsalata yerləşdirmədən əvvəl risk analizi aparılmalıdır: yanlış aşkarlamanın nəticəsi, məlumatın məxfiliyi, modelin dəyişən mühitdə sabitliyi, insan nəzarəti, audit jurnalı və yenidən təlim proseduru müəyyən edilməlidir.</p>
+</section>
+<section id="lab"><h2>Laboratoriya işi №19: YOLO və ya CNN əsaslı modeldən istifadə etməklə təsvirlərdə obyektlərin aşkarlanması, nəticələrin vizuallaşdırılması və modelin IoU/mAP göstəriciləri ilə qiymətləndirilməsi</h2>
+<p><b>Məqsəd:</b> real görüntü datasetini hazırlamaq, əvvəlcədən öyrədilmiş YOLO modelindən inference almaq, annotasiya ilə proqnozu müqayisə etmək və qiymətləndirmə göstəricilərini hesablamaq.</p>
+<h3>A mərhələsi — hazır model ilə inference</h3><ol><li>Google Colab-da GPU runtime seçin (mövcud olduqda).</li><li>Ultralytics kitabxanasını quraşdırın.</li><li>COCO tipli demo şəkli və ya müəllim tərəfindən verilmiş icazəli şəkil/video yükləyin.</li><li>YOLO modelini çağırın, confidence həddini 0.25 seçin.</li><li>Bounding box, sinif və confidence nəticələrini vizuallaşdırın.</li><li>Confidence 0.15, 0.25, 0.50 dəyərləri ilə nəticələri müqayisə edin.</li></ol>
+<h3>B mərhələsi — öz datasetinizlə təlim</h3><ol><li>Ən azı 2 sinif seçin və hər sinif üçün müxtəlif işıq/bucaq/məsafədə görüntü toplayın.</li><li>CVAT və ya Roboflow ilə bounding box annotasiyası aparın.</li><li>Train/validation/test bölgüsünü çəkiliş sessiyalarını qarışdırmadan qurun.</li><li>Dataset YAML faylında yolları və sinif adlarını göstərin.</li><li>Kiçik model ilə təlim aparın; epoch, image size və batch ölçüsünü qeyd edin.</li><li>Test nəticəsində precision, recall, mAP50 və mAP50-95 göstəricilərini şərh edin.</li></ol>
+<pre><code>!pip -q install ultralytics
+
+from ultralytics import YOLO
+model = YOLO("yolo26n.pt")  # hazır model: inference nümunəsi
+results = model.predict(
+    source="/content/test_image.jpg",
+    conf=0.25,
+    save=True
+)
+print(results[0].boxes)</code></pre>
+<p>Öz datasetinizlə təlim skeleti:</p><pre><code>from ultralytics import YOLO
+model = YOLO("yolo26n.pt")
+model.train(
+    data="/content/dataset/data.yaml",
+    epochs=30,
+    imgsz=640,
+    batch=8,
+    project="/content/runs",
+    name="mdu_ch19"
+)
+metrics = model.val(data="/content/dataset/data.yaml")
+print(metrics.box.map, metrics.box.map50)</code></pre>
+<div class="warn">Model faylının adı və əlçatan versiyası kitabxana buraxılışına görə dəyişə bilər. Colab-da quraşdırılan Ultralytics versiyasını, çəkilərin lisenziyasını və sənədləri yoxlayın. Hazır modelin inference nəticəsi öz datasetinizdə təlim nəticəsi sayılmır.</div>
+<h3>Qiymətləndirmə rubrikası</h3><table><tr><th>Meyar</th><th>Bal</th></tr><tr><td>Dataset və annotasiya keyfiyyəti</td><td>15</td></tr><tr><td>Modelin qurulması və parametrlərin əsaslandırılması</td><td>20</td></tr><tr><td>Detection nəticələrinin vizuallaşdırılması</td><td>15</td></tr><tr><td>IoU, Precision, Recall və mAP təhlili</td><td>25</td></tr><tr><td>Səhv nümunələrinin və məhdudiyyətlərin təhlili</td><td>15</td></tr><tr><td>Hesabat və təkrarlana bilmə</td><td>10</td></tr><tr><th>Yekun</th><th>100</th></tr></table>
+</section>
+<section id="tasks"><h2>Praktiki tapşırıqlar</h2><ol>
+<li>224×224×3 ölçülü float32 tensorun bir şəkil üçün yaddaş həcmini hesablayın.</li>
+<li>ImageNet pretrained ResNet modelinin son qatını 5 sinif üçün uyğunlaşdırın.</li>
+<li>Convolution çıxış ölçüsünü I=64, K=3, P=1, S=2 üçün hesablayın.</li>
+<li>Eyni obyekt təsviri üçün classification və detection çıxışlarını müqayisə edin.</li>
+<li>R-CNN, Fast R-CNN və Faster R-CNN arxitekturalarının fərqini cədvəldə göstərin.</li>
+<li>YOLO confidence həddini dəyişərək FP/FN sayına təsirini ölçün.</li>
+<li>İki bounding box üçün IoU-nu əl ilə və interaktiv kalkulyatorla hesablayın.</li>
+<li>NMS IoU həddinin 0.3 və 0.7 seçilməsinin nəticələrini izah edin.</li>
+<li>Semantic və instance segmentation üçün bir real tətbiq nümunəsi göstərin.</li>
+<li>Video üzərində tracking zamanı ID switch-in nə demək olduğunu izah edin.</li>
+<li>Datasetdə train/test data leakage riskini araşdırın.</li>
+<li>Modelin mAP50 və mAP50-95 nəticələrini müqayisə edib hansı ssenaridə hansı göstəricinin vacib olduğunu əsaslandırın.</li>
+</ol></section>
+<section id="quiz"><h2>Özünü yoxlama sualları</h2><p>Suallar ssenari əsaslıdır. Hər sualda vəziyyəti təhlil edib ən uyğun qərarı seçin.</p><div id="quizlist"></div><button onclick="grade()">Cavabları yoxla</button> <button onclick="reset()">Yenidən başla</button><div class="result" id="quizscore">Cavabları seçdikdən sonra yoxlayın.</div></section>
+<section id="refs"><h2>İstifadə olunan ədəbiyyat</h2><ol>
+<li>Goodfellow, I., Bengio, Y., Courville, A. (2016). <i>Deep Learning</i>. MIT Press. <a href="https://www.deeplearningbook.org/" target="_blank">Rəsmi kitab</a>.</li>
+<li>He, K. et al. (2016). Deep Residual Learning for Image Recognition. CVPR. <a href="https://arxiv.org/abs/1512.03385" target="_blank">Məqalə</a>.</li>
+<li>Girshick, R. (2015). Fast R-CNN. ICCV. <a href="https://arxiv.org/abs/1504.08083" target="_blank">Məqalə</a>.</li>
+<li>Ren, S. et al. (2015). Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks. <a href="https://arxiv.org/abs/1506.01497" target="_blank">Məqalə</a>.</li>
+<li>He, K. et al. (2017). Mask R-CNN. ICCV. <a href="https://arxiv.org/abs/1703.06870" target="_blank">Məqalə</a>.</li>
+<li>Redmon, J. et al. (2016). You Only Look Once: Unified, Real-Time Object Detection. CVPR. <a href="https://arxiv.org/abs/1506.02640" target="_blank">Məqalə</a>.</li>
+<li>Lin, T.-Y. et al. (2014). Microsoft COCO: Common Objects in Context. ECCV. <a href="https://cocodataset.org/" target="_blank">Dataset</a>.</li>
+<li>Ultralytics Documentation. <a href="https://docs.ultralytics.com/" target="_blank">YOLO sənədləri</a>.</li>
+<li>PyTorch Tutorials. <a href="https://pytorch.org/tutorials/" target="_blank">Rəsmi təlimatlar</a>.</li>
+<li>TensorFlow Tutorials. <a href="https://www.tensorflow.org/tutorials" target="_blank">Rəsmi təlimatlar</a>.</li>
+<li>CVAT Documentation. <a href="https://docs.cvat.ai/" target="_blank">Annotasiya sənədləri</a>.</li>
+<li>Everingham, M. et al. The PASCAL Visual Object Classes Challenge. <a href="http://host.robots.ox.ac.uk/pascal/VOC/" target="_blank">VOC dataset</a>.</li>
+</ol></section>
+</main></div>
+<script>
+document.querySelectorAll('pre').forEach(p=>{let h=document.createElement('div');h.className='codehead';let t=document.createElement('span');t.textContent='Kod nümunəsi';let b=document.createElement('button');b.className='copy';b.textContent='Kodu köçür';b.onclick=async()=>{try{await navigator.clipboard.writeText(p.innerText);b.textContent='Köçürüldü ✓'}catch(e){b.textContent='Seçib köçürün'}};h.append(t,b);p.parentNode.insertBefore(h,p)});
+function cnn(){let I=+document.getElementById('cnnI').value,K=+document.getElementById('cnnK').value,P=+document.getElementById('cnnP').value,S=+document.getElementById('cnnS').value;let O=Math.floor((I+2*P-K)/S)+1;document.getElementById('cnnResult').textContent=`Çıxış ölçüsü: ${O} × ${O}. Formula: floor((${I}+2×${P}−${K})/${S})+1 = ${O}.`;let c=document.getElementById('cnnCanvas'),x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);let labels=['Giriş','Convolution','Pooling','Fully Connected'];let vals=[I,O,Math.ceil(O/2),10];let xx=[45,220,420,625];for(let i=0;i<4;i++){x.fillStyle=['#dceaff','#d8f3ec','#fff0d9','#e9e1ff'][i];x.fillRect(xx[i],60,105,90);x.strokeStyle='#52657d';x.strokeRect(xx[i],60,105,90);x.fillStyle='#17243a';x.textAlign='center';x.font='14px Arial';x.fillText(labels[i],xx[i]+52,45);x.fillText(vals[i]+' × '+vals[i],xx[i]+52,110);if(i<3){x.beginPath();x.moveTo(xx[i]+105,105);x.lineTo(xx[i+1]-10,105);x.stroke();x.fillText('→',xx[i+1]-15,100)}}}
+['cnnI','cnnK','cnnP','cnnS'].forEach(id=>document.getElementById(id).addEventListener('input',cnn));cnn();
+function iou(){let v=id=>+document.getElementById(id).value;let ax1=v('ax1'),ay1=v('ay1'),ax2=v('ax2'),ay2=v('ay2'),bx1=v('bx1'),by1=v('by1'),bx2=v('bx2'),by2=v('by2');let iw=Math.max(0,Math.min(ax2,bx2)-Math.max(ax1,bx1)),ih=Math.max(0,Math.min(ay2,by2)-Math.max(ay1,by1)),inter=iw*ih,A=Math.max(0,ax2-ax1)*Math.max(0,ay2-ay1),B=Math.max(0,bx2-bx1)*Math.max(0,by2-by1),u=A+B-inter,val=u?inter/u:0;document.getElementById('iouResult').textContent=`Kəsişmə sahəsi=${inter.toFixed(1)}; A=${A}; B=${B}; birləşmə=${u.toFixed(1)}; IoU=${val.toFixed(3)}.`;let c=document.getElementById('iouCanvas'),x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);let sc=.9,ox=40,oy=25;x.strokeStyle='#155eef';x.lineWidth=3;x.strokeRect(ox+ax1*sc,oy+ay1*sc,(ax2-ax1)*sc,(ay2-ay1)*sc);x.strokeStyle='#0b8f87';x.strokeRect(ox+bx1*sc,oy+by1*sc,(bx2-bx1)*sc,(by2-by1)*sc);x.fillStyle='#155eef';x.fillText('A: ground truth / proqnoz',360,55);x.fillStyle='#0b8f87';x.fillText('B: digər qutu',360,80)}
+['ax1','ay1','ax2','ay2','bx1','by1','bx2','by2'].forEach(id=>document.getElementById(id).addEventListener('input',iou));iou();
+function pr(){let v=id=>Math.max(0,+document.getElementById(id).value),tp=v('tp'),fp=v('fp'),fn=v('fn'),p=tp+fp?tp/(tp+fp):0,r=tp+fn?tp/(tp+fn):0,f=p+r?2*p*r/(p+r):0;document.getElementById('prResult').textContent=`Precision=${p.toFixed(3)} · Recall=${r.toFixed(3)} · F1=${f.toFixed(3)}.`;let c=document.getElementById('prCanvas'),x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);[['Precision',p,'#155eef'],['Recall',r,'#0b8f87'],['F1',f,'#bd7a17']].forEach((a,i)=>{x.fillStyle=a[2];x.fillRect(130,30+i*60,a[1]*420,28);x.fillStyle='#17243a';x.fillText(a[0]+' '+a[1].toFixed(2),10,50+i*60)})}
+['tp','fp','fn'].forEach(id=>document.getElementById(id).addEventListener('input',pr));pr();
+const Q=[
+["Bir zavodda model 1000 məhsulun 970-ni düzgün “qüsursuz” kimi tanıyır, amma qüsurlu məhsulların çoxunu buraxır. Datasetdə qüsurlu məhsul cəmi 2%-dir. Hansı qiymətləndirmə yanaşması daha düzgündür?",["Yalnız accuracy-yə baxmaq","Recall, precision, F1 və confusion matrix-i araşdırmaq","Şəkil ölçüsünü artırıb nəticəni qəbul etmək","Modeli yalnız təlim dəqiqliyi ilə qiymətləndirmək"],1,"Sinif balanssızlığı accuracy-ni aldada bilər; qüsurlu sinif üçün recall xüsusilə vacibdir."],
+["Tibbi təsvirlərdə 300 etiketli nümunəniz var, sıfırdan CNN öyrədərkən overfitting yaranır. İlk sınanmalı yanaşma hansıdır?",["Transfer learning və data augmentation","Test datasını təlimə qatmaq","Bütün qatları təsadüfi silmək","Etiketləri qarışdırmaq"],0,"Pretrained backbone az məlumatda faydalı xüsusiyyətlər verə bilər; test datası təlimə daxil edilməməlidir."],
+["Kamera xəttində eyni avtomobil üçün 5 üst-üstə düşən qutu çıxır. Hansı postprocessing mərhələsi təkrarlanan qutuları azaldır?",["Pooling","Non-Maximum Suppression","Normalization","Dropout"],1,"NMS confidence sıralaması və IoU həddi ilə təkrarlanan qutuları süzgəcdən keçirir."],
+["Piyada aşkarlama sistemində uzaqdakı kiçik piyadalar tapılmır. Hansı addım daha məntiqli eksperimentdir?",["Giriş ölçüsünü artırmaq və kiçik obyektləri təmsil edən data toplamaq","Confidence həddini 0.99 etmək","Bütün annotasiyaları silmək","Yalnız böyük obyektlərlə test etmək"],0,"Kiçik obyektlər az piksel tutur; daha yüksək giriş ölçüsü və uyğun nümunələr kömək edə bilər."],
+["Robot iki ardıcıl video kadrında eyni qutunu tapır, amma sistem hər dəfə yeni ID verir. Hansı komponent çatışmır?",["Object tracking","Image classification","Grayscale","Pooling"],0,"Tracking aşkarlamaları zaman üzrə əlaqələndirir və ID davamlılığını təmin etməyə çalışır."],
+["Sizin modelinizin mAP50 yüksək, mAP50-95 isə xeyli aşağıdır. Bu nəyi göstərə bilər?",["Obyekt siniflərini ümumiyyətlə tapmır","Qutular təxmini tapılır, amma daha sərt IoU hədlərində lokallaşdırma dəqiqliyi zəifləyir","Datasetdə heç bir obyekt yoxdur","GPU işləməyib"],1,"mAP50-95 daha sərt lokallaşdırma keyfiyyətini müxtəlif IoU hədlərində ölçür."],
+["Sənaye kamerası gündüz yaxşı, gecə zəif nəticə verir. Ən əsas ehtimal hansıdır?",["Domain shift və işıqlandırma fərqi","Modelin sinif sayı çoxdur","IoU düsturu yanlışdır","Bounding box formatı heç vaxt dəyişmir"],0,"İşıqlandırma paylanması dəyişəndə modelin öyrəndiyi görüntü xüsusiyyətləri uyğun gəlməyə bilər."],
+["Eyni videodan ardıcıl kadrları təsadüfi train və testə paylamısınız. Nə baş verə bilər?",["Data leakage və həddən artıq optimist test nəticəsi","Mütləq daha ədalətli qiymətləndirmə","Modelin avtomatik kalibrlənməsi","Annotasiyaya ehtiyac qalmaması"],0,"Oxşar kadrlar iki bölmədə olduqda test müstəqil olmaya bilər; videoları/sessiyaları bütöv ayırın."],
+["Təhlükəsizlik layihəsində məqsəd yalnız dəbilqə taxılıb-taxılmadığını tapmaqdır. Üz tanıma niyə lazımsızdır?",["Çünki PPE detection obyekt/sinif aşkarlanması ilə mümkündür; şəxs identifikasiyası əlavə biometrik risk yaradır","Çünki üz tanıma həmişə daha dəqiqdir","Çünki YOLO üz tanımır","Çünki video işlənə bilməz"],0,"Məqsədə uyğun ən az müdaxilə edən texnologiyanı seçmək məxfilik riskini azaldır."],
+["Modeldə confidence threshold 0.2-dən 0.7-yə qaldırılır. Ən mümkün təsir hansıdır?",["Daha çox zəif skorlu qutu saxlanar","Aşkarlama sayı azala, precision arta və recall azala bilər","IoU avtomatik 1 olar","Model yenidən təlim keçər"],1,"Yüksək threshold daha az, amma daha əmin aşkarlama saxlayır; trade-off testlə ölçülməlidir."],
+["Mask R-CNN-dən istifadə etdiyiniz layihədə sizə obyektin yalnız düzbucaqlı yeri deyil, dəqiq piksel konturu lazımdır. Hansı çıxış vacibdir?",["Instance mask","Yalnız image-level label","Tək confidence skoru","FPS"],0,"Instance segmentation hər obyekt nümunəsi üçün ayrıca maska verir."],
+["Real vaxt robotunda model 12 FPS işləyir, sistem hədəfi 30 FPS-dir. Hansı tədbir elmi şəkildə sınanmalıdır?",["Input ölçüsü, model ölçüsü, quantization və inference backend optimallaşdırması","Test nəticələrini gizlətmək","Confidence-i 1.0 etmək","Annotasiyaları dəyişmək"],0,"Gecikmənin hansı mərhələdə yarandığını ölçüb optimallaşdırmaları dəqiqliklə birlikdə müqayisə etmək lazımdır."]
+];
+function build(){document.getElementById('quizlist').innerHTML=Q.map((q,i)=>`<div class="quizq"><b>${i+1}. ${q[0]}</b>${q[1].map((a,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${a}</label>`).join('')}<div id="fb${i}" class="small"></div></div>`).join('')}
+function grade(){let n=0;Q.forEach((q,i)=>{let v=document.querySelector(`input[name=q${i}]:checked`),f=document.getElementById('fb'+i);if(v&&+v.value===q[2]){n++;f.className='good';f.textContent='Doğru. '+q[3]}else{f.className='bad';f.textContent='Düzgün cavab: '+q[1][q[2]]+'. '+q[3]}});document.getElementById('quizscore').textContent=`Nəticə: ${n}/${Q.length} (${Math.round(100*n/Q.length)}%).`}
+function reset(){document.querySelectorAll('#quizlist input').forEach(x=>x.checked=false);Q.forEach((q,i)=>{let f=document.getElementById('fb'+i);f.textContent='';f.className='small'});document.getElementById('quizscore').textContent='Cavabları seçdikdən sonra yoxlayın.'}
+build();
+</script><script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

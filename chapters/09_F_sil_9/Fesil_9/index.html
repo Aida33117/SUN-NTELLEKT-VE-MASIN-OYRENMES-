@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fəsil 9. Nəzarətsiz öyrənmə və klasterləşdirmə</title>
+<style>
+:root{--navy:#153b63;--blue:#2463a6;--sky:#eaf3fb;--ink:#203044;--muted:#617286;--line:#d9e3ed;--paper:#fff;--bg:#f4f7fb;--green:#18845b;--orange:#b66a12;--red:#b33b3b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.68 "Segoe UI",Arial,sans-serif}
+header{background:linear-gradient(120deg,#123657,#28689d);color:white;padding:42px max(5vw,22px) 36px}
+header .tag{display:inline-block;background:#e9f2fc;color:#174b7b;padding:6px 13px;border-radius:22px;font-size:13px;font-weight:700;margin:0 8px 12px 0}
+header h1{font-size:clamp(27px,4vw,42px);line-height:1.18;margin:8px 0 14px;max-width:1000px}
+header p{max-width:900px;color:#e2edf7;margin:0}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:24px;max-width:1500px;margin:24px auto;padding:0 20px}
+nav{position:sticky;top:14px;align-self:start;background:white;border:1px solid var(--line);border-radius:14px;padding:18px;max-height:calc(100vh - 28px);overflow:auto}
+nav h3{margin:0 0 10px;color:var(--navy)}nav a{display:block;color:#35536f;text-decoration:none;padding:6px 8px;border-radius:7px;font-size:14px}nav a:hover{background:var(--sky);color:var(--blue)}
+main{min-width:0}.card{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:25px;margin:0 0 20px;box-shadow:0 4px 16px rgba(25,55,85,.045)}
+h2{color:var(--navy);font-size:26px;margin:0 0 14px}h3{color:#214f79;margin:22px 0 8px}h4{margin:12px 0 6px;color:#315b80}
+p{margin:9px 0}ul,ol{padding-left:24px}li{margin:5px 0}.lead{font-size:17px;color:#40566d}.note{background:#eef6fc;border-left:4px solid #4385bb;padding:13px 16px;border-radius:8px;margin:15px 0}.warn{background:#fff6e9;border-left:4px solid #d18a2d;padding:13px 16px;border-radius:8px;margin:15px 0}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.panel{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fbfdff}
+table{border-collapse:collapse;width:100%;margin:13px 0;font-size:14px}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:#edf4fa;color:#244c70}
+.formula{background:#f1f5fa;border:1px solid #dce6f0;border-radius:10px;padding:14px;text-align:center;font-family:Cambria,Georgia,serif;font-size:19px;margin:12px 0;overflow-x:auto}
+button{background:var(--blue);color:white;border:0;border-radius:8px;padding:9px 14px;font-weight:650;cursor:pointer;margin:4px 4px 4px 0}button:hover{filter:brightness(.92)}button.secondary{background:#e8f0f8;color:#234e76}button.green{background:var(--green)}
+input,select{padding:8px 10px;border:1px solid #bdcbd9;border-radius:7px;font:inherit;max-width:100%}input[type=range]{vertical-align:middle}
+canvas{width:100%;height:330px;border:1px solid var(--line);border-radius:10px;background:#fff;display:block}
+.code{background:#102338;color:#e7f0fa;border-radius:10px;padding:16px;overflow:auto;font:13px/1.6 Consolas,monospace;white-space:pre}
+.small{font-size:13px;color:var(--muted)}.result{background:#eef8f3;border:1px solid #c9e8d8;padding:12px;border-radius:9px;margin-top:10px}
+.quizq{border:1px solid var(--line);padding:15px;border-radius:10px;margin:12px 0}.quizq label{display:block;margin:6px 0}.feedback{font-size:14px;margin-top:8px;font-weight:600}
+footer{text-align:center;color:var(--muted);padding:30px}
+.pill{display:inline-block;background:#edf4fa;color:#28547d;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:700}
+@media(max-width:900px){.layout{grid-template-columns:1fr}nav{position:relative;top:0;max-height:none}.grid2,.grid3{grid-template-columns:1fr}header{padding:30px 20px}.card{padding:18px}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style>
+</head>
+<body>
+<header>
+  <span class="tag">Magistratura səviyyəsi</span><span class="tag">Fəsil 9</span>
+  <h1>Nəzarətsiz öyrənmə və klasterləşdirmə</h1>
+  <p>Etiketlənməmiş verilənlərdə gizli strukturların aşkarlanması, oxşar obyektlərin qruplaşdırılması və klasterləşdirmə alqoritmlərinin müqayisəli təhlili.</p>
+<div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="layout">
+<nav>
+<h3>Mündəricat</h3>
+<a href="#intro">Fəslin məqsədi və nəticələri</a>
+<a href="#s91">9.1. Nəzarətsiz öyrənmənin mahiyyəti</a>
+<a href="#s92">9.2. Klasterləşdirmə anlayışı</a>
+<a href="#s93">9.3. Klasterləşdirmədə məsafə ölçüləri</a>
+<a href="#s94">9.4. Evklid və Manhattan məsafələri</a>
+<a href="#s95">9.5. K-Means alqoritminin iş prinsipi</a>
+<a href="#s96">9.6. K-Means addım-addım hesablanması</a>
+<a href="#s97">9.7. Optimal klaster sayının müəyyənləşdirilməsi</a>
+<a href="#s98">9.8. Elbow Method</a>
+<a href="#s99">9.9. Silhouette Score</a>
+<a href="#s910">9.10. Hierarchical Clustering</a>
+<a href="#s911">9.11. DBSCAN alqoritmi</a>
+<a href="#s912">9.12. Klasterlərin vizuallaşdırılması və şərhi</a>
+<a href="#practice">Praktiki tapşırıqlar</a>
+<a href="#quiz">Özünü yoxlama sualları</a>
+<a href="#lab">Laboratoriya işi №9</a>
+<a href="#glossary">Terminlər lüğəti</a>
+<a href="#refs">İstifadə olunan ədəbiyyat</a>
+</nav>
+<main>
+<section class="card" id="intro">
+<h2>Fəslin məqsədi və təlim nəticələri</h2>
+<p class="lead">Bu fəslin məqsədi tələbələrə etiketlənməmiş verilənlərdə oxşarlıq və fərqlilikləri müəyyən etməyi, K-Means, iyerarxik klasterləşdirmə və DBSCAN alqoritmlərini riyazi və praktiki baxımdan tətbiq etməyi öyrətməkdir.</p>
+<div class="grid2">
+<div class="panel"><h3>Öyrənmə nəticələri</h3><ul><li>Nəzarətsiz öyrənməni nəzarətli öyrənmədən fərqləndirir.</li><li>Məsafə ölçülərini hesablayır və müqayisə edir.</li><li>K-Means iterasiyalarını əl ilə izləyir.</li><li>Elbow və Silhouette yanaşmaları ilə klaster sayını əsaslandırır.</li><li>Hierarchical Clustering və DBSCAN nəticələrini şərh edir.</li></ul></div>
+<div class="panel"><h3>İlkin biliklər</h3><ul><li>Vektorlar və koordinat müstəvisi;</li><li>Orta qiymət və dispersiya;</li><li>Python, NumPy, Pandas;</li><li>Verilənlərin miqyaslandırılması və vizuallaşdırılması.</li></ul></div>
+</div>
+<div class="note"><b>Əsas fikir:</b> nəzarətsiz öyrənmədə modelə əvvəlcədən düzgün cavablar (label) təqdim edilmir. Alqoritm verilənlərin daxili quruluşunu və oxşarlıq nümunələrini araşdırır.</div>
+</section>
+
+<section class="card" id="s91"><h2>9.1. Nəzarətsiz öyrənmənin mahiyyəti</h2>
+<p>Nəzarətsiz öyrənmə (Unsupervised Learning) giriş verilənləri ilə işləyən, lakin hər obyekt üçün əvvəlcədən müəyyən edilmiş hədəf etiketi olmayan maşın öyrənməsi istiqamətidir. Məqsəd verilənlərin strukturunu, qruplarını, sıxlıq sahələrini və gizli əlaqələrini aşkarlamaqdır.</p>
+<div class="grid2">
+<div class="panel"><h3>Nəzarətli öyrənmə</h3><p><span class="pill">X + y</span></p><p>Model həm xüsusiyyətləri, həm də düzgün cavabları görür. Məsələn, e-poçtun spam olub-olmaması.</p></div>
+<div class="panel"><h3>Nəzarətsiz öyrənmə</h3><p><span class="pill">Yalnız X</span></p><p>Model yalnız xüsusiyyətləri alır və oxşar obyektləri özü qruplaşdırır. Məsələn, müştəri davranışlarının seqmentləşdirilməsi.</p></div>
+</div>
+<h3>Əsas nəzarətsiz öyrənmə məsələləri</h3>
+<table><tr><th>İstiqamət</th><th>Məqsəd</th><th>Nümunə alqoritm</th><th>Tətbiq</th></tr>
+<tr><td>Klasterləşdirmə</td><td>Oxşar obyektləri qruplaşdırmaq</td><td>K-Means, DBSCAN</td><td>Müştəri seqmentasiyası</td></tr>
+<tr><td>Ölçülərin azaldılması</td><td>Çoxölçülü veriləni yığcam təqdim etmək</td><td>PCA</td><td>Vizual təhlil</td></tr>
+<tr><td>Assosiativ qaydalar</td><td>Birgə baş verən hadisələri tapmaq</td><td>Apriori</td><td>Market səbəti təhlili</td></tr>
+<tr><td>Anomaliya aşkarlanması</td><td>Qeyri-adi müşahidələri müəyyən etmək</td><td>Isolation Forest</td><td>Saxtakarlığın aşkarlanması</td></tr></table>
+</section>
+
+<section class="card" id="s92"><h2>9.2. Klasterləşdirmə anlayışı</h2>
+<p>Klasterləşdirmə (Clustering) obyektləri elə qruplara ayırmaqdır ki, eyni klasterdə yerləşən obyektlər bir-birinə mümkün qədər oxşar, müxtəlif klasterlərdə yerləşən obyektlər isə nisbətən fərqli olsun.</p>
+<div class="formula">Daxili klaster məsafəsi ↓ &nbsp;&nbsp; Klasterlərarası fərq ↑</div>
+<p>Klasterləşdirmənin nəticəsi etiketlərin əvvəlcədən məlum olmasını tələb etmir. Klaster nömrəsi (0, 1, 2 və s.) yalnız texniki identifikatordur; “Klaster 0” avtomatik olaraq “yaxşı müştərilər” demək deyil.</p>
+<h3>İnteraktiv klaster nümunəsi</h3>
+<p>Aşağıdakı nöqtələr iki ölçülü müstəvidə verilmişdir. Klaster sayını dəyişərək qruplaşdırmanın necə dəyişdiyini müşahidə edin.</p>
+<div class="panel">
+<label>Klaster sayı: <b id="kshow">2</b></label><input id="kclusters" type="range" min="2" max="4" value="2" oninput="drawDemo()">
+<canvas id="clusterCanvas" width="760" height="330"></canvas>
+<div class="small">Tədris vizualizasiyasıdır: rənglər nümunə qrupları göstərir, real alqoritm nəticəsi kimi qəbul edilməməlidir.</div>
+</div>
+</section>
+
+<section class="card" id="s93"><h2>9.3. Klasterləşdirmədə məsafə ölçüləri</h2>
+<p>Klasterləşdirmə alqoritmləri obyektlərin oxşarlığını ölçmək üçün məsafə və ya oxşarlıq funksiyalarından istifadə edir. Ölçü seçimi verilənlərin tipindən və problemin mahiyyətindən asılıdır.</p>
+<table><tr><th>Ölçü</th><th>İstifadə xüsusiyyəti</th><th>Qeyd</th></tr>
+<tr><td>Evklid məsafəsi</td><td>Həndəsi düzxətli məsafə</td><td>Ölçülər müqayisə edilə bilən miqyasda olmalıdır</td></tr>
+<tr><td>Manhattan məsafəsi</td><td>Koordinat fərqlərinin mütləq cəmi</td><td>Şəhər küçələri üzrə hərəkət analogiyası</td></tr>
+<tr><td>Minkowski məsafəsi</td><td>Ümumiləşdirilmiş məsafə</td><td>Parametr p ilə fərqli metriklər alınır</td></tr>
+<tr><td>Kosinus məsafəsi</td><td>Vektorların istiqamət fərqi</td><td>Mətn və yüksəkölçülü vektorlar üçün faydalıdır</td></tr></table>
+</section>
+
+<section class="card" id="s94"><h2>9.4. Evklid və Manhattan məsafələri</h2>
+<p>İki nöqtə A(x₁,y₁) və B(x₂,y₂) üçün Evklid məsafəsi koordinatlar arasındakı düz xətt məsafəsidir.</p>
+<div class="formula">d<sub>E</sub>(A,B) = √[(x₂−x₁)² + (y₂−y₁)²]</div>
+<p>Manhattan məsafəsi koordinat fərqlərinin mütləq qiymətlərinin cəmidir.</p>
+<div class="formula">d<sub>M</sub>(A,B) = |x₂−x₁| + |y₂−y₁|</div>
+<div class="panel">
+<h3>Məsafə kalkulyatoru</h3>
+<div class="grid3">
+<label>x₁ <input id="x1" type="number" value="1"></label><label>y₁ <input id="y1" type="number" value="2"></label><label>x₂ <input id="x2" type="number" value="4"></label><label>y₂ <input id="y2" type="number" value="6"></label>
+</div><button onclick="calcDistance()">Məsafələri hesabla</button><div id="distResult" class="result">Nəticə: Evklid = 5, Manhattan = 7</div>
+</div>
+<p><b>Hesablama nümunəsi:</b> A(1,2), B(4,6). Evklid məsafəsi √(3²+4²)=5; Manhattan məsafəsi |3|+|4|=7.</p>
+<div class="warn"><b>Vacib:</b> məsafə hesablamasından əvvəl xüsusiyyətlərin miqyasını yoxlayın. Məsələn, “gəlir” minlərlə, “yaş” onluqlarla ölçülürsə, miqyaslandırma aparılmadıqda gəlir məsafəyə həddindən artıq təsir edə bilər.</div>
+</section>
+
+<section class="card" id="s95"><h2>9.5. K-Means alqoritminin iş prinsipi</h2>
+<p>K-Means verilənləri əvvəlcədən seçilmiş K sayda klasterə bölən iterativ alqoritmdir. Hər klaster mərkəz (centroid) ilə təmsil olunur. Alqoritm müşahidələri ən yaxın mərkəzə təyin edir, sonra mərkəzləri yenidən hesablayır.</p>
+<div class="formula">J = Σ<sub>k=1</sub><sup>K</sup> Σ<sub>xᵢ∈Cₖ</sub> ||xᵢ − μₖ||²</div>
+<p>Burada Cₖ — k-cı klaster, μₖ — həmin klasterin centroid-i, J isə klasterdaxili kvadrat məsafələrin cəmidir (WCSS/Inertia).</p>
+<div class="grid2">
+<div class="panel"><h3>Alqoritmin mərhələləri</h3><ol><li>K klaster sayını seç.</li><li>İlkin centroid-ləri təyin et.</li><li>Hər nöqtəni ən yaxın centroid-ə bağla.</li><li>Hər klasterin orta nöqtəsini hesabla.</li><li>Təyinatlar sabitləşənədək təkrarla.</li></ol></div>
+<div class="panel"><h3>Üstünlüklər və məhdudiyyətlər</h3><ul><li>Sürətli və sadədir.</li><li>Böyük verilənlərdə praktikdir.</li><li>K əvvəlcədən seçilməlidir.</li><li>Kənar qiymətlərə həssasdır.</li><li>Qeyri-sferik klasterlərdə zəif nəticə verə bilər.</li></ul></div>
+</div>
+<h3>İnteraktiv iş prinsipi</h3><canvas id="kmeansCanvas" width="760" height="330"></canvas>
+<button onclick="nextKStep()">Növbəti addım</button><button class="secondary" onclick="resetKSteps()">Sıfırla</button><span id="kstepText" class="pill">Başlanğıc: ilkin mərkəzlər</span>
+</section>
+
+<section class="card" id="s96"><h2>9.6. K-Means alqoritminin addım-addım hesablanması</h2>
+<p>Kiçik verilənlər çoxluğu götürək: A(1,1), B(1,2), C(2,1), D(8,8), E(9,8), F(8,9). K=2 seçilir və ilkin mərkəzlər μ₁=(1,1), μ₂=(8,8) qəbul edilir.</p>
+<table><tr><th>Nöqtə</th><th>d(N, μ₁)</th><th>d(N, μ₂)</th><th>Təyinat</th></tr>
+<tr><td>A(1,1)</td><td>0</td><td>√98 ≈ 9.90</td><td>C₁</td></tr><tr><td>B(1,2)</td><td>1</td><td>√85 ≈ 9.22</td><td>C₁</td></tr>
+<tr><td>C(2,1)</td><td>1</td><td>√85 ≈ 9.22</td><td>C₁</td></tr><tr><td>D(8,8)</td><td>√98 ≈ 9.90</td><td>0</td><td>C₂</td></tr>
+<tr><td>E(9,8)</td><td>√113 ≈ 10.63</td><td>1</td><td>C₂</td></tr><tr><td>F(8,9)</td><td>√113 ≈ 10.63</td><td>1</td><td>C₂</td></tr></table>
+<p>Yeni mərkəzlər:</p><div class="formula">μ₁ = ((1+1+2)/3, (1+2+1)/3) = (1.33, 1.33)</div><div class="formula">μ₂ = ((8+9+8)/3, (8+8+9)/3) = (8.33, 8.33)</div>
+<div class="note">Bu nümunədə qruplar aydın ayrıldığı üçün növbəti iterasiyada da təyinatlar dəyişmir və alqoritm sabit vəziyyətə çatır.</div>
+<h3>İnteraktiv praktiki həll: centroid-i özünüz hesablayın</h3>
+<p>Klasterə daxil olan nöqtələrin koordinatlarını daxil edin. Sistem arifmetik orta ilə yeni centroid-i hesablayacaq.</p>
+<div class="panel">
+<div class="grid2"><label>X koordinatları (vergüllə) <input id="xs" value="1,1,2"></label><label>Y koordinatları (vergüllə) <input id="ys" value="1,2,1"></label></div>
+<button onclick="calcCentroid()">Centroid-i hesabla</button><div id="centroidResult" class="result">Yeni centroid: (1.33, 1.33)</div>
+</div>
+</section>
+
+<section class="card" id="s97"><h2>9.7. Optimal klaster sayının müəyyənləşdirilməsi</h2>
+<p>K seçimi klasterləşdirmənin əsas qərarlarından biridir. Çox kiçik K fərqli qrupları birləşdirə, çox böyük K isə təbii qrupları süni şəkildə parçalaya bilər. Universal optimal K yoxdur; nəticə verilənlərə, məqsədə və şərh edilə bilməyə əsasən qiymətləndirilməlidir.</p>
+<table><tr><th>Yanaşma</th><th>Nəyi qiymətləndirir?</th><th>Şərh</th></tr><tr><td>Elbow Method</td><td>WCSS-in azalması</td><td>Azalmanın sürətinin kəskin zəiflədiyi nöqtə</td></tr><tr><td>Silhouette Score</td><td>Daxili sıxlıq və ayrılma</td><td>Yüksək orta bal daha yaxşı ayrılmaya işarədir</td></tr><tr><td>Domain knowledge</td><td>Praktiki məna</td><td>Klasterlər qərar verməyə yararlı olmalıdır</td></tr></table>
+</section>
+
+<section class="card" id="s98"><h2>9.8. Elbow Method</h2>
+<p>Elbow Method müxtəlif K qiymətləri üçün K-Means modelinin WCSS (inertia) göstəricisini hesablayır. K artdıqca WCSS azalır. “Dirsək” nöqtəsindən sonra əlavə klasterlərin faydası nisbətən azalır.</p>
+<div class="formula">WCSS = Σ<sub>k</sub> Σ<sub>x∈Cₖ</sub> ||x − μₖ||²</div>
+<div class="panel"><h3>Elbow qrafiki simulyatoru</h3><label>Dirsək nöqtəsi: <b id="elbowVal">3</b></label><input type="range" id="elbowK" min="2" max="6" value="3" oninput="drawElbow()"><canvas id="elbowCanvas" width="760" height="300"></canvas><div id="elbowText" class="result">Təxmini seçim: K=3</div></div>
+<p><b>Məhdudiyyət:</b> qrafikdə dirsək həmişə aydın görünmür. Buna görə Silhouette Score, klasterlərin interpretasiyası və domen biliyi ilə birlikdə istifadə edilməlidir.</p>
+</section>
+
+<section class="card" id="s99"><h2>9.9. Silhouette Score</h2>
+<p>Silhouette əmsalı hər obyekt üçün öz klasterinə yaxınlığı və ən yaxın qonşu klasterdən uzaqlığı müqayisə edir.</p>
+<div class="formula">s(i) = (b(i) − a(i)) / max(a(i), b(i))</div>
+<ul><li>a(i): obyektin öz klasterindəki digər obyektlərə orta məsafəsi.</li><li>b(i): obyekt üçün ən yaxın alternativ klasterə orta məsafə.</li><li>s(i) 1-ə yaxın olduqda obyekt yaxşı yerləşib; 0 ətrafında olduqda sərhəddədir; mənfi olduqda yanlış klasterə düşmüş ola bilər.</li></ul>
+<div class="panel"><h3>Silhouette əmsalı kalkulyatoru</h3><div class="grid2"><label>a(i) — daxili orta məsafə <input type="number" id="silA" value="2" min="0" step=".1"></label><label>b(i) — qonşu klaster məsafəsi <input type="number" id="silB" value="5" min="0" step=".1"></label></div><button onclick="calcSil()">Əmsalı hesabla</button><div id="silResult" class="result">s = 0.60</div></div>
+</section>
+
+<section class="card" id="s910"><h2>9.10. Hierarchical Clustering</h2>
+<p>İyerarxik klasterləşdirmə obyektlər arasında çoxsəviyyəli qruplaşma qurur. Aqqlomerativ yanaşmada əvvəlcə hər obyekt ayrıca klaster sayılır, sonra ən yaxın klasterlər birləşdirilir. Diviziv yanaşmada isə bütün obyektlər bir qrupdan başlayaraq bölünür.</p>
+<h3>Klasterlərarası məsafənin hesablanması</h3>
+<table><tr><th>Metod</th><th>Qayda</th><th>Xüsusiyyət</th></tr><tr><td>Single linkage</td><td>Ən yaxın iki obyektin məsafəsi</td><td>Zəncirvari klasterlər yarada bilər</td></tr><tr><td>Complete linkage</td><td>Ən uzaq iki obyektin məsafəsi</td><td>Daha kompakt qruplar yarada bilər</td></tr><tr><td>Average linkage</td><td>Bütün cüt məsafələrin ortası</td><td>Orta kompromis yanaşması</td></tr><tr><td>Ward</td><td>Birləşmədən yaranan dispersiya artımı</td><td>Çox vaxt kompakt klasterlər yaradır</td></tr></table>
+<div class="panel"><h3>Dendroqramın interaktiv sxemi</h3><canvas id="dendroCanvas" width="760" height="270"></canvas><label>Birləşmə həddi: <b id="cutValue">5</b></label><input id="cutRange" type="range" min="1" max="9" value="5" oninput="drawDendro()"><div id="dendroText" class="result">Kəsim səviyyəsinə görə qruplar dəyişir.</div></div>
+<p>Dendroqramda şaquli ox birləşmə məsafəsini, budaqlar isə obyektlərin və klasterlərin birləşmə ardıcıllığını göstərir. Üfüqi kəsim xətti seçilən klaster sayını müəyyən etməyə kömək edir.</p>
+</section>
+
+<section class="card" id="s911"><h2>9.11. DBSCAN alqoritmi</h2>
+<p>DBSCAN (Density-Based Spatial Clustering of Applications with Noise) sıxlıq əsaslı klasterləşdirmə alqoritmidir. O, klasterləri sıx yerləşmiş nöqtələrdən formalaşdırır və seyrək nöqtələri səs-küy (noise) kimi işarələyə bilir.</p>
+<div class="formula">ε — qonşuluq radiusu &nbsp;&nbsp; MinPts — sıxlıq üçün minimum nöqtə sayı</div>
+<table><tr><th>Nöqtə tipi</th><th>Meyar</th><th>Rolu</th></tr><tr><td>Core point</td><td>ε qonşuluğunda ən azı MinPts nöqtə</td><td>Klasterin nüvəsi</td></tr><tr><td>Border point</td><td>Core nöqtənin qonşuluğundadır, lakin özü sıxlıq şərtini ödəmir</td><td>Klasterin sərhəd üzvü</td></tr><tr><td>Noise point</td><td>Heç bir klasterə sıxlıqla qoşulmur</td><td>Kənar müşahidə</td></tr></table>
+<div class="grid2"><div class="panel"><h3>Üstünlüklər</h3><ul><li>Klaster sayı əvvəlcədən tələb olunmur.</li><li>Qeyri-müntəzəm formalı klasterləri tapa bilər.</li><li>Səs-küy nöqtələrini ayırır.</li></ul></div><div class="panel"><h3>Məhdudiyyətlər</h3><ul><li>ε və MinPts seçimi vacibdir.</li><li>Dəyişkən sıxlıqlı qruplarda çətinlik çəkir.</li><li>Yüksək ölçülülükdə məsafə anlayışı zəifləyə bilər.</li></ul></div></div>
+<h3>DBSCAN parametrlərinin interaktiv izahı</h3>
+<div class="panel"><label>ε radiusu: <b id="epsVal">1.2</b></label><input id="epsRange" type="range" min="5" max="30" value="12" oninput="drawDB()"><br><label>MinPts: <b id="minPtsVal">4</b></label><input id="minPtsRange" type="range" min="2" max="8" value="4" oninput="drawDB()"><canvas id="dbCanvas" width="760" height="300"></canvas><div id="dbText" class="result">Parametrləri dəyişərək sıxlıq qonşuluğunun təsirini müşahidə edin.</div></div>
+</section>
+
+<section class="card" id="s912"><h2>9.12. Klasterlərin vizuallaşdırılması və şərhi</h2>
+<p>Klasterləşdirmə nəticələrinin vizuallaşdırılması qrupların ayrılmasını, üst-üstə düşməsini, sıxlığını və kənar nöqtələri anlamağa kömək edir. İki xüsusiyyət olduqda scatter plot istifadə edilə bilər. Çoxölçülü verilənlərdə PCA və ya digər ölçüazaltma metodları ilə 2D təqdimat qurula bilər.</p>
+<div class="grid2">
+<div class="panel"><h3>Vizual təhlil üsulları</h3><ul><li>Scatter plot — iki xüsusiyyət üzrə nöqtələr.</li><li>Dendroqram — iyerarxik birləşmələr.</li><li>Silhouette plot — obyektlərin klaster uyğunluğu.</li><li>Heatmap — klaster profilləri və xüsusiyyət ortaları.</li></ul></div>
+<div class="panel"><h3>Klasterin şərhi</h3><ul><li>Hər klaster üzrə orta/median xüsusiyyətləri hesabla.</li><li>Klasterləri domen biliyi ilə təsvir et.</li><li>Klaster nömrələrini məna daşıyan adlarla qarışdırma.</li><li>Stabilliyi və təkrarolunmanı yoxla.</li></ul></div>
+</div>
+<h3>Klaster profillərinin müqayisəsi</h3>
+<table><tr><th>Klaster</th><th>Orta yaş</th><th>Orta alış sayı</th><th>Şərti profil</th></tr><tr><td>0</td><td>22</td><td>2.1</td><td>Gənc, aşağı aktivlik</td></tr><tr><td>1</td><td>39</td><td>8.4</td><td>Orta yaş, yüksək aktivlik</td></tr><tr><td>2</td><td>56</td><td>3.0</td><td>Yuxarı yaş, orta-aşağı aktivlik</td></tr></table>
+<div class="warn">Klaster profilləri nümunə xarakterlidir. Real tətbiqdə belə etiketlər yalnız statistik göstəricilər və sahə ekspertinin qiymətləndirməsi əsasında verilməlidir.</div>
+</section>
+
+<section class="card" id="practice"><h2>Praktiki tapşırıqlar</h2>
+<div class="grid3">
+<div class="panel"><span class="pill">Başlanğıc</span><h3>Tapşırıq 1</h3><p>Verilmiş 8 ikiölçülü nöqtə üçün Evklid və Manhattan məsafələrini hesablayın. Ən yaxın nöqtə cütünü müəyyən edin.</p></div>
+<div class="panel"><span class="pill">Orta</span><h3>Tapşırıq 2</h3><p>Müştəri verilənləri üzərində K-Means tətbiq edin. K=2…8 üçün Elbow qrafiki və Silhouette Score hesablayın.</p></div>
+<div class="panel"><span class="pill">Tədqiqat</span><h3>Tapşırıq 3</h3><p>Eyni verilənlərə K-Means, Hierarchical Clustering və DBSCAN tətbiq edin. Nəticələri daxili metriklər, vizuallaşdırma və domen şərhi ilə müqayisə edin.</p></div>
+</div>
+</section>
+
+<section class="card" id="quiz"><h2>Özünü yoxlama sualları</h2>
+<p>Sualları cavablandırın. Sonda nəticəniz və düzgün cavabların izahı göstəriləcək.</p>
+<div id="quizBox"></div><button class="green" onclick="gradeQuiz()">Cavabları yoxla</button><button class="secondary" onclick="resetQuiz()">Yenidən başla</button><div id="quizScore" class="result" aria-live="polite">Cavablarınızı seçdikdən sonra yoxlama düyməsini basın.</div>
+</section>
+
+<section class="card" id="lab"><h2>Laboratoriya işi №9: K-Means, Hierarchical Clustering və DBSCAN alqoritmlərinin tətbiqi və müqayisəsi</h2>
+<h3>1. İşin məqsədi</h3><p>Etiketlənməmiş verilənlər çoxluğu üzərində üç klasterləşdirmə alqoritmini tətbiq etmək, parametrlərin təsirini araşdırmaq və nəticələri müqayisə etmək.</p>
+<h3>2. İstifadə olunan vasitələr</h3><ul><li>Python 3, Jupyter Notebook və ya Google Colab;</li><li>NumPy, Pandas, Matplotlib, Seaborn;</li><li>Scikit-learn: KMeans, AgglomerativeClustering, DBSCAN, StandardScaler, silhouette_score.</li></ul>
+<h3>3. Verilənlər</h3><p>Tədris məqsədilə Scikit-learn kitabxanasının make_blobs funksiyası ilə sintetik verilənlər yaradılır. Sintetik verilənlər alqoritmlərin davranışını idarə olunan şəraitdə müqayisə etməyə imkan verir.</p>
+<h3>4. İcra mərhələləri</h3><ol><li>Kitabxanaları import edin.</li><li>Sintetik verilənlər yaradın və ilkin qrafiki qurun.</li><li>Verilənləri miqyaslandırın.</li><li>K-Means modelini qurun və K üçün bir neçə qiyməti yoxlayın.</li><li>Aqqlomerativ klasterləşdirməni tətbiq edin.</li><li>DBSCAN üçün eps və min_samples parametrlərini dəyişin.</li><li>Klaster etiketlərini vizuallaşdırın.</li><li>Silhouette Score və klaster sayı ilə nəticələri müqayisə edin.</li></ol>
+<h3>5. Python kodu</h3>
+<pre class="code">import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.datasets import make_blobs
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN
+from sklearn.metrics import silhouette_score
+
+# 1. Nümunə verilənlər
+X, y_true = make_blobs(
+    n_samples=450,
+    centers=4,
+    cluster_std=0.75,
+    random_state=42
+)
+
+# 2. Miqyaslandırma
+X_scaled = StandardScaler().fit_transform(X)
+
+# 3. K-Means
+kmeans = KMeans(n_clusters=4, n_init=10, random_state=42)
+labels_km = kmeans.fit_predict(X_scaled)
+
+# 4. Hierarchical Clustering
+hier = AgglomerativeClustering(n_clusters=4, linkage="ward")
+labels_h = hier.fit_predict(X_scaled)
+
+# 5. DBSCAN
+dbscan = DBSCAN(eps=0.25, min_samples=5)
+labels_db = dbscan.fit_predict(X_scaled)
+
+# 6. Silhouette: ən azı 2 klaster və səs-küy xaric
+def safe_silhouette(X, labels):
+    mask = labels != -1
+    valid = labels[mask]
+    if len(set(valid)) < 2 or len(set(valid)) >= len(valid):
+        return None
+    return silhouette_score(X[mask], valid)
+
+print("K-Means:", safe_silhouette(X_scaled, labels_km))
+print("Hierarchical:", safe_silhouette(X_scaled, labels_h))
+print("DBSCAN:", safe_silhouette(X_scaled, labels_db))
+
+# 7. Nəticələrin vizuallaşdırılması
+fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+for ax, labels, title in zip(
+    axes,
+    [labels_km, labels_h, labels_db],
+    ["K-Means", "Hierarchical", "DBSCAN"]
+):
+    ax.scatter(X_scaled[:, 0], X_scaled[:, 1],
+               c=labels, cmap="tab10", s=18)
+    ax.set_title(title)
+    ax.set_xlabel("X1")
+    ax.set_ylabel("X2")
+plt.tight_layout()
+plt.show()</pre>
+<h3>6. Kodun izahı və nəticələrin təhlili</h3>
+<table><tr><th>Hissə</th><th>İzah</th></tr><tr><td>make_blobs</td><td>Əvvəlcədən müəyyən edilmiş mərkəzlər ətrafında sintetik nöqtələr yaradır.</td></tr><tr><td>StandardScaler</td><td>Hər xüsusiyyəti orta 0 və standart kənarlaşma 1 miqyasına gətirir.</td></tr><tr><td>KMeans</td><td>Verilənləri K=4 klasterə ayırır; n_init bir neçə başlanğıcı yoxlayır.</td></tr><tr><td>AgglomerativeClustering</td><td>Ward meyarı ilə klasterləri iyerarxik birləşdirir.</td></tr><tr><td>DBSCAN</td><td>Sıxlıq əsasında qrupları və -1 etiketi ilə səs-küyü aşkarlayır.</td></tr><tr><td>Silhouette</td><td>Klasterdaxili uyğunluq və klasterlərarası ayrılmanı ümumiləşdirir.</td></tr></table>
+<div class="note"><b>Metodoloji qeyd:</b> DBSCAN nəticəsində -1 səs-küy etiketidir. Silhouette hesablanarkən səs-küyün xaric edilməsi burada sadələşdirilmiş tədris yanaşmasıdır; real tədqiqatda səs-küyün payı ayrıca hesabatlandırılmalıdır. DBSCAN yalnız bir klaster və ya hər nöqtəyə ayrıca etiket verərsə, Silhouette Score hesablamaq mümkün deyil.</div>
+<h3>7. Müqayisə cədvəli üçün hesabat</h3>
+<table><tr><th>Meyar</th><th>K-Means</th><th>Hierarchical</th><th>DBSCAN</th></tr><tr><td>Klaster sayı</td><td>Tələbə doldurur</td><td>Tələbə doldurur</td><td>Tələbə doldurur</td></tr><tr><td>Səs-küy nöqtələri</td><td>Adətən ayrıca ayırmır</td><td>Adətən ayrıca ayırmır</td><td>Aşkarlaya bilir</td></tr><tr><td>Silhouette Score</td><td>Tələbə doldurur</td><td>Tələbə doldurur</td><td>Tələbə doldurur / mümkün deyilsə səbəbini yazır</td></tr><tr><td>Hesablama vaxtı</td><td>Tələbə ölçür</td><td>Tələbə ölçür</td><td>Tələbə ölçür</td></tr></table>
+<h3>8. Nəzarət sualları</h3><ol><li>K-Means alqoritmində centroid necə hesablanır?</li><li>Elbow Method hansı göstəricidən istifadə edir?</li><li>Silhouette Score-un mənfi olması nəyi göstərə bilər?</li><li>DBSCAN-də core və border nöqtələrinin fərqi nədir?</li><li>Hierarchical Clustering üçün linkage metodları nəticəyə necə təsir edir?</li></ol>
+<h3>9. Hesabatın strukturu</h3><ol><li>Laboratoriya işinin adı və məqsədi;</li><li>Verilənlər çoxluğu və ilkin vizuallaşdırma;</li><li>İstifadə edilən alqoritmlər və parametrlər;</li><li>Python kodu və alınmış qrafiklər;</li><li>Müqayisə cədvəli və metriklər;</li><li>Nəticələrin şərhi, məhdudiyyətlər və yekun nəticə.</li></ol>
+</section>
+
+<section class="card" id="glossary"><h2>Terminlər lüğəti</h2>
+<table><tr><th>Termin</th><th>Azərbaycan dilində qarşılığı / izahı</th></tr>
+<tr><td>Unsupervised Learning</td><td>Nəzarətsiz öyrənmə — etiketlənməmiş verilənlərdən struktur öyrənilməsi</td></tr>
+<tr><td>Clustering</td><td>Klasterləşdirmə — oxşar obyektlərin qruplaşdırılması</td></tr><tr><td>Centroid</td><td>Klaster mərkəzi — klaster nöqtələrinin koordinat ortası</td></tr><tr><td>WCSS / Inertia</td><td>Klasterdaxili kvadrat məsafələrin cəmi</td></tr><tr><td>Elbow Method</td><td>Dirsək metodu — K seçimi üçün WCSS qrafikinin təhlili</td></tr><tr><td>Silhouette Score</td><td>Klaster uyğunluğu və ayrılma əmsalı</td></tr><tr><td>Dendrogram</td><td>İyerarxik birləşmələri göstərən ağac diaqramı</td></tr><tr><td>Density</td><td>Sıxlıq — müəyyən qonşuluqda nöqtələrin konsentrasiyası</td></tr><tr><td>Noise</td><td>Səs-küy — klasterə aid edilməyən müşahidə</td></tr><tr><td>Feature Scaling</td><td>Əlamətlərin miqyaslandırılması</td></tr></table>
+</section>
+
+<section class="card" id="refs"><h2>İstifadə olunan ədəbiyyat</h2>
+<ol>
+<li>Alpaydın, E. (2021). <i>Machine Learning: The New AI</i>. MIT Press. <a href="https://mitpress.mit.edu/9780262542524/machine-learning/" target="_blank" rel="noopener">Nəşriyyat səhifəsi</a>.</li>
+<li>Géron, A. (2022). <i>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</i> (3rd ed.). O’Reilly Media. <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/" target="_blank" rel="noopener">Kitab səhifəsi</a>.</li>
+<li>Murphy, K. P. (2022). <i>Probabilistic Machine Learning: An Introduction</i>. MIT Press. <a href="https://probml.github.io/pml-book/book1.html" target="_blank" rel="noopener">Elektron resurs</a>.</li>
+<li>Rafiq R. Əliyev (2026). <i>Süni intellekt</i>. Azərnəşr.</li>
+<li>Scikit-learn Developers. <i>Clustering</i>. <a href="https://scikit-learn.org/stable/modules/clustering.html" target="_blank" rel="noopener">Rəsmi sənədləşmə</a>.</li>
+<li>Scikit-learn Developers. <i>Clustering performance evaluation</i>. <a href="https://scikit-learn.org/stable/modules/clustering.html#clustering-performance-evaluation" target="_blank" rel="noopener">Rəsmi sənədləşmə</a>.</li>
+<li>Scikit-learn Developers. <i>KMeans API</i>. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html" target="_blank" rel="noopener">API arayışı</a>.</li>
+<li>Scikit-learn Developers. <i>DBSCAN API</i>. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html" target="_blank" rel="noopener">API arayışı</a>.</li>
+<li>Scikit-learn Developers. <i>AgglomerativeClustering API</i>. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html" target="_blank" rel="noopener">API arayışı</a>.</li>
+</ol>
+</section>
+<footer>MDU · Riyaziyyat və İnformasiya Texnologiyaları fakültəsi · Süni intellekt və maşın öyrənməsi</footer>
+</main></div>
+<script>
+const pts=[[90,80],[110,105],[125,75],[300,240],[325,215],[340,250],[520,85],[545,110],[570,75],[650,245],[675,220],[700,255]];
+function drawPoints(canvas, labels=null){const c=document.getElementById(canvas),ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.strokeStyle='#e6edf4';for(let x=30;x<c.width;x+=50){ctx.beginPath();ctx.moveTo(x,15);ctx.lineTo(x,c.height-20);ctx.stroke()}for(let y=20;y<c.height;y+=50){ctx.beginPath();ctx.moveTo(20,y);ctx.lineTo(c.width-15,y);ctx.stroke()}const colors=['#2474b8','#e18b32','#26966b','#9363b6'];pts.forEach((p,i)=>{ctx.beginPath();ctx.arc(p[0],p[1],7,0,Math.PI*2);ctx.fillStyle=colors[labels?labels[i]:Math.floor(i/3)%4];ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke()})}
+function drawDemo(){document.getElementById('kshow').textContent=document.getElementById('kclusters').value;let k=+document.getElementById('kclusters').value;drawPoints('clusterCanvas',pts.map((p,i)=>Math.min(k-1,Math.floor(i/(12/k)))));}
+let step=0;function drawK(){drawPoints('kmeansCanvas');let c=document.getElementById('kmeansCanvas'),x=c.getContext('2d');let centers=step===0?[[90,80],[700,255]]:step===1?[[108,87],[650,230]]:[[108,87],[650,230]];centers.forEach((p)=>{x.beginPath();x.arc(p[0],p[1],13,0,7);x.fillStyle='#d33';x.fill();x.strokeStyle='#fff';x.lineWidth=3;x.stroke()});document.getElementById('kstepText').textContent=['Başlanğıc: ilkin mərkəzlər','Nöqtələr ən yaxın mərkəzə təyin edildi','Centroid-lər yeniləndi; sabitliyə yaxınlaşdı'][step]}
+function nextKStep(){step=Math.min(2,step+1);drawK()}function resetKSteps(){step=0;drawK()}
+function calcDistance(){let a=+x1.value,b=+y1.value,c=+x2.value,d=+y2.value;let dx=c-a,dy=d-b;distResult.textContent=`Evklid: √(${dx}² + ${dy}²) = ${Math.hypot(dx,dy).toFixed(3)}; Manhattan: |${dx}| + |${dy}| = ${Math.abs(dx)+Math.abs(dy)}`;}
+function calcCentroid(){let X=xs.value.split(',').map(Number),Y=ys.value.split(',').map(Number);if(!X.length||X.length!==Y.length||X.some(Number.isNaN)||Y.some(Number.isNaN)){centroidResult.textContent='X və Y siyahılarında eyni sayda düzgün ədədlər daxil edin.';return}centroidResult.textContent=`Nöqtələrin sayı: ${X.length}. μx = ${X.reduce((a,b)=>a+b,0)/X.length.toFixed?.(2)}; μy = ${(Y.reduce((a,b)=>a+b,0)/Y.length).toFixed(2)}`;centroidResult.textContent=`Nöqtələrin sayı: ${X.length}. Yeni centroid = (${(X.reduce((a,b)=>a+b,0)/X.length).toFixed(2)}, ${(Y.reduce((a,b)=>a+b,0)/Y.length).toFixed(2)})`;}
+function drawElbow(){let k=+elbowK.value;elbowVal.textContent=k;let c=elbowCanvas,ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);let vals=[210,130,82,65,55,49];ctx.strokeStyle='#2463a6';ctx.lineWidth=3;ctx.beginPath();vals.forEach((v,i)=>{let x=80+i*110,y=250-v*.85;i?ctx.lineTo(x,y):ctx.moveTo(x,y);ctx.fillStyle=i+2===k?'#d44':'#2463a6';ctx.fillRect(x-5,y-5,10,10);ctx.fillText('K='+(i+2),x-16,278)});ctx.stroke();ctx.fillStyle='#435';ctx.fillText('WCSS',18,25);elbowText.textContent=`Seçilmiş tədris nümunəsi: K=${k}. Qrafikdə K artdıqca WCSS azalır; dirsəkdən sonrakı azalma zəifləyir.`}
+function calcSil(){let a=+silA.value,b=+silB.value;if(a<0||b<0||Math.max(a,b)===0){silResult.textContent='a və b sıfırdan böyük məsafələr olmalıdır.';return}let s=(b-a)/Math.max(a,b);silResult.textContent=`Silhouette s = (${b} − ${a}) / max(${a}, ${b}) = ${s.toFixed(3)}. `+(s>0.5?'Müşahidə klasterinə nisbətən yaxşı uyğunlaşıb.':s>=0?'Klaster sərhədinə yaxın ola bilər.':'Yanlış klasterə təyin olunma ehtimalı var.')}
+function drawDendro(){let cut=+cutRange.value;cutValue.textContent=cut;let c=dendroCanvas,x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);x.strokeStyle='#2463a6';x.lineWidth=3;let leaves=[80,190,300,410,520,630];leaves.forEach((v,i)=>{x.beginPath();x.moveTo(v,230);x.lineTo(v,170);x.stroke()});[[80,190,170],[300,410,150],[520,630,190],[135,355,110],[575,230,130],[245,465,75],[355,355,45]].forEach((a,i)=>{let [l,r,y]=a;x.beginPath();x.moveTo(l,y);x.lineTo(r,y);x.moveTo(l,y);x.lineTo(l,i<3?230:([170,150,190][i-3]||110));x.moveTo(r,y);x.lineTo(r,i<3?230:([170,150,190][i-3]||110));x.stroke()});x.setLineDash([7,5]);x.strokeStyle='#d04b4b';x.beginPath();x.moveTo(35,230-cut*20);x.lineTo(700,230-cut*20);x.stroke();x.setLineDash([]);dendroText.textContent=`Kəsim həddi ${cut}: üfüqi xəttin üstündə birləşməyən budaqlar ayrıca qrup kimi qalır.`}
+function drawDB(){let eps=+epsRange.value/10,min=+minPtsRange.value;epsVal.textContent=eps.toFixed(1);minPtsVal.textContent=min;let c=dbCanvas,x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);let groups=[[],[],[]];for(let i=0;i<30;i++){let g=i%3,base=[[150,130],[390,150],[610,120]][g];groups[g].push([base[0]+Math.sin(i*2.2)*35,base[1]+Math.cos(i*1.7)*28])}groups.flat().forEach(p=>{x.beginPath();x.arc(p[0],p[1],5,0,7);x.fillStyle='#2777b5';x.fill()});x.strokeStyle='#d44';x.beginPath();x.arc(150,130,eps*22,0,7);x.stroke();dbText.textContent=`ε=${eps.toFixed(1)}, MinPts=${min}. Radius artdıqca qonşuluq genişlənir; MinPts artdıqca core point olmaq üçün daha çox qonşu tələb olunur.`}
+const questions=[
+{q:'Nəzarətsiz öyrənmədə modelə hansı məlumat təqdim olunur?',o:['Yalnız etiketlər','Giriş xüsusiyyətləri, hədəf etiketi olmadan','Yalnız düzgün cavablar','Yalnız model proqnozları'],a:1,e:'Nəzarətsiz öyrənmə etiketlənməmiş giriş xüsusiyyətlərindən struktur öyrənir.'},
+{q:'Klasterləşdirmənin əsas məqsədi nədir?',o:['Obyektləri oxşarlığa görə qruplaşdırmaq','Hər obyekt üçün qiymət proqnozlaşdırmaq','Mətnləri tərcümə etmək','Verilənləri şifrələmək'],a:0,e:'Klasterləşdirmə oxşar müşahidələri eyni qrupa toplamağa çalışır.'},
+{q:'A(1,2) və B(4,6) nöqtələrinin Evklid məsafəsi neçədir?',o:['5','7','3','25'],a:0,e:'√((4−1)²+(6−2)²)=√(9+16)=5.'},
+{q:'K-Means alqoritmində centroid necə yenilənir?',o:['Koordinatların medianı ilə','Klasterdəki nöqtələrin koordinat ortası ilə','Ən uzaq nöqtə ilə','Təsadüfi etiketlə'],a:1,e:'Standart K-Means hər klasterin koordinat ortasını yeni mərkəz kimi götürür.'},
+{q:'Elbow Method əsasən hansı göstəricinin dəyişməsini izləyir?',o:['Accuracy','WCSS / Inertia','Recall','ROC-AUC'],a:1,e:'Elbow qrafikində K-yə görə klasterdaxili kvadrat məsafələrin cəmi izlənir.'},
+{q:'Silhouette Score hansı intervalda yerləşir?',o:['0 ilə 1','−1 ilə 1','0 ilə 100','−∞ ilə +∞'],a:1,e:'Silhouette əmsalı −1-dən +1-ə qədər qiymət alır.'},
+{q:'DBSCAN üçün MinPts nəyi ifadə edir?',o:['Klasterlərin maksimum sayını','Qonşuluqda sıxlıq nüvəsi üçün tələb edilən minimum nöqtə sayını','Centroid sayını','Xüsusiyyət sayını'],a:1,e:'MinPts ε-qonşuluğunda core point üçün tələb olunan minimum müşahidə sayıdır.'},
+{q:'Hierarchical Clustering nəticəsi adətən hansı diaqramla göstərilir?',o:['Dendroqram','ROC əyrisi','Qarışıqlıq matrisi','Histogram'],a:0,e:'Dendroqram obyektlərin və klasterlərin birləşmə ardıcıllığını göstərir.'},
+{q:'K-Means bütün formalı klasterləri eyni keyfiyyətlə aşkarlayır.',o:['Doğru','Yanlış'],a:1,e:'K-Means əsasən kompakt, təxminən sferik klasterlərdə daha münasibdir; qeyri-müntəzəm formalarda zəifləyə bilər.'},
+{q:'DBSCAN səs-küy müşahidələrini ayrıca işarələyə bilər.',o:['Doğru','Yanlış'],a:0,e:'DBSCAN klasterə daxil etmədiyi müşahidələrə −1 etiketi verə bilər.'}
+];
+function renderQuiz(){quizBox.innerHTML=questions.map((q,i)=>`<div class="quizq" id="qq${i}"><b>${i+1}. ${q.q}</b>${q.o.map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join('')}<div class="feedback" id="fb${i}"></div></div>`).join('')}
+function gradeQuiz(){let score=0;questions.forEach((q,i)=>{let v=document.querySelector(`input[name=q${i}]:checked`),ok=v&&+v.value===q.a;if(ok)score++;let f=document.getElementById('fb'+i);f.textContent=(ok?'Düzgün. ':'Düzgün cavab: '+q.o[q.a]+'. ')+q.e;f.style.color=ok?'#18845b':'#b33b3b'});quizScore.textContent=`Nəticə: ${score}/${questions.length} (${Math.round(score/questions.length*100)}%). ${score>=8?'Çox yaxşı nəticə!':score>=5?'Yaxşı başlanğıcdır; izahları yenidən nəzərdən keçirin.':'Mövzuları təkrar edib yenidən cəhd edin.'}`}
+function resetQuiz(){renderQuiz();quizScore.textContent='Cavablarınızı seçdikdən sonra yoxlama düyməsini basın.'}
+drawDemo();drawK();drawElbow();drawDendro();drawDB();renderQuiz();
+</script>
+<script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

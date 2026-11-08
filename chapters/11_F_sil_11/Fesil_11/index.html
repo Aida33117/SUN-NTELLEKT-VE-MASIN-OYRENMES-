@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fəsil 11. Süni neyron və perseptron</title>
+<style>
+:root{--navy:#163c63;--blue:#2868a5;--pale:#edf5fc;--ink:#203044;--muted:#607286;--line:#d9e3ed;--green:#19845c;--orange:#b76a12;--red:#b33b3b}
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:var(--ink);font:16px/1.68 "Segoe UI",Arial,sans-serif}
+header{background:linear-gradient(120deg,#123657,#2c6fa5);color:#fff;padding:42px max(5vw,22px)}header h1{font-size:clamp(28px,4vw,43px);line-height:1.2;margin:10px 0}header p{max-width:950px;color:#e5eff8;margin:8px 0}.tag{display:inline-block;background:#eaf3fc;color:#174c7c;padding:5px 13px;border-radius:22px;font-size:13px;font-weight:700;margin-right:7px}
+.layout{max-width:1500px;margin:24px auto;padding:0 20px;display:grid;grid-template-columns:280px minmax(0,1fr);gap:23px}
+nav{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:17px}nav h3{margin:0 0 9px;color:var(--navy)}nav a{display:block;text-decoration:none;color:#385975;font-size:13.5px;padding:5px 7px;border-radius:6px}nav a:hover{background:var(--pale);color:var(--blue)}
+main{min-width:0}.card{background:white;border:1px solid var(--line);border-radius:15px;padding:25px;margin-bottom:19px;box-shadow:0 4px 15px #183b5c0a}
+h2{font-size:25px;color:var(--navy);margin:0 0 12px}h3{color:#24547e;margin:21px 0 8px}h4{color:#315b80;margin:12px 0 6px}p{margin:8px 0}.lead{font-size:17px;color:#405970}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.panel{border:1px solid var(--line);background:#fbfdff;border-radius:11px;padding:15px}
+.note{background:#eef6fc;border-left:4px solid #4385bb;padding:13px 15px;border-radius:8px;margin:13px 0}.warn{background:#fff6e9;border-left:4px solid #d18a2d;padding:13px 15px;border-radius:8px;margin:13px 0}
+.formula{background:#f1f5fa;border:1px solid #dce6f0;border-radius:10px;padding:14px;text-align:center;font:19px Cambria,Georgia,serif;margin:12px 0;overflow:auto}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:#edf4fa;color:#244d70}
+button{border:0;border-radius:8px;background:var(--blue);color:white;padding:9px 14px;font-weight:650;cursor:pointer;margin:4px 4px 4px 0}button:hover{filter:brightness(.92)}button.secondary{background:#e7eff7;color:#244e75}button.green{background:var(--green)}
+input,select{padding:8px 10px;border:1px solid #bdcbd9;border-radius:7px;font:inherit;max-width:100%}input[type=range]{vertical-align:middle}
+label{display:inline-block;margin:5px 8px 5px 0}canvas{width:100%;height:300px;display:block;border:1px solid var(--line);border-radius:10px;background:white}
+.result{background:#eef8f3;border:1px solid #c9e8d8;padding:12px;border-radius:9px;margin-top:10px}.small{font-size:13px;color:var(--muted)}.pill{display:inline-block;background:#edf4fa;color:#28547d;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:700}
+.code{background:#102338;color:#e7f0fa;border-radius:10px;padding:16px;overflow:auto;font:13px/1.6 Consolas,monospace;white-space:pre}
+.quizq{border:1px solid var(--line);padding:14px;border-radius:10px;margin:12px 0}.quizq label{display:block}.feedback{font-size:14px;font-weight:600;margin-top:8px}
+.neuron{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:15px 0}.node{border:2px solid #4c83b2;background:#eff6fc;border-radius:50%;width:82px;height:82px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#204e77}.arrow{font-size:23px;color:#51799d}
+footer{text-align:center;color:var(--muted);padding:28px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}nav{position:relative;max-height:none}.grid2,.grid3{grid-template-columns:1fr}.card{padding:18px}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style></head>
+<body>
+<header><span class="tag">Magistratura səviyyəsi</span><span class="tag">Fəsil 11</span>
+<h1>Süni neyron və perseptron</h1>
+<p>Bioloji neyronun iş prinsipindən süni neyronun riyazi modelinə, aktivləşmə funksiyalarından perseptronun öyrənmə qaydasına qədər addım-addım izah və interaktiv nümunələr.</p><div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="layout"><nav><h3>Mündəricat</h3>
+<a href="#intro">Fəslin məqsədi və nəticələri</a>
+<a href="#s111">11.1. Bioloji neyronun quruluşu</a>
+<a href="#s112">11.2. Bioloji və süni neyronların müqayisəsi</a>
+<a href="#s113">11.3. Süni neyronun əsas komponentləri</a>
+<a href="#s114">11.4. Giriş verilənləri (Inputs)</a>
+<a href="#s115">11.5. Çəkilər (Weights)</a>
+<a href="#s116">11.6. Sürüşmə əmsalı (Bias)</a>
+<a href="#s117">11.7. Çəkili cəmin hesablanması</a>
+<a href="#s118">11.8. Aktivləşmə funksiyasının rolu</a>
+<a href="#s119">11.9. Step, Sigmoid, Tanh və ReLU funksiyaları</a>
+<a href="#s1110">11.10. Perceptron modelinin qurulması</a>
+<a href="#s1111">11.11. Perceptronun öyrənmə qaydası</a>
+<a href="#s1112">11.12. AND, OR və XOR məsələləri</a>
+<a href="#s1113">11.13. Birqatlı perceptronun imkanları və məhdudiyyətləri</a>
+<a href="#practice">Praktiki tapşırıqlar</a><a href="#quiz">Özünü yoxlama sualları</a><a href="#lab">Laboratoriya işi №11</a><a href="#glossary">Terminlər lüğəti</a><a href="#refs">İstifadə olunan ədəbiyyat</a>
+</nav><main>
+<section class="card" id="intro"><h2>Fəslin məqsədi və təlim nəticələri</h2>
+<p class="lead">Bu fəslin məqsədi süni neyronun quruluşunu, riyazi hesablanmasını və perseptronun öyrənmə mexanizmini izah etmək, tələbəyə neyronu Python vasitəsilə sıfırdan qurmaq bacarığı qazandırmaqdır.</p>
+<div class="grid2"><div class="panel"><h3>Təlim nəticələri</h3><ul><li>Bioloji neyronun əsas hissələrini izah edir.</li><li>Bioloji və süni neyron arasında analoji əlaqələri müəyyən edir.</li><li>Giriş, çəki və bias anlayışlarını fərqləndirir.</li><li>Çəkili cəmi əl ilə və proqramla hesablayır.</li><li>Step, Sigmoid, Tanh və ReLU funksiyalarını müqayisə edir.</li><li>Perseptron qurur və sadə məntiqi funksiyaları öyrədir.</li></ul></div><div class="panel"><h3>İlkin biliklər</h3><ul><li>Vektorlar və matrislər;</li><li>Ədədi hesablamalar və funksiyalar;</li><li>Python əsasları;</li><li>Təsnifat anlayışı və ikili etiketlər.</li></ul></div></div>
+<div class="note"><b>Əsas ideya:</b> süni neyron girişləri çəkilərlə vurur, nəticələri toplayır, bias əlavə edir və alınan qiyməti aktivləşmə funksiyasından keçirərək çıxış yaradır.</div></section>
+
+<section class="card" id="s111"><h2>11.1. Bioloji neyronun quruluşu</h2>
+<p>Bioloji neyron sinir sisteminin siqnalları qəbul edən, emal edən və digər hüceyrələrə ötürən əsas hüceyrələrindən biridir. Neyronların quruluşu və əlaqələri mürəkkəb sinir şəbəkələrinin fəaliyyətini təmin edir.</p>
+<div class="grid2"><div class="panel"><h3>Bioloji neyronun əsas hissələri</h3><ul><li><b>Dendritlər:</b> digər neyronlardan siqnalları qəbul edir.</li><li><b>Soma (hüceyrə cismi):</b> daxil olan siqnalları inteqrasiya edir.</li><li><b>Akson:</b> elektrik impulsunu hüceyrədən uzağa ötürür.</li><li><b>Sinaps:</b> neyronlar arasında əlaqə nöqtəsidir.</li><li><b>Mielin qişası:</b> bəzi aksonlarda siqnal ötürülməsini sürətləndirir.</li></ul></div><div class="panel"><h3>Bioloji siqnalın sadələşdirilmiş istiqaməti</h3><div class="neuron"><div class="node">Dendrit</div><div class="arrow">→</div><div class="node">Soma</div><div class="arrow">→</div><div class="node">Akson</div><div class="arrow">→</div><div class="node">Sinaps</div></div><p class="small">Sxem tədris məqsədilə sadələşdirilib; real neyronun morfologiyası daha mürəkkəbdir.</p></div></div>
+<h3>Şəkil: neyronun funksional quruluşu</h3><svg viewBox="0 0 900 250" width="100%" role="img" aria-label="Bioloji neyronun hissələrinin sxematik təsviri"><g fill="none" stroke="#477da9" stroke-width="5" stroke-linecap="round"><path d="M175 125 L95 55 M175 125 L75 125 M175 125 L105 200 M175 125 L145 35 M175 125 L135 215"/><path d="M205 125 C280 120 300 120 365 125 S470 125 550 125 S680 125 770 125" stroke-width="13"/><path d="M770 125 L820 85 M770 125 L835 125 M770 125 L820 165" stroke-width="5"/></g><ellipse cx="185" cy="125" rx="48" ry="42" fill="#dcecf8" stroke="#477da9" stroke-width="4"/><ellipse cx="185" cy="125" rx="15" ry="13" fill="#8bb4d5"/><g fill="#244d70" font-size="18" font-weight="600"><text x="45" y="28">Dendritlər</text><text x="150" y="235">Soma</text><text x="445" y="95">Akson</text><text x="760" y="205">Sinaptik uclar</text></g><g fill="#d5e7f5" stroke="#477da9" stroke-width="2"><rect x="360" y="108" width="65" height="34" rx="16"/><rect x="465" y="108" width="65" height="34" rx="16"/><rect x="570" y="108" width="65" height="34" rx="16"/></g></svg>
+</section>
+
+<section class="card" id="s112"><h2>11.2. Bioloji və süni neyronların müqayisəsi</h2>
+<p>Süni neyron bioloji neyronun fəaliyyətindən ilhamlanmış riyazi abstraksiyadır. Bu, bioloji hüceyrənin bütün bioloji və elektrokimyəvi proseslərini təkrarlamır; öyrənmə üçün sadələşdirilmiş hesablama vahidi yaradır.</p>
+<table><tr><th>Bioloji neyron</th><th>Süni neyron</th><th>Funksional analogiya</th></tr><tr><td>Dendritlər</td><td>Girişlər (x₁, x₂, …)</td><td>Siqnalların qəbulu</td></tr><tr><td>Sinaptik güc</td><td>Çəkilər (w₁, w₂, …)</td><td>Giriş təsirinin miqdarı</td></tr><tr><td>Soma</td><td>Çəkili cəm və bias</td><td>Siqnalların birləşdirilməsi</td></tr><tr><td>Atəşlənmə davranışı</td><td>Aktivləşmə funksiyası</td><td>Çıxışın formalaşması</td></tr><tr><td>Sinaptik plastiklik</td><td>Çəkilərin öyrənilməsi</td><td>Təcrübə əsasında dəyişmə</td></tr></table>
+<div class="warn">Bu uyğunluq konseptual analogiyadır. Süni neyronun çəkisi bioloji sinapsın tam fizioloji modeli deyil.</div>
+</section>
+
+<section class="card" id="s113"><h2>11.3. Süni neyronun əsas komponentləri</h2>
+<p>Süni neyronun hesablaması dörd əsas mərhələdən ibarətdir: girişlərin qəbulu, çəkilərlə vurulma, bias əlavə edilməklə cəmin hesablanması və aktivləşmə funksiyasının tətbiqi.</p>
+<div class="neuron"><div class="node">x₁,x₂,…</div><div class="arrow">→</div><div class="node">× w</div><div class="arrow">→</div><div class="node">Σ + b</div><div class="arrow">→</div><div class="node">f(z)</div><div class="arrow">→</div><div class="node">y</div></div>
+<div class="formula">z = Σᵢ wᵢxᵢ + b &nbsp;&nbsp;&nbsp; y = f(z)</div>
+<p>Burada xᵢ giriş qiyməti, wᵢ uyğun çəki, b bias, z aktivləşmədən əvvəlki xalis giriş, f isə aktivləşmə funksiyasıdır.</p>
+</section>
+
+<section class="card" id="s114"><h2>11.4. Giriş verilənləri (Inputs)</h2>
+<p>Girişlər neyronun emal etdiyi xüsusiyyətlərdir. Məsələn, tələbənin imtahan nəticəsini proqnozlaşdıran modeldə davamiyyət faizi, aralıq imtahan balı və tapşırıqların yerinə yetirilmə faizi giriş kimi verilə bilər.</p>
+<table><tr><th>Giriş</th><th>İşarə</th><th>Nümunə qiymət</th><th>İzah</th></tr><tr><td>Davamiyyət</td><td>x₁</td><td>0.90</td><td>90% davamiyyət</td></tr><tr><td>Aralıq imtahan</td><td>x₂</td><td>0.80</td><td>100 ballıq şkalanın normallaşdırılmış forması</td></tr><tr><td>Tapşırıq faizi</td><td>x₃</td><td>0.70</td><td>Tapşırıqların 70%-i tamamlanıb</td></tr></table>
+<div class="note">Miqyas fərqləri neyronun çəkilərinə təsir edə bilər. Buna görə girişlərin normallaşdırılması və ya standartlaşdırılması çox vaxt faydalıdır.</div>
+</section>
+
+<section class="card" id="s115"><h2>11.5. Çəkilər (Weights)</h2>
+<p>Çəki giriş xüsusiyyətinin neyronun yekun hesablamasına təsir gücünü və istiqamətini müəyyən edir. Müsbət çəki giriş artdıqca xalis cəmi artırır; mənfi çəki isə azaldır. Çəkinin mütləq qiyməti təsirin gücünə təsir edir.</p>
+<div class="panel"><h3>Çəkinin təsirini interaktiv müşahidə edin</h3><label>Giriş x: <b id="wxv">0.8</b></label><input id="wx" type="range" min="0" max="100" value="80" oninput="weightDemo()"><br><label>Çəki w: <b id="wwv">1.0</b></label><input id="ww" type="range" min="-20" max="20" value="10" oninput="weightDemo()"><div id="weightResult" class="result"></div><canvas id="weightCanvas" width="760" height="220"></canvas></div>
+<p><b>Nümunə:</b> x=0.8 və w=1.5 olduqda wx=1.2. Eyni giriş üçün w=-1.5 olarsa, hasil -1.2 olacaq və xalis cəmi əks istiqamətdə dəyişəcək.</p>
+</section>
+
+<section class="card" id="s116"><h2>11.6. Sürüşmə əmsalı (Bias)</h2>
+<p>Bias neyronun aktivləşmə həddini sürüşdürməyə imkan verən öyrənilən sabit termindir. Bias olmasa, qərar sərhədi bir çox sadə modellərdə koordinat başlanğıcından keçməyə məcbur olar. Bias modelə daha çevik qərar sərhədi yaratmağa kömək edir.</p>
+<div class="formula">z = w₁x₁ + w₂x₂ + b</div>
+<div class="panel"><h3>Bias dəyişdikdə çıxış necə dəyişir?</h3><label>Çəkili cəm (bias-dan əvvəl): <b id="preBiasVal">0.4</b></label><input id="preBias" type="range" min="-20" max="20" value="4" oninput="biasDemo()"><br><label>Bias: <b id="biasVal">0.2</b></label><input id="biasRange" type="range" min="-20" max="20" value="2" oninput="biasDemo()"><div id="biasResult" class="result"></div></div>
+</section>
+
+<section class="card" id="s117"><h2>11.7. Çəkili cəmin hesablanması</h2>
+<p>Çəkili cəm hər girişin uyğun çəki ilə hasilinin toplanması və bias-ın əlavə edilməsi ilə hesablanır.</p>
+<div class="formula">z = w₁x₁ + w₂x₂ + … + wₙxₙ + b</div>
+<p><b>Hesablanmış nümunə:</b> x₁=0.9, x₂=0.8, x₃=0.7; w₁=0.5, w₂=0.3, w₃=0.2; b=-0.4.</p>
+<div class="formula">z = (0.5×0.9) + (0.3×0.8) + (0.2×0.7) − 0.4 = 0.25</div>
+<div class="panel"><h3>İnteraktiv neyron kalkulyatoru</h3><div class="grid3"><label>x₁ <input id="ix1" type="number" step=".1" value=".9"></label><label>w₁ <input id="iw1" type="number" step=".1" value=".5"></label><label>x₂ <input id="ix2" type="number" step=".1" value=".8"></label><label>w₂ <input id="iw2" type="number" step=".1" value=".3"></label><label>x₃ <input id="ix3" type="number" step=".1" value=".7"></label><label>w₃ <input id="iw3" type="number" step=".1" value=".2"></label><label>Bias b <input id="ib" type="number" step=".1" value="-.4"></label></div><label>Aktivləşmə <select id="actSelect"><option value="step">Step</option><option value="sigmoid" selected>Sigmoid</option><option value="tanh">Tanh</option><option value="relu">ReLU</option></select></label><button onclick="neuronCalc()">Neyronu hesabla</button><div id="neuronResult" class="result">z=0.25; sigmoid(z)≈0.562</div>
+<h4>Canlı neyron şəbəkə sxemi — hesablanmış nəticəyə uyğun</h4>
+<p class="small">Girişləri, çəkiləri, bias və aktivləşmə funksiyasını dəyişdikdə sxem avtomatik yenilənir.</p>
+<div class="panel" style="overflow:auto">
+<svg id="neuronNetworkSvg" viewBox="0 0 900 300" width="100%" role="img" aria-label="İnteraktiv süni neyron şəbəkəsi sxemi">
+<defs><marker id="arrN" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#6386a5"/></marker></defs>
+<g stroke="#6386a5" stroke-width="2.5" fill="none" marker-end="url(#arrN)"><path d="M115 65 L365 140"/><path d="M115 145 L365 150"/><path d="M115 225 L365 160"/><path d="M475 150 L600 150"/><path d="M700 150 L800 150"/><path d="M285 255 L400 180"/></g>
+<g fill="#edf5fc" stroke="#4d83ae" stroke-width="2"><circle cx="75" cy="65" r="34"/><circle cx="75" cy="145" r="34"/><circle cx="75" cy="225" r="34"/><circle cx="420" cy="150" r="55"/><rect x="600" y="112" width="100" height="76" rx="14"/><circle cx="830" cy="150" r="42"/></g>
+<g fill="#204d73" font-size="17" font-weight="600" text-anchor="middle"><text x="75" y="71">x₁</text><text x="75" y="151">x₂</text><text x="75" y="231">x₃</text><text x="420" y="145">Σ</text><text x="420" y="168" font-size="13">z = Σwx+b</text><text x="650" y="145">f(z)</text><text x="650" y="166" font-size="12">Aktivləşmə</text><text x="830" y="156">y</text></g>
+<g fill="#526b82" font-size="14" text-anchor="middle"><text id="svgX1" x="205" y="80">x₁=0.9; w₁=0.5</text><text id="svgX2" x="205" y="137">x₂=0.8; w₂=0.3</text><text id="svgX3" x="205" y="220">x₃=0.7; w₃=0.2</text><text id="svgBias" x="345" y="270">b=−0.4</text><text id="svgZ" x="500" y="105">z=0.25</text><text id="svgAct" x="650" y="215">Sigmoid</text><text id="svgY" x="830" y="215">y=0.562</text></g>
+</svg>
+<div id="networkExplanation" class="result">Girişlər çəkilərlə vurulur, bias əlavə edilir və aktivləşmə funksiyasından keçirilərək çıxış alınır.</div>
+</div></div>
+</section>
+
+<section class="card" id="s118"><h2>11.8. Aktivləşmə funksiyasının rolu</h2>
+<p>Aktivləşmə funksiyası neyronun xalis girişini çıxışa çevirir. Qeyri-xətti aktivləşmə funksiyaları çoxqatlı neyron şəbəkələrinə mürəkkəb qeyri-xətti əlaqələri öyrənmək imkanı verir. Əgər bütün qatlarda yalnız xətti çevirmələr tətbiq edilsə, onların ardıcıl kompozisiyası yenə xətti çevirmə olar.</p>
+<div class="grid2"><div class="panel"><h3>Aktivləşmə funksiyası nə edir?</h3><ul><li>Çıxışın diapazonunu müəyyən edir.</li><li>Qeyri-xəttilik yarada bilər.</li><li>Gradientin davranışına təsir edir.</li><li>Şəbəkənin öyrənmə dinamikasını dəyişir.</li></ul></div><div class="panel"><h3>Seçim nümunələri</h3><ul><li>Step — klassik perseptron qərarı.</li><li>Sigmoid — 0 və 1 arasında çıxış.</li><li>Tanh — −1 və 1 arasında çıxış.</li><li>ReLU — müsbət hissəni saxlayır, mənfi hissəni sıfırlayır.</li></ul></div></div>
+</section>
+
+<section class="card" id="s119"><h2>11.9. Step, Sigmoid, Tanh və ReLU funksiyaları</h2>
+<p>Aktivləşmə funksiyaları eyni xalis giriş üçün fərqli çıxışlar yaradır. Aşağıdakı qrafiklər funksiyaların formasını və diapazonunu müqayisə edir.</p>
+<div class="formula">Step(z) = 1, z ≥ 0; əks halda 0</div><div class="formula">Sigmoid(z) = 1 / (1 + e<sup>−z</sup>)</div><div class="formula">Tanh(z) = (e<sup>z</sup> − e<sup>−z</sup>) / (e<sup>z</sup> + e<sup>−z</sup>)</div><div class="formula">ReLU(z) = max(0, z)</div>
+<div class="panel"><h3>Aktivləşmə funksiyalarının interaktiv qrafiki</h3><label>z qiyməti: <b id="zValue">0.5</b></label><input id="zRange" type="range" min="-60" max="60" value="5" oninput="drawActivations()"><canvas id="activationCanvas" width="760" height="330"></canvas><div id="activationValues" class="result"></div></div>
+<table><tr><th>Funksiya</th><th>Çıxış diapazonu</th><th>Üstünlük</th><th>Məhdudiyyət</th></tr><tr><td>Step</td><td>0 və ya 1</td><td>Sadə qərar qaydası</td><td>Törəməsi demək olar ki, hər yerdə 0; gradient əsaslı öyrənmə üçün yararsızdır</td></tr><tr><td>Sigmoid</td><td>(0,1)</td><td>Ehtimal kimi şərh oluna bilər</td><td>Böyük |z| üçün gradient zəifləyir</td></tr><tr><td>Tanh</td><td>(−1,1)</td><td>Sıfır ətrafında mərkəzləşib</td><td>Doyma zonalarında gradient zəifləyir</td></tr><tr><td>ReLU</td><td>[0,+∞)</td><td>Sadə və hesablama baxımından səmərəli</td><td>Mənfi sahədə neyron aktiv olmaya bilər</td></tr></table>
+</section>
+
+<section class="card" id="s1110"><h2>11.10. Perceptron modelinin qurulması</h2>
+<p>Perseptron ikili təsnifat üçün istifadə edilən ən sadə süni neyron modellərindən biridir. Girişlərin çəkili cəmini hesablayır və nəticəni hədd funksiyası ilə 0 və ya 1 sinfinə çevirir.</p>
+<div class="formula">ŷ = Step(wᵀx + b)</div>
+<div class="panel"><h3>Perseptron qərar mexanizmi</h3><div class="neuron"><div class="node">Girişlər<br>x₁,x₂</div><div class="arrow">→</div><div class="node">w₁x₁+w₂x₂+b</div><div class="arrow">→</div><div class="node">Step</div><div class="arrow">→</div><div class="node">0 / 1</div></div><p class="small">Perseptron xətti qərar sərhədi yaradır: w₁x₁ + w₂x₂ + b = 0.</p></div>
+<h3>İnteraktiv iki girişli perseptron</h3><div class="panel"><div class="grid3"><label>x₁ <input id="px1" type="number" value="1" min="0" max="1"></label><label>x₂ <input id="px2" type="number" value="0" min="0" max="1"></label><label>w₁ <input id="pw1" type="number" value=".7" step=".1"></label><label>w₂ <input id="pw2" type="number" value=".6" step=".1"></label><label>Bias <input id="pb" type="number" value="-.8" step=".1"></label></div><button onclick="perceptronCalc()">Çıxışı hesabla</button><div id="perceptronResult" class="result"></div></div>
+</section>
+
+<section class="card" id="s1111"><h2>11.11. Perceptronun öyrənmə qaydası</h2>
+<p>Perseptron öyrənərkən proqnoz ilə hədəf arasındakı fərqdən istifadə edərək çəkilərini yeniləyir. Sadə ikili perseptron üçün yenilənmə qaydası belə yazıla bilər:</p>
+<div class="formula">wᵢ(new) = wᵢ(old) + η (y − ŷ) xᵢ</div><div class="formula">b(new) = b(old) + η (y − ŷ)</div>
+<p>Burada η öyrənmə sürəti, y düzgün etiket, ŷ modelin proqnozudur. Əgər proqnoz düzgün olarsa, xəta sıfır olur və bu nümunə üzrə çəki dəyişmir.</p>
+<div class="panel"><h3>Bir addımlıq çəki yenilənməsi kalkulyatoru</h3><div class="grid3"><label>x₁ <input id="lx1" type="number" value="1"></label><label>x₂ <input id="lx2" type="number" value="0"></label><label>Hədəf y <input id="ly" type="number" min="0" max="1" value="1"></label><label>Proqnoz ŷ <input id="lhat" type="number" min="0" max="1" value="0"></label><label>η <input id="leta" type="number" step=".1" value=".2"></label><label>Başlanğıc b <input id="lb" type="number" step=".1" value="0"></label><label>w₁ <input id="lw1" type="number" step=".1" value=".1"></label><label>w₂ <input id="lw2" type="number" step=".1" value="-.1"></label></div><button onclick="learnStep()">Yenilənməni hesabla</button><div id="learnResult" class="result"></div></div>
+<h3>Öyrənmə prosesi</h3><ol><li>Başlanğıc çəkiləri və bias təyin edilir.</li><li>Təlim nümunəsi modelə verilir.</li><li>Çəkili cəm və proqnoz hesablanır.</li><li>Hədəf ilə proqnoz fərqi tapılır.</li><li>Çəki və bias yenilənir.</li><li>Nümunələr üzrə təkrar edilir.</li></ol>
+<div class="warn">Klassik perceptron öyrənmə qaydası xətti ayrılan verilənlərdə sonlu addımlardan sonra həllə yaxınlaşma zəmanətinə malikdir. Xətti ayrılmayan verilənlərdə, məsələn XOR-da, bu zəmanət yoxdur.</div>
+</section>
+
+<section class="card" id="s1112"><h2>11.12. AND, OR və XOR məsələləri</h2>
+<p>Məntiqi qapılar perseptronun imkanlarını anlamaq üçün klassik nümunələrdir. AND və OR xətti ayrıla bilir; XOR isə bir düz xəttlə ayrıla bilməyən nümunədir.</p>
+<table><tr><th>x₁</th><th>x₂</th><th>AND</th><th>OR</th><th>XOR</th></tr><tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr><tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr><tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr></table>
+<div class="grid2"><div class="panel"><h3>AND qapısı</h3><div class="formula">ŷ = Step(x₁ + x₂ − 1.5)</div><p>Yalnız hər iki giriş 1 olduqda çıxış 1 olur.</p></div><div class="panel"><h3>OR qapısı</h3><div class="formula">ŷ = Step(x₁ + x₂ − 0.5)</div><p>Girişlərdən ən azı biri 1 olduqda çıxış 1 olur.</p></div></div>
+<div class="panel"><h3>İnteraktiv məntiqi qapı sınağı</h3><label>Qapı <select id="gateSelect" onchange="gateDemo()"><option value="AND">AND</option><option value="OR">OR</option><option value="XOR">XOR</option></select></label><label>x₁ <select id="gateX1" onchange="gateDemo()"><option>0</option><option selected>1</option></select></label><label>x₂ <select id="gateX2" onchange="gateDemo()"><option selected>0</option><option>1</option></select></label><div id="gateResult" class="result"></div><canvas id="gateCanvas" width="760" height="250"></canvas></div>
+<div class="note"><b>XOR niyə çətindir?</b> XOR-da (0,0) və (1,1) bir sinfə, (0,1) və (1,0) digər sinfə aiddir. Bu nöqtələri bir düz xəttlə iki sinfə ayırmaq mümkün deyil. Çoxqatlı şəbəkə və qeyri-xətti ara qatlar XOR-u öyrənə bilər.</div>
+</section>
+
+<section class="card" id="s1113"><h2>11.13. Birqatlı perceptronun imkanları və məhdudiyyətləri</h2>
+<table><tr><th>İmkanlar</th><th>Məhdudiyyətlər</th></tr><tr><td>Xətti ayrıla bilən ikili təsnifat</td><td>Xətti ayrılmayan problemləri təkqatlı formada həll edə bilmir</td></tr><tr><td>Sadə və hesablama baxımından yüngül model</td><td>Mürəkkəb qeyri-xətti əlaqələri modelləşdirmir</td></tr><tr><td>Çəkilərin və qərar sərhədinin interpretasiyası nisbətən asandır</td><td>Çıxış step funksiyası ilə sərt qərardır, ehtimal vermir</td></tr><tr><td>AND və OR kimi qapıları öyrənə bilər</td><td>XOR kimi xətti ayrılmayan funksiyada uğursuz olur</td></tr></table>
+<p>Birqatlı perceptron neyron şəbəkələrinin əsasını anlamaq üçün vacibdir. Daha mürəkkəb məsələlərdə çoxqatlı perseptronlar (MLP), qeyri-xətti aktivləşmələr və gradient əsaslı optimallaşdırma metodları istifadə olunur.</p>
+</section>
+
+<section class="card" id="practice"><h2>Praktiki tapşırıqlar</h2><div class="grid3">
+<div class="panel"><span class="pill">Başlanğıc</span><h3>Tapşırıq 1</h3><p>x₁=0.6, x₂=0.9, w₁=0.4, w₂=−0.2, b=0.1 olduqda çəkili cəmi hesablayın. Sigmoid və ReLU çıxışlarını müqayisə edin.</p></div>
+<div class="panel"><span class="pill">Orta</span><h3>Tapşırıq 2</h3><p>Python-da Step, Sigmoid, Tanh və ReLU funksiyalarını yazın. −5-dən 5-ə qədər girişlər üçün qrafiklərini qurun və nəticələri cədvəldə müqayisə edin.</p></div>
+<div class="panel"><span class="pill">Tədqiqat</span><h3>Tapşırıq 3</h3><p>Perseptronu AND və OR qapıları üçün sıfırdan öyrədin. Sonra eyni yanaşmanın XOR üçün niyə konvergensiya etmədiyini eksperimentlə göstərin.</p></div>
+</div></section>
+
+<section class="card" id="quiz"><h2>Özünü yoxlama sualları</h2><p>Sualları cavablandırın. Sonda balınız və hər cavab üzrə izah göstəriləcək.</p><div id="quizBox"></div><button class="green" onclick="gradeQuiz()">Cavabları yoxla</button><button class="secondary" onclick="resetQuiz()">Yenidən başla</button><div id="quizScore" class="result">Cavabları seçdikdən sonra yoxlama düyməsini basın.</div></section>
+
+<section class="card" id="lab"><h2>Laboratoriya işi №11: Süni neyronun Python vasitəsilə sıfırdan qurulması, çəkili cəmin və aktivləşmə funksiyasının hesablanması</h2>
+<h3>1. İşin məqsədi</h3><p>Süni neyronun əsas riyazi əməliyyatlarını Python vasitəsilə kitabxanasız və ya yalnız NumPy istifadə etməklə reallaşdırmaq, müxtəlif aktivləşmə funksiyalarını müqayisə etmək və perseptronun məntiqi qapılara tətbiqini yoxlamaq.</p>
+<h3>2. İstifadə olunan vasitələr</h3><ul><li>Python 3;</li><li>Google Colab və ya Jupyter Notebook;</li><li>NumPy və Matplotlib.</li></ul>
+<h3>3. Tapşırıq A — neyronun sıfırdan qurulması</h3>
+<pre class="code">import numpy as np
+
+def step(z):
+    return 1 if z >= 0 else 0
+
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+def tanh(z):
+    return np.tanh(z)
+
+def relu(z):
+    return max(0, z)
+
+def neuron(x, w, b, activation="sigmoid"):
+    # Girişlərin çəkilərlə skalyar hasilini hesabla
+    z = np.dot(x, w) + b
+
+    # Aktivləşmə funksiyasını seç
+    functions = {
+        "step": step,
+        "sigmoid": sigmoid,
+        "tanh": tanh,
+        "relu": relu
+    }
+    y = functions[activation](z)
+    return z, y
+
+# Nümunə girişlər, çəkilər və bias
+x = np.array([0.9, 0.8, 0.7])
+w = np.array([0.5, 0.3, 0.2])
+b = -0.4
+
+for name in ["step", "sigmoid", "tanh", "relu"]:
+    z, output = neuron(x, w, b, name)
+    print(name, "z =", round(float(z), 4),
+          "çıxış =", round(float(output), 4))</pre>
+<h3>4. Tapşırıq B — aktivləşmə funksiyalarının qrafiki</h3>
+<pre class="code">import numpy as np
+import matplotlib.pyplot as plt
+
+z = np.linspace(-6, 6, 300)
+step_y = (z >= 0).astype(int)
+sigmoid_y = 1 / (1 + np.exp(-z))
+tanh_y = np.tanh(z)
+relu_y = np.maximum(0, z)
+
+plt.figure(figsize=(9, 5))
+plt.plot(z, step_y, label="Step")
+plt.plot(z, sigmoid_y, label="Sigmoid")
+plt.plot(z, tanh_y, label="Tanh")
+plt.plot(z, relu_y, label="ReLU")
+plt.xlabel("z")
+plt.ylabel("f(z)")
+plt.title("Aktivləşmə funksiyalarının müqayisəsi")
+plt.grid(True)
+plt.legend()
+plt.show()</pre>
+<h3>5. Tapşırıq C — AND qapısı üçün perseptron</h3>
+<pre class="code">import numpy as np
+
+X = np.array([
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+])
+y = np.array([0, 0, 0, 1])
+
+w = np.zeros(2)
+b = 0.0
+learning_rate = 0.1
+
+def predict(x, w, b):
+    return 1 if np.dot(x, w) + b >= 0 else 0
+
+# Perceptron learning rule
+for epoch in range(20):
+    errors = 0
+    for xi, target in zip(X, y):
+        y_hat = predict(xi, w, b)
+        error = target - y_hat
+        w = w + learning_rate * error * xi
+        b = b + learning_rate * error
+        errors += int(error != 0)
+    if errors == 0:
+        print("Konvergensiya:", epoch + 1)
+        break
+
+print("Çəkilər:", w, "Bias:", b)
+for xi in X:
+    print(xi, "->", predict(xi, w, b))</pre>
+<h3>6. Kodun izahı</h3><table><tr><th>Kod elementi</th><th>İzah</th></tr><tr><td>np.dot(x,w)</td><td>Giriş vektoru ilə çəki vektorunun skalyar hasilini hesablayır.</td></tr><tr><td>+ b</td><td>Sürüşmə əmsalını xalis girişə əlavə edir.</td></tr><tr><td>activation</td><td>Hansı aktivləşmə funksiyasının tətbiq olunacağını seçir.</td></tr><tr><td>error = target − y_hat</td><td>Proqnozla düzgün etiket arasındakı fərqi hesablayır.</td></tr><tr><td>w = w + η error x</td><td>Çəkiləri perceptron öyrənmə qaydasına əsasən yeniləyir.</td></tr></table>
+<h3>7. Təcrübə və təhlil</h3><ol><li>Giriş və çəki qiymətlərini dəyişərək neyronun çıxışını müşahidə edin.</li><li>Hər aktivləşmə funksiyasının eyni z qiymətinə verdiyi nəticəni müqayisə edin.</li><li>AND və OR üçün perseptron öyrədin.</li><li>XOR hədəflərini verərək birqatlı perseptronun nəticəsini təhlil edin.</li><li>Öyrənmə sürətini dəyişərək iterasiya sayına təsirini müşahidə edin.</li></ol>
+<h3>8. Nəzarət sualları</h3><ol><li>Bias neyronun hesablamasında hansı rolu oynayır?</li><li>Sigmoid funksiyasının çıxış diapazonu nədir?</li><li>Step funksiyası niyə gradient əsaslı dərin öyrənmədə çətinlik yaradır?</li><li>Perseptronun çəkiləri hansı qayda ilə yenilənir?</li><li>XOR məsələsi birqatlı perseptron üçün niyə həll olunmur?</li></ol>
+<h3>9. Hesabatın strukturu</h3><ol><li>Laboratoriya işinin adı və məqsədi;</li><li>Neyronun riyazi modeli;</li><li>Python kodu və alınmış nəticələr;</li><li>Aktivləşmə funksiyalarının qrafikləri;</li><li>AND/OR/XOR eksperimentlərinin nəticələri;</li><li>Müqayisə, təhlil və yekun.</li></ol>
+</section>
+
+<section class="card" id="glossary"><h2>Terminlər lüğəti</h2><table><tr><th>Termin</th><th>Azərbaycan dilində izah</th></tr><tr><td>Neuron</td><td>Neyron — siqnalları qəbul və emal edən hesablama vahidi</td></tr><tr><td>Input</td><td>Giriş — neyrona verilən xüsusiyyət qiyməti</td></tr><tr><td>Weight</td><td>Çəki — girişin təsirini müəyyən edən öyrənilən əmsal</td></tr><tr><td>Bias</td><td>Sürüşmə əmsalı — xalis girişə əlavə olunan sabit parametr</td></tr><tr><td>Weighted sum</td><td>Çəkili cəm — girişlərin çəkilərlə hasilinin cəmi və bias</td></tr><tr><td>Activation function</td><td>Aktivləşmə funksiyası — xalis girişi çıxışa çevirən funksiya</td></tr><tr><td>Perceptron</td><td>Perseptron — sadə ikili təsnifat neyronu</td></tr><tr><td>Learning rate</td><td>Öyrənmə sürəti — parametr yenilənməsinin addım ölçüsü</td></tr><tr><td>Decision boundary</td><td>Qərar sərhədi — sinifləri ayıran sərhəd</td></tr><tr><td>Linearly separable</td><td>Xətti ayrıla bilən — sinifləri düz xətt/hipermüstəvi ilə ayırmaq mümkün olan</td></tr></table></section>
+
+<section class="card" id="refs"><h2>İstifadə olunan ədəbiyyat</h2><ol>
+<li>Alpaydın, E. (2021). <i>Machine Learning: The New AI</i>. MIT Press. <a href="https://mitpress.mit.edu/9780262542524/machine-learning/" target="_blank" rel="noopener">Nəşriyyat səhifəsi</a>.</li>
+<li>Géron, A. (2022). <i>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</i> (3rd ed.). O’Reilly Media. <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/" target="_blank" rel="noopener">Kitab səhifəsi</a>.</li>
+<li>Chollet, F. (2021). <i>Deep Learning with Python</i> (2nd ed.). Manning Publications. <a href="https://www.manning.com/books/deep-learning-with-python-second-edition" target="_blank" rel="noopener">Kitab səhifəsi</a>.</li>
+<li>Rafiq R. Əliyev (2026). <i>Süni intellekt</i>. Azərnəşr.</li>
+<li>Scikit-learn Developers. <i>Perceptron</i>. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Perceptron.html" target="_blank" rel="noopener">Rəsmi API sənədi</a>.</li>
+<li>Google. <i>Neural networks: A visual introduction</i>. <a href="https://developers.google.com/machine-learning/crash-course/neural-networks" target="_blank" rel="noopener">Tədris resursu</a>.</li>
+<li>DeepLearning.AI. <i>Neural Networks and Deep Learning</i>. <a href="https://www.deeplearning.ai/courses/neural-networks-deep-learning/" target="_blank" rel="noopener">Kurs səhifəsi</a>.</li>
+</ol></section>
+<footer>MDU · Riyaziyyat və İnformasiya Texnologiyaları fakültəsi · Süni intellekt və maşın öyrənməsi</footer>
+</main></div>
+<script>
+function el(id){return document.getElementById(id)}
+function weightDemo(){let x=+el('wx').value/100,w=+el('ww').value/10;el('wxv').textContent=x.toFixed(2);el('wwv').textContent=w.toFixed(1);el('weightResult').textContent=`w × x = ${w.toFixed(1)} × ${x.toFixed(2)} = ${(w*x).toFixed(3)}. Çəkinin işarəsi və böyüklüyü girişin xalis cəmə təsirini müəyyən edir.`;let c=el('weightCanvas'),ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='#eaf0f6';ctx.fillRect(60,95,640,32);let width=Math.min(640,Math.abs(w*x)*120);ctx.fillStyle=w*x>=0?'#2868a5':'#c45b4b';ctx.fillRect(w*x>=0?380:380-width,95,width,32);ctx.fillStyle='#243b53';ctx.fillText('Mənfi təsir',65,80);ctx.fillText('0',375,150);ctx.fillText('Müsbət təsir',620,80)}
+function biasDemo(){let p=+el('preBias').value/10,b=+el('biasRange').value/10,z=p+b;el('preBiasVal').textContent=p.toFixed(1);el('biasVal').textContent=b.toFixed(1);el('biasResult').textContent=`z = ${p.toFixed(1)} + (${b.toFixed(1)}) = ${z.toFixed(2)}. Bias xalis girişi ${b>=0?'artırır':'azaldır'}. Step çıxışı: ${z>=0?1:0}.`}
+function act(name,z){if(name==='step')return z>=0?1:0;if(name==='sigmoid')return 1/(1+Math.exp(-z));if(name==='tanh')return Math.tanh(z);return Math.max(0,z)}
+function neuronCalc(){
+let x=[1,2,3].map(i=>+el('ix'+i).value),w=[1,2,3].map(i=>+el('iw'+i).value),b=+el('ib').value;
+let z=x.reduce((s,v,i)=>s+v*w[i],0)+b,fn=el('actSelect').value,y=act(fn,z);
+el('neuronResult').textContent=`z = ${x.map((v,i)=>`(${v}×${w[i]})`).join(' + ')} + (${b}) = ${z.toFixed(4)}. ${fn}(z) = ${y.toFixed(4)}.`;
+el('svgX1').textContent=`x₁=${x[0]}; w₁=${w[0]}`; el('svgX2').textContent=`x₂=${x[1]}; w₂=${w[1]}`; el('svgX3').textContent=`x₃=${x[2]}; w₃=${w[2]}`;
+el('svgBias').textContent=`Bias b=${b}`; el('svgZ').textContent=`z=${z.toFixed(4)}`;
+el('svgAct').textContent=fn.charAt(0).toUpperCase()+fn.slice(1); el('svgY').textContent=`y=${y.toFixed(4)}`;
+el('networkExplanation').textContent=`Girişlər (${x.join(', ')}) uyğun çəkilərlə (${w.join(', ')}) vurulur, bias (${b}) əlavə edilir və z=${z.toFixed(4)} alınır. ${fn} funksiyasının tətbiqi ilə çıxış y=${y.toFixed(4)} olur.`;
+}
+function drawActivations(){let z=+el('zRange').value/10;el('zValue').textContent=z.toFixed(1);let c=el('activationCanvas'),x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);let left=45,right=720,top=20,bottom=290;function X(v){return left+(v+6)/12*(right-left)}function Y(v){return bottom-(v+1.2)/7.2*(bottom-top)}x.strokeStyle='#dce5ee';for(let v=-6;v<=6;v+=2){x.beginPath();x.moveTo(X(v),top);x.lineTo(X(v),bottom);x.stroke()}x.beginPath();x.moveTo(left,Y(0));x.lineTo(right,Y(0));x.moveTo(X(0),top);x.lineTo(X(0),bottom);x.strokeStyle='#8798a8';x.stroke();[['step','#2868a5'],['sigmoid','#19845c'],['tanh','#b76a12'],['relu','#925bb2']].forEach(([fn,col])=>{x.beginPath();for(let i=0;i<=240;i++){let v=-6+i/20,y=act(fn,v),px=X(v),py=Y(y);i?x.lineTo(px,py):x.moveTo(px,py)}x.strokeStyle=col;x.lineWidth=2.5;x.stroke()});x.fillStyle='#243b53';x.fillText('Step',50,15);x.fillStyle='#2868a5';x.fillText('Step',90,15);x.fillStyle='#19845c';x.fillText('Sigmoid',145,15);x.fillStyle='#b76a12';x.fillText('Tanh',220,15);x.fillStyle='#925bb2';x.fillText('ReLU',270,15);el('activationValues').textContent=`z=${z.toFixed(1)} → Step=${act('step',z).toFixed(3)}, Sigmoid=${act('sigmoid',z).toFixed(3)}, Tanh=${act('tanh',z).toFixed(3)}, ReLU=${act('relu',z).toFixed(3)}.`}
+function perceptronCalc(){let x1=+el('px1').value,x2=+el('px2').value,w1=+el('pw1').value,w2=+el('pw2').value,b=+el('pb').value,z=x1*w1+x2*w2+b,y=z>=0?1:0;el('perceptronResult').textContent=`z = ${x1}×${w1} + ${x2}×${w2} + (${b}) = ${z.toFixed(3)}. Step(z) = ${y}. Modelin sinif proqnozu: ${y}.`}
+function learnStep(){let x1=+el('lx1').value,x2=+el('lx2').value,y=+el('ly').value,yh=+el('lhat').value,eta=+el('leta').value,b=+el('lb').value,w1=+el('lw1').value,w2=+el('lw2').value,e=y-yh;el('learnResult').textContent=`Xəta e = y−ŷ = ${y}−${yh} = ${e}. w₁' = ${w1}+${eta}×${e}×${x1} = ${(w1+eta*e*x1).toFixed(3)}; w₂' = ${w2}+${eta}×${e}×${x2} = ${(w2+eta*e*x2).toFixed(3)}; b' = ${b}+${eta}×${e} = ${(b+eta*e).toFixed(3)}.`}
+function gateDemo(){let gate=el('gateSelect').value,a=+el('gateX1').value,b=+el('gateX2').value,y=gate==='AND'?a*b:gate==='OR'?Math.max(a,b):(a===b?0:1);el('gateResult').textContent=`${gate}(${a}, ${b}) = ${y}. ${gate==='XOR'?'XOR girişlər fərqli olduqda 1 verir.':'Nəticə seçilmiş məntiqi qapının həqiqət cədvəlinə uyğundur.'}`;let c=el('gateCanvas'),x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);let data=[[0,0],[0,1],[1,0],[1,1]];data.forEach((p,i)=>{let val=gate==='AND'?p[0]*p[1]:gate==='OR'?Math.max(...p):(p[0]===p[1]?0:1),px=150+(i%2)*300,py=60+Math.floor(i/2)*100;x.beginPath();x.arc(px,py,25,0,7);x.fillStyle=val?'#19845c':'#d8e3ed';x.fill();x.fillStyle='#203044';x.fillText(`${p[0]},${p[1]} → ${val}`,px-28,py+5)})}
+const qs=[
+{q:'Bioloji neyronun siqnalları qəbul edən əsas çıxıntıları hansılardır?',o:['Aksonlar','Dendritlər','Sinapslar','Mielin qişası'],a:1,e:'Dendritlər digər hüceyrələrdən gələn siqnalların qəbulunda iştirak edir.'},
+{q:'Süni neyronun çəkiləri hansı funksiyanı yerinə yetirir?',o:['Girişlərin təsir gücünü və istiqamətini müəyyən edir','Girişləri həmişə sıfırlayır','Yalnız çıxış etiketini saxlayır','Aktivləşmə funksiyasını silir'],a:0,e:'Çəkilər hər girişin xalis cəmə nə qədər və hansı istiqamətdə təsir etdiyini müəyyən edir.'},
+{q:'x=[2,1], w=[3,4], b=−1 olduqda çəkili cəm z neçədir?',o:['5','9','11','13'],a:1,e:'z=2×3+1×4−1=6+4−1=9.'},
+{q:'Sigmoid funksiyasının çıxış qiymətləri hansı intervaldadır?',o:['(−1,1)','[0,+∞)','(0,1)','Bütün həqiqi ədədlər'],a:2,e:'Sigmoid istənilən sonlu giriş üçün 0 ilə 1 arasında qiymət verir.'},
+{q:'ReLU funksiyası z=−3 üçün hansı qiyməti qaytarır?',o:['−3','0','0.5','1'],a:1,e:'ReLU(z)=max(0,z), buna görə mənfi giriş üçün nəticə 0-dır.'},
+{q:'Perseptron çəkilərinin yenilənməsində η hansı parametri bildirir?',o:['Bias','Öyrənmə sürəti','Giriş sayı','Sinif sayı'],a:1,e:'η yenilənmə addımının ölçüsünü idarə edən learning rate parametridir.'},
+{q:'Aşağıdakı məntiqi qapılardan hansı birqatlı perseptronla xətti ayrıla bilmir?',o:['AND','OR','XOR','NOT'],a:2,e:'XOR nümunələrinin sinifləri bir düz xəttlə ayrıla bilmir.'},
+{q:'Bias xalis girişə əlavə olunan sərbəst parametrdir.',o:['Doğru','Yanlış'],a:0,e:'Bias neyronun aktivləşmə həddini sürüşdürməyə imkan verir.'},
+{q:'Tanh funksiyasının çıxış diapazonu [0,1]-dir.',o:['Doğru','Yanlış'],a:1,e:'Tanh funksiyasının çıxışı (−1,1) intervalındadır; [0,1] sigmoid üçün xarakterikdir.'},
+{q:'Perseptron üçün x=[1,0], w=[0.6,0.2], b=−0.4 olduqda Step(z) hansı çıxışı verir?',o:['0','1','0.2','0.6'],a:1,e:'z=1×0.6+0×0.2−0.4=0.2. z≥0 olduğuna görə Step(z)=1.'}
+];
+function renderQuiz(){el('quizBox').innerHTML=qs.map((q,i)=>`<div class="quizq"><b>${i+1}. ${q.q}</b>${q.o.map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join('')}<div class="feedback" id="fb${i}"></div></div>`).join('')}
+function gradeQuiz(){let score=0;qs.forEach((q,i)=>{let v=document.querySelector(`input[name="q${i}"]:checked`),ok=v&&+v.value===q.a;if(ok)score++;let f=el('fb'+i);f.textContent=(ok?'Düzgün. ':'Düzgün cavab: '+q.o[q.a]+'. ')+q.e;f.style.color=ok?'#19845c':'#b33b3b'});el('quizScore').textContent=`Nəticə: ${score}/${qs.length} (${Math.round(score/qs.length*100)}%). `+(score>=8?'Çox yaxşı nəticə!':score>=5?'Yaxşıdır, izahları təkrar nəzərdən keçirin.':'Mövzuları yenidən oxuyub təkrar cəhd edin.')}
+function resetQuiz(){renderQuiz();el('quizScore').textContent='Cavabları seçdikdən sonra yoxlama düyməsini basın.'}
+weightDemo();biasDemo();neuronCalc();drawActivations();perceptronCalc();learnStep();gateDemo();renderQuiz();
+</script><script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="az"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fəsil 20 — Yekun layihə: Maşın öyrənməsi əsasında intellektual analiz sistemi</title>
+<style>
+:root{--ink:#17243a;--muted:#5e6d82;--blue:#155eef;--teal:#0b8f87;--pale:#edf4ff;--line:#dbe3ef;--paper:#fff;--bg:#f4f7fb;--gold:#a15c00}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.72 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+header{background:linear-gradient(120deg,#10264b,#155eef 70%,#0b8f87);color:white;padding:42px max(22px,calc((100% - 1160px)/2))}
+header .tag{opacity:.85;font-size:.9rem;letter-spacing:.08em;text-transform:uppercase}h1{font-size:clamp(2rem,4vw,3.2rem);line-height:1.15;margin:.6rem 0}header p{max-width:850px;color:#e9f1ff}
+.shell{max-width:1160px;margin:24px auto;padding:0 18px;display:grid;grid-template-columns:275px minmax(0,1fr);gap:24px}
+nav{position:sticky;top:16px;align-self:start;background:white;border:1px solid var(--line);border-radius:16px;padding:18px;max-height:calc(100vh - 32px);overflow:auto}
+nav strong{display:block;margin-bottom:10px}nav a{display:block;color:#33445f;text-decoration:none;padding:5px 8px;border-radius:7px;font-size:.9rem}nav a:hover{background:var(--pale);color:var(--blue)}
+main{min-width:0}.intro,.chapter,.lab,.quiz,.refs{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:clamp(18px,3vw,30px);margin-bottom:20px;box-shadow:0 5px 20px #1c35550a}
+h2{font-size:1.65rem;line-height:1.3;margin:0 0 18px;border-bottom:2px solid var(--pale);padding-bottom:12px}h3{font-size:1.2rem;margin:25px 0 8px;color:#123d76}h4{margin:16px 0 6px}
+p{margin:9px 0}ul,ol{padding-left:24px}li{margin:5px 0}.note{background:#eef7ff;border-left:4px solid var(--blue);padding:12px 15px;border-radius:8px;margin:14px 0}.warn{background:#fff7e8;border-left:4px solid #d78a13;padding:12px 15px;border-radius:8px;margin:14px 0}.good{background:#ecfdf7;border-left:4px solid var(--teal);padding:12px 15px;border-radius:8px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}.tile{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fbfdff}.tile b{color:#123d76}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.94rem}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:#edf4ff;color:#183c70}
+code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}pre{background:#101c2f;color:#f1f5ff;padding:18px;border-radius:12px;overflow:auto;line-height:1.65;font-size:.92rem;border:1px solid #263852;white-space:pre}
+pre code{background:transparent!important;color:#f1f5ff!important;padding:0!important;border-radius:0!important;font:inherit}
+code{background:#eef2f8;color:#18324f;padding:2px 5px;border-radius:4px}
+.codehead{display:flex;justify-content:space-between;align-items:center;color:#c8d7ee;font-size:.82rem;margin:0 0 6px}
+.copybtn{background:#314766;color:#fff;padding:5px 10px;font-size:.78rem}
+.realphoto{width:100%;max-height:360px;object-fit:contain;background:#e8eef6;border-radius:12px;border:1px solid var(--line)}
+.realgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.realcard{border:1px solid var(--line);border-radius:13px;padding:12px;background:#fff}
+.realcard img{width:100%;height:210px;object-fit:contain;background:#edf2f7;border-radius:9px}
+.diagram{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fbfdff;margin:16px 0;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}
+button{border:0;border-radius:9px;padding:10px 15px;background:var(--blue);color:white;font-weight:650;cursor:pointer;margin:5px 4px 5px 0}button.secondary{background:#eaf0f9;color:#183c70}button:hover{filter:brightness(.96)}input[type=range]{width:100%;accent-color:var(--blue)}input[type=number],select{padding:9px;border:1px solid #bcc9da;border-radius:8px;font:inherit;max-width:100%}
+canvas{max-width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:white}.small{font-size:.9rem;color:var(--muted)}.result{background:#f1f8ff;border-radius:9px;padding:10px;margin:10px 0;min-height:42px}.pill{display:inline-block;background:#eaf2ff;color:#174b99;border-radius:30px;padding:3px 9px;font-size:.8rem;margin:2px}
+.quizq{border-top:1px solid var(--line);padding:14px 0}.quizq label{display:block;margin:6px 0}.correct{color:#087c50;font-weight:700}.wrong{color:#b42318;font-weight:700}
+footer{text-align:center;color:var(--muted);padding:25px}
+@media(max-width:850px){.shell{display:block}nav{position:relative;top:auto;max-height:300px;margin-bottom:18px}header{padding:30px 20px}}
+
+.interactive{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fbfdff;margin:16px 0;overflow:hidden}
+.interactive .grid{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+.interactive label{display:flex;flex-direction:column;gap:5px;color:#33445f;font-size:.9rem}
+.interactive input[type=number],.interactive select{width:100%;min-width:0}
+.diagram svg{display:block;max-width:100%;height:auto;margin:auto}
+.quizq label{display:block;margin:7px 0}
+.goodtxt{color:#087c50;font-weight:700}.badtxt{color:#b42318;font-weight:700}
+.step{border-left:3px solid #8bb5ff;padding:5px 0 5px 14px;margin:10px 0}
+a{color:#155eef}
+@media(max-width:850px){.interactive .grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}}
+main{min-width:0}main>section{min-width:0;overflow:hidden}table{display:table;max-width:100%} .diagram{max-width:100%} pre{max-width:100%}
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style></head><body>
+<header><div class="tag">MDU · Riyaziyyat və İnformasiya texnologiyaları fakültəsi · Magistratura</div>
+<h1>Fəsil 20. Yekun layihə: Maşın öyrənməsi əsasında intellektual analiz sistemi</h1>
+<p>Sıfırdan layihə qurmaq üçün mərhələli metodika: real problemin seçilməsindən işlək prototipə, model qiymətləndirməsindən elmi hesabat və müdafiəyə qədər.</p><div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="shell"><nav><b>Mündəricat</b>
+<a href="#start">Layihəyə necə başlamaq?</a>
+<a href="#s1">20.1. Yekun layihənin məqsədi və tələbləri</a><a href="#s2">20.2. Real problemin seçilməsi</a><a href="#s3">20.3. Datasetin əldə edilməsi və təsviri</a><a href="#s4">20.4. Verilənlərin təmizlənməsi və hazırlanması</a><a href="#s5">20.5. Model və alqoritmin seçilməsi</a><a href="#s6">20.6. Modelin qurulması və öyrədilməsi</a><a href="#s7">20.7. Modelin qiymətləndirilməsi</a><a href="#s8">20.8. Nəticələrin müqayisəli təhlili</a><a href="#s9">20.9. İntellektual sistemin prototipinin hazırlanması</a><a href="#s10">20.10. Layihənin elmi hesabatı və müdafiəsi</a>
+<a href="#roadmap">Layihə yol xəritəsi</a><a href="#interactive">İnteraktiv layihə planlayıcısı</a><a href="#lab">Laboratoriya işi №20</a><a href="#tasks">Praktiki tapşırıqlar</a><a href="#quiz">Özünü yoxlama sualları</a><a href="#refs">İstifadə olunan ədəbiyyat</a>
+</nav><main>
+<section class="intro" id="start"><h2>Bu fəsildən necə istifadə etməli?</h2>
+<p>Bu fəsil tələbəni yalnız hazır kodu icra etməyə deyil, müstəqil maşın öyrənməsi layihəsini planlaşdırmağa, əsaslandırmağa, qurmağa, yoxlamağa və təqdim etməyə hazırlayır. Layihənin mövzusu dəyişə bilər, lakin elmi iş axını ümumən eynidir: <b>problem → məlumat → hazırlıq → model → qiymətləndirmə → prototip → hesabat</b>.</p>
+<div class="grid"><div class="tile"><b>Başlanğıc səviyyəsi</b><p>Python və əsas statistika biliklərini təkrarlayın. Kiçik, aydın və ölçülə bilən problem seçin.</p></div><div class="tile"><b>Layihə düşüncəsi</b><p>Əvvəl tədqiqat sualı və uğur meyarı yazılır, sonra model seçilir. Əks ardıcıllıq layihəni məqsədsiz edir.</p></div><div class="tile"><b>Elmi dürüstlük</b><p>Test datası təlimdə istifadə edilmir. Nəticələr, məhdudiyyətlər və uğursuz sınaqlar gizlədilmir.</p></div></div>
+<div class="note"><b>Fəslin sonunda tələbə:</b> real problemi ML tapşırığına çevirə, dataset kartı hazırlaya, məlumatı təmizləyə, baseline və ən azı iki model qura, uyğun metriklərlə qiymətləndirə, prototip yarada və elmi hesabatı müdafiə edə bilməlidir.</div>
+</section>
+<section class="chapter" id="roadmap"><h2>Yekun layihənin ümumi arxitekturası</h2>
+<div class="diagram"><svg viewBox="0 0 940 250" role="img" aria-label="Yekun maşın öyrənməsi layihəsinin iş axını"><defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#155eef"/></marker></defs><g font-family="Arial" text-anchor="middle"><g fill="#edf4ff" stroke="#155eef" stroke-width="2"><rect x="8" y="78" width="125" height="82" rx="10"/><rect x="165" y="78" width="125" height="82" rx="10"/><rect x="322" y="78" width="125" height="82" rx="10"/><rect x="479" y="78" width="125" height="82" rx="10"/><rect x="636" y="78" width="125" height="82" rx="10"/><rect x="793" y="78" width="135" height="82" rx="10"/></g><g fill="#173b70" font-size="15"><text x="70" y="110">Problem</text><text x="70" y="132" font-size="12">Sual + hədəf</text><text x="227" y="110">Dataset</text><text x="227" y="132" font-size="12">Topla / anla</text><text x="384" y="110">Hazırlıq</text><text x="384" y="132" font-size="12">Təmizlə / böl</text><text x="541" y="110">Model</text><text x="541" y="132" font-size="12">Təlim / tuning</text><text x="698" y="110">Qiymət</text><text x="698" y="132" font-size="12">Test / müqayisə</text><text x="860" y="110">Prototip</text><text x="860" y="132" font-size="12">Hesabat / demo</text></g><g stroke="#155eef" stroke-width="3" fill="none" marker-end="url(#ar)"><path d="M133 119H160M290 119H317M447 119H474M604 119H631M761 119H788"/></g><path d="M698 168V210H384V168" stroke="#0b8f87" stroke-width="2" fill="none" stroke-dasharray="6 5"/><text x="540" y="232" fill="#0b716b" font-size="13">Qiymətləndirmə zəifdirsə: məlumat / xüsusiyyət / model mərhələsinə qayıt</text></g></svg></div>
+<p>Bu sxem xətti görünsə də, real layihə iterativdir. Test nəticəsi qənaətbəxş deyilsə, səbəb araşdırılır: məlumat keyfiyyəti, etiket, xüsusiyyət, model, hiperparametr və ya ölçmə üsulu yenidən nəzərdən keçirilir. Test dəstinə baxaraq təkrar-təkrar model seçmək test məlumatını dolayı yolla təlim prosesinə daxil edə bilər; model seçimi validation dəsti ilə aparılmalıdır.</p>
+</section>
+<section class="chapter" id="s1"><h2>20.1. Yekun layihənin məqsədi və tələbləri</h2>
+<p>Yekun layihənin məqsədi real problemin məlumat əsasında həll oluna biləcəyini göstərən, təkrarlana bilən və ölçülə bilən intellektual analiz sistemi hazırlamaqdır. “Süni intellektdən istifadə etmək” özü layihə məqsədi deyil. Məqsəd konkret olmalıdır: məsələn, “Tələbənin növbəti semestrdə akademik risk qrupuna düşmə ehtimalını əvvəlki semestrlərin göstəriciləri əsasında qiymətləndirmək”.</p>
+<h3>Layihənin minimum tələbləri</h3>
+<table><tr><th>Komponent</th><th>Tələb</th><th>Sübut / artefakt</th></tr><tr><td>Problem</td><td>Ölçülə bilən tədqiqat sualı və hədəf dəyişən</td><td>Problem bəyanatı, məqsəd, hipotez</td></tr><tr><td>Dataset</td><td>Mənbə, lisenziya, dəyişənlər, müşahidə sayı</td><td>Dataset Card</td></tr><tr><td>Hazırlıq</td><td>Missing, duplicate, outlier, encoding, split</td><td>Preprocessing pipeline</td></tr><tr><td>Modellər</td><td>Baseline və müqayisə üçün ən azı 2 yanaşma</td><td>Notebook və model parametrləri</td></tr><tr><td>Qiymətləndirmə</td><td>Tapşırığa uyğun metriklər və hold-out test</td><td>Metrik cədvəli, qrafik, səhv təhlili</td></tr><tr><td>Prototip</td><td>İstifadəçinin məlumat daxil edib nəticə ala bilməsi</td><td>Streamlit / Flask / notebook demo</td></tr><tr><td>Hesabat</td><td>Metod, nəticə, məhdudiyyət, istinad</td><td>Elmi hesabat və təqdimat</td></tr></table>
+<p>Layihə sualını PICO tipli məntiqdə dəqiqləşdirmək olar: kim/ hansı obyekt, hansı giriş məlumatları, hansı proqnoz, hansı müqayisə və hansı ölçmə. Hipotez yoxlanıla bilən olmalıdır. “Random Forest daha yaxşıdır” əvəzinə “Seçilmiş datasetdə Random Forest modelinin macro-F1 göstəricisi Logistic Regression-dan yüksək olacaq” kimi yazılır.</p>
+</section><section class="chapter" id="s2"><h2>20.2. Real problemin seçilməsi</h2>
+<p>Yaxşı problem həm əhəmiyyətli, həm də mövcud resurslarla həll edilə bilən problemdir. Problem seçərkən məlumatın əldə edilə bilməsi, etiketin mövcudluğu, hüquqi/etik icazə, layihə müddəti, tələb olunan hesablama gücü və nəticənin kimə fayda verəcəyi nəzərə alınır.</p>
+<table><tr><th>İstiqamət</th><th>Problem nümunəsi</th><th>ML tapşırığı</th><th>Hədəf</th></tr><tr><td>Təhsil</td><td>Akademik riskin erkən müəyyən edilməsi</td><td>Təsnifat</td><td>Riskli / risksiz</td></tr><tr><td>Enerji</td><td>Günəş paneli istehsalının proqnozu</td><td>Reqressiya</td><td>kWh</td></tr><tr><td>Turizm</td><td>Turist məmnuniyyətinin təhlili</td><td>Təsnifat / sentiment</td><td>Müsbət / neytral / mənfi</td></tr><tr><td>Sənaye</td><td>Avadanlığın nasazlıq ehtimalı</td><td>Təsnifat</td><td>Nasazlıq / normal</td></tr><tr><td>Su ehtiyatları</td><td>Su səviyyəsinin proqnozu</td><td>Zaman sırası reqressiyası</td><td>Su səviyyəsi</td></tr></table>
+<h3>Problem seçimi üçün qərar meyarları</h3>
+<p>Hər meyarı 1–5 bal aralığında qiymətləndirin. Çəkili bal = meyar balı × çəki. Bu cədvəl qərarı strukturlaşdırır, lakin elmi sübutu əvəz etmir.</p>
+<table><tr><th>Meyar</th><th>Çəki</th><th>Özünüzə verəcəyiniz sual</th></tr><tr><td>Məlumat əlçatanlığı</td><td>5</td><td>Qanuni və keyfiyyətli dataset varmı?</td></tr><tr><td>Problemin əhəmiyyəti</td><td>4</td><td>Nəticədən real istifadəçi faydalanacaqmı?</td></tr><tr><td>Ölçülə bilmə</td><td>4</td><td>Uğuru metriklə ifadə etmək mümkündürmü?</td></tr><tr><td>İcra oluna bilmə</td><td>5</td><td>Vaxt və hesablama resursu kifayətdirmi?</td></tr><tr><td>Etik/hüquqi risk</td><td>5</td><td>Risklər idarə oluna bilirmi?</td></tr></table>
+<div class="note"><b>Problem bəyanatı şablonu:</b> “[İstifadəçi/qurum] hazırda [problemlə] qarşılaşır. Bu layihənin məqsədi [məlumat mənbələri] əsasında [hədəf dəyişəni] proqnozlaşdırmaq/təsnif etmək və nəticəni [istifadə ssenarisi] üçün təqdim etməkdir. Uğur [metrik] və [praktiki meyar] ilə qiymətləndiriləcək.”</div>
+</section><section class="chapter" id="s3"><h2>20.3. Datasetin əldə edilməsi və təsviri</h2>
+<p>Dataset müşahidələrdən (sətirlər) və dəyişənlərdən (sütunlar) ibarətdir. Hər sətir bir müşahidəni, hər sütun isə xüsusiyyəti və ya hədəfi təsvir edir. Dataset seçilərkən mənbə, toplama üsulu, zaman aralığı, populyasiya, lisenziya, etiketin mənası və mümkün qərəz araşdırılmalıdır.</p>
+<h3>Dataset mənbələri</h3>
+<div class="grid"><div class="tile"><b>UCI Machine Learning Repository</b><p>Akademik tədris və benchmark datasetləri.</p><a href="https://archive.ics.uci.edu/" target="_blank">Rəsmi resurs</a></div><div class="tile"><b>Kaggle</b><p>İcma datasetləri və yarışlar; lisenziyanı ayrıca yoxlayın.</p><a href="https://www.kaggle.com/datasets" target="_blank">Datasetlər</a></div><div class="tile"><b>OpenML</b><p>ML təcrübələri üçün dataset və benchmark.</p><a href="https://www.openml.org/" target="_blank">OpenML</a></div><div class="tile"><b>World Bank Data</b><p>İqtisadi və sosial göstəricilər.</p><a href="https://data.worldbank.org/" target="_blank">Məlumat portalı</a></div></div>
+<p>Dataset Card-da minimum bunları qeyd edin: ad və versiya, mənbə URL, lisenziya, yüklənmə tarixi, müşahidə sayı, dəyişən sayı, hədəf sütun, sinif paylanması, çatışmayan dəyərlər, məxfilik riski, məhdudiyyətlər.</p>
+<pre><code>import pandas as pd
+
+df = pd.read_csv("dataset.csv")
+print("Ölçü:", df.shape)
+display(df.head())
+display(df.info())
+display(df.describe(include="all").T)
+print("Hədəf paylanması:")
+print(df["target"].value_counts(dropna=False))</code></pre>
+<p>Əgər dataset zaman üzrə qurulubsa, gələcək məlumatı keçmişi proqnozlaşdırmaq üçün istifadə etməyin. Zaman sırası üçün train/validation/test bölməsi xronoloji ardıcıllığı qorumalıdır.</p>
+</section><section class="chapter" id="s4"><h2>20.4. Verilənlərin təmizlənməsi və hazırlanması</h2>
+<p>Model məlumatın keyfiyyətindən asılıdır. İlk addım məlumatı anlamaqdır, dərhal bütün boş xanaları doldurmaq deyil. Missing values, dublikatlar, səhv tiplər, qeyri-mümkün qiymətlər, outlier-lər, etiket uyğunsuzluğu və məlumat sızması yoxlanılır.</p>
+<h3>İlkin yoxlama ardıcıllığı</h3><ol><li>Faylın ölçüsü, sütun adları və tipləri.</li><li>Boş dəyərlərin sayı və faizi.</li><li>Dublikat müşahidələr.</li><li>Kateqoriyaların yazılış uyğunsuzluğu.</li><li>Hədəf paylanması və sinif balansı.</li><li>Outlier və məntiqsiz dəyərlər.</li><li>Hədəfi birbaşa və ya dolayı açıqlayan sütunlar (leakage).</li></ol>
+<pre><code>df.isna().sum().sort_values(ascending=False)
+df.duplicated().sum()
+
+from sklearn.model_selection import train_test_split
+X = df.drop(columns=["target"])
+y = df["target"]
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42,
+    stratify=y
+)</code></pre>
+<p>Vacib qayda: imputasiya, scaling və encoding kimi parametrlər yalnız train hissəsində öyrənilməlidir. Bunun üçün <code>Pipeline</code> və <code>ColumnTransformer</code> istifadə edilir. Bütün datasetdə əvvəlcədən StandardScaler fit etmək test məlumatının statistik məlumatını təlimə sızdırır.</p>
+<pre><code>from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+
+numeric_pipe = Pipeline([
+    ("imputer", SimpleImputer(strategy="median")),
+    ("scaler", StandardScaler())
+])
+categorical_pipe = Pipeline([
+    ("imputer", SimpleImputer(strategy="most_frequent")),
+    ("onehot", OneHotEncoder(handle_unknown="ignore"))
+])
+preprocess = ColumnTransformer([
+    ("num", numeric_pipe, numeric_cols),
+    ("cat", categorical_pipe, categorical_cols)
+])</code></pre>
+<div class="warn"><b>Data leakage nümunəsi:</b> tələbənin semestr sonunda yaranan yekun nəticəsini proqnozlaşdırarkən yekun qiyməti hesablayan sütunu girişə daxil etmək modelə cavabı əvvəlcədən verməkdir. Belə model yüksək metrik göstərə bilər, amma real istifadədə yararsızdır.</div>
+</section><section class="chapter" id="s5"><h2>20.5. Model və alqoritmin seçilməsi</h2>
+<p>Alqoritm hədəfin növünə, dataset ölçüsünə, interpretasiya tələbinə və səhvin nəticəsinə görə seçilir. Başlanğıcda mürəkkəb neyron şəbəkəsi qurmaq məcburi deyil. Sadə baseline müqayisə nöqtəsi yaradır.</p>
+<table><tr><th>Tapşırıq</th><th>Baseline</th><th>Müqayisə modelləri</th><th>Metrik</th></tr><tr><td>Binary classification</td><td>DummyClassifier</td><td>Logistic Regression, Random Forest, XGBoost</td><td>Recall, Precision, F1, ROC-AUC / PR-AUC</td></tr><tr><td>Regression</td><td>DummyRegressor</td><td>Linear/Ridge, Random Forest, Gradient Boosting</td><td>MAE, RMSE, R²</td></tr><tr><td>Clustering</td><td>Sadə K-Means baseline</td><td>Hierarchical, DBSCAN</td><td>Silhouette, Davies-Bouldin; domen yoxlaması</td></tr><tr><td>Time series</td><td>Naive last-value</td><td>ARIMA, tree-based lag features, LSTM</td><td>MAE, RMSE, MASE</td></tr></table>
+<p>Model seçimi üçün suallar: nəticə izah edilməlidirmi? Siniflər balanslıdırmı? Məlumat azdırmı? Xəta hansı istiqamətdə daha bahalıdır? Model real vaxtda işləməlidirmi? Hesablama resursu varmı?</p>
+<div class="note">Baseline zəif görünə bilər, amma onun əsas rolu mürəkkəb modelin həqiqətən əlavə dəyər yaradıb-yaratmadığını göstərməkdir. Mürəkkəb model baseline-dan yaxşı deyilsə, daha sadə model seçmək əsaslandırıla bilər.</div>
+</section><section class="chapter" id="s6"><h2>20.6. Modelin qurulması və öyrədilməsi</h2>
+<p>Modelin öyrədilməsi zamanı alqoritm train datasında parametrləri öyrənir. Validation dəsti hiperparametr seçmək, early stopping və model müqayisəsi üçün istifadə olunur. Test dəsti isə yekun, mümkün qədər bir dəfəlik qiymətləndirmə üçündür.</p>
+<div class="diagram"><svg viewBox="0 0 760 205" role="img" aria-label="Dataset bölgüsü"><g font-family="Arial" text-anchor="middle"><rect x="25" y="60" width="710" height="62" rx="9" fill="#eaf2ff" stroke="#155eef"/><rect x="25" y="60" width="497" height="62" rx="9" fill="#b9d5ff"/><rect x="522" y="60" width="142" height="62" fill="#b8e9df"/><rect x="664" y="60" width="71" height="62" rx="9" fill="#ffe0ae"/><text x="270" y="96" fill="#173b70">Train 70%</text><text x="593" y="96" fill="#075e59">Validation 20%</text><text x="699" y="145" fill="#80500b">Test</text><text x="270" y="145" fill="#52657d" font-size="12">Parametrləri öyrən</text><text x="590" y="145" fill="#52657d" font-size="12">Model seç</text><text x="699" y="165" fill="#52657d" font-size="12">Son ölçmə</text></g></svg><p class="small">70/15/15 və ya 80/10/10 kimi bölgülər də istifadə oluna bilər. Dəqiq nisbət datasetin ölçüsü və strukturundan asılıdır; zaman sıralarında xronoloji bölmə seçilir.</p></div>
+<pre><code>from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report
+
+model = Pipeline([
+    ("prep", preprocess),
+    ("clf", LogisticRegression(max_iter=1000,
+                               class_weight="balanced"))
+])
+model.fit(X_train, y_train)
+pred = model.predict(X_test)
+print(classification_report(y_test, pred))</code></pre>
+<p>Random seed təcrübənin təkrarlana bilməsinə kömək edir, lakin bütün kitabxana və GPU mühitlərində tam deterministik nəticəyə zəmanət vermir. Kitabxana versiyalarını, seed-i, hardware-i və parametrləri qeyd edin.</p>
+</section><section class="chapter" id="s7"><h2>20.7. Modelin qiymətləndirilməsi</h2>
+<p>Qiymətləndirmə metrikləri tapşırığın məqsədinə uyğun seçilir. Classification üçün confusion matrix-də TP, TN, FP, FN sayılır. Precision yanlış alarmın, Recall isə real müsbətlərin nə qədərinin tapıldığını göstərir. Regression-da MAE orta mütləq səhv, RMSE böyük səhvləri daha çox cəzalandıran kvadratik ölçü, R² isə modelin variasiyanı nə qədər izah etdiyini göstərən göstəricidir.</p>
+<div class="interactive"><h3>İnteraktiv classification metrik kalkulyatoru</h3><div class="grid"><label>TP<input id="tp" type="number" value="72" min="0"></label><label>FP<input id="fp" type="number" value="8" min="0"></label><label>FN<input id="fn" type="number" value="18" min="0"></label><label>TN<input id="tn" type="number" value="102" min="0"></label></div><canvas id="metricCanvas" width="650" height="250"></canvas><div class="result" id="metricResult"></div></div>
+<p>Modelin nəticəsini yalnız bir rəqəmlə təqdim etməyin. Confusion matrix, siniflər üzrə precision/recall, ROC və PR əyrisi, kalibrlənmə, threshold seçimi və səhv nümunələrinin təhlili daha dolğun mənzərə yaradır. Nəticənin qeyri-müəyyənliyi üçün cross-validation və ya bootstrap intervalı nəzərdən keçirilə bilər.</p>
+</section><section class="chapter" id="s8"><h2>20.8. Nəticələrin müqayisəli təhlili</h2>
+<p>Müqayisə ədalətli olmalıdır: modellər eyni train/test bölgüsündə, eyni preprocessing protokolunda və eyni metriklə qiymətləndirilməlidir. Hiperparametr axtarışının büdcəsi də qeyd edilməlidir. Ən yüksək rəqəmi seçməklə kifayətlənməyin; modelin sabitliyi, interpretasiyası, sürəti, yaddaş sərfi və səhvlərinin növü də vacibdir.</p>
+<table><tr><th>Model</th><th>F1 (nümunə)</th><th>Recall (nümunə)</th><th>Inference vaxtı</th><th>Şərh</th></tr><tr><td>Logistic Regression</td><td>0.81</td><td>0.78</td><td>2 ms</td><td>Sadə və izahı asan baseline</td></tr><tr><td>Random Forest</td><td>0.87</td><td>0.84</td><td>9 ms</td><td>Qeyri-xətti əlaqələri tuta bilər</td></tr><tr><td>Gradient Boosting</td><td>0.89</td><td>0.86</td><td>12 ms</td><td>Nümunə nəticə; testdə yoxlanmalıdır</td></tr></table>
+<div class="warn">Cədvəldəki rəqəmlər izah məqsədli nümunədir, real eksperiment nəticəsi deyil. Tələbə öz datasetində ölçdüyü nəticələri yazmalıdır.</div>
+<p>Statistik fərq iddiası irəli sürərkən təkcə 0.01 fərqi “əhəmiyyətli” adlandırmaq olmaz. Təkrar cross-validation nəticələri, etibar intervalı və uyğun statistik test seçimi nəzərdən keçirilməlidir. Eyni test nümunələri üzərində müqayisədə paired yanaşmalar üstün ola bilər.</p>
+</section><section class="chapter" id="s9"><h2>20.9. İntellektual sistemin prototipinin hazırlanması</h2>
+<p>Prototip modelin laboratoriyadan istifadəçi ssenarisinə keçididir. Prototip istifadəçidən giriş qəbul edir, eyni preprocessing-i tətbiq edir, modeldən nəticə alır və nəticəni başa düşülən formada göstərir. Prototip elmi nəticəni nümayiş etdirməlidir, lakin klinik, maliyyə və ya digər yüksək riskli qərarları insan yoxlaması olmadan avtomatlaşdırmamalıdır.</p>
+<h3>Sadə sistem arxitekturası</h3>
+<div class="diagram"><svg viewBox="0 0 820 220" role="img" aria-label="ML prototip arxitekturası"><defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#155eef"/></marker></defs><g font-family="Arial" text-anchor="middle"><rect x="20" y="65" width="145" height="90" rx="10" fill="#eaf2ff" stroke="#155eef" stroke-width="2"/><text x="92" y="102">İstifadəçi</text><text x="92" y="125" font-size="12">Form / fayl</text><rect x="225" y="65" width="155" height="90" rx="10" fill="#eaf8f5" stroke="#0b8f87" stroke-width="2"/><text x="302" y="102">Preprocessing</text><text x="302" y="125" font-size="12">Eyni pipeline</text><rect x="440" y="65" width="145" height="90" rx="10" fill="#fff5e7" stroke="#c17a13" stroke-width="2"/><text x="512" y="102">ML Model</text><text x="512" y="125" font-size="12">Predict / score</text><rect x="645" y="65" width="155" height="90" rx="10" fill="#edf8ee" stroke="#29934b" stroke-width="2"/><text x="722" y="102">Nəticə paneli</text><text x="722" y="125" font-size="12">İzah + xəbərdarlıq</text><g stroke="#155eef" stroke-width="3" fill="none" marker-end="url(#arr2)"><path d="M165 110H220M380 110H435M585 110H640"/></g></g></svg></div>
+<p>Başlanğıc üçün Streamlit rahat seçimdir. Model və preprocessing pipeline-ı fayla saxlayın; tətbiqdə təlimi təkrar etməyin, yalnız yüklənmiş modeli çağırın. İstifadəçi girişinin validasiyası, səhv mesajları, model versiyası və audit qeydi əlavə edin.</p>
+<pre><code># app.py — minimal Streamlit prototip skeleti
+import streamlit as st
+import joblib
+import pandas as pd
+
+st.title("İntellektual analiz sistemi")
+model = joblib.load("ml_pipeline.joblib")
+
+age = st.number_input("Yaş", 16, 100, 22)
+attendance = st.slider("Davamiyyət (%)", 0, 100, 80)
+avg_grade = st.number_input("Orta bal", 0.0, 100.0, 70.0)
+
+if st.button("Təhlil et"):
+    row = pd.DataFrame([{
+        "age": age,
+        "attendance": attendance,
+        "avg_grade": avg_grade
+    }])
+    prediction = model.predict(row)[0]
+    st.success(f"Modelin proqnozu: {prediction}")
+    st.caption("Bu prototip qərar dəstəyi üçündür; yekun qərarı məsul şəxs verir.")</code></pre>
+<p>Bu kod yalnız nümunə skeletidir: sütun adları və model faylı sizin real layihənizə uyğun olmalıdır. Təlim zamanı istifadə edilən sütun sırası və preprocessing tətbiqdə də eyni olmalıdır.</p>
+</section><section class="chapter" id="s10"><h2>20.10. Layihənin elmi hesabatı və müdafiəsi</h2>
+<p>Elmi hesabat başqa tədqiqatçının nə etdiyinizi təkrarlaya bilməsi üçün kifayət qədər məlumat verməlidir. Mətn “model yaxşı nəticə verdi” deməklə kifayətlənməməli, dataset, bölgü, preprocessing, hiperparametrlər, metriklər və məhdudiyyətləri açıq göstərməlidir.</p>
+<table><tr><th>Hesabat bölməsi</th><th>Yazılmalı məzmun</th></tr><tr><td>Başlıq və xülasə</td><td>Problem, metod, əsas nəticə, töhfə</td></tr><tr><td>Giriş</td><td>Problemin aktuallığı, məqsəd, sual, hipotez</td></tr><tr><td>Əlaqəli işlər</td><td>Əvvəlki yanaşmalar, fərq və tədqiqat boşluğu</td></tr><tr><td>Məlumat və metod</td><td>Dataset, dəyişənlər, preprocessing, model, eksperiment dizaynı</td></tr><tr><td>Nəticələr</td><td>Metriklər, cədvəl, qrafik, müqayisə</td></tr><tr><td>Müzakirə</td><td>Nəticənin mənası, səhvlər, məhdudiyyətlər, qərəz</td></tr><tr><td>Nəticə və gələcək iş</td><td>Əsas cavab, töhfə, növbəti addımlar</td></tr><tr><td>Ədəbiyyat və əlavələr</td><td>İstinadlar, kod, konfiqurasiya, Dataset Card</td></tr></table>
+<p>Müdafiə təqdimatında problem və motivasiya, dataset, metodologiya, arxitektura, nəticələr, prototip nümayişi, məhdudiyyətlər və gələcək iş ardıcıllığı tövsiyə olunur. Suallara cavab verərkən test nəticəsinin hansı bölmədən alındığını və modelin hansı şəraitdə işləmədiyini də izah edin.</p>
+</section>
+<section class="chapter" id="interactive"><h2>İnteraktiv layihə planlayıcısı və model seçimi</h2>
+<p>Layihənin sahəsini və problem tipini seçin. Alət ilkin iş planı təklif edir; bu, elmi rəhbərlə razılaşdırılmış tədqiqat planını əvəz etmir.</p>
+<label>Layihə sahəsi<select id="domain"><option>Təhsil</option><option>Enerji</option><option>Turizm</option><option>Sənaye</option><option>Su ehtiyatları</option><option>Digər</option></select></label>
+<label>ML tapşırığı<select id="task"><option>Classification</option><option>Regression</option><option>Clustering</option><option>Time series forecasting</option></select></label>
+<label>Dataset ölçüsü<select id="size"><option>Kiçik (500-dən az)</option><option selected>Orta (500–50 000)</option><option>Böyük (50 000-dən çox)</option></select></label>
+<label>Əsas tələb<select id="priority"><option>İzaholunma</option><option>Sürət</option><option>Yüksək proqnoz keyfiyyəti</option></select></label>
+<button onclick="makePlan()">Layihə planını yarat</button><div class="result" id="planResult">Seçimlərinizi edin və plan yaradın.</div>
+<h3>İş qrafiki: 8 həftəlik nümunə</h3><canvas id="gantt" width="760" height="290"></canvas>
+</section>
+<section class="lab" id="lab"><h2>Laboratoriya işi №20: Seçilmiş real problem üzrə tam maşın öyrənməsi layihəsinin hazırlanması və təqdim edilməsi</h2>
+<p><b>Laboratoriyanın məqsədi:</b> tələbənin seçdiyi real problem üzrə bütün ML həyat dövrünü icra etməsi və işlək prototip təqdim etməsi.</p>
+<h3>İcra mərhələləri</h3>
+<div class="step"><b>1-ci həftə — Problem və hipotez.</b> Problem bəyanatı, tədqiqat sualı, məqsəd, hipotez və uğur meyarı yazılır.</div>
+<div class="step"><b>2-ci həftə — Dataset.</b> Məlumat mənbəyi, lisenziya, dəyişənlər, hədəf və Dataset Card hazırlanır.</div>
+<div class="step"><b>3-cü həftə — EDA və təmizləmə.</b> Boş dəyərlər, dublikat, paylanma, outlier, leakage və sinif balansı araşdırılır.</div>
+<div class="step"><b>4-cü həftə — Baseline.</b> Sadə baseline qurulur, uyğun metrik seçilir və ilk nəticə qeyd edilir.</div>
+<div class="step"><b>5-ci həftə — Model müqayisəsi.</b> Ən azı iki model qurulur, validation ilə hiperparametrlər seçilir.</div>
+<div class="step"><b>6-cı həftə — Test və səhv təhlili.</b> Test dəsti bir dəfə yekun qiymətləndirmə üçün istifadə olunur; səhvlər araşdırılır.</div>
+<div class="step"><b>7-ci həftə — Prototip.</b> Streamlit və ya başqa interfeys qurulur; model versiyası və giriş yoxlaması əlavə edilir.</div>
+<div class="step"><b>8-ci həftə — Hesabat və müdafiə.</b> Hesabat, təqdimat, demo və təkrarlana bilən fayllar tamamlanır.</div>
+<h3>Qiymətləndirmə rubrikası</h3><table><tr><th>Meyar</th><th>Bal</th></tr><tr><td>Problemin əsaslandırılması və hipotez</td><td>10</td></tr><tr><td>Dataset seçimi, təsviri və etik əsaslandırma</td><td>15</td></tr><tr><td>EDA və preprocessing</td><td>15</td></tr><tr><td>Baseline və modellərin qurulması</td><td>15</td></tr><tr><td>Qiymətləndirmə və müqayisəli təhlil</td><td>20</td></tr><tr><td>İşlək prototip</td><td>10</td></tr><tr><td>Elmi hesabat və müdafiə</td><td>15</td></tr><tr><th>Yekun</th><th>100</th></tr></table>
+<h3>Təqdim edilməli fayllar</h3><ul><li>Elmi hesabat (PDF/DOCX).</li><li>Notebook və ya Python mənbə kodları.</li><li>Dataset Card və məlumat lisenziyası qeydi.</li><li>Yadda saxlanmış preprocessing/model pipeline.</li><li>Prototipin işlək versiyası və ekran görüntüləri.</li><li>Eksperiment nəticələri, metrik cədvəli və qrafiklər.</li><li>README: quraşdırma və işə salma təlimatı.</li></ul>
+</section>
+<section class="chapter" id="tasks"><h2>Praktiki tapşırıqlar</h2><ol>
+<li>Öz ixtisasınıza uyğun üç real problem seçin və qərar meyarları ilə ən uyğununu əsaslandırın.</li>
+<li>Seçilmiş problem üçün bir cümləlik problem bəyanatı, tədqiqat sualı və yoxlanıla bilən hipotez yazın.</li>
+<li>Uyğun dataset tapın və Dataset Card hazırlayın.</li>
+<li>Datasetin ölçüsünü, tiplərini, boş dəyərlərini və hədəf paylanmasını təhlil edin.</li>
+<li>Train/validation/test bölgüsünü seçin və seçiminizi əsaslandırın.</li>
+<li>Preprocessing Pipeline qurun və data leakage riskini izah edin.</li>
+<li>Baseline və ən azı iki ML modelini eyni protokolla müqayisə edin.</li>
+<li>Classification və regression üçün uyğun metrikləri seçin və nəticələri şərh edin.</li>
+<li>Model səhvlərindən 10 nümunə seçərək error analysis aparın.</li>
+<li>Modeli istifadəçiyə təqdim edən Streamlit prototipi hazırlayın.</li>
+<li>Layihə hesabatını bu fəsildə verilən struktura uyğun yazın.</li>
+<li>5–7 dəqiqəlik müdafiə təqdimatı və canlı demo hazırlayın.</li>
+</ol></section>
+<section class="quiz" id="quiz"><h2>Özünü yoxlama sualları</h2><p>Hər sual real layihə ssenarisinə əsaslanır. Düzgün cavabdan sonra qısa izah göstərilir.</p><div id="quizlist"></div><button onclick="grade()">Cavabları yoxla</button><button class="secondary" onclick="resetQuiz()">Yenidən başla</button><div class="result" id="quizscore">Cavabları seçin və yoxlayın.</div></section>
+<section class="refs" id="refs"><h2>İstifadə olunan ədəbiyyat</h2><ol>
+<li>James, G., Witten, D., Hastie, T., Tibshirani, R., Taylor, J. (2023). <i>An Introduction to Statistical Learning</i>, 2nd ed. <a href="https://www.statlearning.com/" target="_blank">Kitab və resurslar</a>.</li>
+<li>Géron, A. (2022). <i>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</i>, 3rd ed. O’Reilly.</li>
+<li>Molnar, C. (2022). <i>Interpretable Machine Learning</i>. <a href="https://christophm.github.io/interpretable-ml-book/" target="_blank">Onlayn kitab</a>.</li>
+<li> scikit-learn User Guide. <a href="https://scikit-learn.org/stable/user_guide.html" target="_blank">Rəsmi sənədlər</a>.</li>
+<li>Google Machine Learning Crash Course. <a href="https://developers.google.com/machine-learning/crash-course" target="_blank">Təlim kursu</a>.</li>
+<li>Hastie, T., Tibshirani, R., Friedman, J. (2009). <i>The Elements of Statistical Learning</i>, 2nd ed. <a href="https://hastie.su.domains/ElemStatLearn/" target="_blank">Kitab</a>.</li>
+<li>Provost, F., Fawcett, T. (2013). <i>Data Science for Business</i>. O’Reilly.</li>
+<li>McKinney, W. (2022). <i>Python for Data Analysis</i>, 3rd ed. O’Reilly.</li>
+<li>OpenML. <a href="https://www.openml.org/" target="_blank">Dataset və eksperiment platforması</a>.</li>
+<li>UCI Machine Learning Repository. <a href="https://archive.ics.uci.edu/" target="_blank">Dataset kataloqu</a>.</li>
+<li>Streamlit Documentation. <a href="https://docs.streamlit.io/" target="_blank">Prototip hazırlama</a>.</li>
+<li>Google Colab FAQ. <a href="https://research.google.com/colaboratory/faq.html" target="_blank">Colab sənədləri</a>.</li>
+</ol><div class="note"><b>Akademik dürüstlük:</b> Dataset, kod, model və süni intellekt alətlərindən istifadə hesabatda açıqlanmalıdır. Mənbəsiz qrafik, uydurma metrik və ya aparılmamış eksperiment nəticəsi təqdim edilməməlidir.</div></section>
+</main></div>
+<script>
+document.querySelectorAll('pre').forEach(p=>{let h=document.createElement('div');h.className='codehead';let t=document.createElement('span');t.textContent='Python kod nümunəsi';let b=document.createElement('button');b.className='copy';b.textContent='Kodu köçür';b.onclick=async()=>{try{await navigator.clipboard.writeText(p.innerText);b.textContent='Köçürüldü ✓'}catch(e){b.textContent='Seçib köçürün'}};h.append(t,b);p.parentNode.insertBefore(h,p)});
+function metrics(){let v=id=>Math.max(0,+document.getElementById(id).value),tp=v('tp'),fp=v('fp'),fn=v('fn'),tn=v('tn'),p=tp+fp?tp/(tp+fp):0,r=tp+fn?tp/(tp+fn):0,acc=tp+tn+fp+fn?(tp+tn)/(tp+tn+fp+fn):0,f=p+r?2*p*r/(p+r):0;document.getElementById('metricResult').textContent=`Accuracy=${acc.toFixed(3)} · Precision=${p.toFixed(3)} · Recall=${r.toFixed(3)} · F1=${f.toFixed(3)}`;let c=document.getElementById('metricCanvas'),x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);[['Accuracy',acc,'#155eef'],['Precision',p,'#0b8f87'],['Recall',r,'#bd7a17'],['F1',f,'#7753b5']].forEach((a,i)=>{x.fillStyle=a[2];x.fillRect(135,20+i*55,a[1]*470,30);x.fillStyle='#17243a';x.fillText(a[0]+' '+a[1].toFixed(2),10,40+i*55)})}
+['tp','fp','fn','tn'].forEach(id=>document.getElementById(id).addEventListener('input',metrics));metrics();
+function makePlan(){let d=document.getElementById('domain').value,t=document.getElementById('task').value,z=document.getElementById('size').value,p=document.getElementById('priority').value;let models=t==='Classification'?'DummyClassifier → Logistic Regression → Random Forest / Gradient Boosting':t==='Regression'?'DummyRegressor → Ridge → Random Forest Regressor':t==='Clustering'?'K-Means baseline → Hierarchical / DBSCAN':'Naive forecast → lag-feature regression → time-series model';let met=t==='Classification'?'Macro-F1, Recall, Precision, PR-AUC':t==='Regression'?'MAE, RMSE, R²':'Silhouette + domen üzrə yoxlama';document.getElementById('planResult').innerHTML=`<b>İlkin plan: ${d} / ${t}</b><br>Dataset: ${z}.<br>Model ardıcıllığı: ${models}.<br>Qiymətləndirmə: ${met}.<br>Əsas prioritet: ${p}.<br><b>Növbəti addım:</b> problem bəyanatı və Dataset Card hazırlayın.`}
+function gantt(){let c=document.getElementById('gantt'),x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);let names=['Problem','Dataset','Təmizləmə','Model','Qiymət','Prototip','Hesabat'];let spans=[[1,1],[2,2],[3,3],[4,5],[6,6],[7,7],[8,8]];x.font='13px Arial';names.forEach((n,i)=>{let y=25+i*35;x.fillStyle='#24364f';x.fillText(n,8,y+16);let a=spans[i][0],b=spans[i][1];x.fillStyle=['#155eef','#0b8f87','#bd7a17','#7753b5','#155eef','#0b8f87','#bd7a17'][i];x.fillRect(145+(a-1)*72,y,Math.max(30,(b-a+1)*65),22)});for(let w=1;w<=8;w++){x.fillStyle='#5e6d82';x.fillText('H'+w,155+(w-1)*72,315-10)}}
+gantt();
+const Q=[
+["Universitet tələbələrin akademik riskini proqnozlaşdırmaq istəyir. Layihə qrupu əvvəlcə model seçib, sonra uyğun dataset axtarmağı planlaşdırır. Metodoloji baxımdan ilk düzgün addım hansıdır?",["Ən mürəkkəb alqoritmi seçmək","Problemi, hədəf dəyişəni və uğur meyarını dəqiqləşdirmək","Test datasını toplamaq","Tətbiqin rənglərini seçmək"],1,"Əvvəl problem və ölçülə bilən hədəf müəyyənləşdirilməlidir; model seçimi bundan sonra gəlir."],
+["Enerji laboratoriyası növbəti günün kWh istehsalını təxmin etmək istəyir. Bu hansı ML tapşırığıdır?",["Classification","Regression / time-series forecasting","Clustering","Object detection"],1,"Hədəf ədədi enerji miqdarıdır; zaman asılılığı varsa zaman sırası metodları da nəzərə alınır."],
+["Datasetdə hədəf sütununa aid yekun nəticə ilə hesablanan başqa sütun var. Bu sütun proqnoz anında məlum deyil. Onu modelə daxil etmək nə yarada bilər?",["Data leakage","Data augmentation","Regularization","Cross-validation"],0,"Proqnoz anında mövcud olmayan məlumat modelə gələcəyi göstərər və test nəticəsini süni yüksəldə bilər."],
+["Siniflərin 90%-i “normal”, 10%-i “nasazlıq”dır. Model 90% accuracy alır, amma heç bir nasazlığı tapmır. Hansı metriklərə baxmaq lazımdır?",["Yalnız accuracy","Nasazlıq sinfi üçün recall, precision, F1 və PR-AUC","Yalnız R²","Yalnız MAE"],1,"Balanssız siniflərdə accuracy yanıltıcıdır; azlıq sinfinin aşkarlanması ayrıca ölçülməlidir."],
+["Tədqiqatçı StandardScaler-i bütün datasetdə fit edir, sonra train/test bölür. Problem nədir?",["Heç bir problem yoxdur","Test məlumatının statistikası preprocessing-ə sızır","Model mütləq underfit olur","Sütun adları itir"],1,"Scaler train hissəsində fit edilməli, validation/test-ə yalnız transform tətbiq olunmalıdır."],
+["Tələbə 4 model sınayır və ən yaxşı nəticəni test dəstinə baxaraq seçir. Niyə bu düzgün deyil?",["Test dəsti hiperparametr seçimi üçün nəzərdə tutulub","Test dəstinə təkrar baxmaq testə overfitting və optimist qiymətləndirmə yarada bilər","Test dəsti həmişə boş olmalıdır","Model sayı çoxdur"],1,"Model seçimi validation/CV ilə aparılmalı, test yekun müstəqil qiymətləndirmə üçün saxlanmalıdır."],
+["Datasetdə 200 müşahidə var, 40 sütun və az sayda etiket mövcuddur. Hansı strategiya daha məqsədəuyğundur?",["Dərhal böyük dərin neyron şəbəkəsi öyrətmək","Sadə baseline, cross-validation, ehtiyatlı feature selection və regularization","Test məlumatını train-ə qatmaq","Metrik hesablamamaq"],1,"Kiçik datasetdə sadə modellər, regularization və etibarlı validation daha uyğundur."],
+["Modelin precision-i yüksək, recall-u aşağıdır. Səhiyyə skrininqində xəstəni buraxmaq bahalıdır. Hansı addım araşdırılmalıdır?",["Threshold-u və recall/precision trade-off-u validation üzərində yoxlamaq","Test nəticəsini dəyişmək","Bütün müsbətləri silmək","Yalnız accuracy göstərmək"],0,"Skrininqdə false negative bahalı ola bilər; threshold qərarı validation və klinik risk kontekstində əsaslandırılmalıdır."],
+["İki modelin F1 nəticələri 0.86 və 0.87-dir. İkinci model 10 dəfə yavaşdır və izahı çətindir. Layihə qərarı necə verilməlidir?",["Həmişə 0.87 seçilməlidir","Keyfiyyət fərqinin qeyri-müəyyənliyini, sürəti, izaholunmanı və istifadə tələblərini birlikdə qiymətləndirmək","Metrikləri gizlətmək","Bir modeli təsadüfi seçmək"],1,"Praktik fayda yalnız bir metrikdən ibarət deyil; performans, xərclər və risklər birlikdə müqayisə olunmalıdır."],
+["Tələbə Streamlit prototipində yeni məlumatı modelə ötürür, lakin sütunların sırası təlimdən fərqlidir və boş dəyərlər yoxlanmır. Əsas risk nədir?",["Prototip təlim pipeline-ı ilə uyğun deyil, səhv proqnoz yarana bilər","Model avtomatik yenidən təlim alacaq","Metriklər dəyişməz qalacaq","Heç bir risk yoxdur"],0,"Tətbiqdə eyni preprocessing və sütun sxemi qorunmalı, girişlər validasiya edilməlidir."],
+["Layihə qrupu hesabatda yalnız ən yaxşı nəticəni yazır, uğursuz sınaqları və dataset məhdudiyyətlərini qeyd etmir. Bu nəyi zəiflədir?",["Elmi şəffaflıq və təkrarlana bilmə","GPU sürəti","Dataset ölçüsü","Python sintaksisi"],0,"Eksperiment parametrləri, məhdudiyyətlər və nəticələr şəffaf təqdim olunmalıdır."],
+["Tələbə layihəsini müdafiə edir. Komissiya soruşur: “Model real şəraitdə niyə zəifləyə bilər?” Ən dolğun cavab hansıdır?",["Çünki model bəzən səhv edir","Dataset paylanmasının dəyişməsi, etiket qərəzi, ölçmə xətası, data drift və tətbiq mühitinin fərqi nəticəyə təsir edə bilər","Çünki Python istifadə olunub","Çünki modelin adı Random Forest-dir"],1,"Real mühitdə paylanma və proses dəyişiklikləri modelin ümumiləşdirmə qabiliyyətini zəiflədə bilər."],
+["Tədqiqatda 5-fold cross-validation nəticələri fold-lar üzrə çox dəyişir. Bu nəyi göstərir?",["Modelin performansı bölünmədən asılı ola bilər; qeyri-sabitlik və məlumat azlığı araşdırılmalıdır","Model mütləq mükəmməldir","Test dəsti artıq lazım deyil","Dataset lisenziyası yoxdur"],0,"Fold-lar arası dəyişkənlik model sabitliyi və dataset ölçüsü barədə məlumat verir."],
+["Universitet risk proqnozunu tələbəyə qarşı avtomatik cəza qərarı üçün istifadə etmək istəyir. Hansı yanaşma daha məsuliyyətlidir?",["Model nəticəsini yeganə qərar kimi tətbiq etmək","İnsan nəzarəti, izah, apellyasiya imkanı, qərəz auditi və məqsəd məhdudiyyəti tətbiq etmək","Modelin səhvlərini gizlətmək","Tələbələrə məlumat verməmək"],1,"Yüksək təsirli qərarlarda model qərar dəstəyi olmalı, şəffaflıq və insan nəzarəti qorunmalıdır."]
+];
+function buildQuiz(){document.getElementById('quizlist').innerHTML=Q.map((q,i)=>`<div class="quizq"><b>${i+1}. ${q[0]}</b>${q[1].map((a,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${a}</label>`).join('')}<div id="fb${i}" class="small"></div></div>`).join('')}
+function grade(){let n=0;Q.forEach((q,i)=>{let v=document.querySelector(`input[name=q${i}]:checked`),f=document.getElementById('fb'+i);if(v&&+v.value===q[2]){n++;f.className='goodtxt';f.textContent='Doğru cavab. '+q[3]}else{f.className='badtxt';f.textContent='Düzgün cavab: '+q[1][q[2]]+'. '+q[3]}});document.getElementById('quizscore').textContent=`Nəticə: ${n}/${Q.length} (${Math.round(n/Q.length*100)}%).`}
+function resetQuiz(){document.querySelectorAll('#quizlist input').forEach(x=>x.checked=false);Q.forEach((q,i)=>{let f=document.getElementById('fb'+i);f.textContent='';f.className='small'});document.getElementById('quizscore').textContent='Cavabları seçin və yoxlayın.'}
+buildQuiz();
+</script><script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

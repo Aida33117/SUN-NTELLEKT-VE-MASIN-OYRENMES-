@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fəsil 10. Modelin qiymətləndirilməsi və optimallaşdırılması</title>
+<style>
+:root{--navy:#163c63;--blue:#2868a5;--pale:#edf5fc;--ink:#203044;--muted:#607286;--line:#d9e3ed;--green:#19845c;--orange:#b76a12;--red:#b33b3b}
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:var(--ink);font:16px/1.68 "Segoe UI",Arial,sans-serif}
+header{background:linear-gradient(120deg,#123657,#2c6fa5);color:#fff;padding:42px max(5vw,22px)}header h1{font-size:clamp(28px,4vw,43px);line-height:1.2;margin:10px 0}header p{max-width:950px;color:#e5eff8;margin:8px 0}.tag{display:inline-block;background:#eaf3fc;color:#174c7c;padding:5px 13px;border-radius:22px;font-size:13px;font-weight:700;margin-right:7px}
+.layout{max-width:1500px;margin:24px auto;padding:0 20px;display:grid;grid-template-columns:275px minmax(0,1fr);gap:23px}
+nav{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:17px}nav h3{margin:0 0 9px;color:var(--navy)}nav a{display:block;text-decoration:none;color:#385975;font-size:13.5px;padding:5px 7px;border-radius:6px}nav a:hover{background:var(--pale);color:var(--blue)}
+main{min-width:0}.card{background:white;border:1px solid var(--line);border-radius:15px;padding:25px;margin-bottom:19px;box-shadow:0 4px 15px #183b5c0a}
+h2{font-size:25px;color:var(--navy);margin:0 0 12px}h3{color:#24547e;margin:21px 0 8px}h4{color:#315b80;margin:12px 0 6px}p{margin:8px 0}.lead{font-size:17px;color:#405970}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.panel{border:1px solid var(--line);background:#fbfdff;border-radius:11px;padding:15px}
+.note{background:#eef6fc;border-left:4px solid #4385bb;padding:13px 15px;border-radius:8px;margin:13px 0}.warn{background:#fff6e9;border-left:4px solid #d18a2d;padding:13px 15px;border-radius:8px;margin:13px 0}
+.formula{background:#f1f5fa;border:1px solid #dce6f0;border-radius:10px;padding:14px;text-align:center;font:19px Cambria,Georgia,serif;margin:12px 0;overflow:auto}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:#edf4fa;color:#244d70}
+button{border:0;border-radius:8px;background:var(--blue);color:white;padding:9px 14px;font-weight:650;cursor:pointer;margin:4px 4px 4px 0}button:hover{filter:brightness(.92)}button.secondary{background:#e7eff7;color:#244e75}button.green{background:var(--green)}
+input,select{padding:8px 10px;border:1px solid #bdcbd9;border-radius:7px;font:inherit;max-width:100%}input[type=range]{vertical-align:middle}
+label{display:inline-block;margin:5px 8px 5px 0}canvas{width:100%;height:300px;display:block;border:1px solid var(--line);border-radius:10px;background:white}
+.result{background:#eef8f3;border:1px solid #c9e8d8;padding:12px;border-radius:9px;margin-top:10px}.small{font-size:13px;color:var(--muted)}.pill{display:inline-block;background:#edf4fa;color:#28547d;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:700}
+.code{background:#102338;color:#e7f0fa;border-radius:10px;padding:16px;overflow:auto;font:13px/1.6 Consolas,monospace;white-space:pre}
+.quizq{border:1px solid var(--line);padding:14px;border-radius:10px;margin:12px 0}.quizq label{display:block}.feedback{font-size:14px;font-weight:600;margin-top:8px}
+footer{text-align:center;color:var(--muted);padding:28px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}nav{position:relative;max-height:none}.grid2,.grid3{grid-template-columns:1fr}.card{padding:18px}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style></head>
+<body>
+<header><span class="tag">Magistratura səviyyəsi</span><span class="tag">Fəsil 10</span>
+<h1>Modelin qiymətləndirilməsi və optimallaşdırılması</h1>
+<p>Maşın öyrənməsi modelinin ümumiləşdirmə qabiliyyətinin ölçülməsi, overfitting və underfitting problemlərinin aşkarlanması, çarpaz yoxlama və hiperparametr axtarışı metodları.</p><div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="layout"><nav><h3>Mündəricat</h3>
+<a href="#intro">Fəslin məqsədi və nəticələri</a>
+<a href="#s101">10.1. Maşın öyrənməsi modelinin keyfiyyəti</a>
+<a href="#s102">10.2. Təlim və test nəticələrinin müqayisəsi</a>
+<a href="#s103">10.3. Overfitting və Underfitting</a>
+<a href="#s104">10.4. Bias–Variance Trade-off</a>
+<a href="#s105">10.5. Cross-Validation</a>
+<a href="#s106">10.6. K-Fold Cross-Validation</a>
+<a href="#s107">10.7. Parametr və hiperparametr anlayışları</a>
+<a href="#s108">10.8. Grid Search</a>
+<a href="#s109">10.9. Random Search</a>
+<a href="#s1010">10.10. Regularization metodları</a>
+<a href="#s1011">10.11. Modelin seçilməsi və müqayisəsi</a>
+<a href="#s1012">10.12. Eksperiment nəticələrinin statistik təhlili</a>
+<a href="#s1013">10.13. Modelin etibarlılığının qiymətləndirilməsi</a>
+<a href="#practice">Praktiki tapşırıqlar</a><a href="#quiz">Özünü yoxlama sualları</a><a href="#lab">Laboratoriya işi №10</a><a href="#glossary">Terminlər lüğəti</a><a href="#refs">İstifadə olunan ədəbiyyat</a>
+</nav><main>
+<section class="card" id="intro"><h2>Fəslin məqsədi və təlim nəticələri</h2>
+<p class="lead">Bu fəslin məqsədi tələbələrə maşın öyrənməsi modellərini yalnız bir metriklə deyil, düzgün eksperimental protokol, çarpaz yoxlama, hiperparametr optimallaşdırılması və statistik təhlil əsasında qiymətləndirməyi öyrətməkdir.</p>
+<div class="grid2"><div class="panel"><h3>Təlim nəticələri</h3><ul><li>Model keyfiyyətinin ölçülərini izah edir.</li><li>Təlim və test nəticələrini müqayisə edir.</li><li>Overfitting, underfitting və bias–variance əlaqəsini təhlil edir.</li><li>K-Fold Cross-Validation tətbiq edir.</li><li>Grid Search və Random Search ilə hiperparametrləri optimallaşdırır.</li><li>Eksperiment nəticələrini statistik baxımdan şərh edir.</li></ul></div><div class="panel"><h3>İlkin biliklər</h3><ul><li>Təsnifat və reqressiya modelləri;</li><li>Accuracy, Precision, Recall, F1, MAE, RMSE;</li><li>Python və Scikit-learn;</li><li>Orta, dispersiya və standart kənarlaşma.</li></ul></div></div>
+<div class="note"><b>Əsas prinsip:</b> modelin təlim verilənlərində yüksək nəticə göstərməsi onun yeni, əvvəllər görmədiyi verilənlərdə də yaxşı işləyəcəyinə zəmanət vermir. Əsas məqsəd ümumiləşdirmə qabiliyyətidir.</div></section>
+
+<section class="card" id="s101"><h2>10.1. Maşın öyrənməsi modelinin keyfiyyəti</h2>
+<p>Modelin keyfiyyəti onun konkret tapşırıq üçün nə dərəcədə düzgün, sabit və yeni verilənlərə tətbiq edilə bilən nəticə verməsi ilə müəyyən olunur. Qiymətləndirmə metrikləri problemin növünə uyğun seçilməlidir.</p>
+<table><tr><th>Tapşırıq</th><th>Metriklər</th><th>Nəyi ölçür?</th></tr><tr><td>Təsnifat</td><td>Accuracy, Precision, Recall, F1, ROC-AUC</td><td>Düzgün təsnifat və siniflərin aşkarlanması</td></tr><tr><td>Reqressiya</td><td>MAE, MSE, RMSE, R²</td><td>Proqnoz xətası və izah olunan variasiya</td></tr><tr><td>Klasterləşdirmə</td><td>Silhouette, Davies–Bouldin</td><td>Klasterlərin daxili uyğunluğu və ayrılması</td></tr></table>
+<h3>İnteraktiv metrik hesablayıcısı</h3><p>Qarışıqlıq matrisinin dəyərlərini daxil edin. Hesablayıcı Accuracy, Precision, Recall və F1 göstəricilərini çıxaracaq.</p>
+<div class="panel"><div class="grid3"><label>TP <input id="tp" type="number" min="0" value="42"></label><label>TN <input id="tn" type="number" min="0" value="48"></label><label>FP <input id="fp" type="number" min="0" value="6"></label><label>FN <input id="fn" type="number" min="0" value="4"></label></div><button onclick="metricCalc()">Metrikləri hesabla</button><div id="metricResult" class="result">Accuracy=0.90 · Precision=0.875 · Recall=0.913 · F1=0.894</div></div>
+<div class="formula">Accuracy = (TP + TN) / (TP + TN + FP + FN)</div><div class="formula">Precision = TP / (TP + FP) &nbsp;&nbsp; Recall = TP / (TP + FN)</div><div class="formula">F1 = 2 × (Precision × Recall) / (Precision + Recall)</div>
+<div class="warn">Siniflər balanssız olduqda Accuracy aldadıcı ola bilər. Məsələn, nümunələrin 99%-i “sağlam” sinfidirsə, bütün nümunələri sağlam proqnozlaşdıran model 99% Accuracy əldə edə bilər, lakin xəstə sinfini heç aşkarlamaya bilər.</div></section>
+
+<section class="card" id="s102"><h2>10.2. Təlim və test nəticələrinin müqayisəsi</h2>
+<p>Təlim nəticəsi modelin öyrəndiyi verilənlər üzərindəki performansını, test nəticəsi isə təlim prosesində istifadə edilməmiş verilənlər üzərindəki performansını göstərir. Test dəsti model seçimi və hiperparametr axtarışı üçün təkrar-təkrar istifadə edilməməlidir.</p>
+<table><tr><th>Təlim nəticəsi</th><th>Test nəticəsi</th><th>Ehtimal olunan şərh</th></tr><tr><td>Yüksək</td><td>Yüksək və yaxın</td><td>Yaxşı ümumiləşdirmə</td></tr><tr><td>Çox yüksək</td><td>Əhəmiyyətli dərəcədə aşağı</td><td>Overfitting ehtimalı</td></tr><tr><td>Aşağı</td><td>Aşağı</td><td>Underfitting və ya zəif xüsusiyyətlər</td></tr><tr><td>Aşağı</td><td>Yüksək</td><td>Bölünmə, nümunə sayı və təsadüfi variasiya araşdırılmalıdır</td></tr></table>
+<div class="panel"><h3>Təlim–test fərqinin interaktiv təhlili</h3><label>Təlim Accuracy: <b id="trv">0.98</b></label><input id="trainAcc" type="range" min="50" max="100" value="98" oninput="drawTrain()"><br><label>Test Accuracy: <b id="tev">0.82</b></label><input id="testAcc" type="range" min="50" max="100" value="82" oninput="drawTrain()"><canvas id="trainCanvas" width="760" height="270"></canvas><div id="trainInterpret" class="result"></div></div>
+</section>
+
+<section class="card" id="s103"><h2>10.3. Overfitting və Underfitting</h2>
+<p><b>Overfitting</b> modelin təlim verilənlərini, o cümlədən təsadüfi səs-küyü həddindən artıq öyrənməsi nəticəsində yeni verilənlərdə zəif işləməsidir. <b>Underfitting</b> isə modelin verilənlərdəki əsas qanunauyğunluğu belə öyrənə bilməməsidir.</p>
+<div class="grid2"><div class="panel"><h3>Underfitting</h3><ul><li>Model çox sadədir.</li><li>Təlim xətası yüksəkdir.</li><li>Test xətası da yüksəkdir.</li><li>Həll: modelin mürəkkəbliyini artırmaq, xüsusiyyətləri yaxşılaşdırmaq.</li></ul></div><div class="panel"><h3>Overfitting</h3><ul><li>Model həddindən artıq mürəkkəbdir.</li><li>Təlim xətası çox aşağıdır.</li><li>Test xətası nəzərəçarpacaq dərəcədə yüksəkdir.</li><li>Həll: regularization, sadələşdirmə, daha çox məlumat, cross-validation.</li></ul></div></div>
+<h3>Model mürəkkəbliyi və xəta diaqramı</h3><div class="panel"><canvas id="fitCanvas" width="760" height="310"></canvas><div class="small">Sxematik diaqram: model mürəkkəbliyi artdıqca təlim xətası azalır, test xətası isə müəyyən nöqtədən sonra arta bilər.</div></div>
+</section>
+
+<section class="card" id="s104"><h2>10.4. Bias–Variance Trade-off</h2>
+<p>Bias–Variance Trade-off modelin sadələşdirilməsi ilə verilənlərə həddindən artıq uyğunlaşma arasında tarazlığı ifadə edir. Yüksək bias modelin əsas əlaqəni tuta bilməməsi, yüksək variance isə təlim verilənlərindəki kiçik dəyişikliklərə həddindən artıq həssas olmasıdır.</p>
+<div class="formula">E[(y − ŷ)²] = Bias(ŷ)² + Variance(ŷ) + Irreducible Noise</div>
+<table><tr><th>Model vəziyyəti</th><th>Bias</th><th>Variance</th><th>Tipik nəticə</th></tr><tr><td>Həddindən artıq sadə</td><td>Yüksək</td><td>Aşağı</td><td>Underfitting</td></tr><tr><td>Həddindən artıq mürəkkəb</td><td>Aşağı</td><td>Yüksək</td><td>Overfitting</td></tr><tr><td>Tarazlaşdırılmış</td><td>Münasib</td><td>Münasib</td><td>Yaxşı ümumiləşdirmə</td></tr></table>
+<div class="panel"><h3>Bias və Variance tarazlığının simulyasiyası</h3><label>Model mürəkkəbliyi: <b id="complexVal">5</b></label><input id="complexity" type="range" min="1" max="10" value="5" oninput="drawBias()"><canvas id="biasCanvas" width="760" height="280"></canvas><div id="biasText" class="result"></div></div>
+</section>
+
+<section class="card" id="s105"><h2>10.5. Cross-Validation</h2>
+<p>Cross-Validation (çarpaz yoxlama) verilənlər çoxluğunu bir neçə hissəyə ayıraraq modelin müxtəlif təlim və yoxlama bölmələrində performansını qiymətləndirmə üsuludur. Bu yanaşma nəticənin yalnız bir təsadüfi train/test bölünməsindən asılılığını azaltmağa kömək edir.</p>
+<h3>Əsas addımlar</h3><ol><li>Verilənlər bir neçə hissəyə bölünür.</li><li>Hər iterasiyada bir hissə yoxlama üçün saxlanılır.</li><li>Qalan hissələrdə model öyrədilir.</li><li>Hər iterasiyanın metrikası hesablanır.</li><li>Nəticələr orta qiymət və yayılma ilə ümumiləşdirilir.</li></ol>
+<div class="note"><b>Vacib:</b> preprocessing addımları (məsələn, StandardScaler və feature selection) cross-validation daxilində Pipeline vasitəsilə öyrədilməlidir. Bütün dataset üzərində əvvəlcədən miqyaslandırma məlumat sızmasına (data leakage) səbəb ola bilər.</div>
+</section>
+
+<section class="card" id="s106"><h2>10.6. K-Fold Cross-Validation</h2>
+<p>K-Fold metodunda verilənlər K bərabər (və ya mümkün qədər yaxın ölçülü) hissəyə bölünür. Hər iterasiyada bir fold validation, qalan K−1 fold isə training üçün istifadə edilir.</p>
+<div class="formula">CV orta nəticəsi = (1/K) × Σ scoreₖ</div>
+<div class="panel"><h3>İnteraktiv K-Fold sxemi</h3><label>Fold sayı K: <b id="foldVal">5</b></label><input id="foldRange" type="range" min="3" max="8" value="5" oninput="drawFolds()"><div id="foldViz" class="grid2"></div><div id="foldInfo" class="result"></div></div>
+<p><b>Stratified K-Fold</b> təsnifat məsələlərində hər fold-da sinif nisbətlərini qorumağa çalışır. Zaman sıralarında isə gələcək müşahidələrin keçmişdən əvvəl təlimə düşməməsi üçün TimeSeriesSplit kimi zaman ardıcıllığını qoruyan üsullar seçilməlidir.</p>
+</section>
+
+<section class="card" id="s107"><h2>10.7. Parametr və hiperparametr anlayışları</h2>
+<p><b>Parametr</b> modelin təlim zamanı verilənlərdən öyrəndiyi daxili qiymətdir. <b>Hiperparametr</b> isə təlimdən əvvəl istifadəçi tərəfindən təyin edilən və modelin öyrənmə prosesini və ya mürəkkəbliyini idarə edən parametrdir.</p>
+<table><tr><th>Model</th><th>Parametr nümunəsi</th><th>Hiperparametr nümunəsi</th></tr><tr><td>Linear Regression</td><td>Əmsallar (w), sərbəst hədd (b)</td><td>Fit zamanı seçilən model spesifikasiyası</td></tr><tr><td>Decision Tree</td><td>Düyünlərdə öyrənilən bölünmə qaydaları</td><td>max_depth, min_samples_split</td></tr><tr><td>KNN</td><td>Klassik mənada öyrənilən çəki parametri yoxdur</td><td>n_neighbors, metric, weights</td></tr><tr><td>Neural Network</td><td>Çəkilər və bias-lar</td><td>Learning rate, batch size, layer sayı</td></tr></table>
+<div class="note">Hiperparametr optimallaşdırılmasının məqsədi validation və ya cross-validation nəticəsinə əsasən uyğun konfiqurasiyanı tapmaqdır. Test dəsti son, qərəzsiz qiymətləndirmə üçün saxlanmalıdır.</div>
+</section>
+
+<section class="card" id="s108"><h2>10.8. Grid Search</h2>
+<p>Grid Search əvvəlcədən verilmiş hiperparametr qiymətlərinin bütün mümkün kombinasiyalarını sistematik yoxlayır. Axtarış sahəsi kiçik olduqda şəffaf və təkrarlana bilən yanaşmadır, lakin kombinasiya sayı artdıqca hesablama xərci sürətlə böyüyür.</p>
+<div class="formula">N<sub>kombinasiya</sub> = n₁ × n₂ × ... × nₚ</div>
+<div class="panel"><h3>Grid Search kombinasiya kalkulyatoru</h3><div class="grid3"><label>Parametr 1 qiymət sayı <input id="g1" type="number" min="1" value="3"></label><label>Parametr 2 qiymət sayı <input id="g2" type="number" min="1" value="4"></label><label>Parametr 3 qiymət sayı <input id="g3" type="number" min="1" value="2"></label></div><button onclick="gridCalc()">Kombinasiyaları hesabla</button><div id="gridResult" class="result">3 × 4 × 2 = 24 konfiqurasiya</div></div>
+<h3>Python nümunəsi</h3><pre class="code">from sklearn.model_selection import GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
+
+model = RandomForestClassifier(random_state=42)
+param_grid = {
+    "n_estimators": [100, 200, 300],
+    "max_depth": [None, 5, 10],
+    "min_samples_split": [2, 5]
+}
+
+search = GridSearchCV(
+    estimator=model,
+    param_grid=param_grid,
+    cv=5,
+    scoring="f1",
+    n_jobs=-1
+)
+search.fit(X_train, y_train)
+print(search.best_params_)
+print(search.best_score_)</pre>
+</section>
+
+<section class="card" id="s109"><h2>10.9. Random Search</h2>
+<p>Random Search hiperparametr kombinasiyalarını verilmiş paylanmalardan təsadüfi seçir. Çoxölçülü axtarış fəzasında məhdud sayda sınaqla yaxşı konfiqurasiya tapmaq üçün faydalı ola bilər.</p>
+<table><tr><th>Meyar</th><th>Grid Search</th><th>Random Search</th></tr><tr><td>Yoxlama üsulu</td><td>Bütün müəyyən edilmiş kombinasiyalar</td><td>Təsadüfi seçilmiş kombinasiyalar</td></tr><tr><td>Hesablama sayı</td><td>Şəbəkənin ölçüsündən asılıdır</td><td>n_iter ilə məhdudlaşdırılır</td></tr><tr><td>Uyğun şərait</td><td>Kiçik axtarış fəzası</td><td>Böyük və geniş axtarış fəzası</td></tr><tr><td>Təkrarlanma</td><td>Eyni grid ilə deterministik</td><td>random_state ilə təkrarlana bilər</td></tr></table>
+<div class="panel"><h3>Random Search sınaq simulyatoru</h3><label>Sınaq sayı: <b id="trialVal">20</b></label><input id="trials" type="range" min="5" max="100" step="5" value="20" oninput="drawTrials()"><canvas id="trialCanvas" width="760" height="240"></canvas><div id="trialText" class="result"></div></div>
+<pre class="code">from sklearn.model_selection import RandomizedSearchCV
+from scipy.stats import randint
+
+param_dist = {
+    "n_estimators": randint(80, 401),
+    "max_depth": [None, 4, 6, 8, 12, 16],
+    "min_samples_split": randint(2, 12)
+}
+search = RandomizedSearchCV(
+    RandomForestClassifier(random_state=42),
+    param_distributions=param_dist,
+    n_iter=40,
+    cv=5,
+    scoring="f1",
+    random_state=42,
+    n_jobs=-1
+)
+search.fit(X_train, y_train)</pre>
+</section>
+
+<section class="card" id="s1010"><h2>10.10. Regularization metodları</h2>
+<p>Regularization modelin həddindən artıq mürəkkəbləşməsini məhdudlaşdırmaq üçün itki funksiyasına cərimə termini əlavə edir. Bu, xüsusilə çoxsaylı xüsusiyyətlər olduqda overfitting riskini azaltmağa kömək edə bilər.</p>
+<div class="formula">L1: Loss + λ Σ |wᵢ|</div><div class="formula">L2: Loss + λ Σ wᵢ²</div>
+<table><tr><th>Metod</th><th>Cərimə</th><th>Tipik təsir</th></tr><tr><td>L1 / Lasso</td><td>Əmsalların mütləq qiymətləri cəmi</td><td>Bəzi əmsalları sıfıra endirə, seyrək model yarada bilər</td></tr><tr><td>L2 / Ridge</td><td>Əmsalların kvadratları cəmi</td><td>Əmsalları kiçildir, adətən sıfıra tam endirmir</td></tr><tr><td>Elastic Net</td><td>L1 və L2 kombinasiyası</td><td>Hər iki yanaşmanın xüsusiyyətlərini birləşdirir</td></tr></table>
+<div class="panel"><h3>Regularization gücünün interaktiv nümayişi</h3><label>λ (lambda): <b id="lambdaVal">0.5</b></label><input id="lambdaRange" type="range" min="0" max="100" value="50" oninput="drawLambda()"><canvas id="lambdaCanvas" width="760" height="250"></canvas><div id="lambdaText" class="result"></div></div>
+<div class="warn">λ çox kiçik olduqda mürəkkəb modelin cəriməsi zəif, həddindən artıq böyük olduqda isə modelin öyrənməsi məhdud ola bilər. λ uyğunluğu validation/CV ilə seçilməlidir. Xüsusiyyətlər adətən regularization-dan əvvəl miqyaslandırılır.</div>
+</section>
+
+<section class="card" id="s1011"><h2>10.11. Modelin seçilməsi və müqayisəsi</h2>
+<p>Model seçimi təkcə ən yüksək orta metrikə əsaslanmamalıdır. Hesablama xərci, interpretasiya, sabitlik, proqnoz gecikməsi, məlumat sızması riski və tətbiq mühiti də nəzərə alınmalıdır.</p>
+<table><tr><th>Meyar</th><th>Model A</th><th>Model B</th><th>Model C</th></tr><tr><td>CV F1 orta</td><td>0.88</td><td>0.91</td><td>0.90</td></tr><tr><td>CV standart kənarlaşma</td><td>0.02</td><td>0.07</td><td>0.015</td></tr><tr><td>Təlim vaxtı</td><td>Az</td><td>Yüksək</td><td>Orta</td></tr><tr><td>Şərh edilə bilmə</td><td>Yüksək</td><td>Aşağı</td><td>Orta</td></tr></table>
+<div class="note">Model B-nin orta F1 göstəricisi ən yüksək olsa da, dəyişkənliyi də böyükdür. Model C bir qədər aşağı orta nəticə ilə daha sabit ola bilər. Seçim tətbiqin risklərinə və tələblərinə görə əsaslandırılmalıdır.</div>
+<h3>İnteraktiv model seçimi</h3><div class="panel"><label>Orta metrik çəkisi (%) <input id="wscore" type="range" min="0" max="100" value="60" oninput="compareModels()"></label><label>Sabitlik çəkisi (%) <input id="wstable" type="range" min="0" max="100" value="40" oninput="compareModels()"></label><div id="modelChoice" class="result"></div></div>
+</section>
+
+<section class="card" id="s1012"><h2>10.12. Eksperiment nəticələrinin statistik təhlili</h2>
+<p>Maşın öyrənməsi eksperimentlərində nəticələr təsadüfi bölünmə, başlanğıc seed, fold tərkibi və təlim prosesinə görə dəyişə bilər. Buna görə yalnız bir ölçməni deyil, təkrar sınaqların orta qiymətini və yayılmasını təqdim etmək vacibdir.</p>
+<div class="formula">Orta: x̄ = (1/n) Σxᵢ</div><div class="formula">Nümunə standart kənarlaşması: s = √[Σ(xᵢ−x̄)²/(n−1)]</div>
+<div class="panel"><h3>Eksperiment nəticələrinin interaktiv statistik təhlili</h3><label>Fold nəticələri (vergüllə) <input id="scores" value="0.84,0.87,0.86,0.90,0.88" style="width:min(100%,500px)"></label><br><button onclick="statsCalc()">Orta və standart kənarlaşmanı hesabla</button><div id="statsResult" class="result">Nəticələri daxil edin.</div></div>
+<p>İki modelin müqayisəsində eyni fold-lar və ya eyni random seed-lər üzrə cütləşdirilmiş nəticələrdən istifadə etmək daha informativ ola bilər. Statistik əhəmiyyət, praktik əhəmiyyətlə eyni deyil: kiçik fərq böyük dataset-də statistik əhəmiyyətli görünsə də, real tətbiqdə faydasız ola bilər.</p>
+</section>
+
+<section class="card" id="s1013"><h2>10.13. Modelin etibarlılığının qiymətləndirilməsi</h2>
+<p>Modelin etibarlılığı nəticələrin təkrarlana bilməsi, verilənlər dəyişdikdə sabit qalması, yeni mühitə uyğunlaşması və riskli hallarda davranışının başa düşülməsi ilə bağlıdır.</p>
+<table><tr><th>Yoxlama istiqaməti</th><th>Praktiki sual</th><th>Yanaşma</th></tr><tr><td>Reproduktivlik</td><td>Eyni şərtlərdə nəticə təkrarlanırmı?</td><td>Seed, versiyalar, eksperiment qeydləri</td></tr><tr><td>Stabillik</td><td>Verilənlərin kiçik dəyişməsində performans qorunurmu?</td><td>Təkrar bölünmələr, perturbasiya sınaqları</td></tr><tr><td>Data leakage</td><td>Test məlumatı təlim prosesinə sızıb?</td><td>Pipeline və düzgün split</td></tr><tr><td>Drift</td><td>İstehsalat verilənlərinin paylanması dəyişib?</td><td>Monitorinq və periodik qiymətləndirmə</td></tr><tr><td>Ədalətlilik</td><td>Alt qruplar üzrə performans fərqlənirmi?</td><td>Qrup əsaslı metriklər və audit</td></tr><tr><td>Kalibrləmə</td><td>Proqnoz ehtimalları reallığa uyğundurmu?</td><td>Calibration curve, Brier score</td></tr></table>
+<div class="note"><b>Etibarlı eksperiment protokolu:</b> train/validation/test bölgüsünü əvvəlcədən müəyyən edin; preprocessing-i Pipeline daxilində saxlayın; hiperparametrləri yalnız train/CV hissəsində seçin; test dəstini yekun qiymətləndirməyə qədər toxunulmaz saxlayın; nəticələri seed, versiya və metriklərlə qeyd edin.</div>
+</section>
+
+<section class="card" id="practice"><h2>Praktiki tapşırıqlar</h2><div class="grid3">
+<div class="panel"><span class="pill">Başlanğıc</span><h3>Tapşırıq 1</h3><p>Verilmiş TP, TN, FP, FN qiymətləri üçün Accuracy, Precision, Recall və F1 hesablayın. Sinif balanssızlığının Accuracy-yə təsirini izah edin.</p></div>
+<div class="panel"><span class="pill">Orta</span><h3>Tapşırıq 2</h3><p>Decision Tree və Random Forest modellərini 5-Fold Stratified CV ilə qiymətləndirin. Təlim/test fərqini və standart kənarlaşmanı müqayisə edin.</p></div>
+<div class="panel"><span class="pill">Tədqiqat</span><h3>Tapşırıq 3</h3><p>Bir model üçün Grid Search və Random Search tətbiq edin. Hesablama büdcəsi, ən yaxşı CV nəticəsi, sabitlik və test performansını müqayisə edin.</p></div>
+</div></section>
+
+<section class="card" id="quiz"><h2>Özünü yoxlama sualları</h2><p>Sualları cavablandırın. Sonda balınız və hər cavab üzrə izah göstəriləcək.</p><div id="quizBox"></div><button class="green" onclick="gradeQuiz()">Cavabları yoxla</button><button class="secondary" onclick="resetQuiz()">Yenidən başla</button><div id="quizScore" class="result">Cavabları seçdikdən sonra yoxlama düyməsini basın.</div></section>
+
+<section class="card" id="lab"><h2>Laboratoriya işi №10: Hiperparametrlərin optimallaşdırılması və modelin müxtəlif qiymətləndirmə metodları ilə yoxlanılması</h2>
+<h3>1. İşin məqsədi</h3><p>Bir neçə təsnifat modelini düzgün train/test protokolu ilə qurmaq, cross-validation vasitəsilə qiymətləndirmək, Grid Search və Random Search ilə hiperparametrləri optimallaşdırmaq və yekun test nəticələrini müqayisə etmək.</p>
+<h3>2. İstifadə olunan vasitələr</h3><ul><li>Python 3, Google Colab və ya Jupyter Notebook;</li><li>NumPy, Pandas, Matplotlib;</li><li>Scikit-learn: Pipeline, StandardScaler, LogisticRegression, RandomForestClassifier, GridSearchCV, RandomizedSearchCV.</li></ul>
+<h3>3. Verilənlər</h3><p>Scikit-learn Breast Cancer Wisconsin dataset-i tədris nümunəsi kimi istifadə olunur. Dataset ikisinifli təsnifat tapşırığıdır. Bu laboratoriya tibbi diaqnoz üçün deyil, model qiymətləndirmə metodlarının öyrənilməsi üçündür.</p>
+<h3>4. İcra ardıcıllığı</h3><ol><li>Dataset-i yükləyin və sinif paylanmasını yoxlayın.</li><li>Stratified train/test bölgüsü yaradın.</li><li>Logistic Regression və Random Forest üçün Pipeline qurun.</li><li>5-Fold Stratified CV ilə başlanğıc nəticələri hesablayın.</li><li>Grid Search ilə Logistic Regression hiperparametrlərini seçin.</li><li>Random Search ilə Random Forest parametrlərini axtarın.</li><li>Ən yaxşı modelləri ayrılmış test dəstində yalnız bir dəfə qiymətləndirin.</li><li>Orta CV nəticəsi, standart kənarlaşma və test nəticələrini müqayisə edin.</li></ol>
+<h3>5. Python kodu</h3>
+<pre class="code">import numpy as np
+import pandas as pd
+
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import (
+    train_test_split, StratifiedKFold,
+    cross_validate, GridSearchCV, RandomizedSearchCV
+)
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from scipy.stats import randint
+
+# 1. Dataset
+data = load_breast_cancer()
+X, y = data.data, data.target
+
+# 2. Test dəstini əvvəlcədən ayırırıq
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, stratify=y, random_state=42
+)
+
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+# 3. Logistic Regression: scaling Pipeline daxilindədir
+log_pipe = Pipeline([
+    ("scaler", StandardScaler()),
+    ("model", LogisticRegression(max_iter=5000))
+])
+
+log_grid = {
+    "model__C": [0.01, 0.1, 1, 10, 100],
+    "model__solver": ["liblinear", "lbfgs"]
+}
+grid = GridSearchCV(
+    log_pipe, log_grid, cv=cv, scoring="f1",
+    n_jobs=-1, return_train_score=True
+)
+grid.fit(X_train, y_train)
+
+# 4. Random Forest üçün Random Search
+rf = RandomForestClassifier(random_state=42)
+rf_dist = {
+    "n_estimators": randint(100, 401),
+    "max_depth": [None, 4, 6, 8, 12],
+    "min_samples_split": randint(2, 12),
+    "min_samples_leaf": randint(1, 6)
+}
+random_search = RandomizedSearchCV(
+    rf, rf_dist, n_iter=30, cv=cv, scoring="f1",
+    random_state=42, n_jobs=-1, return_train_score=True
+)
+random_search.fit(X_train, y_train)
+
+# 5. Yalnız indi toxunulmamış test dəstini qiymətləndiririk
+best_models = {
+    "Logistic Regression": grid.best_estimator_,
+    "Random Forest": random_search.best_estimator_
+}
+for name, model in best_models.items():
+    pred = model.predict(X_test)
+    print("\\n", name)
+    print("Accuracy:", accuracy_score(y_test, pred))
+    print("Precision:", precision_score(y_test, pred))
+    print("Recall:", recall_score(y_test, pred))
+    print("F1:", f1_score(y_test, pred))
+
+print("Grid best params:", grid.best_params_)
+print("Grid best CV F1:", grid.best_score_)
+print("Random best params:", random_search.best_params_)
+print("Random best CV F1:", random_search.best_score_)</pre>
+<h3>6. Kodun izahı</h3><table><tr><th>Komponent</th><th>Funksiyası</th></tr><tr><td>train_test_split(stratify=y)</td><td>Sinif nisbətlərini qoruyaraq test dəstini ayırır.</td></tr><tr><td>StratifiedKFold</td><td>Hər fold-da sinif nisbətlərini mümkün qədər saxlayır.</td></tr><tr><td>Pipeline</td><td>StandardScaler-i hər fold-un yalnız təlim hissəsində öyrədir, data leakage riskini azaldır.</td></tr><tr><td>GridSearchCV</td><td>Göstərilmiş C və solver kombinasiyalarını yoxlayır.</td></tr><tr><td>RandomizedSearchCV</td><td>Parametr paylanmalarından məhdud sayda kombinasiya seçir.</td></tr><tr><td>best_score_</td><td>Ən yaxşı konfiqurasiyanın CV üzrə orta F1 nəticəsidir.</td></tr><tr><td>Test metrikləri</td><td>Seçim tamamlandıqdan sonra ümumiləşdirmə qabiliyyətini qiymətləndirir.</td></tr></table>
+<div class="warn">Bu laboratoriyada test dəsti hiperparametr seçimi üçün istifadə edilmir. Test nəticəsinə baxdıqdan sonra parametrləri dəyişmək test dəstinə dolayı uyğunlaşma yarada bilər.</div>
+<h3>7. Nəticələrin qeydiyyatı</h3><table><tr><th>Model</th><th>Ən yaxşı hiperparametrlər</th><th>CV F1 orta</th><th>Test F1</th><th>Test Accuracy</th></tr><tr><td>Logistic Regression</td><td>Tələbə doldurur</td><td></td><td></td><td></td></tr><tr><td>Random Forest</td><td>Tələbə doldurur</td><td></td><td></td><td></td></tr></table>
+<h3>8. Nəzarət sualları</h3><ol><li>Nə üçün test dəsti hiperparametr seçimi zamanı istifadə edilməməlidir?</li><li>Stratified K-Fold hansı problemi azaldır?</li><li>Grid Search və Random Search arasındakı əsas fərq nədir?</li><li>Pipeline data leakage riskini necə azaldır?</li><li>CV orta nəticəsi yüksək, standart kənarlaşması da böyük olan model necə şərh edilməlidir?</li></ol>
+<h3>9. Hesabatın strukturu</h3><ol><li>Laboratoriya işinin adı və məqsədi;</li><li>Dataset-in təsviri və sinif paylanması;</li><li>İstifadə edilən modellər və qiymətləndirmə protokolu;</li><li>Grid Search və Random Search parametrləri;</li><li>CV və test metrikləri;</li><li>Model müqayisəsi, məhdudiyyətlər və yekun nəticə.</li></ol>
+</section>
+
+<section class="card" id="glossary"><h2>Terminlər lüğəti</h2><table><tr><th>Termin</th><th>İzah</th></tr><tr><td>Generalization</td><td>Modelin yeni verilənlərdə düzgün işləmək qabiliyyəti</td></tr><tr><td>Overfitting</td><td>Təlim verilənlərinə həddindən artıq uyğunlaşma</td></tr><tr><td>Underfitting</td><td>Modelin qanunauyğunluğu öyrənmək üçün kifayət qədər mürəkkəb olmaması</td></tr><tr><td>Bias</td><td>Model fərziyyələrinin yaratdığı sistematik xəta</td></tr><tr><td>Variance</td><td>Modelin təlim verilənlərinin dəyişməsinə həssaslığı</td></tr><tr><td>Cross-Validation</td><td>Çarpaz yoxlama</td></tr><tr><td>Fold</td><td>Çarpaz yoxlamada verilənlərin bir hissəsi</td></tr><tr><td>Hyperparameter</td><td>Təlimdən əvvəl seçilən idarəedici parametr</td></tr><tr><td>Grid Search</td><td>Hiperparametr kombinasiyalarının sistematik axtarışı</td></tr><tr><td>Random Search</td><td>Təsadüfi hiperparametr axtarışı</td></tr><tr><td>Regularization</td><td>Model mürəkkəbliyini məhdudlaşdıran cərimələndirmə</td></tr><tr><td>Data Leakage</td><td>Qiymətləndirmə zamanı modelə gələcək/test məlumatının sızması</td></tr><tr><td>Drift</td><td>Zamanla verilənlər paylanmasının və ya əlaqələrin dəyişməsi</td></tr></table></section>
+
+<section class="card" id="refs"><h2>İstifadə olunan ədəbiyyat</h2><ol>
+<li>Alpaydın, E. (2021). <i>Machine Learning: The New AI</i>. MIT Press. <a href="https://mitpress.mit.edu/9780262542524/machine-learning/" target="_blank" rel="noopener">Nəşriyyat səhifəsi</a>.</li>
+<li>Géron, A. (2022). <i>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</i> (3rd ed.). O’Reilly Media. <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/" target="_blank" rel="noopener">Kitab səhifəsi</a>.</li>
+<li>Murphy, K. P. (2022). <i>Probabilistic Machine Learning: An Introduction</i>. MIT Press. <a href="https://probml.github.io/pml-book/book1.html" target="_blank" rel="noopener">Elektron resurs</a>.</li>
+<li>Rafiq R. Əliyev (2026). <i>Süni intellekt</i>. Azərnəşr.</li>
+<li>Scikit-learn Developers. <i>Model selection and evaluation</i>. <a href="https://scikit-learn.org/stable/model_selection.html" target="_blank" rel="noopener">Rəsmi sənədləşmə</a>.</li>
+<li>Scikit-learn Developers. <i>Cross-validation: evaluating estimator performance</i>. <a href="https://scikit-learn.org/stable/modules/cross_validation.html" target="_blank" rel="noopener">Rəsmi sənədləşmə</a>.</li>
+<li>Scikit-learn Developers. <i>Tuning the hyper-parameters of an estimator</i>. <a href="https://scikit-learn.org/stable/modules/grid_search.html" target="_blank" rel="noopener">Rəsmi sənədləşmə</a>.</li>
+<li>Scikit-learn Developers. <i>Pipeline and composite estimators</i>. <a href="https://scikit-learn.org/stable/modules/compose.html" target="_blank" rel="noopener">Rəsmi sənədləşmə</a>.</li>
+<li>Scikit-learn Developers. <i>Linear models: Ridge, Lasso and Elastic Net</i>. <a href="https://scikit-learn.org/stable/modules/linear_model.html" target="_blank" rel="noopener">Rəsmi sənədləşmə</a>.</li>
+</ol></section>
+<footer>MDU · Riyaziyyat və İnformasiya Texnologiyaları fakültəsi · Süni intellekt və maşın öyrənməsi</footer>
+</main></div>
+<script>
+function metricCalc(){let a=+tp.value,b=+tn.value,c=+fp.value,d=+fn.value;if([a,b,c,d].some(v=>v<0)||a+b+c+d===0){metricResult.textContent='Müsbət cəmli, mənfi olmayan qiymətlər daxil edin.';return}let acc=(a+b)/(a+b+c+d),p=a/(a+c||1),r=a/(a+d||1),f=2*p*r/(p+r||1);metricResult.textContent=`Accuracy=${acc.toFixed(3)} · Precision=${p.toFixed(3)} · Recall=${r.toFixed(3)} · F1=${f.toFixed(3)}`}
+function drawTrain(){let a=+trainAcc.value/100,b=+testAcc.value/100;trv.textContent=a.toFixed(2);tev.textContent=b.toFixed(2);let c=trainCanvas,x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);let vals=[['Təlim',a,'#2868a5'],['Test',b,'#19845c']];vals.forEach((v,i)=>{x.fillStyle='#e9eff5';x.fillRect(170,55+i*90,480,36);x.fillStyle=v[2];x.fillRect(170,55+i*90,480*v[1],36);x.fillStyle='#243b53';x.fillText(v[0],85,78+i*90);x.fillText(v[1].toFixed(2),660,78+i*90)});let gap=a-b;trainInterpret.textContent=`Təlim–test fərqi: ${(gap*100).toFixed(1)} faiz bəndi. `+(gap>.12?'Fərq nəzərəçarpandır; overfitting ehtimalını və split protokolunu araşdırın.':gap<0?'Test nəticəsi təlimdən yüksəkdir; bölünmənin təsadüfi dəyişkənliyini yoxlayın.':'Nəticələr bir-birinə yaxındır; digər metriklər və CV ilə də yoxlayın.') }
+function drawFit(){let c=fitCanvas,x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);x.strokeStyle='#dbe4ed';for(let i=0;i<5;i++){x.beginPath();x.moveTo(50,30+i*55);x.lineTo(720,30+i*55);x.stroke()}function line(color,fn){x.beginPath();for(let i=0;i<=100;i++){let t=i/100,px=55+t*650,py=260-fn(t)*220;i?x.lineTo(px,py):x.moveTo(px,py)}x.strokeStyle=color;x.lineWidth=3;x.stroke()}line('#2868a5',t=>.85*Math.exp(-4*t)+.08);line('#d07a2a',t=>.78*Math.exp(-3*t)+.12+Math.pow(Math.max(0,t-.55),2)*2.1);x.fillStyle='#2868a5';x.fillText('Təlim xətası',80,22);x.fillStyle='#d07a2a';x.fillText('Test xətası',190,22)}
+function drawBias(){let n=+complexity.value;complexVal.textContent=n;let c=biasCanvas,x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);let bias=11-n,variance=n;function bar(label,val,y,col){x.fillStyle='#e9eff5';x.fillRect(150,y,500,28);x.fillStyle=col;x.fillRect(150,y,500*val/11,28);x.fillStyle='#243b53';x.fillText(label,25,y+20);x.fillText(val.toFixed(1),665,y+20)}bar('Bias (sxematik)',bias,70,'#2868a5');bar('Variance (sxematik)',variance,145,'#d07a2a');bar('Ümumi tarazlıq göstəricisi',Math.min(11,bias+variance*.35),220,'#19845c');biasText.textContent=n<=3?'Sadə model: bias yüksək ola bilər — underfitting riski.':n>=8?'Mürəkkəb model: variance yüksələ bilər — overfitting riski.':'Orta mürəkkəblik: tarazlıq axtarılır; real nəticəni CV ilə yoxlayın.'}
+function drawFolds(){let k=+foldRange.value;foldVal.textContent=k;foldViz.innerHTML=Array.from({length:k},(_,i)=>`<div class="panel"><b>İterasiya ${i+1}</b><div style="display:flex;gap:3px;margin-top:8px">${Array.from({length:k},(_,j)=>`<div style="flex:1;height:26px;border-radius:4px;background:${i===j?'#d98a35':'#4b88b8'}" title="${i===j?'Validation':'Training'}"></div>`).join('')}</div><div class="small">${i+1}-ci fold validation, qalan ${k-1} fold training</div></div>`).join('');foldInfo.textContent=`${k} iterasiya aparılır; hər müşahidə bir dəfə validation hissəsində, ${k-1} dəfə training hissəsində iştirak edir.`}
+function gridCalc(){let a=+g1.value,b=+g2.value,c=+g3.value;if([a,b,c].some(v=>v<1)){gridResult.textContent='Hər parametr üçün ən azı 1 qiymət olmalıdır.';return}gridResult.textContent=`${a} × ${b} × ${c} = ${a*b*c} konfiqurasiya. Hər konfiqurasiya 5-fold CV ilə yoxlanarsa, təxminən ${a*b*c*5} model-fit icra ediləcək.`}
+function drawTrials(){let n=+trials.value;trialVal.textContent=n;let c=trialCanvas,x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);for(let i=0;i<n;i++){let px=25+(i%20)*35,py=30+Math.floor(i/20)*42;x.beginPath();x.arc(px,py,7,0,7);x.fillStyle=`hsl(${210-i*1.2},55%,${45+(i%4)*7}%)`;x.fill()}trialText.textContent=`${n} təsadüfi konfiqurasiya nöqtəsi göstərilir. Random Search-də n_iter=${n} seçilsə, axtarış bu sayda kombinasiyanı yoxlayır.`}
+function drawLambda(){let l=+lambdaRange.value/100;lambdaVal.textContent=l.toFixed(2);let c=lambdaCanvas,x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);let ws=[2.4,1.8,1.2,.8,.5];ws.forEach((v,i)=>{let shrink=v/(1+3*l);x.fillStyle='#e9eff5';x.fillRect(150,25+i*42,480,22);x.fillStyle='#2868a5';x.fillRect(150,25+i*42,480*shrink/2.4,22);x.fillStyle='#243b53';x.fillText('w'+(i+1),90,42+i*42)});lambdaText.textContent=l<.2?'Zəif cərimə: əmsallar daha sərbəst qalır.':l>.75?'Güclü cərimə: əmsallar daha çox kiçildilir; həddindən artıq cərimə underfitting yarada bilər.':'Orta cərimə: əmsalların böyüklüyü məhdudlaşdırılır.'}
+function compareModels(){let w=+wscore.value/100,s=+wstable.value/100;let norm=w+s||1;w/=norm;s/=norm;let models=[['Model A',.88,.98],['Model B',.91,.93],['Model C',.90,.985]];let scores=models.map(m=>({name:m[0],score:w*m[1]+s*m[2]})).sort((a,b)=>b.score-a.score);modelChoice.textContent=`Metrik çəkisi=${Math.round(w*100)}%, sabitlik çəkisi=${Math.round(s*100)}%. Bu tədris simulyasiyasına görə seçim: ${scores[0].name}. Çəkilər qərar prioritetini dəyişir; real seçimdə tətbiq tələbləri əsas götürülməlidir.`}
+function statsCalc(){let a=scores.value.split(',').map(v=>Number(v.trim()));if(a.length<2||a.some(v=>!Number.isFinite(v))){statsResult.textContent='Ən azı iki düzgün ədədi vergüllə ayıraraq daxil edin.';return}let m=a.reduce((x,y)=>x+y,0)/a.length,sd=Math.sqrt(a.reduce((x,y)=>x+(y-m)**2,0)/(a.length-1));statsResult.textContent=`n=${a.length}; orta=${m.toFixed(4)}; nümunə standart kənarlaşması=${sd.toFixed(4)}; diapazon=${Math.min(...a).toFixed(4)}–${Math.max(...a).toFixed(4)}.`}
+const qs=[
+{q:'Modelin ümumiləşdirmə qabiliyyəti nəyi ifadə edir?',o:['Təlim verilənlərini yadda saxlamağı','Yeni, görünməmiş verilənlərdə işləməyi','Yalnız təlim vaxtını','Parametrlərin sayını'],a:1,e:'Ümumiləşdirmə modelin təlimdə görmədiyi müşahidələrdə performansını ifadə edir.'},
+{q:'Təlim nəticəsi çox yüksək, test nəticəsi xeyli aşağıdır. Hansı problem ehtimalı artır?',o:['Underfitting','Overfitting','Normalizasiya','Az sayda sinif'],a:1,e:'Təlim və test arasındakı böyük fərq modelin təlim verilənlərinə həddindən artıq uyğunlaşmasına işarə edə bilər.'},
+{q:'K-Fold Cross-Validation zamanı K=5 olduqda hər iterasiyada neçə fold validation üçün ayrılır?',o:['1','2','4','5'],a:0,e:'Hər iterasiyada bir fold validation, qalan dörd fold training üçün istifadə olunur.'},
+{q:'Modelin təlim zamanı öyrəndiyi daxili çəkilər hansı anlayışdır?',o:['Hiperparametr','Model parametri','Fold','Scoring funksiyası'],a:1,e:'Çəkilər və bias-lar təlim prosesi zamanı verilənlərdən öyrənilən model parametrləridir.'},
+{q:'Grid Search 3, 4 və 2 qiymətlik üç parametr siyahısını tam kombinasiyalarla yoxlayır. Neçə kombinasiya alınar?',o:['9','12','24','36'],a:2,e:'3 × 4 × 2 = 24 kombinasiya.'},
+{q:'L1 regularization hansı xüsusiyyəti ilə tanınır?',o:['Əmsalların mütləq qiymətlərini cərimələyir','Yalnız ağac dərinliyini artırır','Fold sayını təyin edir','Test dəstini böyüdür'],a:0,e:'L1 cəriməsi əmsalların mütləq qiymətlərinin cəminə əsaslanır və bəzi əmsalları sıfıra endirə bilər.'},
+{q:'Random Search-də n_iter parametrinin rolu nədir?',o:['Fold sayını təyin etmək','Təsadüfi yoxlanacaq konfiqurasiya sayını məhdudlaşdırmaq','Test dəstinin ölçüsünü seçmək','Regularization əmsalını hesablamaq'],a:1,e:'n_iter RandomizedSearchCV tərəfindən yoxlanacaq parametr kombinasiyalarının sayını müəyyən edir.'},
+{q:'Cross-validation zamanı scaler bütün dataset üzərində əvvəlcədən fit edilərsə, hansı risk yarana bilər?',o:['Data leakage','Underflow','Klasterləşdirmə','Label encoding'],a:0,e:'Validation fold-larından statistik məlumat preprocessing mərhələsinə sızaraq qiymətləndirməni qərəzli edə bilər.'},
+{q:'Hiperparametr axtarışı tamamlandıqdan sonra toxunulmamış test dəsti yekun qiymətləndirmə üçün saxlanmalıdır.',o:['Doğru','Yanlış'],a:0,e:'Test dəsti model seçimi prosesindən kənarda saxlanmalıdır ki, yekun performans qərəzsiz qiymətləndirilsin.'},
+{q:'Eyni modelin fold nəticələri 0.91, 0.90, 0.92, 0.89 və 0.88-dir. Orta nəticə təxminən neçədir?',o:['0.80','0.90','0.95','1.00'],a:1,e:'Cəm 4.50-dir; 4.50/5=0.90.'}
+];
+function renderQuiz(){quizBox.innerHTML=qs.map((q,i)=>`<div class="quizq"><b>${i+1}. ${q.q}</b>${q.o.map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join('')}<div class="feedback" id="fb${i}"></div></div>`).join('')}
+function gradeQuiz(){let score=0;qs.forEach((q,i)=>{let v=document.querySelector(`input[name=q${i}]:checked`),ok=v&&+v.value===q.a;if(ok)score++;let f=document.getElementById('fb'+i);f.textContent=(ok?'Düzgün. ':'Düzgün cavab: '+q.o[q.a]+'. ')+q.e;f.style.color=ok?'#19845c':'#b33b3b'});quizScore.textContent=`Nəticə: ${score}/${qs.length} (${Math.round(score/qs.length*100)}%). `+(score>=8?'Çox yaxşı nəticə!':score>=5?'Yaxşıdır, izahları təkrar nəzərdən keçirin.':'Mövzuları yenidən oxuyub təkrar cəhd edin.')}
+function resetQuiz(){renderQuiz();quizScore.textContent='Cavabları seçdikdən sonra yoxlama düyməsini basın.'}
+metricCalc();drawTrain();drawFit();drawBias();drawFolds();gridCalc();drawTrials();drawLambda();compareModels();renderQuiz();
+</script><script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

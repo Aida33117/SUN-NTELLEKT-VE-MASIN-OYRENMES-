@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fəsil 3. Python və süni intellekt üçün proqramlaşdırma mühiti</title>
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{--bg:#f4f7fb;--panel:#fff;--ink:#182334;--muted:#607087;--line:#dce4ef;--accent:#2457a7;--accent2:#087f8c;--soft:#eaf1fb;--code:#101a2a;--good:#16794b;--bad:#b42318}
+[data-theme=dark]{--bg:#111827;--panel:#1c2738;--ink:#edf3fb;--muted:#aab8ca;--line:#34445a;--accent:#8db7ff;--accent2:#64d4dc;--soft:#26364d;--code:#0a101a;--good:#68d6a0;--bad:#ff8f86}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.68 system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c);color:white;padding:38px max(22px,calc((100% - 1180px)/2));}
+header .eyebrow{letter-spacing:.13em;text-transform:uppercase;font-size:.78rem;opacity:.85}h1{font-size:clamp(1.8rem,4vw,3rem);line-height:1.15;margin:.5rem 0}header p{max-width:850px;color:#e4edfa}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.toolbar button,.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 12px;border-radius:9px;cursor:pointer;font-weight:600}.toolbar button{background:#ffffff18;color:white;border-color:#ffffff55}
+.layout{max-width:1180px;margin:24px auto;padding:0 18px;display:grid;grid-template-columns:270px minmax(0,1fr);gap:22px}
+nav{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+nav h3{margin:0 0 10px}nav a{display:block;padding:6px 8px;color:var(--muted);text-decoration:none;border-radius:7px;font-size:.91rem}nav a:hover{background:var(--soft);color:var(--accent)}
+main{min-width:0}.card,section{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:clamp(18px,3vw,30px);margin-bottom:18px;box-shadow:0 4px 18px #162c4a0a}
+h2{font-size:1.55rem;margin:0 0 14px;color:var(--accent)}h3{font-size:1.15rem;margin:22px 0 8px}h4{margin:14px 0 5px}
+p{margin:8px 0 13px}.muted{color:var(--muted)}.tag{display:inline-block;background:var(--soft);color:var(--accent);border-radius:30px;padding:3px 10px;font-size:.8rem;font-weight:700}
+.callout{border-left:4px solid var(--accent2);background:var(--soft);padding:13px 16px;border-radius:8px;margin:14px 0}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.mini{border:1px solid var(--line);border-radius:11px;padding:14px;background:var(--panel)}
+.diagram{border:1px solid var(--line);border-radius:12px;background:var(--soft);padding:15px;margin:16px 0;overflow:auto}
+.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.caption{font-size:.88rem;color:var(--muted);text-align:center;margin-top:8px}
+pre{background:var(--code);color:#e7efff;padding:16px;border-radius:10px;overflow:auto;line-height:1.55;font-size:.91rem}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.codebox{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:15px 0}.codehead{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 12px;background:var(--soft);font-weight:700}.codebox pre{margin:0;border-radius:0}.runarea{padding:12px;background:var(--panel);border-top:1px solid var(--line)}.output{background:var(--code);color:#b8f3d0;padding:11px;border-radius:8px;min-height:42px;white-space:pre-wrap;font: .9rem/1.5 ui-monospace,monospace}
+button:focus,input:focus,select:focus{outline:3px solid #68a5ff66;outline-offset:2px}
+input,select{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:8px;border-radius:8px}
+.quiz-q{border:1px solid var(--line);border-radius:12px;padding:15px;margin:13px 0}.quiz-q label{display:block;margin:7px 0;cursor:pointer}.feedback{margin-top:8px;font-weight:650}.correct{color:var(--good)}.wrong{color:var(--bad)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.94rem}th,td{padding:9px;border:1px solid var(--line);text-align:left}th{background:var(--soft)}
+footer{text-align:center;color:var(--muted);padding:28px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}nav{position:relative;top:auto;max-height:330px}.grid2,.grid3{grid-template-columns:1fr}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style>
+</head>
+<body>
+<header>
+<div class="eyebrow">Mingəçevir Dövlət Universiteti · Riyaziyyat və İnformasiya texnologiyaları fakültəsi</div>
+<h1>Fəsil 3. Python və süni intellekt üçün proqramlaşdırma mühiti</h1>
+<p>Python dilindən başlayaraq verilənlərin emalı, vizuallaşdırma və maşın öyrənməsi kitabxanalarına qədər praktik bələdçi. Kod nümunələri və interaktiv modellərlə addım-addım öyrənin.</p>
+<div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div>
+</header>
+<div class="layout">
+<nav><h3>Mündəricat</h3>
+<a href="#goals">Təlim məqsədləri</a>
+<a href="#s31">3.1 Python-un rolu</a><a href="#s32">3.2 Quraşdırma və sazlama</a><a href="#s33">3.3 Colab və Jupyter</a>
+<a href="#s34">3.4 Dəyişənlər və tiplər</a><a href="#s35">3.5 Şərtlər və dövrlər</a><a href="#s36">3.6 Funksiyalar və modullar</a>
+<a href="#s37">3.7 Siyahılar, massivlər, lüğətlər</a><a href="#s38">3.8 NumPy</a><a href="#s39">3.9 Pandas</a>
+<a href="#s310">3.10 Vizuallaşdırma</a><a href="#s311">3.11 Scikit-learn</a><a href="#s312">3.12 TensorFlow, Keras, PyTorch</a>
+<a href="#s313">3.13 Layihə mühiti</a><a href="#practice">Praktiki tapşırıqlar</a><a href="#quiz">7 tipli özünü yoxlama</a>
+<a href="#lab">Laboratoriya işi №3</a><a href="#glossary">Lüğət</a><a href="#refs">Ədəbiyyat</a>
+</nav>
+<main>
+<section id="goals"><span class="tag">Fəslə giriş</span><h2>Təlim məqsədləri və nəticələri</h2>
+<p>Bu fəsil magistrantı Python sintaksisindən başlayaraq süni intellekt layihəsinin təkrarlana bilən proqramlaşdırma mühitinin qurulmasına aparır. Məqsəd yalnız kitabxana adlarını əzbərləmək deyil, verilənlərin hansı mərhələlərdən keçdiyini və hər alətin nə üçün seçildiyini anlamaqdır.</p>
+<div class="grid2"><div class="mini"><h4>Fəslin sonunda tələbə bacarmalıdır</h4><ul><li>Python skriptini və Notebook hüceyrələrini icra etmək;</li><li>əsas verilən tipləri, şərt, dövr və funksiyalardan istifadə etmək;</li><li>NumPy və Pandas ilə verilənləri emal etmək;</li><li>Matplotlib/Seaborn ilə qrafik qurmaq;</li><li>Scikit-learn iş axınını izah etmək;</li><li>TensorFlow/Keras və PyTorch-un rolunu fərqləndirmək;</li><li>layihə üçün virtual mühit və asılılıqları təşkil etmək.</li></ul></div>
+<div class="mini"><h4>İlkin biliklər</h4><p>Fəsil 2-dəki vektor, matris, funksiya, statistika və optimallaşdırma anlayışları; fayl və qovluqlarla ilkin iş bacarığı.</p><p><b>Əsas prinsip:</b> kodun nəticəsi giriş verilənlərinə və icra mühitinə bağlıdır. Eyni təcrübəni təkrarlamaq üçün kod, kitabxana versiyaları və verilənlər sənədləşdirilməlidir.</p></div></div>
+</section>
+
+<section id="s31"><h2>3.1. Python proqramlaşdırma dilinin süni intellektdə rolu</h2>
+<p>Python yüksək səviyyəli, ümumi təyinatlı proqramlaşdırma dilidir. Sintaksisinin oxunaqlılığı, geniş kitabxana ekosistemi və elmi hesablama alətləri onu süni intellekt və maşın öyrənməsi iş axınlarında geniş istifadə olunan dillərdən birinə çevirib.</p>
+<h3>AI layihəsində Python-un yeri</h3>
+<div class="diagram"><svg viewBox="0 0 760 245" role="img" aria-label="AI layihəsində Python iş axını"><defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="#2457a7"/></marker></defs>
+<g font-family="Arial" font-size="15" text-anchor="middle"><rect x="12" y="80" width="130" height="70" rx="12" fill="#d8e7fa" stroke="#2457a7"/><text x="77" y="108" fill="#182334">Verilənlərin</text><text x="77" y="129" fill="#182334">toplanması</text>
+<rect x="165" y="80" width="130" height="70" rx="12" fill="#d7f0ed" stroke="#087f8c"/><text x="230" y="108" fill="#182334">Emal</text><text x="230" y="129" fill="#182334">NumPy/Pandas</text>
+<rect x="318" y="80" width="130" height="70" rx="12" fill="#d8e7fa" stroke="#2457a7"/><text x="383" y="108" fill="#182334">Model</text><text x="383" y="129" fill="#182334">scikit-learn</text>
+<rect x="471" y="80" width="130" height="70" rx="12" fill="#d7f0ed" stroke="#087f8c"/><text x="536" y="108" fill="#182334">Qiymətləndirmə</text><text x="536" y="129" fill="#182334">metriklər</text>
+<rect x="624" y="80" width="124" height="70" rx="12" fill="#d8e7fa" stroke="#2457a7"/><text x="686" y="108" fill="#182334">Tətbiq</text><text x="686" y="129" fill="#182334">və monitorinq</text>
+<g stroke="#2457a7" stroke-width="2.5" marker-end="url(#arr)"><path d="M142 115H160"/><path d="M295 115H313"/><path d="M448 115H466"/><path d="M601 115H619"/></g><text x="380" y="205" fill="currentColor" font-size="13">Python bu mərhələləri bir proqramlaşdırma ekosistemində əlaqələndirir</text></g></svg><div class="caption">Şəkil 3.1. Tipik süni intellekt layihəsinin proqramlaşdırma iş axını.</div></div>
+<p>Python özü modelin keyfiyyətinə zəmanət vermir. Nəticəyə verilənlərin keyfiyyəti, düzgün eksperiment dizaynı, model seçimi, hiperparametrlər və qiymətləndirmə metodologiyası təsir edir.</p>
+<h3>Əsas kitabxana qrupları</h3><table><tr><th>İstiqamət</th><th>Alətlər</th><th>Tipik vəzifə</th></tr><tr><td>Ədədi hesablama</td><td>NumPy</td><td>Massiv, vektorlaşdırılmış əməliyyat</td></tr><tr><td>Cədvəl verilənləri</td><td>Pandas</td><td>Oxuma, təmizləmə, qruplaşdırma</td></tr><tr><td>Qrafiklər</td><td>Matplotlib, Seaborn</td><td>Paylanma və əlaqələrin vizuallaşdırılması</td></tr><tr><td>Klassik ML</td><td>Scikit-learn</td><td>Təsnifat, reqressiya, klasterləşmə</td></tr><tr><td>Dərin öyrənmə</td><td>TensorFlow/Keras, PyTorch</td><td>Neyron şəbəkələrinin qurulması və öyrədilməsi</td></tr></table>
+<div class="callout"><b>Yadda saxla:</b> Python proqramlaşdırma dilidir; NumPy, Pandas və digər adlar isə Python ekosistemində istifadə edilən kitabxana və platformalardır.</div>
+</section>
+
+<section id="s32"><h2>3.2. Python-un quraşdırılması və sazlanması</h2>
+<p>Python-u rəsmi <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads</a> səhifəsindən yükləmək məqsədəuyğundur. Windows quraşdırıcısında <i>Add Python to PATH</i> seçimi terminaldan Python çağırılmasını asanlaşdırır. Quraşdırmadan sonra terminalı yenidən açıb versiyanı yoxlayın.</p>
+<div class="codebox"><div class="codehead">Terminal · quraşdırmanı yoxla <button class="btn" onclick="copyText('python --version\\npython -m pip --version')">Kodu köçür</button></div><pre><code>python --version
+python -m pip --version</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out32','Nümunə nəticə:\\nPython 3.x.x\\npip 24.x ...\\nQeyd: versiya kompüterinizdə quraşdırılmış versiyadan asılıdır.')">Nümunə nəticəni göstər</button><div class="output" id="out32">Nəticəni görmək üçün düyməni seçin.</div></div></div>
+<h3>Virtual mühit yaratmaq</h3>
+<p>Virtual mühit hər layihənin kitabxanalarını digər layihələrdən təcrid edir. Beləliklə, bir layihədəki paket yenilənməsi digər layihənin işləməsini pozmur.</p>
+<div class="codebox"><div class="codehead">Windows PowerShell / CMD <button class="btn" onclick="copyText('python -m venv .venv\\n.venv\\\\Scripts\\\\activate\\npython -m pip install --upgrade pip')">Kodu köçür</button></div><pre><code>python -m venv .venv
+.venv\Scripts\activate
+python -m pip install --upgrade pip</code></pre></div>
+<p>Linux/macOS üçün aktivləşdirmə əmri: <code>source .venv/bin/activate</code>. Layihənin kitabxanalarını quraşdırmaq üçün <code>python -m pip install numpy pandas matplotlib seaborn scikit-learn</code> əmrindən istifadə edilə bilər.</p>
+<h3>İşlək layihə qovluğunun nümunəsi</h3><pre><code>ai-project/
+├── data/             # ilkin və emal olunmuş verilənlər
+├── notebooks/        # Jupyter/Colab dəftərləri
+├── src/              # proqram kodu
+├── models/           # saxlanmış modellər
+├── reports/          # qrafiklər və hesabatlar
+├── requirements.txt  # paket versiyaları
+└── README.md         # layihə təsviri</code></pre>
+</section>
+
+<section id="s33"><h2>3.3. Google Colab və Jupyter Notebook mühiti</h2>
+<p>Notebook mühiti kodu kiçik hüceyrələrə bölərək icra etməyə, nəticəni dərhal görməyə və mətn, düstur, cədvəl, qrafiki eyni sənəddə saxlamağa imkan verir.</p>
+<div class="grid2"><div class="mini"><h4>Google Colab</h4><ul><li>Brauzerdə işləyir;</li><li>quraşdırma tələb etmədən Python kodu icra edir;</li><li>Google Drive ilə inteqrasiya mümkündür;</li><li>GPU/TPU resursları plan və əlçatanlıqdan asılıdır.</li></ul><a href="https://colab.research.google.com/" target="_blank" rel="noopener">Colab-ı aç</a></div><div class="mini"><h4>Jupyter Notebook</h4><ul><li>Yerli kompüterdə işləyə bilər;</li><li>hüceyrə əsaslı icra modeli var;</li><li>JupyterLab daha geniş interfeys təqdim edir;</li><li>mühit və paketlərə istifadəçi nəzarəti yüksəkdir.</li></ul><a href="https://jupyter.org/install" target="_blank" rel="noopener">Jupyter quraşdırılması</a></div></div>
+<div class="diagram"><svg viewBox="0 0 720 205" role="img" aria-label="Notebook hüceyrələrinin ardıcıllığı"><g font-family="Arial" font-size="14"><rect x="18" y="20" width="205" height="65" rx="9" fill="#d8e7fa" stroke="#2457a7"/><text x="32" y="43" fill="#182334">Markdown hüceyrəsi</text><text x="32" y="65" fill="#182334">Məqsəd və izah</text><rect x="257" y="20" width="205" height="65" rx="9" fill="#101a2a" stroke="#087f8c"/><text x="271" y="43" fill="#fff">Code hüceyrəsi</text><text x="271" y="65" fill="#b8f3d0">x = 2 + 3</text><rect x="496" y="20" width="205" height="65" rx="9" fill="#d7f0ed" stroke="#087f8c"/><text x="510" y="43" fill="#182334">Çıxış</text><text x="510" y="65" fill="#182334">5</text><path d="M223 52H250M462 52H489" stroke="#2457a7" stroke-width="2.5"/><text x="360" y="145" text-anchor="middle" fill="currentColor">Hüceyrələr ardıcıllıqla icra olunur, lakin dəyişənlər kernel yaddaşında qalır</text></g></svg><div class="caption">Şəkil 3.2. Notebook-da izah → kod → nəticə dövrü.</div></div>
+<div class="callout"><b>Vacib:</b> Notebook hüceyrələri yuxarıdan aşağı icra edilməsə, yaddaşdakı dəyişənlərin vəziyyəti sənəddəki vizual ardıcıllıqdan fərqlənə bilər. Təcrübəni yoxlamaq üçün Kernel/Runtime → Restart and Run All seçimi faydalıdır.</div>
+</section>
+
+<section id="s34"><h2>3.4. Dəyişənlər, verilənlərin tipləri və operatorlar</h2>
+<p>Dəyişən proqramın icrası zamanı qiymət saxlayan addır. Python-da dəyişənin tipi adətən qiymət mənimsədildikdə müəyyən olunur. Əsas tiplər: <code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>. Kolleksiya tipləri ayrıca 3.7-də araşdırılır.</p>
+<div class="codebox"><div class="codehead">İnteraktiv kod pəncərəsi · tiplər <button class="btn" onclick="copyText('student_count = 32\\naccuracy = 0.91\\nmodel_name = \"Random Forest\"\\nis_trained = True\\nprint(type(student_count), type(accuracy), type(model_name), type(is_trained))')">Kodu köçür</button></div><pre><code>student_count = 32
+accuracy = 0.91
+model_name = "Random Forest"
+is_trained = True
+
+print(type(student_count))
+print(type(accuracy))
+print(type(model_name))
+print(type(is_trained))</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out34','&lt;class \\'int\\'&gt;\\n&lt;class \\'float\\'&gt;\\n&lt;class \\'str\\'&gt;\\n&lt;class \\'bool\\'&gt;')">Nəticəni göstər</button><div class="output" id="out34">Nəticəni görmək üçün düyməni seçin.</div></div></div>
+<p>Ədədi operatorlar: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>//</code>, <code>%</code>, <code>**</code>. Müqayisə operatorları <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>; məntiqi operatorlar <code>and</code>, <code>or</code>, <code>not</code>.</p>
+<div class="callout">AI konteksti: <code>accuracy = 0.91</code> sadəcə ədədi qiymətdir. Onun “91% düzgünlük” kimi şərhi yalnız metrik həqiqətən accuracy olduqda və qiymətləndirmə proseduru düzgün qurulduqda məna daşıyır.</div>
+</section>
+
+<section id="s35"><h2>3.5. Şərt operatorları və dövrlər</h2>
+<p><code>if</code>, <code>elif</code>, <code>else</code> şərtə əsaslanan budaqlanmanı, <code>for</code> və <code>while</code> isə təkrarlanan əməliyyatları təmin edir.</p>
+<div class="diagram"><svg viewBox="0 0 650 245" role="img" aria-label="Şərt operatorunun blok-sxemi"><g font-family="Arial" text-anchor="middle" font-size="14"><rect x="240" y="8" width="170" height="42" rx="18" fill="#d8e7fa" stroke="#2457a7"/><text x="325" y="34" fill="#182334">Başla</text><path d="M325 50V78" stroke="#2457a7" stroke-width="2"/><path d="M325 78L410 125L325 172L240 125Z" fill="#fff0c7" stroke="#a66b00"/><text x="325" y="130" fill="#182334">Şərt doğrudur?</text><path d="M240 125H105V190" stroke="#087f8c" stroke-width="2"/><path d="M410 125H545V190" stroke="#2457a7" stroke-width="2"/><text x="150" y="115" fill="currentColor">Xeyr</text><text x="500" y="115" fill="currentColor">Bəli</text><rect x="35" y="190" width="140" height="42" rx="8" fill="#d7f0ed" stroke="#087f8c"/><text x="105" y="216" fill="#182334">else bloku</text><rect x="475" y="190" width="140" height="42" rx="8" fill="#d8e7fa" stroke="#2457a7"/><text x="545" y="216" fill="#182334">if bloku</text></g></svg><div class="caption">Şəkil 3.3. Şərt əsasında icra istiqamətinin seçilməsi.</div></div>
+<div class="codebox"><div class="codehead">İnteraktiv kod pəncərəsi · model keyfiyyətinin şərhi</div><pre><code>accuracy = 0.87
+
+if accuracy >= 0.90:
+    print("Yüksək nəticə")
+elif accuracy >= 0.80:
+    print("Qənaətbəxş nəticə")
+else:
+    print("Modeli təkmilləşdirmək lazımdır")</code></pre><div class="runarea"><label>Accuracy: <input id="acc35" type="number" min="0" max="1" step=".01" value=".87"></label> <button class="btn" onclick="let v=Number(document.getElementById('acc35').value);showOutput('out35',!Number.isFinite(v)||v<0||v>1?'0 ilə 1 arasında qiymət daxil edin.':v>=.9?'Yüksək nəticə':v>=.8?'Qənaətbəxş nəticə':'Modeli təkmilləşdirmək lazımdır')">İcra et</button><div class="output" id="out35">Dəyəri dəyişin və icra edin.</div></div></div>
+<p><code>for</code> dövrü verilənlər ardıcıllığını emal etmək, <code>while</code> isə şərt ödənildiyi müddətdə təkrarlamaq üçün uyğundur. Sonsuz dövr riskinə görə <code>while</code> daxilində dayandırıcı şərtin dəyişməsi təmin edilməlidir.</p>
+</section>
+
+<section id="s36"><h2>3.6. Funksiyalar və modullar</h2>
+<p>Funksiya müəyyən işi ad altında birləşdirir, təkrar istifadəni və test etməni asanlaşdırır. <code>return</code> funksiyanın nəticəsini çağıran hissəyə qaytarır. Modul isə Python kodunun ayrıca faylda təşkilidir.</p>
+<div class="codebox"><div class="codehead">Funksiya nümunəsi</div><pre><code>def normalize_score(score, maximum=100):
+    """Balı 0–1 intervalına normallaşdırır."""
+    if maximum <= 0:
+        raise ValueError("maximum müsbət olmalıdır")
+    return score / maximum
+
+print(normalize_score(84))</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out36','0.84')">Nəticəni göstər</button><div class="output" id="out36">Nəticəni görmək üçün seçin.</div></div></div>
+<p>Funksiya üçün girişin yoxlanılması vacibdir. Məsələn, maksimum bal sıfır və ya mənfi ola bilməz. Böyük layihədə funksiyaları <code>src/</code> qovluğundakı modullara bölmək, hər modula aydın məsuliyyət vermək məqsədəuyğundur.</p>
+</section>
+
+<section id="s37"><h2>3.7. Siyahılar, massivlər və lüğətlər</h2>
+<p><b>List</b> dəyişdirilə bilən ardıcıllıqdır; <b>tuple</b> dəyişdirilməyən ardıcıllıqdır; <b>dict</b> açar–qiymət cütlərini saxlayır; <b>set</b> təkrarlanmayan elementlər toplusudur. Python siyahısı ilə NumPy massivi eyni anlayış deyil: NumPy massivi eyni tipli ədədi hesablamalar üçün daha səmərəli ola bilər.</p>
+<div class="grid2"><div class="mini"><h4>List</h4><pre><code>scores = [78, 85, 91]
+scores.append(88)
+print(scores[0])</code></pre><p>İndeksləmə 0-dan başlayır.</p></div><div class="mini"><h4>Dictionary</h4><pre><code>student = {
+  "id": 101,
+  "score": 91
+}
+print(student["score"])</code></pre><p>Açar vasitəsilə qiymətə müraciət edilir.</p></div></div>
+<div class="callout"><b>AI nümunəsi:</b> müşahidə olunan bir obyektin xüsusiyyətləri lüğətdə saxlanıla bilər: <code>{"age": 21, "hours": 4.5, "passed": True}</code>. Modelə ötürülməzdən əvvəl bu məlumatlar uyğun ədədi matrisə çevrilməlidir.</div>
+</section>
+
+<section id="s38"><h2>3.8. NumPy ilə ədədi hesablamalar</h2>
+<p>NumPy çoxölçülü massivlər və vektorlaşdırılmış ədədi əməliyyatlar üçün əsas kitabxanalardandır. <code>ndarray</code> massivinin <code>shape</code> atributu ölçüləri, <code>ndim</code> ölçülülüyü, <code>dtype</code> isə element tipini göstərir.</p>
+<div class="diagram"><svg viewBox="0 0 700 230" role="img" aria-label="NumPy massivinin indekslənməsi"><g font-family="Arial" text-anchor="middle"><text x="350" y="22" font-size="16" fill="currentColor">A = [[2, 4, 6], [1, 3, 5]] · shape = (2, 3)</text><g stroke="#2457a7" stroke-width="1.5"><rect x="180" y="55" width="100" height="52" rx="5" fill="#d8e7fa"/><rect x="280" y="55" width="100" height="52" rx="5" fill="#d8e7fa"/><rect x="380" y="55" width="100" height="52" rx="5" fill="#d8e7fa"/><rect x="180" y="107" width="100" height="52" rx="5" fill="#d7f0ed"/><rect x="280" y="107" width="100" height="52" rx="5" fill="#d7f0ed"/><rect x="380" y="107" width="100" height="52" rx="5" fill="#d7f0ed"/></g><g font-size="18" fill="#182334"><text x="230" y="88">2</text><text x="330" y="88">4</text><text x="430" y="88">6</text><text x="230" y="140">1</text><text x="330" y="140">3</text><text x="430" y="140">5</text></g><g font-size="12" fill="currentColor"><text x="230" y="48">sütun 0</text><text x="330" y="48">sütun 1</text><text x="430" y="48">sütun 2</text><text x="150" y="86">sətir 0</text><text x="150" y="138">sətir 1</text><text x="350" y="193">A[1, 2] = 5  (ikinci sətir, üçüncü sütun)</text></g></g></svg><div class="caption">Şəkil 3.4. İkiölçülü NumPy massivində sıfırdan başlayan indeksləmə.</div></div>
+<div class="codebox"><div class="codehead">İnteraktiv kod pəncərəsi · massiv əməliyyatları <button class="btn" onclick="copyText('import numpy as np\\nA = np.array([[2, 4, 6], [1, 3, 5]])\\nprint(A.shape)\\nprint(A[1, 2])\\nprint(A.mean(axis=0))\\nprint(A * 2)')">Kodu köçür</button></div><pre><code>import numpy as np
+A = np.array([[2, 4, 6],
+              [1, 3, 5]])
+
+print(A.shape)       # (2, 3)
+print(A[1, 2])       # 5
+print(A.mean(axis=0))# sütun ortalamaları
+print(A * 2)         # hər elementi 2-yə vurur</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out38','(2, 3)\\n5\\n[1.5 3.5 5.5]\\n[[ 4  8 12]\\n [ 2  6 10]]')">Nəticəni göstər</button><div class="output" id="out38">Nəticəni görmək üçün seçin.</div></div></div>
+<p><code>axis=0</code> sütunlar üzrə, <code>axis=1</code> sətirlər üzrə aqreqasiyanı ifadə edir. Bu parametrin mənası əməliyyatdan asılı olaraq diqqətlə yoxlanmalıdır.</p>
+<h3>Broadcasting</h3><p>NumPy ölçüləri uyğun olan massivlər arasında bəzi əməliyyatları avtomatik genişləndirmə ilə yerinə yetirir. Məsələn, 2×3 matrisə 3 elementli sətir vektoru əlavə edilə bilər; vektor hər sətirə tətbiq olunur. Uyğunluq sağdan sola yoxlanır: ölçülər bərabər olmalı və ya onlardan biri 1 olmalıdır.</p>
+</section>
+
+<section id="s39"><h2>3.9. Pandas ilə verilənlərin emalı</h2>
+<p>Pandas cədvəl tipli verilənləri <code>DataFrame</code>, birölçülü verilənləri isə <code>Series</code> kimi təqdim edir. CSV/Excel fayllarını oxumaq, çatışmayan qiymətləri araşdırmaq, sütunları seçmək, qruplaşdırmaq və birləşdirmək üçün istifadə olunur.</p>
+<div class="diagram"><svg viewBox="0 0 690 210" role="img" aria-label="Pandas verilənlərin emalı"><g font-family="Arial" text-anchor="middle" font-size="14"><rect x="15" y="58" width="120" height="62" rx="9" fill="#d8e7fa" stroke="#2457a7"/><text x="75" y="84" fill="#182334">CSV / Excel</text><text x="75" y="103" fill="#182334">mənbə</text><rect x="175" y="58" width="120" height="62" rx="9" fill="#d7f0ed" stroke="#087f8c"/><text x="235" y="84" fill="#182334">DataFrame</text><text x="235" y="103" fill="#182334">oxu</text><rect x="335" y="58" width="120" height="62" rx="9" fill="#d8e7fa" stroke="#2457a7"/><text x="395" y="84" fill="#182334">Təmizləmə</text><text x="395" y="103" fill="#182334">və çevirmə</text><rect x="495" y="58" width="175" height="62" rx="9" fill="#d7f0ed" stroke="#087f8c"/><text x="582" y="84" fill="#182334">Analiz / modelə</text><text x="582" y="103" fill="#182334">hazırlıq</text><g stroke="#2457a7" stroke-width="2.5"><path d="M135 89H170M295 89H330M455 89H490"/></g><text x="345" y="170" fill="currentColor">Hər mərhələdə sətir sayı, sütun tipləri və missing values yoxlanılır</text></g></svg><div class="caption">Şəkil 3.5. Cədvəl verilənlərinin tipik emal ardıcıllığı.</div></div>
+<div class="codebox"><div class="codehead">Pandas nümunəsi · kiçik məlumat cədvəli</div><pre><code>import pandas as pd
+
+df = pd.DataFrame({
+    "hours": [2, 4, 5, 3],
+    "score": [55, 70, 88, 64],
+    "group": ["A", "A", "B", "B"]
+})
+
+print(df.head())
+print(df.isna().sum())
+print(df.groupby("group")["score"].mean())</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out39','   hours  score group\\n0      2     55     A\\n1      4     70     A\\n2      5     88     B\\n3      3     64     B\\nhours    0\\nscore    0\\ngroup    0\\nA    62.5\\nB    76.0')">Nəticəni göstər</button><div class="output" id="out39">Nəticəni görmək üçün seçin.</div></div></div>
+<p><b>Data leakage</b> riski: test verilənlərinin statistikası ilə əvvəlcədən normallaşdırma parametrlərini hesablamaq modelin qiymətləndirilməsini süni şəkildə yaxşılaşdıra bilər. Çevirmə parametrləri yalnız təlim hissəsində öyrənilməlidir; Scikit-learn Pipeline bu ardıcıllığı qorumağa kömək edir.</p>
+</section>
+
+<section id="s310"><h2>3.10. Matplotlib və Seaborn ilə vizuallaşdırma</h2>
+<p>Matplotlib qrafiklərin incə detallarına nəzarət etməyə imkan verir. Seaborn isə statistik vizuallaşdırma üçün daha yüksək səviyyəli interfeys təqdim edir. Qrafik yalnız gözəl görünməməli, dəyişənləri, ölçü vahidlərini və əsas mesajı düzgün ifadə etməlidir.</p>
+<div class="grid2"><div class="mini"><h4>Matplotlib</h4><pre><code>import matplotlib.pyplot as plt
+plt.plot([1,2,3], [2,4,3])
+plt.xlabel("Həftə")
+plt.ylabel("Göstərici")
+plt.show()</code></pre></div><div class="mini"><h4>Seaborn</h4><pre><code>import seaborn as sns
+sns.histplot(data=df,
+             x="score",
+             bins=5)</code></pre></div></div>
+<div class="diagram"><svg viewBox="0 0 680 250" role="img" aria-label="Təlim saatları və bal qrafikinin nümunəsi"><g font-family="Arial"><path d="M70 25V200H625" fill="none" stroke="currentColor" stroke-width="1.5"/><g stroke="#dce4ef"><path d="M70 155H625M70 110H625M70 65H625"/></g><g fill="currentColor" font-size="12"><text x="28" y="204">0</text><text x="22" y="159">50</text><text x="16" y="114">100</text><text x="16" y="69">150</text><text x="320" y="238">Təlim saatı</text><text transform="translate(14 140) rotate(-90)">Test balı</text></g><polyline points="130,160 250,137 370,110 490,82 580,62" fill="none" stroke="#2457a7" stroke-width="3"/><g fill="#087f8c"><circle cx="130" cy="160" r="6"/><circle cx="250" cy="137" r="6"/><circle cx="370" cy="110" r="6"/><circle cx="490" cy="82" r="6"/><circle cx="580" cy="62" r="6"/></g><g fill="currentColor" font-size="12"><text x="120" y="218">1</text><text x="240" y="218">2</text><text x="360" y="218">3</text><text x="480" y="218">4</text><text x="570" y="218">5</text></g></g></svg><div class="caption">Şəkil 3.6. Təlim saatı ilə test balı arasındakı mümkün əlaqənin sxematik təsviri. Bu, real müşahidə datası deyil.</div></div>
+<p>Histogram bir dəyişənin paylanmasını, scatter plot iki ədədi dəyişənin əlaqəsini, boxplot isə medianı və kvartilləri, eləcə də mümkün kənar müşahidələri göstərir. Qrafikdən səbəb-nəticə əlaqəsi çıxarmaq olmaz.</p>
+</section>
+
+<section id="s311"><h2>3.11. Scikit-learn kitabxanasına giriş</h2>
+<p>Scikit-learn klassik maşın öyrənməsi üçün vahid API təqdim edir. Tipik iş axını: verilənləri ayırmaq, modeli yaratmaq, <code>fit()</code> ilə öyrətmək, <code>predict()</code> ilə proqnoz almaq və uyğun metriklərlə qiymətləndirmək.</p>
+<div class="diagram"><svg viewBox="0 0 700 205" role="img" aria-label="Scikit-learn model iş axını"><g font-family="Arial" text-anchor="middle" font-size="14"><rect x="15" y="55" width="120" height="62" rx="8" fill="#d8e7fa" stroke="#2457a7"/><text x="75" y="81" fill="#182334">Dataset</text><text x="75" y="100" fill="#182334">X, y</text><rect x="170" y="55" width="120" height="62" rx="8" fill="#d7f0ed" stroke="#087f8c"/><text x="230" y="81" fill="#182334">Train / test</text><text x="230" y="100" fill="#182334">bölünməsi</text><rect x="325" y="55" width="120" height="62" rx="8" fill="#d8e7fa" stroke="#2457a7"/><text x="385" y="81" fill="#182334">fit()</text><text x="385" y="100" fill="#182334">öyrətmə</text><rect x="480" y="55" width="95" height="62" rx="8" fill="#d7f0ed" stroke="#087f8c"/><text x="527" y="91" fill="#182334">predict()</text><rect x="605" y="55" width="80" height="62" rx="8" fill="#d8e7fa" stroke="#2457a7"/><text x="645" y="91" fill="#182334">score</text><g stroke="#2457a7" stroke-width="2"><path d="M135 86H165M290 86H320M445 86H475M575 86H600"/></g><text x="350" y="165" fill="currentColor">Təlim məlumatı ilə test məlumatı ayrılmalıdır</text></g></svg><div class="caption">Şəkil 3.7. Scikit-learn ilə nəzarətli öyrənmənin sadələşdirilmiş iş axını.</div></div>
+<div class="codebox"><div class="codehead">İnteraktiv nümunə · train/test və KNN</div><pre><code>from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42, stratify=y
+)
+model = KNeighborsClassifier(n_neighbors=5)
+model.fit(X_train, y_train)
+pred = model.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, pred))</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out311','Nəticə mühitdəki scikit-learn versiyasına görə xırda fərqlənə bilər.\\nBu nümunədə random_state=42 nəticənin təkrarlanmasını təmin edir.\\nDəqiq accuracy dəyərini Colab/Jupyter-də kodu icra etməklə əldə edin.')">İcra məntiqini göstər</button><div class="output" id="out311">Kod Python mühitində icra olunmalıdır.</div></div></div>
+<p>Bu səhifədəki interaktiv pəncərələr brauzerdə öyrədici nəticə simulyasiyası və kod nümunəsinin gedişini göstərir. Tam Python icrası üçün kodu Google Colab və ya Jupyter Notebook-a köçürüb işə salın.</p>
+</section>
+
+<section id="s312"><h2>3.12. TensorFlow, Keras və PyTorch platformalarına giriş</h2>
+<p>TensorFlow və PyTorch dərin öyrənmə modellərinin qurulması və təlimi üçün geniş istifadə edilən ekosistemlərdir. Keras yüksək səviyyəli API təqdim edir; TensorFlow 2 mühitində <code>tf.keras</code> inteqrasiyası geniş yayılıb. Keras-ın müasir sənədlərində çoxbackendli imkanlar da mövcuddur. PyTorch tensor əməliyyatları, avtomatik diferensiallama və model qurmaq üçün modullar təqdim edir.</p>
+<table><tr><th>Platforma</th><th>Əsas anlayış</th><th>İstifadə konteksti</th></tr><tr><td>TensorFlow</td><td>Tensor, GradientTape, Keras inteqrasiyası</td><td>Dərin öyrənmə və tətbiqə çıxarma</td></tr><tr><td>Keras</td><td>Layer, Model, compile, fit</td><td>Modelin daha yığcam təsviri</td></tr><tr><td>PyTorch</td><td>Tensor, autograd, nn.Module</td><td>Çevik model və təlim dövrü</td></tr></table>
+<h3>İnteraktiv neyron şəbəkəsi qurucusu</h3>
+<p>Aşağıdakı alət tam model təlim etmir; şəbəkənin arxitekturasını və parametr sayını hesablayan tədris simulyatorudur. Giriş xüsusiyyətlərinin, gizli qatların və çıxış neyronlarının sayını dəyişərək nəticəni müşahidə edin.</p>
+<div class="mini">
+<div class="grid3"><label>Giriş xüsusiyyətləri<br><input id="nnIn" type="number" min="1" max="100" value="4"></label><label>Gizli qat 1 neyron<br><input id="nnH1" type="number" min="1" max="100" value="8"></label><label>Gizli qat 2 neyron<br><input id="nnH2" type="number" min="0" max="100" value="4"></label></div>
+<div class="grid2" style="margin-top:10px"><label>Çıxış neyronları<br><input id="nnOut" type="number" min="1" max="100" value="3"></label><label>Bias<br><select id="nnBias"><option value="yes">Hər qatda bias var</option><option value="no">Bias yoxdur</option></select></label></div>
+<button class="btn" style="margin-top:12px" onclick="buildNN()">Şəbəkəni qur və hesabla</button>
+<div id="nnResult" class="output" style="margin-top:12px">Düyməni seçərək arxitekturanı hesablayın.</div>
+<div id="nnDiagram" class="diagram" style="margin-top:12px">Şəbəkə diaqramı burada görünəcək.</div>
+</div>
+<p>Fully connected (dense) qat üçün giriş ölçüsü \(n_{in}\), çıxış ölçüsü \(n_{out}\) olduqda, bias daxil edilirsə parametr sayı:</p>
+<div class="callout">\[P=n_{in}n_{out}+n_{out}= (n_{in}+1)n_{out}\]</div>
+<p>Bias daxil edilmirsə \(P=n_{in}n_{out}\). Bu düstur yalnız tam əlaqəli qat üçündür; konvolyusiya qatlarında parametr sayı filtr ölçülərindən və kanal sayından asılıdır.</p>
+<h3>Sadə modelin konseptual kodu</h3><pre><code># Keras (TensorFlow backend nümunəsi)
+import tensorflow as tf
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Input(shape=(4,)),
+    tf.keras.layers.Dense(8, activation="relu"),
+    tf.keras.layers.Dense(3, activation="softmax")
+])
+model.summary()</code></pre>
+<p>4 giriş xüsusiyyəti, 8 neyronlu bir gizli qat və 3 çıxış neyronu olan təsnifat modelidir. Softmax çıxışları çoxsinifli təsnifatda sinif ehtimalları kimi şərh edilə bilər; bu şərh modelin təlim və kalibrlənmə keyfiyyətindən asılıdır.</p>
+</section>
+
+<section id="s313"><h2>3.13. Süni intellekt layihəsinin proqramlaşdırma mühitinin təşkili</h2>
+<p>Peşəkar layihədə mühitin təkrarlana bilməsi, verilənlərin mənbəyinin sənədləşdirilməsi, kodun versiyalanması və nəticələrin izlənməsi vacibdir.</p>
+<div class="diagram"><svg viewBox="0 0 700 255" role="img" aria-label="AI layihə qovluğunun arxitekturası"><g font-family="monospace" font-size="14"><rect x="220" y="10" width="260" height="35" rx="7" fill="#d8e7fa" stroke="#2457a7"/><text x="350" y="33" text-anchor="middle" fill="#182334">ai-project/</text><g fill="#d7f0ed" stroke="#087f8c"><rect x="55" y="70" width="170" height="34" rx="6"/><rect x="265" y="70" width="170" height="34" rx="6"/><rect x="475" y="70" width="170" height="34" rx="6"/><rect x="55" y="132" width="170" height="34" rx="6"/><rect x="265" y="132" width="170" height="34" rx="6"/><rect x="475" y="132" width="170" height="34" rx="6"/></g><g fill="#182334"><text x="140" y="92" text-anchor="middle">data/</text><text x="350" y="92" text-anchor="middle">notebooks/</text><text x="560" y="92" text-anchor="middle">src/</text><text x="140" y="154" text-anchor="middle">models/</text><text x="350" y="154" text-anchor="middle">reports/</text><text x="560" y="154" text-anchor="middle">tests/</text></g><path d="M350 45V58H140V70M350 58V70M350 58H560V70M140 104V132M350 104V132M560 104V132" fill="none" stroke="#2457a7" stroke-width="1.8"/><text x="350" y="215" text-anchor="middle" fill="currentColor" font-family="Arial">README.md · requirements.txt · .gitignore · environment.yml</text></g></svg><div class="caption">Şəkil 3.8. AI layihəsi üçün təklif olunan qovluq strukturu.</div></div>
+<h3>Asılılıqları qeyd etmək</h3><pre><code># requirements.txt nümunəsi
+numpy
+pandas
+matplotlib
+seaborn
+scikit-learn
+jupyter</code></pre>
+<p>Elmi nəticələrin təkrarlanması üçün təkcə kitabxana adlarını deyil, istifadə olunan versiyaları da sabitləmək məqsədəuyğundur. Məsələn, işlək mühitdə <code>python -m pip freeze &gt; requirements-lock.txt</code> əmri quraşdırılmış paketlərin versiyalarını qeyd edir. Faylın özü mühitdən asılıdır və hər sistemə kor-koranə köçürülməməlidir.</p>
+<h3>Keyfiyyət və təhlükəsizlik yoxlama siyahısı</h3><ul><li>Verilənlərin lisenziyası və məxfilik tələbləri yoxlanılıb.</li><li>Şəxsi məlumatlar açıq repozitoriyaya yerləşdirilmir.</li><li>Random seed və eksperiment parametrləri qeyd edilir.</li><li>Train/test ayrılması və data leakage riski yoxlanılır.</li><li>Kod modullara bölünür və əsas funksiyalar test edilir.</li><li>README-də quraşdırma və icra addımları yazılır.</li></ul>
+</section>
+
+<section id="practice"><h2>Praktiki tapşırıqlar</h2>
+<div class="mini"><span class="tag">Başlanğıc</span><h3>Tapşırıq 1. Python əsasları</h3><p>Tələbənin adı, yaşı, imtahan balı və keçib-keçmədiyi barədə dəyişənlər yaradın. Tipini <code>type()</code> ilə yoxlayın. Bal 50-dən böyük və ya bərabərdirsə “Keçdi”, əks halda “Kəsildi” çap edin.</p><p><b>Təhvil:</b> kod, terminal çıxışı və 4–5 cümləlik izah.</p></div>
+<div class="mini"><span class="tag">Orta</span><h3>Tapşırıq 2. NumPy və Pandas</h3><p>Ən azı 10 müşahidədən ibarət “təlim saatı–imtahan balı” cədvəli yaradın. NumPy ilə orta və standart kənarlaşmanı hesablayın; Pandas ilə qruplaşdırma aparın; çatışmayan qiymətləri yoxlayın.</p><p><b>Təhvil:</b> Notebook, cədvəl və nəticələrin şərhi.</p></div>
+<div class="mini"><span class="tag">Tədqiqat səviyyəsi</span><h3>Tapşırıq 3. ML iş axınının qurulması</h3><p>Scikit-learn-un açıq datasetlərindən birini seçin. Təlim/test bölgüsü yaradın, ən azı iki modeli müqayisə edin, uyğun metrikləri hesablayın. Pipeline istifadə edərək normallaşdırma və model addımlarını birləşdirin.</p><p><b>Təhvil:</b> metodologiya, kod, metrik cədvəli, qrafik və məhdudiyyətlərin müzakirəsi.</p></div>
+</section>
+
+<section id="quiz"><h2>Özünü yoxlama sualları · 7 interaktiv quiz tipi</h2>
+<p>10 sual müxtəlif formatlarda verilib. Hər cavabdan sonra izahlı rəy görünür. Yekun bal yalnız “Yoxla” düyməsinə basıldıqda hesablanır.</p>
+<div id="quizArea">
+<div class="quiz-q" data-type="single" data-answer="b" data-explain="NumPy əsasən çoxölçülü massivlər və vektorlaşdırılmış ədədi hesablamalar üçün istifadə olunur."><b>1. Tək düzgün cavab.</b><p>NumPy kitabxanasının əsas təyinatı hansıdır?</p><label><input type="radio" name="q1" value="a"> Veb server yaratmaq</label><label><input type="radio" name="q1" value="b"> Çoxölçülü massivlər və ədədi hesablamalar</label><label><input type="radio" name="q1" value="c"> Slayd hazırlamaq</label><label><input type="radio" name="q1" value="d"> Verilənlər bazası serveri idarə etmək</label><div class="feedback"></div></div>
+<div class="quiz-q" data-type="multi" data-answer="a,c" data-explain="Pandas DataFrame cədvəl verilənləri saxlayır; Matplotlib qrafik qurur. Python dəyişənləri bu alətlərin əvəzi deyil."><b>2. Çox düzgün cavab.</b><p>Cədvəl verilənləri ilə işdə uyğun alətləri seçin.</p><label><input type="checkbox" name="q2" value="a"> Pandas DataFrame</label><label><input type="checkbox" name="q2" value="b"> HTML heading</label><label><input type="checkbox" name="q2" value="c"> Pandas read_csv()</label><label><input type="checkbox" name="q2" value="d"> CSS selector</label><div class="feedback"></div></div>
+<div class="quiz-q" data-type="tf" data-answer="false" data-explain="Notebook hüceyrələri istənilən ardıcıllıqla icra edilə bilər; buna görə kernel vəziyyəti vizual ardıcıllıqla uyğun gəlməyə bilər."><b>3. Doğru / yanlış.</b><p>Jupyter Notebook-da hüceyrələr həmişə yalnız yuxarıdan aşağı icra olunur.</p><label><input type="radio" name="q3" value="true"> Doğru</label><label><input type="radio" name="q3" value="false"> Yanlış</label><div class="feedback"></div></div>
+<div class="quiz-q" data-type="match" data-answer="a1,b2,c3" data-explain="NumPy — massiv; Pandas — cədvəl; Matplotlib — qrafik."><b>4. Uyğunlaşdırma.</b><p>Kitabxananı funksiyası ilə uyğunlaşdırın.</p><div class="grid2"><div><p>1. NumPy</p><p>2. Pandas</p><p>3. Matplotlib</p></div><div><label>1 → <select name="q4a"><option value="">Seçin</option><option value="a1">Massivlər</option><option value="a2">Qrafiklər</option><option value="a3">Cədvəllər</option></select></label><label>2 → <select name="q4b"><option value="">Seçin</option><option value="b1">Massivlər</option><option value="b2">Cədvəllər</option><option value="b3">Qrafiklər</option></select></label><label>3 → <select name="q4c"><option value="">Seçin</option><option value="c1">Cədvəllər</option><option value="c2">Massivlər</option><option value="c3">Qrafiklər</option></select></label></div><div class="feedback"></div></div>
+<div class="quiz-q" data-type="fill" data-answer="fit" data-explain="Scikit-learn-da fit() modeli təlim verilənlərinə uyğunlaşdırır."><b>5. Boşluğu doldur.</b><p>Scikit-learn modelini öyrətmək üçün <code>model.____(X_train, y_train)</code> yazılır.</p><input name="q5" placeholder="Metod adı"><div class="feedback"></div></div>
+<div class="quiz-q" data-type="order" data-answer="b,a,c,d" data-explain="Əvvəl verilənlər hazırlanır, sonra train/test bölünür, model train hissəsində fit edilir, sonda testdə qiymətləndirilir."><b>6. Addımları ardıcıllığa düzün.</b><p>ML iş axınının düzgün ardıcıllığını seçin.</p><select name="q6"><option value="">Seçin</option><option value="a,b,c,d">Train/test → verilənlər → fit → qiymətləndirmə</option><option value="b,a,c,d">Verilənlər → train/test → fit → qiymətləndirmə</option><option value="b,c,a,d">Verilənlər → fit → train/test → qiymətləndirmə</option></select><div class="feedback"></div></div>
+<div class="quiz-q" data-type="calc" data-answer="12" data-explain="Massivdə 3 sətir və 4 sütun var. Elementlərin sayı 3×4=12-dir."><b>7. Hesablama / kod nəticəsi.</b><p><code>A = np.zeros((3, 4))</code> massivində neçə element olacaq?</p><input name="q7" type="number" placeholder="Ədədi cavab"><div class="feedback"></div></div>
+<div class="quiz-q" data-type="single" data-answer="c" data-explain="Virtual mühit layihənin asılılıqlarını təcrid etməyə kömək edir."><b>8. Tək düzgün cavab.</b><p>Virtual mühitin əsas üstünlüyü nədir?</p><label><input type="radio" name="q8" value="a"> İnterneti sürətləndirir</label><label><input type="radio" name="q8" value="b"> Monitorun rəngini dəyişir</label><label><input type="radio" name="q8" value="c"> Layihə asılılıqlarını təcrid edir</label><label><input type="radio" name="q8" value="d"> Dataseti avtomatik etiketləyir</label><div class="feedback"></div></div>
+<div class="quiz-q" data-type="multi" data-answer="a,b,d" data-explain="TensorFlow, Keras və PyTorch dərin öyrənmə ekosistemində istifadə olunur; Pandas isə cədvəl verilənləri üçündür."><b>9. Çox düzgün cavab.</b><p>Dərin öyrənmə modelləri qurmaq üçün hansı alətlər istifadə olunur?</p><label><input type="checkbox" name="q9" value="a"> TensorFlow</label><label><input type="checkbox" name="q9" value="b"> Keras</label><label><input type="checkbox" name="q9" value="c"> Pandas</label><label><input type="checkbox" name="q9" value="d"> PyTorch</label><div class="feedback"></div></div>
+<div class="quiz-q" data-type="calc" data-answer="9" data-explain="3×3 ölçülü matrisdə 9 element var. shape (3, 3) ölçünü bildirir."><b>10. Kod nəticəsinin təhlili.</b><p><code>np.ones((3, 3)).size</code> ifadəsinin nəticəsi nədir?</p><input name="q10" type="number" placeholder="Ədədi cavab"><div class="feedback"></div></div>
+</div>
+<button class="btn" onclick="gradeQuiz()">Yoxla və balı hesabla</button> <button class="btn" onclick="resetQuiz()">Yenidən başla</button><div id="quizScore" class="callout" aria-live="polite">Cavabları seçdikdən sonra “Yoxla” düyməsini basın.</div>
+</section>
+
+<section id="lab"><h2>Laboratoriya işi №3</h2><span class="tag">Google Colab · Python · NumPy · Pandas · Matplotlib</span>
+<h3>Mövzu</h3><p>Google Colab mühitində Python, NumPy, Pandas və Matplotlib vasitəsilə verilənlərin emalı və vizuallaşdırılması.</p>
+<h3>İşin məqsədi</h3><p>Notebook mühitində verilənlər cədvəli yaratmaq və ya CSV faylı oxumaq, ilkin statistik təhlil aparmaq, NumPy ilə hesablamalar etmək və nəticələri qrafiklərlə təqdim etmək.</p>
+<h3>Avadanlıq və proqram təminatı</h3><ul><li>İnternetə çıxışı olan kompüter;</li><li>Google hesabı və Google Colab;</li><li>Python, NumPy, Pandas, Matplotlib;</li><li>İstəyə görə Seaborn.</li></ul>
+<h3>İcra addımları</h3><ol><li><a href="https://colab.research.google.com/" target="_blank" rel="noopener">Google Colab</a> açın və New Notebook yaradın.</li><li>İlkin Markdown hüceyrəsində laboratoriyanın məqsədini və müəllif məlumatını qeyd edin.</li><li>Aşağıdakı kodla nümunə verilənlər cədvəlini yaradın.</li><li>Çatışmayan qiymətləri, təsviri statistik göstəriciləri və qruplar üzrə ortalamaları hesablayın.</li><li>Histogram və scatter plot qurun.</li><li>Nəticələri şərh edin və Notebook-u <code>.ipynb</code> formatında saxlayın.</li></ol>
+<h3>Laboratoriya üçün kod</h3><pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+data = {
+    "student": ["S1", "S2", "S3", "S4", "S5", "S6"],
+    "study_hours": [1.5, 2.0, 3.0, 3.5, 4.0, 5.0],
+    "score": [48, 55, 67, 72, 81, 91],
+    "group": ["A", "A", "A", "B", "B", "B"]
+}
+df = pd.DataFrame(data)
+
+print("İlk sətirlər:")
+display(df.head())
+print("\\nMəlumat tipləri:")
+print(df.dtypes)
+print("\\nTəsviri statistika:")
+display(df[["study_hours", "score"]].describe())
+
+scores = df["score"].to_numpy()
+print("Orta bal:", np.mean(scores))
+print("Standart kənarlaşma (population):", np.std(scores, ddof=0))
+print("Qruplar üzrə orta bal:")
+display(df.groupby("group")["score"].mean())
+
+plt.figure(figsize=(7, 4))
+plt.hist(df["score"], bins=5, edgecolor="black")
+plt.xlabel("İmtahan balı")
+plt.ylabel("Tələbə sayı")
+plt.title("İmtahan ballarının paylanması")
+plt.show()
+
+plt.figure(figsize=(7, 4))
+plt.scatter(df["study_hours"], df["score"])
+plt.xlabel("Təlim saatı")
+plt.ylabel("İmtahan balı")
+plt.title("Təlim saatı və imtahan balı")
+plt.grid(True)
+plt.show()</code></pre>
+<h3>Gözlənilən nəticələrin təhlili</h3><p>Verilənlərdə 6 müşahidə var. Orta bal 69-dir. Population standart kənarlaşması <code>np.std(..., ddof=0)</code> ilə hesablanır; seçmə standart kənarlaşması üçün <code>ddof=1</code> istifadə edilməlidir. Qruplar üzrə ortalama A qrupunda 56.67, B qrupunda 81.33-dür. Bu kiçik sintetik nümunə səbəb-nəticə əlaqəsini sübut etmir.</p>
+<h3>Nəzarət sualları</h3><ol><li>DataFrame və Series arasında fərq nədir?</li><li><code>to_numpy()</code> hansı məqsədlə istifadə olunur?</li><li><code>ddof=0</code> və <code>ddof=1</code> arasında fərq nədir?</li><li>Histogram hansı tip məlumatı göstərir?</li><li>Scatter plot əsasında korrelyasiya və səbəbiyyət barədə hansı nəticələri çıxarmaq olmaz?</li></ol>
+<h3>Hesabatın strukturu</h3><ol><li>Laboratoriya işinin adı və məqsədi;</li><li>istifadə olunan proqram və kitabxanalar;</li><li>kodun əsas hissələri və ekran görüntüləri;</li><li>hesablanmış statistik göstəricilər;</li><li>qrafiklər və onların şərhi;</li><li>qarşılaşılan problemlər və nəticə.</li></ol>
+</section>
+
+<section id="glossary"><h2>Əsas terminlər lüğəti</h2><table><tr><th>English term</th><th>Azərbaycan dilində</th><th>İzah</th></tr>
+<tr><td>Variable</td><td>Dəyişən</td><td>Qiyməti ad vasitəsilə saxlayan proqram obyekti.</td></tr><tr><td>Data type</td><td>Verilənlərin tipi</td><td>Qiymətin növünü və mümkün əməliyyatları müəyyən edir.</td></tr><tr><td>Virtual environment</td><td>Virtual mühit</td><td>Layihəyə məxsus Python asılılıqlarını təcrid edən mühit.</td></tr><tr><td>Notebook</td><td>İnteraktiv dəftər</td><td>Kod, mətn və nəticələri hüceyrələrdə birləşdirən sənəd.</td></tr><tr><td>Array</td><td>Massiv</td><td>İndekslənən, çoxölçülü verilənlər strukturu.</td></tr><tr><td>DataFrame</td><td>Cədvəl verilənləri strukturu</td><td>Sətir və sütunlardan ibarət Pandas obyekti.</td></tr><tr><td>Visualization</td><td>Vizuallaşdırma</td><td>Verilənlərin qrafik və diaqramlarla təqdimatı.</td></tr><tr><td>Training</td><td>Təlim</td><td>Model parametrlərinin verilənlər əsasında öyrənilməsi.</td></tr><tr><td>Inference</td><td>Çıxarış / proqnoz</td><td>Öyrədilmiş modelin yeni giriş üçün nəticə yaratması.</td></tr><tr><td>Reproducibility</td><td>Təkrarlana bilmə</td><td>Eyni şərtlərlə oxşar nəticənin yenidən əldə olunması.</td></tr><tr><td>Data leakage</td><td>Verilən sızması</td><td>Təlim zamanı modelə qiymətləndirmə məlumatından dolayı məlumat keçməsi.</td></tr><tr><td>Pipeline</td><td>Emal zənciri</td><td>Verilənlərin emalı və model addımlarının ardıcıl təşkili.</td></tr></table></section>
+
+<section id="refs"><h2>İstifadə olunan ədəbiyyat və rəsmi resurslar</h2>
+<h3>Kitablar və tədris mənbələri</h3><ol>
+<li>VanderPlas, J. (2023). <i>Python Data Science Handbook</i>, 2nd ed. O’Reilly. <a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">Onlayn kitab</a>.</li>
+<li>McKinney, W. (2022). <i>Python for Data Analysis</i>, 3rd ed. O’Reilly. <a href="https://wesmckinney.com/book/" target="_blank" rel="noopener">Rəsmi onlayn mətn</a>.</li>
+<li>Géron, A. (2022). <i>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</i>, 3rd ed. O’Reilly. <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/" target="_blank" rel="noopener">Nəşriyyat səhifəsi</a>.</li>
+<li>Raschka, S., Liu, Y., & Mirjalili, V. (2022). <i>Machine Learning with PyTorch and Scikit-Learn</i>. Packt. <a href="https://www.packtpub.com/" target="_blank" rel="noopener">Packt nəşriyyatı</a>.</li>
+<li>Downey, A. (2023). <i>Think Python</i>, 3rd ed. O’Reilly. <a href="https://allendowney.github.io/ThinkPython/" target="_blank" rel="noopener">Pulsuz onlayn kitab</a>.</li>
+</ol>
+<h3>Rəsmi sənədlər və onlayn resurslar</h3><ul>
+<li><a href="https://docs.python.org/3/tutorial/" target="_blank" rel="noopener">Python 3 Tutorial</a></li>
+<li><a href="https://numpy.org/doc/stable/user/absolute_beginners.html" target="_blank" rel="noopener">NumPy: Absolute Beginners</a></li>
+<li><a href="https://pandas.pydata.org/docs/getting_started/intro_tutorials/" target="_blank" rel="noopener">Pandas: Getting started tutorials</a></li>
+<li><a href="https://matplotlib.org/stable/tutorials/" target="_blank" rel="noopener">Matplotlib tutorials</a></li>
+<li><a href="https://seaborn.pydata.org/tutorial.html" target="_blank" rel="noopener">Seaborn tutorial</a></li>
+<li><a href="https://scikit-learn.org/stable/getting_started.html" target="_blank" rel="noopener">Scikit-learn: Getting Started</a></li>
+<li><a href="https://www.tensorflow.org/tutorials" target="_blank" rel="noopener">TensorFlow tutorials</a></li>
+<li><a href="https://keras.io/guides/" target="_blank" rel="noopener">Keras guides</a></li>
+<li><a href="https://pytorch.org/tutorials/" target="_blank" rel="noopener">PyTorch tutorials</a></li>
+<li><a href="https://jupyter.org/documentation" target="_blank" rel="noopener">Jupyter documentation</a></li>
+<li><a href="https://colab.research.google.com/" target="_blank" rel="noopener">Google Colab</a></li>
+</ul>
+<div class="callout"><b>Tədqiqat sualı:</b> Eyni verilənlər toplusunda Pandas əsaslı əvvəlcədən emal, Scikit-learn Pipeline və fərqli təsnifat modellərinin nəticələrinin təkrarlana bilməsinə hansı amillər təsir göstərir?</div>
+</section>
+</main></div>
+<footer>MDU · Riyaziyyat və İnformasiya texnologiyaları fakültəsi · Elektron dərslik · Fəsil 3</footer>
+<script>
+function toggleTheme(){document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'}
+let fs=16;function changeFont(d){fs=Math.max(14,Math.min(21,fs+d));document.body.style.fontSize=fs+'px'}
+function showOutput(id,t){document.getElementById(id).textContent=t}
+function copyText(t){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(()=>alert('Kod köçürüldü')).catch(()=>alert('Kodu seçərək köçürün.'))}else{alert('Kodu seçərək köçürün.')}}
+function buildNN(){
+ const ids=['nnIn','nnH1','nnH2','nnOut'];let v=ids.map(id=>Number(document.getElementById(id).value));
+ if(v.some((x,i)=>!Number.isInteger(x)||x<(i===2?0:1)||x>100)){showOutput('nnResult','Hər ölçü 1–100 aralığında tam ədəd olmalıdır; ikinci gizli qat 0 ola bilər.');return}
+ let layers=[v[0],v[1]];if(v[2]>0)layers.push(v[2]);layers.push(v[3]);
+ let bias=document.getElementById('nnBias').value==='yes',total=0,lines=[];
+ for(let i=0;i<layers.length-1;i++){let p=layers[i]*layers[i+1]+(bias?layers[i+1]:0);total+=p;lines.push(`${layers[i]} → ${layers[i+1]}: ${p} parametr`)}
+ showOutput('nnResult',`Arxitektura: ${layers.join(' → ')}\\n${lines.join('\\n')}\\nÜmumi öyrənilən parametr sayı: ${total}\\nBu hesab tam əlaqəli qatlar üçündür.`);
+ let svg=`<svg viewBox="0 0 680 190" role="img" aria-label="Neyron şəbəkəsi arxitekturası"><g font-family="Arial" text-anchor="middle">`;
+ let xs=layers.map((_,i)=>55+i*(570/(layers.length-1)));
+ layers.forEach((n,i)=>{let shown=Math.min(n,8),start=95-(shown-1)*13;for(let j=0;j<shown;j++){let y=start+j*26;svg+=`<circle cx="${xs[i]}" cy="${y}" r="8" fill="${i%2?'#d7f0ed':'#d8e7fa'}" stroke="${i%2?'#087f8c':'#2457a7'}"/>`}svg+=`<text x="${xs[i]}" y="178" font-size="12" fill="currentColor">${i===0?'Giriş':i===layers.length-1?'Çıxış':'Gizli'}: ${n}</text>`;if(n>8)svg+=`<text x="${xs[i]}" y="20" font-size="11" fill="currentColor">…</text>`});
+ for(let i=0;i<layers.length-1;i++){let a=Math.min(layers[i],8),b=Math.min(layers[i+1],8);for(let j=0;j<a;j++)for(let k=0;k<b;k++){let y1=95-(a-1)*13+j*26,y2=95-(b-1)*13+k*26;svg+=`<path d="M${xs[i]+9} ${y1} L${xs[i+1]-9} ${y2}" stroke="#8aa4c7" stroke-width=".8"/>`}}
+ svg+='</g></svg><div class="caption">Neyronların sayı göstərilir; 8-dən artıq neyron olduqda sxemdə ilk 8-i göstərilir, parametr hesabı isə tam say üzərində aparılır.</div>';document.getElementById('nnDiagram').innerHTML=svg;
+}
+function getVal(q){let type=q.dataset.type;if(type==='single'||type==='tf')return q.querySelector('input:checked')?.value||'';if(type==='multi')return [...q.querySelectorAll('input:checked')].map(x=>x.value).sort().join(',');if(type==='fill'||type==='calc')return q.querySelector('input').value.trim().toLowerCase();if(type==='order')return q.querySelector('select').value;if(type==='match')return ['a','b','c'].map(k=>q.querySelector(`[name=q4${k}]`).value).join(',');return ''}
+function gradeQuiz(){let qs=[...document.querySelectorAll('.quiz-q')],score=0;qs.forEach(q=>{let val=getVal(q),ans=q.dataset.answer,ok=val===ans,fb=q.querySelector('.feedback');if(ok)score++;fb.className='feedback '+(ok?'correct':'wrong');fb.textContent=(ok?'Düzgündür. ':'Düzgün deyil. ')+q.dataset.explain});document.getElementById('quizScore').textContent=`Nəticə: ${score} / ${qs.length} (${Math.round(score/qs.length*100)}%). Hər sual 1 baldır.`}
+function resetQuiz(){document.querySelectorAll('#quizArea input').forEach(x=>{if(x.type==='radio'||x.type==='checkbox')x.checked=false;else x.value=''});document.querySelectorAll('#quizArea select').forEach(x=>x.selectedIndex=0);document.querySelectorAll('.feedback').forEach(x=>{x.textContent='';x.className='feedback'});document.getElementById('quizScore').textContent='Cavabları seçdikdən sonra “Yoxla” düyməsini basın.'}
+buildNN();
+</script>
+<script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fəsil 5. Verilənlərin hazırlanması və ilkin emalı</title>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{--bg:#f4f7fb;--panel:#fff;--ink:#182334;--muted:#607087;--line:#dce4ef;--accent:#2457a7;--teal:#087f8c;--soft:#eaf1fb;--code:#101a2a;--good:#16794b;--bad:#b42318;--gold:#a66b00}
+[data-theme=dark]{--bg:#111827;--panel:#1c2738;--ink:#edf3fb;--muted:#aab8ca;--line:#34445a;--accent:#8db7ff;--teal:#64d4dc;--soft:#26364d;--code:#0a101a;--good:#68d6a0;--bad:#ff8f86;--gold:#ffd27a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.68 system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c);color:white;padding:38px max(22px,calc((100% - 1180px)/2))}
+header .eyebrow{letter-spacing:.13em;text-transform:uppercase;font-size:.78rem;opacity:.85}h1{font-size:clamp(1.8rem,4vw,3rem);line-height:1.15;margin:.5rem 0}header p{max-width:920px;color:#e4edfa}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.toolbar button,.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 12px;border-radius:9px;cursor:pointer;font-weight:650}.toolbar button{background:#ffffff18;color:white;border-color:#ffffff55}
+.layout{max-width:1180px;margin:24px auto;padding:0 18px;display:grid;grid-template-columns:275px minmax(0,1fr);gap:22px}nav{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+nav h3{margin:0 0 10px}nav a{display:block;padding:6px 8px;color:var(--muted);text-decoration:none;border-radius:7px;font-size:.91rem}nav a:hover{background:var(--soft);color:var(--accent)}
+main{min-width:0}section,.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:clamp(18px,3vw,30px);margin-bottom:18px;box-shadow:0 4px 18px #162c4a0a}
+h2{font-size:1.55rem;margin:0 0 14px;color:var(--accent)}h3{font-size:1.15rem;margin:22px 0 8px}h4{margin:14px 0 5px}p{margin:8px 0 13px}.muted{color:var(--muted)}.tag{display:inline-block;background:var(--soft);color:var(--accent);border-radius:30px;padding:3px 10px;font-size:.8rem;font-weight:700}
+.callout{border-left:4px solid var(--teal);background:var(--soft);padding:13px 16px;border-radius:8px;margin:14px 0}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.mini{border:1px solid var(--line);border-radius:11px;padding:14px;background:var(--panel)}
+.diagram{border:1px solid var(--line);border-radius:12px;background:var(--soft);padding:15px;margin:16px 0;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.caption{font-size:.88rem;color:var(--muted);text-align:center;margin-top:8px}
+pre{background:var(--code);color:#e7efff;padding:16px;border-radius:10px;overflow:auto;line-height:1.55;font-size:.91rem}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.codebox{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:15px 0}.codehead{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 12px;background:var(--soft);font-weight:700}.codebox pre{margin:0;border-radius:0}.runarea{padding:12px;background:var(--panel);border-top:1px solid var(--line)}.output{background:var(--code);color:#b8f3d0;padding:11px;border-radius:8px;min-height:42px;white-space:pre-wrap;font:.9rem/1.5 ui-monospace,monospace}
+input,select{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:8px;border-radius:8px;max-width:100%}
+.quiz-q{border:1px solid var(--line);border-radius:12px;padding:15px;margin:13px 0}.quiz-q label{display:block;margin:7px 0;cursor:pointer}.feedback{margin-top:8px;font-weight:650}.correct{color:var(--good)}.wrong{color:var(--bad)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.94rem}th,td{padding:9px;border:1px solid var(--line);text-align:left}th{background:var(--soft)}
+footer{text-align:center;color:var(--muted);padding:28px}.chart-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;background:#fff0c7;color:#795000;font-size:.8rem;font-weight:700}
+@media(max-width:850px){.layout{grid-template-columns:1fr}nav{position:relative;top:auto;max-height:330px}.grid2,.grid3{grid-template-columns:1fr}}
+@media print{nav,.toolbar,.btn{display:none!important}.layout{display:block;max-width:none}section{break-inside:avoid;box-shadow:none}body{background:white;color:black}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style></head>
+<body>
+<header><div class="eyebrow">Mingəçevir Dövlət Universiteti · Riyaziyyat və İnformasiya texnologiyaları fakültəsi</div>
+<h1>Fəsil 5. Verilənlərin hazırlanması və ilkin emalı</h1>
+<p>Maşın öyrənməsi modelinin etibarlılığı yalnız alqoritmdən deyil, verilənlərin necə təmizlənməsi, kodlaşdırılması, miqyaslandırılması və bölünməsindən də asılıdır. Bu fəsildə xam datasetin model üçün uyğun xüsusiyyət matrisinə çevrilməsi addım-addım, interaktiv cədvəl və Python nümunələri ilə öyrənilir.</p>
+<div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="layout"><nav><h3>Mündəricat</h3>
+<a href="#goals">Təlim məqsədləri</a><a href="#s51">5.1 Hazırlamanın rolu</a><a href="#s52">5.2 Verilənlərin təmizlənməsi</a><a href="#s53">5.3 Çatışmayan qiymətlər</a><a href="#s54">5.4 Kənar qiymətlər</a><a href="#s55">5.5 Kateqorik dəyişənlər</a><a href="#s56">5.6 Label / One-Hot Encoding</a><a href="#s57">5.7 Normallaşdırma və standardlaşdırma</a><a href="#s58">5.8 Min-Max və StandardScaler</a><a href="#s59">5.9 Feature Selection</a><a href="#s510">5.10 PCA</a><a href="#s511">5.11 Train / validation / test</a><a href="#s512">5.12 Data Leakage</a><a href="#s513">5.13 Pipeline</a><a href="#practice">Praktiki tapşırıqlar</a><a href="#quiz">7 tipli quiz</a><a href="#lab">Laboratoriya işi №5</a><a href="#glossary">Lüğət</a><a href="#refs">Ədəbiyyat</a>
+</nav><main>
+<section id="goals"><span class="tag">Fəslə giriş</span><h2>Təlim məqsədləri və nəticələri</h2>
+<p>Fəslin əsas məqsədi tələbəyə xam verilənlərdən modelin təliminə hazır, təkrarlana bilən və məlumat sızmasından qorunan emal axını qurmağı öyrətməkdir.</p>
+<div class="grid2"><div class="mini"><h4>Fəslin sonunda tələbə bacarmalıdır</h4><ul><li>verilənlərin hazırlanmasının model keyfiyyətinə təsirini əsaslandırmaq;</li><li>çatışmayan və təkrarlanan qeydləri aşkarlamaq və əsaslandırılmış emal üsulu seçmək;</li><li>outlier-ləri IQR və domen biliyi ilə araşdırmaq;</li><li>nominal və ordinal kateqoriyaları düzgün kodlaşdırmaq;</li><li>Min-Max Scaling və StandardScaler tətbiq etmək;</li><li>feature selection və PCA fərqini izah etmək;</li><li>train/validation/test bölgüsünü düzgün qurmaq;</li><li>data leakage riskini tanımaq və Pipeline ilə qarşısını almaq.</li></ul></div><div class="mini"><h4>Əvvəlki fəsillərlə əlaqə</h4><p>Fəsil 4-də aparılan EDA bu fəslin başlanğıc nöqtəsidir. Təmizləmə qərarları EDA nəticələrinə, dəyişənlərin ölçmə şkalasına, tətbiq kontekstinə və model ailəsinə əsaslanmalıdır.</p><p><b>Əsas prinsip:</b> emal addımlarını yalnız öyrənmə məlumatından öyrən; eyni transformasiyanı validation, test və real yeni məlumatlara tətbiq et.</p></div></div>
+<div class="diagram"><svg viewBox="0 0 740 190" role="img" aria-label="Preprocessing axını"><g font-family="Arial" text-anchor="middle" font-size="13"><rect x="8" y="48" width="105" height="66" rx="9" fill="#d8e7fa" stroke="#2457a7"/><text x="60" y="76" fill="#182334">Xam</text><text x="60" y="94" fill="#182334">dataset</text><rect x="130" y="48" width="105" height="66" rx="9" fill="#d7f0ed" stroke="#087f8c"/><text x="182" y="76" fill="#182334">Təmizləmə</text><text x="182" y="94" fill="#182334">və düzəliş</text><rect x="252" y="48" width="105" height="66" rx="9" fill="#d8e7fa" stroke="#2457a7"/><text x="304" y="76" fill="#182334">Kodlaşdırma</text><text x="304" y="94" fill="#182334">/ imputation</text><rect x="374" y="48" width="105" height="66" rx="9" fill="#d7f0ed" stroke="#087f8c"/><text x="426" y="76" fill="#182334">Scaling</text><text x="426" y="94" fill="#182334">/ selection</text><rect x="496" y="48" width="105" height="66" rx="9" fill="#d8e7fa" stroke="#2457a7"/><text x="548" y="76" fill="#182334">Pipeline</text><text x="548" y="94" fill="#182334">və model</text><rect x="618" y="48" width="112" height="66" rx="9" fill="#d7f0ed" stroke="#087f8c"/><text x="674" y="76" fill="#182334">Qiymətlən-</text><text x="674" y="94" fill="#182334">dirmə</text><g stroke="#2457a7" stroke-width="2"><path d="M113 81H127M235 81H249M357 81H371M479 81H493M601 81H615"/></g><text x="370" y="153" fill="currentColor">Hər transformasiyanın parametrləri train hissəsində öyrənilir.</text></g></svg><div class="caption">Şəkil 5.1. Xam veriləndən modelə hazırlama ardıcıllığı.</div></div></section>
+
+<section id="s51"><h2>5.1. Verilənlərin hazırlanmasının maşın öyrənməsində rolu</h2>
+<p>Verilənlərin hazırlanması (data preparation / preprocessing) xam məlumatı seçilmiş alqoritmin qəbul edə biləcəyi formaya gətirən mərhələlər toplusudur. Bu mərhələ yalnız texniki təmizləmə deyil; ölçmə vahidlərinin uyğunlaşdırılması, kateqoriyaların semantik mənasının saxlanması, təlim və testin ayrılması, qərəz və sızma risklərinin idarə olunmasını da əhatə edir.</p>
+<p>Çirkli və uyğunsuz verilənlər modelə təsadüfi səs-küy, sistematik qərəz və yanlış əlaqələr öyrədə bilər. Məsələn, gəlir sütununda AZN və USD qarışdırılıbsa, modelin hesabladığı məsafələr və statistik göstəricilər mənasız ola bilər.</p>
+<div class="grid3"><div class="mini"><h4>Keyfiyyət</h4><p>Dəqiqlik, tamlıq, ardıcıllıq və etibarlılıq.</p></div><div class="mini"><h4>Uyğunluq</h4><p>Modelin gözlədiyi tip, forma və miqyas.</p></div><div class="mini"><h4>Təkrarlana bilmə</h4><p>Eyni qaydaların yeni məlumatlara tətbiqi.</p></div></div>
+<div class="callout"><b>Vacib fərq:</b> preprocessing bütün problemləri “silərək” həll etmək deyil. Məlumatın mənasını qoruyaraq, sənədləşdirilmiş və əsaslandırılmış transformasiya aparmaqdır.</div></section>
+
+<section id="s52"><h2>5.2. Verilənlərin təmizlənməsi</h2>
+<p>Verilənlərin təmizlənməsi (data cleaning) səhv, ziddiyyətli, təkrarlanan, formatı pozulmuş və ya domen qaydalarına uyğun olmayan qeydlərin aşkarlanması və idarə edilməsidir. Təmizləməyə başlamazdan əvvəl orijinal datasetin dəyişməz nüsxəsini saxlayın və bütün düzəlişləri qeydə alın.</p>
+<h3>Tipik yoxlama istiqamətləri</h3><ul><li><b>Tip və format:</b> tarix sütununun mətn kimi oxunması, rəqəmdə vergül/nöqtə fərqi.</li><li><b>Aralıq yoxlaması:</b> yaşın mənfi, davamiyyətin 100%-dən böyük olması.</li><li><b>Standartlaşdırma:</b> “Bakı”, “baki”, “BAKI” kimi kateqoriya yazılışları.</li><li><b>Təkrar qeydlər:</b> eyni ID və tarix kombinasiyasının təkrarlanması.</li><li><b>Domen məntiqi:</b> bitmə tarixi başlanğıc tarixindən əvvəl ola bilməz.</li></ul>
+<div class="codebox"><div class="codehead">Python · ilkin təmizləmə yoxlamaları <button class="btn" onclick="copyText('df.columns = df.columns.str.strip().str.lower().str.replace(\" \", \"_\")\\ndf = df.drop_duplicates()\\ndf[\"date\"] = pd.to_datetime(df[\"date\"], errors=\"coerce\")\\ndf[\"age\"] = pd.to_numeric(df[\"age\"], errors=\"coerce\")\\nprint(df.isna().sum())')">Kodu köçür</button></div><pre><code>df.columns = (df.columns.str.strip()
+              .str.lower()
+              .str.replace(" ", "_"))
+df = df.drop_duplicates()
+df["date"] = pd.to_datetime(df["date"], errors="coerce")
+df["age"] = pd.to_numeric(df["age"], errors="coerce")
+print(df.isna().sum())</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out52','Sütun adları normallaşdırılır.\\nTam təkrarlanan sətirlər çıxarılır.\\nTarix və yaş sütunları uyğun tiplərə çevrilir.\\nerrors=\"coerce\" çevrilə bilməyən dəyərləri NaT/NaN edir; bu qeydlər ayrıca yoxlanmalıdır.')">Əmrlərin nəticəsini izah et</button><div class="output" id="out52">Nəticəni görmək üçün seçin.</div></div></div></section>
+
+<section id="s53"><h2>5.3. Çatışmayan qiymətlərin aşkarlanması və doldurulması</h2>
+<p>Çatışmayan qiymətlərin emalı dəyişənin tipinə, çatışmazlığın səbəbinə və paylanmasına əsaslanmalıdır. Ədədi sütunda orta qiymət kənar müşahidələrdən təsirlənir; median çox vaxt daha dayanıqlı seçimdir. Kateqorik sütunda ən çox rast gəlinən sinif və ya ayrıca “Naməlum” kateqoriyası istifadə oluna bilər. Lakin heç bir doldurma üsulu avtomatik olaraq düzgün deyil.</p>
+<h3>Əsas strategiyalar</h3><table><tr><th>Strategiya</th><th>Uyğun ola biləcəyi hal</th><th>Risk / məhdudiyyət</th></tr><tr><td>Sətiri/sütunu silmək</td><td>Az sayda qeyd və əsaslandırılmış MCAR ehtimalı</td><td>Nümunə həcmini və təmsilçiliyi azalda bilər</td></tr><tr><td>Orta ilə doldurma</td><td>Təxminən simmetrik ədədi paylanma</td><td>Outlier-lər orta qiyməti dəyişir</td></tr><tr><td>Medianla doldurma</td><td>Çəp paylanma və outlier ehtimalı</td><td>Dəyişkənliyi zəiflədə bilər</td></tr><tr><td>Moda / “Naməlum”</td><td>Kateqorik dəyişən</td><td>Əlavə kateqoriya semantik baxımdan izah olunmalıdır</td></tr><tr><td>Model əsaslı imputasiya</td><td>Əlaqəli dəyişənlər və kifayət qədər məlumat</td><td>Model fərziyyələri və sızma riski var</td></tr></table>
+<p>Çatışmazlıq MCAR, MAR və MNAR mexanizmlərindən biri ilə bağlı ola bilər. Bu mexanizm müşahidə olunan məlumat və domen biliyi əsasında araşdırılmalıdır; yalnız missing faizinə baxmaq kifayət deyil.</p>
+<h3>İnteraktiv doldurma laboratoriyası</h3><p>Kiçik sintetik cədvəldə boş “bal” qiymətini orta və ya medianla doldurun. Seçim dəyişdikdə nəticə cədvəli yenilənir.</p>
+<div class="mini"><div class="chart-controls"><label>Doldurma üsulu <select id="imputeMethod" onchange="renderImpute()"><option value="median">Median</option><option value="mean">Orta</option></select></label><span class="muted">Nümunə: 42, 55, boş, 61, 92</span></div><div id="imputeTable"></div><div id="imputeExplain" class="callout">—</div></div>
+<div class="codebox"><div class="codehead">Scikit-learn · SimpleImputer</div><pre><code>from sklearn.impute import SimpleImputer
+
+numeric_imputer = SimpleImputer(strategy="median")
+X_train_num = numeric_imputer.fit_transform(X_train_num)
+X_test_num = numeric_imputer.transform(X_test_num)</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out53','fit_transform yalnız train məlumatında medianı öyrənir və train-i doldurur.\\nTest hissəsində fit deyil, transform istifadə olunur.\\nBeləliklə test statistikası train preprocessing parametrinə qarışmır.')">Train / test fərqini izah et</button><div class="output" id="out53">Düyməni seçin.</div></div></div></section>
+
+<section id="s54"><h2>5.4. Kənar qiymətlərin müəyyənləşdirilməsi</h2>
+<p>Kənar qiymətlər (outliers) paylanmanın əsas hissəsindən fərqlənən müşahidələrdir. Onlar giriş xətası, cihaz nasazlığı, nadir, lakin real hadisə və ya fərqli alt-populyasiya göstəricisi ola bilər. Əvvəlki fəsildə öyrənilən IQR üsulu ilkin aşkarlama üçün yararlıdır; qərar kontekstlə verilməlidir.</p>
+<div class="callout">\[IQR=Q_3-Q_1,\quad L=Q_1-1.5IQR,\quad U=Q_3+1.5IQR\]<p>Əgər \(x&lt;L\) və ya \(x&gt;U\) olarsa, müşahidə IQR qaydasına görə potensial kənar qiymət kimi işarələnir.</p></div>
+<h3>Outlier-lə işləmə variantları</h3><ul><li>mənbəyə qayıdıb səhvi düzəltmək;</li><li>müşahidəni saxlamaq və robust model/metric seçmək;</li><li>əsaslandırılmış winsorization və ya clipping tətbiq etmək;</li><li>log və ya başqa transformasiya ilə çəp paylanmanı azaltmaq;</li><li>yalnız ölçmə xətası təsdiqləndikdə silmək.</li></ul>
+<div class="codebox"><div class="codehead">Python · IQR ilə namizəd outlier-lər</div><pre><code>q1 = df["income"].quantile(0.25)
+q3 = df["income"].quantile(0.75)
+iqr = q3 - q1
+lower, upper = q1 - 1.5*iqr, q3 + 1.5*iqr
+
+outlier_mask = (df["income"] < lower) | (df["income"] > upper)
+print(df.loc[outlier_mask, "income"])</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out54','IQR sərhədləri Q1 və Q3-dən hesablanır.\\nMask sərhədlərdən kənar qiymətləri seçir.\\nBu qeydlər silinməzdən əvvəl mənbə və domen konteksti ilə yoxlanmalıdır.')">Hesablama məntiqi</button><div class="output" id="out54">Düyməni seçin.</div></div></div></section>
+
+<section id="s55"><h2>5.5. Kateqorik dəyişənlərin kodlaşdırılması</h2>
+<p>Bir çox ML alqoritmi girişdə ədədi matris gözləyir. Mətn kateqoriyalarının rəqəmə çevrilməsi kodlaşdırma (encoding) adlanır. Kodlar kateqoriyanın mənasını və sırasını təhrif etməməlidir.</p>
+<p>Nominal dəyişənlərdə təbii sıra yoxdur (məsələn, şəhər və rəng). Ordinal dəyişənlərdə isə sıralama var (aşağı, orta, yüksək). Bu fərq kodlaşdırma üsulunun seçilməsini müəyyən edir.</p>
+<div class="grid2"><div class="mini"><h4>Nominal</h4><p>“Bakı”, “Gəncə”, “Şəki”</p><p>Adətən One-Hot Encoding uyğundur.</p></div><div class="mini"><h4>Ordinal</h4><p>“Aşağı”, “Orta”, “Yüksək”</p><p>Əsaslandırılmış sıra ilə ordinal encoding istifadə oluna bilər.</p></div></div>
+<div class="callout"><b>Yanlış yanaşma nümunəsi:</b> şəhərlərə Bakı=1, Gəncə=2, Şəki=3 kodu vermək bəzi alqoritmlərdə Şəkinin “Bakıdan üç dəfə böyük” və ya arada məsafə olduğu təəssüratını yarada bilər. Nominal dəyişən üçün belə rəqəmsal sıra mənalı deyil.</div></section>
+
+<section id="s56"><h2>5.6. Label Encoding və One-Hot Encoding</h2>
+<p><b>Label Encoding</b> kateqoriyaları tam ədədlərlə əvəz edir. Bu üsul çox vaxt hədəf etiketlərinin kodlaşdırılması üçün uyğundur. Giriş xüsusiyyətində istifadə ediləndə süni sıralama yarada bilər. <b>Ordinal Encoding</b> yalnız həqiqi sıra mövcud olduqda və sıra açıq müəyyənləşdirildikdə istifadə edilməlidir.</p>
+<p><b>One-Hot Encoding</b> hər kateqoriya üçün ayrıca ikili sütun yaradır. Məsələn, “rəng” = {qırmızı, yaşıl, mavi} dəyişəni üç indikator sütununa çevrilir. Bəzi xətti modellərdə intercept ilə birlikdə tam kollinearılığın qarşısını almaq üçün bir sütun buraxıla bilər (`drop="first"`); bu seçim model və interpretasiya tələbindən asılıdır.</p>
+<div class="diagram"><svg viewBox="0 0 720 235" role="img" aria-label="One hot encoding cədvəli"><g font-family="Arial" font-size="13"><text x="360" y="20" text-anchor="middle" fill="currentColor">Rəng kateqoriyasının One-Hot çevrilməsi</text><g stroke="#2457a7"><rect x="30" y="42" width="155" height="145" fill="#fff"/><rect x="220" y="42" width="470" height="145" fill="#fff"/><path d="M30 78H185M220 78H690M375 42V187M532 42V187M30 114H185M30 150H185M220 114H690M220 150H690" fill="none"/></g><g fill="#182334" text-anchor="middle"><text x="107" y="65">Rəng</text><text x="297" y="65">Qırmızı</text><text x="453" y="65">Yaşıl</text><text x="611" y="65">Mavi</text><text x="107" y="101">Qırmızı</text><text x="107" y="137">Yaşıl</text><text x="107" y="173">Mavi</text><text x="297" y="101">1</text><text x="453" y="101">0</text><text x="611" y="101">0</text><text x="297" y="137">0</text><text x="453" y="137">1</text><text x="611" y="137">0</text><text x="297" y="173">0</text><text x="453" y="173">0</text><text x="611" y="173">1</text></g></g></svg><div class="caption">Şəkil 5.2. Nominal “rəng” dəyişəninin One-Hot Encoding nəticəsi.</div></div>
+<h3>İnteraktiv kodlaşdırma cədvəli</h3><div class="mini"><div class="chart-controls"><label>Kodlaşdırma <select id="encodingMode" onchange="renderEncoding()"><option value="onehot">One-Hot</option><option value="label">Label Encoding</option></select></label></div><div id="encodingTable"></div><div id="encodingNote" class="callout">—</div></div>
+<div class="codebox"><div class="codehead">Python · OneHotEncoder və OrdinalEncoder</div><pre><code>from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
+
+nominal_encoder = OneHotEncoder(handle_unknown="ignore")
+X_city = nominal_encoder.fit_transform(train[["city"]])
+
+ordinal_encoder = OrdinalEncoder(
+    categories=[["low", "medium", "high"]]
+)
+X_level = ordinal_encoder.fit_transform(train[["level"]])</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out56','OneHotEncoder nominal kateqoriyaları indikator sütunlarına çevirir.\\nhandle_unknown=\"ignore\" transform zamanı təlimdə görünməyən kateqoriyaya görə xətanın qarşısını alır.\\nOrdinalEncoder-də kateqoriya sırası açıq göstərilib.')">Kodun izahı</button><div class="output" id="out56">Düyməni seçin.</div></div></div></section>
+
+<section id="s57"><h2>5.7. Normallaşdırma və standardlaşdırma</h2>
+<p>Ədədi xüsusiyyətlər fərqli miqyaslarda olduqda məsafə və gradient əsaslı alqoritmlər bir dəyişənə həddindən artıq həssas ola bilər. Məsələn, yaş 18–70, illik gəlir isə 5 000–100 000 aralığında ola bilər. Scaling dəyişənləri müqayisə edilə bilən miqyasa gətirir.</p>
+<p><b>Normallaşdırma</b> termini kontekstdən asılı olaraq müxtəlif miqyaslandırma üsullarını ifadə edə bilər. Bu fəsildə əsasən Min-Max Scaling nəzərdə tutulur. <b>Standardlaşdırma</b> isə orta qiyməti 0, standart kənarlaşması 1 olan z-score çevrilməsidir.</p>
+<div class="grid2"><div class="mini"><h4>Scaling faydalı ola bilər</h4><p>KNN, K-means, SVM, PCA, gradient əsaslı neyron şəbəkələri və regularizasiya tətbiq edən modellər.</p></div><div class="mini"><h4>Həmişə vacib deyil</h4><p>Qərar ağacları və bir çox tree ensemble modelləri miqyas fərqinə adətən həssas deyil.</p></div></div>
+<div class="callout">Scaling yalnız təlim məlumatında fit edilməlidir. Test və real tətbiq məlumatı həmin train-dən öyrənilmiş parametr ilə transformasiya olunur.</div></section>
+
+<section id="s58"><h2>5.8. Min-Max Scaling və StandardScaler</h2>
+<p><b>Min-Max Scaling</b> verilənləri adətən \([0,1]\) intervalına çevirir:</p><div class="callout">\[x' = \frac{x-x_{\\min}}{x_{\\max}-x_{\\min}}\]</div>
+<p><b>StandardScaler</b> z-score çevrilməsini tətbiq edir:</p><div class="callout">\[z = \frac{x-\mu}{\sigma}\]</div>
+<p>Burada \(\mu\) təlim nümunəsinin orta qiyməti, \(\sigma\) isə standart kənarlaşmasıdır. StandardScaler nəticəsinin hər qiyməti mütləq [-1,1] aralığında olmur. Min-Max outlier-lərdən təsirlənə bilər; StandardScaler də outlier-lərə həssasdır. Belə hallarda RobustScaler kimi alternativlər nəzərdən keçirilə bilər.</p>
+<h3>İnteraktiv miqyaslandırma kalkulyatoru</h3><div class="mini"><div class="chart-controls"><label>x qiyməti <input id="scaleX" type="range" min="0" max="100" value="60" oninput="renderScaling()"><b id="scaleXVal">60</b></label><label>Min <input id="scaleMin" type="number" value="20" oninput="renderScaling()" style="width:75px"></label><label>Max <input id="scaleMax" type="number" value="100" oninput="renderScaling()" style="width:75px"></label><label>Orta μ <input id="scaleMean" type="number" value="60" oninput="renderScaling()" style="width:75px"></label><label>σ <input id="scaleStd" type="number" min=".01" step=".1" value="20" oninput="renderScaling()" style="width:75px"></label></div><div class="grid2"><div class="mini"><span class="muted">Min-Max nəticəsi</span><div id="minmaxResult" style="font-size:1.7rem;font-weight:800">—</div></div><div class="mini"><span class="muted">StandardScaler nəticəsi</span><div id="standardResult" style="font-size:1.7rem;font-weight:800">—</div></div></div><div id="scaleWarning" class="callout">—</div></div>
+<div class="codebox"><div class="codehead">Python · train-də fit, test-də transform</div><pre><code>from sklearn.preprocessing import MinMaxScaler, StandardScaler
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out58','fit_transform: train məlumatından orta və standart kənarlaşmanı öyrənir, train-i çevirir.\\ntransform: həmin parametrləri test məlumatına tətbiq edir.\\nTest üçün yenidən fit_transform etmək olmaz.')">Niyə testdə fit etmirik?</button><div class="output" id="out58">Düyməni seçin.</div></div></div></section>
+
+<section id="s59"><h2>5.9. Xüsusiyyətlərin seçilməsi (Feature Selection)</h2>
+<p>Feature Selection mövcud xüsusiyyətlər arasından model üçün faydalı alt çoxluğu seçir. Məqsəd ölçülülüyü, hesablama xərclərini və overfitting riskini azaltmaq, interpretasiyanı yaxşılaşdırmaqdır. Feature Selection yeni xüsusiyyət yaratmır; mövcud sütunları seçir.</p>
+<table><tr><th>Yanaşma</th><th>İş prinsipi</th><th>Nümunə</th></tr><tr><td>Filter</td><td>Modeldən əvvəl statistik meyarla sıralama</td><td>VarianceThreshold, mutual information, ANOVA</td></tr><tr><td>Wrapper</td><td>Alt çoxluqları model performansı ilə müqayisə</td><td>RFE, Sequential Feature Selection</td></tr><tr><td>Embedded</td><td>Seçim modelin öyrənmə prosesində baş verir</td><td>L1/Lasso, ağac əsaslı feature importance</td></tr></table>
+<p>Seçim prosesi yalnız train məlumatı daxilində və cross-validation qaydalarına uyğun aparılmalıdır. Test nəticəsinə baxaraq feature seçmək test məlumatını qərara sızdırır.</p>
+<div class="codebox"><div class="codehead">Python · SelectKBest nümunəsi</div><pre><code>from sklearn.feature_selection import SelectKBest, f_classif
+
+selector = SelectKBest(score_func=f_classif, k=5)
+X_train_selected = selector.fit_transform(X_train, y_train)
+X_test_selected = selector.transform(X_test)</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out59','f_classif ANOVA F-statistikası ilə xüsusiyyətlərin siniflə əlaqəsini qiymətləndirir.\\nk=5 ən yüksək bal alan 5 xüsusiyyəti saxlayır.\\nSeçici yalnız X_train və y_train üzərində fit edilir.')">Seçim addımlarını izah et</button><div class="output" id="out59">Düyməni seçin.</div></div></div></section>
+
+<section id="s510"><h2>5.10. Ölçülərin azaldılması və PCA</h2>
+<p>Ölçülərin azaldılması (dimensionality reduction) çoxsaylı xüsusiyyətləri daha az ölçülü təqdimata çevirməklə məlumatın əsas strukturunu qorumağa çalışır. <b>PCA (Principal Component Analysis)</b> verilənlərdə mümkün qədər çox dispersiyanı izah edən, bir-birinə ortoqonal istiqamətlər – əsas komponentlər yaradır.</p>
+<p>PCA adətən ədədi və miqyaslandırılmış xüsusiyyətlər üzərində tətbiq edilir. Komponentlər ilkin dəyişənlərin xətti kombinasiyalarıdır; buna görə interpretasiya çətinləşə bilər. PCA nəzarətsiz üsuldur və hədəf dəyişənini birbaşa nəzərə almır.</p>
+<div class="diagram"><svg viewBox="0 0 700 260" role="img" aria-label="PCA əsas komponent istiqamətləri"><g font-family="Arial"><path d="M55 220V25M55 220H660" stroke="currentColor" fill="none"/><g fill="#2457a7" opacity=".8"><circle cx="130" cy="185" r="5"/><circle cx="190" cy="166" r="5"/><circle cx="245" cy="151" r="5"/><circle cx="290" cy="137" r="5"/><circle cx="355" cy="115" r="5"/><circle cx="420" cy="98" r="5"/><circle cx="480" cy="80" r="5"/><circle cx="535" cy="62" r="5"/><circle cx="590" cy="47" r="5"/></g><path d="M105 192L620 35" stroke="#087f8c" stroke-width="3"/><path d="M300 135L335 250" stroke="#a66b00" stroke-width="2.5" stroke-dasharray="6 4"/><g fill="currentColor" font-size="13"><text x="520" y="25">PC1 — ən çox dispersiya</text><text x="340" y="245">PC2 — PC1-ə perpendikulyar</text><text x="360" y="254" font-size="10"> </text><text x="360" y="240" font-size="10"> </text><text x="10" y="18">X₂</text><text x="665" y="240">X₁</text></g></g></svg><div class="caption">Şəkil 5.3. İki ölçülü veriləndə əsas dəyişkənlik istiqamətinin (PC1) konseptual təsviri.</div></div>
+<div class="callout">\[Z = XW\]<p>Burada \(X\) (mərkəzləşdirilmiş və lazım olduqda miqyaslandırılmış) verilənlər matrisi, \(W\) seçilmiş əsas komponentlərin istiqamət vektorları, \(Z\) isə aşağı ölçülü təqdimatdır.</p></div>
+<div class="codebox"><div class="codehead">Python · PCA və izah olunan dispersiya</div><pre><code>from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+X_train_s = scaler.fit_transform(X_train)
+X_test_s = scaler.transform(X_test)
+
+pca = PCA(n_components=0.95)
+X_train_pca = pca.fit_transform(X_train_s)
+X_test_pca = pca.transform(X_test_s)
+
+print(pca.n_components_)
+print(pca.explained_variance_ratio_.sum())</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out510','n_components=0.95 komponent sayını elə seçir ki, train verilənlərində izah olunan ümumi dispersiya ən azı 95% olsun.\\nPCA train-də fit edilir, test-ə yalnız transform tətbiq olunur.\\n95% dispersiyanı qorumaq hədəf dəyişəninin 95% informasiyasını qorumaq demək deyil.')">PCA nəticəsinin mənası</button><div class="output" id="out510">Düyməni seçin.</div></div></div></section>
+
+<section id="s511"><h2>5.11. Təlim, validasiya və test verilənlərinin ayrılması</h2>
+<p>Modelin ümumiləşdirmə qabiliyyətini qiymətləndirmək üçün dataset müstəqil hissələrə ayrılır. <b>Train</b> model parametrlərini öyrənmək, <b>validation</b> hiperparametrləri və model variantlarını seçmək, <b>test</b> isə yekun performansı qərəzsiz qiymətləndirmək üçün istifadə edilir.</p>
+<div class="diagram"><svg viewBox="0 0 700 175" role="img" aria-label="Train validation test bölünməsi"><g font-family="Arial" text-anchor="middle"><rect x="30" y="42" width="390" height="72" rx="8" fill="#d8e7fa" stroke="#2457a7"/><rect x="420" y="42" width="120" height="72" rx="8" fill="#d7f0ed" stroke="#087f8c"/><rect x="540" y="42" width="130" height="72" rx="8" fill="#fff0c7" stroke="#a66b00"/><text x="225" y="72" fill="#182334" font-size="18">Train · 70%</text><text x="225" y="94" fill="#182334" font-size="12">Parametrlərin öyrənilməsi</text><text x="480" y="72" fill="#182334" font-size="15">Validation</text><text x="480" y="94" fill="#182334" font-size="12">15%</text><text x="605" y="72" fill="#182334" font-size="15">Test</text><text x="605" y="94" fill="#182334" font-size="12">15%</text><text x="350" y="145" fill="currentColor" font-size="12">Nisbətlər nümunədir; datasetin ölçüsü və quruluşuna uyğun seçilir.</text></g></svg><div class="caption">Şəkil 5.4. Train / validation / test bölgüsünün nümunəvi təsviri.</div></div>
+<p>Sinif nisbətini qorumaq üçün təsnifat məsələlərində <code>stratify=y</code> istifadə oluna bilər. Zaman sıralarında təsadüfi bölmə gələcək məlumatın keçmişə sızmasına səbəb ola bilər; xronoloji bölmə və time-series cross-validation daha uyğundur. Eyni şəxsə və ya obyektə aid qeydlər müxtəlif hissələrə düşməməlidirsə, Group split istifadə edilir.</p>
+<div class="codebox"><div class="codehead">Python · stratified split</div><pre><code>from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42,
+    stratify=y
+)</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out511','test_size=0.20 → məlumatın 20%-i test hissəsinə ayrılır.\\nrandom_state=42 → eyni bölgünün təkrarlanmasına kömək edir.\\nstratify=y → sinif nisbətlərini təxmini qoruyur.\\nValidation tələb olunarsa train hissəsi əlavə bölünür və ya cross-validation tətbiq edilir.')">Parametrləri izah et</button><div class="output" id="out511">Düyməni seçin.</div></div></div>
+<h3>İnteraktiv bölgü kalkulyatoru</h3><div class="mini"><div class="chart-controls"><label>Müşahidə sayı <input id="nSamples" type="number" min="10" max="1000000" value="1000" oninput="renderSplit()"></label><label>Test faizi <input id="testPct" type="range" min="10" max="30" value="20" oninput="renderSplit()"><b id="testPctVal">20%</b></label><label>Validation faizi <input id="valPct" type="range" min="5" max="25" value="15" oninput="renderSplit()"><b id="valPctVal">15%</b></label></div><div id="splitBars"></div><div id="splitText" class="callout">—</div></div></section>
+
+<section id="s512"><h2>5.12. Data Leakage problemi və qarşısının alınması</h2>
+<p><b>Data leakage</b> modelin təlimi və ya model seçimi zamanı real proqnoz anında əlçatan olmayacaq məlumatın prosesə daxil olmasıdır. Bu, qiymətləndirmə nəticəsini süni şəkildə yüksəldə və real istifadədə zəif performansa səbəb ola bilər.</p>
+<h3>Əsas sızma növləri</h3><ul><li><b>Preprocessing leakage:</b> scaling/imputation parametrlərinin train+test birlikdə hesablanması.</li><li><b>Target leakage:</b> hədəfi birbaşa və ya dolayı açıqlayan feature-in girişə daxil edilməsi.</li><li><b>Temporal leakage:</b> gələcəkdə yaranan məlumatın keçmiş hadisəni proqnozlaşdırmaq üçün istifadəsi.</li><li><b>Group leakage:</b> eyni şəxsə/obyektə aid qeydlərin train və test arasında bölünməsi.</li></ul>
+<div class="grid2"><div class="mini"><span class="pill">Səhv</span><h4>Əvvəl bütün datasetə fit</h4><pre><code>scaler.fit(X)
+X_scaled = scaler.transform(X)
+X_train, X_test = split(X_scaled)</code></pre><p>Test məlumatının statistikası scaling parametrinə təsir edir.</p></div><div class="mini"><span class="tag">Düzgün</span><h4>Əvvəl split, sonra fit</h4><pre><code>X_train, X_test = split(X)
+scaler.fit(X_train)
+X_train_s = scaler.transform(X_train)
+X_test_s = scaler.transform(X_test)</code></pre><p>Test hissəsi transformasiya parametrinin öyrənilməsində iştirak etmir.</p></div></div>
+<div class="callout"><b>Qızıl qayda:</b> Test dəstinə yalnız yekun qiymətləndirmə üçün müraciət edin. Hər dəfə test nəticəsinə baxaraq model qərarlarını dəyişmək test dəstini faktiki validation dəstinə çevirir.</div></section>
+
+<section id="s513"><h2>5.13. Verilənlərin hazırlanması üçün Pipeline mexanizmi</h2>
+<p>Scikit-learn <code>Pipeline</code> preprocessing addımlarını və modeli vahid obyekt daxilində birləşdirir. <code>ColumnTransformer</code> isə ədədi və kateqorik sütunlara fərqli transformasiyalar tətbiq etməyə imkan verir. Pipeline cross-validation və hiperparametr axtarışında transformasiyaların hər fold-un train hissəsində fit edilməsini təmin etməyə kömək edir.</p>
+<div class="diagram"><svg viewBox="0 0 720 245" role="img" aria-label="ColumnTransformer və Pipeline"><g font-family="Arial" text-anchor="middle" font-size="13"><rect x="15" y="88" width="120" height="65" rx="9" fill="#d8e7fa" stroke="#2457a7"/><text x="75" y="115" fill="#182334">Xam</text><text x="75" y="134" fill="#182334">X sütunları</text><rect x="180" y="22" width="205" height="78" rx="9" fill="#d7f0ed" stroke="#087f8c"/><text x="282" y="50" fill="#182334">Ədədi pipeline</text><text x="282" y="72" fill="#182334">Imputer → Scaler</text><rect x="180" y="140" width="205" height="78" rx="9" fill="#fff0c7" stroke="#a66b00"/><text x="282" y="168" fill="#182334">Kateqorik pipeline</text><text x="282" y="190" fill="#182334">Imputer → OneHot</text><rect x="430" y="88" width="120" height="65" rx="9" fill="#d8e7fa" stroke="#2457a7"/><text x="490" y="115" fill="#182334">Column</text><text x="490" y="134" fill="#182334">Transformer</text><rect x="590" y="88" width="115" height="65" rx="9" fill="#d7f0ed" stroke="#087f8c"/><text x="647" y="115" fill="#182334">Model</text><text x="647" y="134" fill="#182334">classifier</text><path d="M135 120H155V61H175M155 120V179H175M385 61H410V120H425M385 179H410V120M550 120H585" fill="none" stroke="#2457a7" stroke-width="2"/><text x="360" y="238" fill="currentColor">Pipeline: fit zamanı parametrləri train fold-da öyrənir.</text></g></svg><div class="caption">Şəkil 5.5. Ədədi və kateqorik sütunlar üçün ColumnTransformer və Pipeline arxitekturası.</div></div>
+<div class="codebox"><div class="codehead">Tam nümunə · ColumnTransformer + Pipeline</div><pre><code>from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.ensemble import RandomForestClassifier
+
+numeric_features = ["age", "income"]
+categorical_features = ["city", "education"]
+
+numeric_pipe = Pipeline([
+    ("imputer", SimpleImputer(strategy="median")),
+    ("scaler", StandardScaler())
+])
+
+categorical_pipe = Pipeline([
+    ("imputer", SimpleImputer(strategy="most_frequent")),
+    ("onehot", OneHotEncoder(handle_unknown="ignore"))
+])
+
+preprocessor = ColumnTransformer([
+    ("num", numeric_pipe, numeric_features),
+    ("cat", categorical_pipe, categorical_features)
+])
+
+model = Pipeline([
+    ("preprocess", preprocessor),
+    ("classifier", RandomForestClassifier(random_state=42))
+])
+
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out513','1) Numeric pipeline: median imputasiya, sonra standardlaşdırma.\\n2) Categorical pipeline: moda ilə doldurma, sonra One-Hot.\\n3) ColumnTransformer sütun qruplarına uyğun pipeline-ları birləşdirir.\\n4) Model Pipeline bütün addımları vahid fit/predict axınına salır.\\n5) model.fit yalnız X_train, y_train üzərində öyrənir; predict X_test üçün proqnoz verir.')">Pipeline addımlarını göstər</button><div class="output" id="out513">Düyməni seçin.</div></div></div>
+<div class="callout"><b>Qeyd:</b> nümunədəki sütun adları və model seçimi datasetə uyğun dəyişdirilməlidir. Real layihədə target sütunu X-dən çıxarılmalı, split Pipeline-dan əvvəl aparılmalı və uyğun cross-validation strategiyası seçilməlidir.</div></section>
+
+<section id="practice"><h2>Praktiki tapşırıqlar</h2>
+<div class="mini"><span class="tag">Başlanğıc</span><h3>Tapşırıq 1. Çirkli cədvəlin təmizlənməsi</h3><p>Ən azı 100 sətirli dataset seçin. Sütun adlarını normallaşdırın, tipləri düzəldin, duplicate qeydləri yoxlayın, missing faizlərini hesablayın. Hər düzəlişin səbəbini qeyd edin.</p><p><b>Təhvil:</b> əvvəl/sonra müqayisə cədvəli və təmizləmə jurnalı.</p></div>
+<div class="mini"><span class="tag">Orta</span><h3>Tapşırıq 2. Kodlaşdırma və scaling müqayisəsi</h3><p>Bir nominal, bir ordinal və iki ədədi xüsusiyyət seçin. Nominal üçün One-Hot, ordinal üçün açıq sıra ilə encoding, ədədi sütunlar üçün MinMaxScaler və StandardScaler tətbiq edin. Nəticələri cədvəldə müqayisə edin.</p><p><b>Təhvil:</b> transformasiya edilmiş nümunə cədvəli və metod seçiminin əsaslandırılması.</p></div>
+<div class="mini"><span class="tag">Tədqiqat səviyyəsi</span><h3>Tapşırıq 3. Leakage-siz preprocessing Pipeline</h3><p>Real datasetdə train/test bölgüsü qurun. ColumnTransformer və Pipeline ilə missing value, encoding və scaling addımlarını birləşdirin. Pipeline-ı cross-validation ilə qiymətləndirin və Pipeline-sız yanlış yanaşma ilə nəticələri müqayisə edib sızma riskini müzakirə edin.</p><p><b>Təhvil:</b> Notebook, model metrikləri, preprocessing sxemi və metodoloji müzakirə.</p></div>
+</section>
+
+<section id="quiz"><h2>Özünü yoxlama sualları · 7 interaktiv quiz tipi</h2><p>10 sual 7 formatı əhatə edir. Hər sual 1 baldır; cavabdan sonra izahlı rəy göstərilir.</p>
+<div id="quizArea">
+<div class="quiz-q" data-answer="b" data-explain="Scaling və imputation parametrləri yalnız train hissəsində öyrənilməlidir; test həmin parametrlərlə transformasiya olunur."><b>1. Tək düzgün cavab.</b><p>StandardScaler hansı məlumatda fit edilməlidir?</p><label><input type="radio" name="q1" value="a"> Bütün datasetdə</label><label><input type="radio" name="q1" value="b"> Yalnız train hissəsində</label><label><input type="radio" name="q1" value="c"> Yalnız test hissəsində</label><label><input type="radio" name="q1" value="d"> Hər proqnoz üçün ayrıca</label><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="a,c" data-explain="Nominal dəyişəndə təbii sıra yoxdur; One-Hot kateqoriyalar üçün indikator sütunları yaradır."><b>2. Çox düzgün cavab.</b><p>One-Hot Encoding haqqında doğru fikirləri seçin.</p><label><input type="checkbox" name="q2" value="a"> Nominal kateqoriyalar üçün uyğundur</label><label><input type="checkbox" name="q2" value="b"> Hər zaman kateqoriyaların sırasını kodlaşdırır</label><label><input type="checkbox" name="q2" value="c"> Kateqoriyalar üçün indikator sütunları yaradır</label><label><input type="checkbox" name="q2" value="d"> Missing qiymətləri avtomatik həmişə həll edir</label><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="false" data-explain="Test məlumatında scaler fit etmək test paylanmasının statistikalarını öyrənmə prosesinə daxil edir və leakage yarada bilər."><b>3. Doğru / yanlış.</b><p>Train və test birlikdə StandardScaler.fit() metoduna verilə bilər.</p><label><input type="radio" name="q3" value="true"> Doğru</label><label><input type="radio" name="q3" value="false"> Yanlış</label><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="a1,b2,c3" data-explain="Median outlier-lərə nisbətən dayanıqlıdır; One-Hot nominal kateqoriyalar yaradır; StandardScaler z-score çevrilməsidir."><b>4. Uyğunlaşdırma.</b><p>Metodu uyğun izahla birləşdirin.</p><div class="grid2"><div><p>1. Median imputation</p><p>2. One-Hot</p><p>3. StandardScaler</p></div><div><label>1 → <select name="q4a"><option value="">Seçin</option><option value="a1">Outlier-lərə dayanıqlı mərkəzi qiymət</option><option value="a2">Nominal indikator sütunları</option><option value="a3">Orta 0, std 1 çevrilməsi</option></select></label><label>2 → <select name="q4b"><option value="">Seçin</option><option value="b1">Outlier-lərə dayanıqlı mərkəzi qiymət</option><option value="b2">Nominal indikator sütunları</option><option value="b3">Orta 0, std 1 çevrilməsi</option></select></label><label>3 → <select name="q4c"><option value="">Seçin</option><option value="c1">Outlier-lərə dayanıqlı mərkəzi qiymət</option><option value="c2">Nominal indikator sütunları</option><option value="c3">Orta 0, std 1 çevrilməsi</option></select></label></div><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="pipeline" data-explain="Pipeline preprocessing və modeli vahid, təkrarlana bilən fit/predict axınında birləşdirir."><b>5. Boşluğu doldur.</b><p>Preprocessing addımlarını və modeli vahid obyektə birləşdirən Scikit-learn mexanizmi ______ adlanır.</p><input name="q5" placeholder="Termin"><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="b,a,c,d" data-explain="Əvvəl train/test split, sonra train-də fit, train və test-ə transform, sonda model təlimi və qiymətləndirmə aparılır."><b>6. Addımları ardıcıllığa düzün.</b><p>Leakage-siz scaling ardıcıllığını seçin.</p><select name="q6"><option value="">Seçin</option><option value="a,b,c,d">Bütün məlumatda fit → split → transform → model</option><option value="b,a,c,d">Split → train-də fit → train/test transform → model</option><option value="b,c,a,d">Split → test-də fit → train transform → model</option></select><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="0.5" data-explain="Min=20, max=100 və x=60 olduqda (60−20)/(100−20)=40/80=0.5."><b>7. Hesablama.</b><p>Min-Max düsturu ilə x=60, min=20, max=100 üçün nəticəni hesablayın.</p><input name="q7" type="number" step=".01" placeholder="Cavab"><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="c" data-explain="PCA ölçüləri azaldır və yeni ortoqonal komponentlər yaradır; feature selection mövcud sütunları seçir."><b>8. Tək düzgün cavab.</b><p>PCA ilə Feature Selection arasındakı əsas fərq hansıdır?</p><label><input type="radio" name="q8" value="a"> Eyni üsuldur</label><label><input type="radio" name="q8" value="b"> PCA yalnız kateqorik məlumatda işləyir</label><label><input type="radio" name="q8" value="c"> PCA yeni komponentlər yaradır, selection mövcud feature-ləri seçir</label><label><input type="radio" name="q8" value="d"> Feature selection həmişə target-i silir</label><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="a,b,d" data-explain="Tree modelləri çox vaxt scaling-ə həssas deyil; KNN və PCA miqyas fərqinə həssasdır; outlier-in silinməsi kontekst tələb edir."><b>9. Çox düzgün cavab.</b><p>Scaling və outlier-lərlə bağlı doğru fikirləri seçin.</p><label><input type="checkbox" name="q9" value="a"> KNN miqyas fərqinə həssasdır</label><label><input type="checkbox" name="q9" value="b"> PCA-dan əvvəl scaling çox vaxt məqsədəuyğundur</label><label><input type="checkbox" name="q9" value="c"> Bütün tree modelləri mütləq StandardScaler tələb edir</label><label><input type="checkbox" name="q9" value="d"> Outlier silinməzdən əvvəl araşdırılmalıdır</label><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="b" data-explain="Target leakage hədəfi birbaşa və ya dolayı yolla açıqlayan məlumatın feature kimi istifadəsidir."><b>10. Ssenari təhlili.</b><p>Modelə imtahan nəticəsi artıq məlum olduqdan sonra hesablanan “yekun_status” sütunu verilir və model “keçdi/kəsildi” nəticəsini proqnozlaşdırır. Bu hansı problemdir?</p><label><input type="radio" name="q10" value="a"> Underfitting</label><label><input type="radio" name="q10" value="b"> Target leakage</label><label><input type="radio" name="q10" value="c"> One-Hot Encoding</label><label><input type="radio" name="q10" value="d"> PCA</label><div class="feedback"></div></div>
+</div><button class="btn" onclick="gradeQuiz()">Yoxla və balı hesabla</button> <button class="btn" onclick="resetQuiz()">Yenidən başla</button><div id="quizScore" class="callout">Cavabları seçdikdən sonra “Yoxla” düyməsini basın.</div></section>
+
+<section id="lab"><h2>Laboratoriya işi №5</h2><span class="tag">Təmizləmə · Encoding · Scaling · Split · Pipeline</span>
+<h3>Mövzu</h3><p>Çirkli datasetin təmizlənməsi, kodlaşdırılması, normallaşdırılması və model üçün hazırlanması.</p>
+<h3>Məqsəd</h3><p>Qarışıq tipli sütunlara malik datasetdə çatışmayan qiymətləri və təkrarlanan qeydləri araşdırmaq, nominal dəyişənləri kodlaşdırmaq, ədədi xüsusiyyətləri miqyaslandırmaq və bütün addımları Pipeline daxilində leakage-siz icra etmək.</p>
+<h3>Proqram təminatı və dataset</h3><ul><li>Google Colab / Jupyter Notebook;</li><li>Python, Pandas, NumPy, Scikit-learn;</li><li>UCI Adult/Census Income və ya müəllim tərəfindən təsdiqlənmiş qarışıq tipli açıq dataset.</li></ul>
+<p>Bu laboratoriya üçün tədris məqsədilə Scikit-learn-in OpenML interfeysindən Adult datasetini yükləmək olar. Mənbə və dataset şərtləri: <a href="https://www.openml.org/search?type=data&sort=runs&id=1590" target="_blank" rel="noopener">OpenML Adult dataset</a>. İnternetə çıxış və OpenML versiyasının mövcudluğu tələb olunur. Alternativ olaraq eyni strukturda müəllimin təqdim etdiyi lokal CSV istifadə edilə bilər.</p>
+<h3>İcra mərhələləri</h3><ol><li>Dataseti yükləyin və sütunların tipini, hədəf dəyişənini müəyyən edin.</li><li>“?” və boş sətir kimi xüsusi missing marker-ləri NaN-a çevirin.</li><li>Duplicate qeydləri və domenə zidd qiymətləri yoxlayın.</li><li>Hədəf sütununu X-dən ayırın.</li><li>Train/test bölgüsünü qurun; təsnifatdırsa stratify istifadə edin.</li><li>Ədədi sütunlar üçün median imputation və StandardScaler tətbiq edin.</li><li>Kateqorik sütunlar üçün moda imputation və OneHotEncoder tətbiq edin.</li><li>ColumnTransformer və Pipeline daxilində model qurun.</li><li>Test hissəsində yekun metrikləri hesablayın və preprocessing qərarlarını şərh edin.</li></ol>
+<h3>İşlək kod skeleti</h3><pre><code>import pandas as pd
+import numpy as np
+
+from sklearn.model_selection import train_test_split
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.metrics import classification_report, accuracy_score
+
+# 1. CSV faylını yükləyin; yolunuzu uyğunlaşdırın
+df = pd.read_csv("adult.csv", na_values=["?", " ?"])
+
+# 2. Sütun adlarını təmizləyin
+df.columns = df.columns.str.strip()
+
+# 3. Təkrarlanan qeydləri yoxlayın və çıxarın
+print("Duplicates:", df.duplicated().sum())
+df = df.drop_duplicates().copy()
+
+# 4. Hədəf sütununu müəyyən edin (datasetə uyğunlaşdırın)
+target = "income"
+df[target] = df[target].astype(str).str.strip()
+X = df.drop(columns=[target])
+y = df[target]
+
+# 5. Sütun qrupları
+numeric_features = X.select_dtypes(include=["number"]).columns.tolist()
+categorical_features = X.select_dtypes(
+    include=["object", "category", "bool"]
+).columns.tolist()
+
+# 6. Train/test split — preprocessing-dən əvvəl
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42, stratify=y
+)
+
+# 7. Ədədi və kateqorik emal axınları
+numeric_pipe = Pipeline([
+    ("imputer", SimpleImputer(strategy="median")),
+    ("scaler", StandardScaler())
+])
+categorical_pipe = Pipeline([
+    ("imputer", SimpleImputer(strategy="most_frequent")),
+    ("onehot", OneHotEncoder(handle_unknown="ignore"))
+])
+
+preprocessor = ColumnTransformer([
+    ("num", numeric_pipe, numeric_features),
+    ("cat", categorical_pipe, categorical_features)
+])
+
+# 8. Preprocessing + model vahid Pipeline-da
+pipe = Pipeline([
+    ("preprocess", preprocessor),
+    ("model", HistGradientBoostingClassifier(
+        random_state=42
+    ))
+])
+
+pipe.fit(X_train, y_train)
+pred = pipe.predict(X_test)
+
+print("Accuracy:", accuracy_score(y_test, pred))
+print(classification_report(y_test, pred))</code></pre>
+<div class="callout"><b>Texniki uyğunluq qeydi:</b> yuxarıdakı nümunədə OneHotEncoder seyrək (sparse) matris yarada bilər, HistGradientBoostingClassifier isə versiyadan asılı olaraq sparse giriş qəbul etməyə bilər. İcra zamanı belə uyğunsuzluq yaranarsa, `OneHotEncoder(handle_unknown="ignore", sparse_output=False)` (köhnə Scikit-learn-də `sparse=False`) istifadə edin və ya sparse matris qəbul edən uyğun təsnifatçı seçin. Bu qeyd kitabxana versiyası fərqlərini nəzərə almaq üçündür.</div>
+<h3>Nəticələrin təhlili</h3><ul><li>Accuracy ilə yanaşı precision, recall və F1-score göstəricilərinə baxın.</li><li>Siniflər balanssızdırsa, yalnız accuracy ilə nəticə çıxarmayın.</li><li>Preprocessing parametrinin train-dən öyrənildiyini yoxlayın.</li><li>Test nəticəsini model seçimi üçün təkrar-təkrar istifadə etməyin.</li></ul>
+<h3>Hesabatın strukturu</h3><ol><li>Laboratoriya işinin adı və məqsədi;</li><li>datasetin mənbəyi, hədəf dəyişəni və dəyişən tipləri;</li><li>missing/duplicate/outlier təhlili;</li><li>imputation, encoding və scaling qərarlarının əsaslandırılması;</li><li>train/test bölgüsü və Pipeline sxemi;</li><li>model metrikləri və nəticələrin şərhi;</li><li>data leakage riskləri və məhdudiyyətlər.</li></ol>
+<h3>Nəzarət sualları</h3><ol><li>Median imputation hansı hallarda orta qiymətdən daha münasibdir?</li><li>Nominal və ordinal dəyişənlər kodlaşdırmada necə fərqlənir?</li><li>Min-Max Scaling ilə StandardScaler arasındakı fərq nədir?</li><li>Train/test split preprocessing-dən əvvəl niyə aparılır?</li><li>Pipeline cross-validation zamanı hansı problemi azaldır?</li><li>PCA və feature selection eyni məqsədə xidmət etsə də, nə ilə fərqlənir?</li></ol></section>
+
+<section id="glossary"><h2>Əsas terminlər lüğəti</h2><table><tr><th>English term</th><th>Azərbaycan dilində</th><th>İzah</th></tr>
+<tr><td>Preprocessing</td><td>İlkin emal</td><td>Xam verilənlərin modelə uyğun formaya gətirilməsi.</td></tr><tr><td>Data cleaning</td><td>Verilənlərin təmizlənməsi</td><td>Səhv, təkrar və uyğunsuz qeydlərin araşdırılması və düzəldilməsi.</td></tr><tr><td>Imputation</td><td>Çatışmayan qiymətin doldurulması</td><td>Missing dəyərin əsaslandırılmış üsulla əvəzlənməsi.</td></tr><tr><td>Outlier</td><td>Kənar qiymət</td><td>Paylanmanın əsas hissəsindən fərqlənən müşahidə.</td></tr><tr><td>Encoding</td><td>Kodlaşdırma</td><td>Kateqoriyaların modelin qəbul etdiyi rəqəmsal formaya çevrilməsi.</td></tr><tr><td>One-Hot Encoding</td><td>İndikator kodlaşdırması</td><td>Hər nominal kateqoriya üçün ikili sütun yaradılması.</td></tr><tr><td>Scaling</td><td>Miqyaslandırma</td><td>Ədədi xüsusiyyətlərin miqyasının dəyişdirilməsi.</td></tr><tr><td>Standardization</td><td>Standardlaşdırma</td><td>Orta 0 və standart kənarlaşma 1 əsasında z-score çevrilməsi.</td></tr><tr><td>Feature Selection</td><td>Xüsusiyyət seçimi</td><td>Mövcud xüsusiyyətlərin faydalı alt çoxluğunun seçilməsi.</td></tr><tr><td>PCA</td><td>Əsas komponentlər təhlili</td><td>Dispersiyanı qorumağa çalışan xətti ölçüazaltma üsulu.</td></tr><tr><td>Data Leakage</td><td>Verilən sızması</td><td>Proqnoz anında əlçatan olmayan informasiyanın təlimə qarışması.</td></tr><tr><td>Pipeline</td><td>Emal axını</td><td>Transformasiyaları və modeli vahid ardıcıllıqda birləşdirən mexanizm.</td></tr><tr><td>Validation set</td><td>Validasiya dəsti</td><td>Model və hiperparametr seçimi üçün ayrılan məlumat hissəsi.</td></tr></table></section>
+
+<section id="refs"><h2>İstifadə olunan ədəbiyyat və rəsmi resurslar</h2>
+<h3>Kitablar</h3><ol><li>Géron, A. (2022). <i>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</i>, 3rd ed. O’Reilly. <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/" target="_blank" rel="noopener">Nəşriyyat səhifəsi</a>.</li><li>McKinney, W. (2022). <i>Python for Data Analysis</i>, 3rd ed. O’Reilly. <a href="https://wesmckinney.com/book/" target="_blank" rel="noopener">Onlayn kitab</a>.</li><li>Bruce, P., Bruce, A., & Gedeck, P. (2020). <i>Practical Statistics for Data Scientists</i>, 2nd ed. O’Reilly. <a href="https://www.oreilly.com/library/view/practical-statistics-for/9781492072935/" target="_blank" rel="noopener">Nəşriyyat səhifəsi</a>.</li><li>VanderPlas, J. (2023). <i>Python Data Science Handbook</i>, 2nd ed. O’Reilly. <a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">Onlayn kitab</a>.</li></ol>
+<h3>Rəsmi sənədlər və elmi resurslar</h3><ul><li><a href="https://scikit-learn.org/stable/modules/preprocessing.html" target="_blank" rel="noopener">Scikit-learn: Preprocessing data</a></li><li><a href="https://scikit-learn.org/stable/modules/compose.html" target="_blank" rel="noopener">Scikit-learn: ColumnTransformer and Pipeline</a></li><li><a href="https://scikit-learn.org/stable/modules/decomposition.html#pca" target="_blank" rel="noopener">Scikit-learn: PCA</a></li><li><a href="https://scikit-learn.org/stable/modules/cross_validation.html" target="_blank" rel="noopener">Scikit-learn: Cross-validation</a></li><li><a href="https://pandas.pydata.org/docs/" target="_blank" rel="noopener">Pandas documentation</a></li><li><a href="https://www.openml.org/" target="_blank" rel="noopener">OpenML datasets</a></li></ul>
+<div class="callout"><b>Tədqiqat sualı:</b> Müxtəlif missing-value imputasiya, kateqorik encoding və scaling strategiyalarının eyni dataset və eyni cross-validation protokolu daxilində modelin performansına, sabitliyinə və interpretasiya imkanlarına təsiri necə dəyişir?</div></section>
+</main></div><footer>MDU · Riyaziyyat və İnformasiya texnologiyaları fakültəsi · Elektron dərslik · Fəsil 5</footer>
+<script>
+function toggleTheme(){document.documentElement.dataset.theme=document.documentElement.dataset.theme==="dark"?"light":"dark"}let fs=16;function changeFont(d){fs=Math.max(14,Math.min(21,fs+d));document.body.style.fontSize=fs+"px"}
+function showOutput(id,t){document.getElementById(id).textContent=t}
+function copyText(t){if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>alert("Kod köçürüldü")).catch(()=>alert("Kodu seçərək köçürün."));else alert("Kodu seçərək köçürün.")}
+const raw=[42,55,null,61,92];
+function renderImpute(){let method=document.getElementById("imputeMethod").value,vals=raw.filter(v=>v!==null).slice().sort((a,b)=>a-b),fill=method==="median"?vals[Math.floor(vals.length/2)]:vals.reduce((a,b)=>a+b,0)/vals.length;let shown=raw.map(v=>v===null?Number(fill.toFixed(2)):v);let h="<table><tr><th>Sətir</th><th>İlkin bal</th><th>Emaldan sonra</th></tr>";raw.forEach((v,i)=>h+=`<tr><td>${i+1}</td><td>${v===null?"NaN":v}</td><td>${shown[i]}</td></tr>`);h+="</table>";document.getElementById("imputeTable").innerHTML=h;document.getElementById("imputeExplain").textContent=method==="median"?`Median = ${fill}. 42, 55, 61, 92 sıralandıqda orta iki qiymətin (55 və 61) ortası 58 olur. Median outlier təsirinə orta qiymətdən daha dayanıqlıdır.`:`Orta = ${fill.toFixed(2)}. Mövcud dörd qiymətin cəmi 250, sayı 4-dür. Orta yüksək 92 qiymətindən təsirlənir.`}
+function renderEncoding(){let mode=document.getElementById("encodingMode").value,vals=["Bakı","Gəncə","Şəki"];let h="<table><tr><th>Şəhər</th>";if(mode==="onehot")h+="<th>Bakı</th><th>Gəncə</th><th>Şəki</th>";else h+="<th>Label kodu</th>";h+="</tr>";vals.forEach((v,i)=>{h+=`<tr><td>${v}</td>`+(mode==="onehot"?vals.map((_,j)=>`<td>${i===j?1:0}</td>`).join(""):`<td>${i}</td>`)+"</tr>"});h+="</table>";document.getElementById("encodingTable").innerHTML=h;document.getElementById("encodingNote").textContent=mode==="onehot"?"One-Hot nominal şəhər kateqoriyalarına süni sıra vermir. Hər kateqoriya ayrıca indikator sütunudur.":"Label kodları 0, 1, 2 kimi rəqəm verir. Nominal giriş xüsusiyyətində bu kodlar bəzi modellərdə yanlış sıra/məsafə təsəvvürü yarada bilər."}
+function renderScaling(){let x=Number(document.getElementById("scaleX").value),mn=Number(document.getElementById("scaleMin").value),mx=Number(document.getElementById("scaleMax").value),mu=Number(document.getElementById("scaleMean").value),sd=Number(document.getElementById("scaleStd").value);document.getElementById("scaleXVal").textContent=x;if(mx<=mn||sd<=0){document.getElementById("minmaxResult").textContent="—";document.getElementById("standardResult").textContent="—";document.getElementById("scaleWarning").textContent="Xəta: max min-dən böyük, standart kənarlaşma isə müsbət olmalıdır.";return}document.getElementById("minmaxResult").textContent=((x-mn)/(mx-mn)).toFixed(3);document.getElementById("standardResult").textContent=((x-mu)/sd).toFixed(3);document.getElementById("scaleWarning").textContent=`Min-Max: (${x} − ${mn}) / (${mx} − ${mn}). Z-score: (${x} − ${mu}) / ${sd}. Min-Max nəticəsi verilmiş min/max sərhədlərinə bağlıdır; StandardScaler nəticəsi mütləq [0,1] intervalında olmur.`}
+function renderSplit(){let n=Math.max(10,Number(document.getElementById("nSamples").value)||10),t=Number(document.getElementById("testPct").value),v=Number(document.getElementById("valPct").value);document.getElementById("testPctVal").textContent=t+"%";document.getElementById("valPctVal").textContent=v+"%";if(t+v>=90){document.getElementById("splitText").textContent="Test və validation faizlərinin cəmi 90%-dən az olmalıdır.";return}let nt=Math.round(n*t/100),nv=Math.round(n*v/100),ntr=n-nt-nv;let parts=[["Train",ntr],["Validation",nv],["Test",nt]],colors=["#2457a7","#087f8c","#d49a2a"];let bar='<div style="display:flex;height:42px;border-radius:9px;overflow:hidden;margin:14px 0">';parts.forEach((p,i)=>bar+=`<div style="width:${p[1]/n*100}%;background:${colors[i]};color:white;display:grid;place-items:center;font-size:.85rem;font-weight:700">${p[1]}</div>`);bar+="</div><table><tr><th>Hissə</th><th>Müşahidə sayı</th><th>Faiz</th></tr>";parts.forEach(p=>bar+=`<tr><td>${p[0]}</td><td>${p[1]}</td><td>${(p[1]/n*100).toFixed(1)}%</td></tr>`);bar+="</table>";document.getElementById("splitBars").innerHTML=bar;document.getElementById("splitText").textContent=`Cəmi ${n} müşahidə: train ${ntr}, validation ${nv}, test ${nt}. Bu hesab nümunəvi təsadüfi bölünməni göstərir; qruplaşma və zaman asılılığı varsa split strategiyasını dəyişin.`}
+function getAnswer(q){if(q.dataset.answer==="a1,b2,c3")return ["a","b","c"].map(k=>q.querySelector(`[name=q4${k}]`).value).join(",");if(q.querySelector('input[type="checkbox"]'))return [...q.querySelectorAll('input[type="checkbox"]:checked')].map(x=>x.value).sort().join(",");if(q.querySelector('input[type="radio"]'))return q.querySelector('input[type="radio"]:checked')?.value||"";if(q.querySelector("select"))return q.querySelector("select").value;return q.querySelector("input")?.value.trim().toLowerCase()||""}
+function gradeQuiz(){let qs=[...document.querySelectorAll(".quiz-q")],score=0;qs.forEach(q=>{let v=getAnswer(q),a=q.dataset.answer,ok=(q.querySelector('input[type=number]')?Math.abs(Number(v)-Number(a))<.011:v===a);if(ok)score++;let f=q.querySelector(".feedback");f.className="feedback "+(ok?"correct":"wrong");f.textContent=(ok?"Düzgündür. ":"Düzgün deyil. ")+q.dataset.explain});document.getElementById("quizScore").textContent=`Nəticə: ${score} / ${qs.length} (${Math.round(score/qs.length*100)}%). Hər sual 1 baldır.`}
+function resetQuiz(){document.querySelectorAll("#quizArea input").forEach(x=>{if(["radio","checkbox"].includes(x.type))x.checked=false;else x.value=""});document.querySelectorAll("#quizArea select").forEach(x=>x.selectedIndex=0);document.querySelectorAll(".feedback").forEach(x=>{x.textContent="";x.className="feedback"});document.getElementById("quizScore").textContent="Cavabları seçdikdən sonra “Yoxla” düyməsini basın."}
+renderImpute();renderEncoding();renderScaling();renderSplit();
+</script><script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

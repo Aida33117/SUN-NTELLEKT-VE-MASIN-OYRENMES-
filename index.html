@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html lang="az">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="Mingəçevir Dövlət Universiteti üçün Süni intellekt və maşın öyrənməsi üzrə interaktiv elektron dərslik." name="description"/>
+<title>Süni intellekt və maşın öyrənməsi | MDU elektron dərslik</title>
+
+<style>
+:root{--navy:#102b55;--navy2:#173e70;--blue:#2868a9;--gold:#d6a52a;--teal:#23a6a1;--ink:#20334b;--muted:#65768c;--paper:#fff;--bg:#eef2f7;--line:#dce4ee;--soft:#f4f7fb;--shadow:0 16px 42px rgba(16,43,85,.10)}
+[data-theme=dark]{--ink:#eaf0f8;--muted:#b2bfd0;--paper:#17263a;--bg:#0b1625;--line:#2d4058;--soft:#20334b;--shadow:0 16px 42px rgba(0,0,0,.28)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,Arial,sans-serif}
+button,input{font:inherit}
+button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;padding:9px 13px;font-weight:700;cursor:pointer;transition:.18s}
+button:hover{border-color:var(--gold);transform:translateY(-1px)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.topbar{height:64px;position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:14px;padding:0 max(18px,calc((100vw - 1480px)/2));background:var(--paper);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.brandmark{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(140deg,var(--navy),var(--teal));color:#fff;font-weight:900;letter-spacing:-1px}
+.brandtitle{font-size:13px;font-weight:900;letter-spacing:.04em;color:var(--navy);white-space:nowrap}
+[data-theme=dark] .brandtitle{color:#fff}
+.brandmeta{font-size:10px;letter-spacing:.09em;color:var(--muted)}
+.top-actions{margin-left:auto;display:flex;gap:7px}
+.top-actions button{padding:8px 10px;font-size:12px}
+.hero{max-width:1480px;margin:24px auto 18px;padding:0 22px}
+.cover-shell{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(280px, .92fr) minmax(360px,1.08fr);gap:clamp(24px,4vw,64px);align-items:center;padding:clamp(24px,4vw,56px);border-radius:24px;background:linear-gradient(120deg,#091e3b 0%,#123c6c 55%,#176b7b 100%);box-shadow:0 24px 65px rgba(7,29,59,.22);color:#fff}
+.cover-art-wrap{display:flex;justify-content:center;align-items:center;min-width:0}
+.cover-art{display:block;width:min(100%,430px);max-height:560px;object-fit:contain;border-radius:9px;filter:drop-shadow(0 24px 28px rgba(0,0,0,.32))}
+.cover-copy{min-width:0}
+.eyebrow{font-size:10px;line-height:1.5;letter-spacing:.14em;text-transform:uppercase;color:#b8d6e8;font-weight:800}
+.cover-copy h1{margin:12px 0 14px;color:#fff;font:800 clamp(30px,4vw,54px)/1.08 Georgia,serif;letter-spacing:-.025em}
+.cover-copy>p{max-width:660px;color:#e1ebf5;font-size:15px;line-height:1.8;margin:0 0 22px}
+.cover-pills{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 25px}
+.cover-pills span{padding:7px 11px;border:1px solid rgba(255,255,255,.23);background:rgba(255,255,255,.08);border-radius:30px;color:#f5f8fc;font-size:11px;font-weight:700}
+.author-card{display:flex;align-items:flex-start;gap:14px;padding-top:18px;border-top:1px solid rgba(255,255,255,.23)}
+.author-photo{width:82px;height:82px;flex:0 0 82px;object-fit:cover;object-position:center 25%;border-radius:50%;border:3px solid rgba(255,255,255,.8);box-shadow:0 8px 22px rgba(0,0,0,.25)}
+.author-info{min-width:0}
+.author-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#b8d6e8;font-weight:800;margin:1px 0 5px}
+.author-name{font-size:17px;font-weight:800;color:#fff;margin:0 0 5px}
+.author-bio{font-size:10px;line-height:1.65;color:#d8e4f0;margin:0;max-width:520px}
+.cover-cta{display:inline-flex;align-items:center;gap:9px;margin-top:22px;padding:12px 18px;background:var(--gold);color:#142b4b;border:0;border-radius:10px;font-weight:900}
+.cover-cta:hover{background:#f0c75b;color:#142b4b}
+.reader-tools{max-width:1480px;margin:0 auto 14px;padding:0 22px}
+.reader-tools-inner{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--paper);box-shadow:var(--shadow)}
+.reader-tools-label{font-size:11px;font-weight:900;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-right:5px}
+.reader-tools .spacer{flex:1}
+.reader-tools button{font-size:12px;padding:8px 11px}
+.progress-wrap{display:flex;align-items:center;gap:8px;min-width:130px}
+.progress-track{width:90px;height:6px;background:var(--line);border-radius:10px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--gold));transition:width .2s}
+.progress-text{font-size:11px;color:var(--muted);font-weight:800;white-space:nowrap}
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;max-width:1480px;margin:0 auto 30px;padding:0 22px;align-items:start}
+.sidebar{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);height:calc(100vh - 110px);min-height:450px;position:sticky;top:78px;display:flex;flex-direction:column;overflow:hidden}
+.sidehead{padding:16px;border-bottom:1px solid var(--line)}
+.sidehead h2{font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 10px;color:var(--muted)}
+.search{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.nav{overflow:auto;padding:9px}
+.nav a{display:flex;gap:10px;align-items:flex-start;text-decoration:none;color:var(--muted);padding:10px;border-radius:10px;margin:2px 0;font-size:12px;line-height:1.4}
+.nav a:hover{background:var(--soft);color:var(--blue)}
+.nav a.active{background:var(--soft);color:var(--blue);font-weight:800;box-shadow:inset 3px 0 var(--teal)}
+.num{flex:0 0 26px;color:var(--teal);font-weight:900;font-variant-numeric:tabular-nums}
+.sidefoot{margin-top:auto;padding:12px 15px;border-top:1px solid var(--line);font-size:10px;color:var(--muted)}
+.content{min-width:0}
+.toolbar{display:flex;align-items:center;gap:10px;padding:10px 13px;background:var(--paper);border:1px solid var(--line);border-radius:14px 14px 0 0;border-bottom:0}
+.crumb{font-size:12px;color:var(--muted);font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toolbar .spacer{flex:1}
+.framewrap{background:var(--paper);border:1px solid var(--line);border-radius:0 0 14px 14px;overflow:hidden;box-shadow:var(--shadow)}
+iframe{display:block;width:100%;height:calc(100vh - 190px);min-height:680px;border:0;background:#fff}
+.status{display:flex;justify-content:space-between;gap:10px;max-width:1480px;margin:0 auto;padding:0 22px 22px;color:var(--muted);font-size:10px}
+body.focus-mode .hero,body.focus-mode .sidebar,body.focus-mode .status{display:none}
+body.focus-mode .layout{display:block;max-width:1180px}
+body.focus-mode iframe{height:calc(100vh - 170px)}
+body.contents-hidden .sidebar{display:none}
+body.contents-hidden .layout{grid-template-columns:1fr}
+@media(max-width:900px){
+ .topbar{padding:0 14px}.hero{margin:14px auto;padding:0 14px}
+ .cover-shell{grid-template-columns:minmax(220px,.8fr) minmax(0,1.2fr);gap:22px;padding:24px}
+ .cover-art{max-height:430px}.layout{grid-template-columns:1fr;padding:0 14px;margin-top:10px}
+ .sidebar{position:relative;top:auto;height:auto;min-height:0;max-height:270px}
+ .nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ iframe{height:calc(100vh - 430px);min-height:620px}
+}
+@media(max-width:620px){
+ body{font-size:14px}.topbar{height:56px;padding:0 10px;gap:8px}
+ .brandmark{width:34px;height:34px;border-radius:9px;font-size:11px}
+ .brandtitle{font-size:10px;max-width:190px;white-space:normal;line-height:1.15}
+ .brandmeta{display:none}.top-actions{gap:4px}.top-actions button{padding:7px 8px;font-size:11px}
+ .hero{margin:10px auto 12px;padding:0 9px}
+ .cover-shell{display:flex;flex-direction:column;align-items:stretch;gap:18px;padding:16px;border-radius:17px}
+ .cover-art-wrap{width:100%;padding:3px 0 0}
+ .cover-art{width:min(76vw,300px);max-height:none;max-height:390px;object-fit:contain}
+ .cover-copy{width:100%;text-align:left}
+ .eyebrow{font-size:9px}
+ .cover-copy h1{font-size:clamp(26px,8vw,36px);margin:8px 0 10px}
+ .cover-copy>p{font-size:13px;line-height:1.65;margin-bottom:14px}
+ .cover-pills{gap:6px;margin:14px 0}
+ .cover-pills span{font-size:10px;padding:6px 9px}
+ .author-card{display:flex;flex-direction:column;align-items:flex-start;gap:9px;padding-top:14px}
+ .author-photo{width:76px;height:76px;flex-basis:76px}
+ .author-info{width:100%}
+ .author-label{font-size:10px}
+ .author-name{font-size:15px}
+ .author-bio{font-size:10px;line-height:1.55;max-width:none}
+ .cover-cta{width:100%;justify-content:center;margin-top:16px}
+ .reader-tools{padding:0 9px;margin-bottom:10px}
+ .reader-tools-inner{gap:6px;padding:9px;border-radius:12px}
+ .reader-tools-label{width:100%;font-size:10px}
+ .reader-tools button{font-size:11px;padding:8px 9px}
+ .reader-tools .spacer{display:none}
+ .progress-wrap{margin-left:auto}
+ .progress-track{width:55px}
+ .layout{padding:0 9px;gap:9px;margin:0 auto 18px}
+ .sidebar{max-height:245px;border-radius:12px}
+ .sidehead{padding:11px}
+ .sidehead h2{font-size:10px}
+ .nav{grid-template-columns:1fr;padding:6px}
+ .nav a{font-size:11px;padding:8px}
+ .toolbar{padding:8px 9px;border-radius:11px 11px 0 0}
+ .crumb{font-size:11px}
+ .framewrap{border-radius:0 0 11px 11px}
+ iframe{height:72vh;min-height:540px}
+ .status{padding:0 10px 15px;font-size:9px}
+ body.focus-mode .reader-tools{position:sticky;top:56px;z-index:18}
+ body.focus-mode .layout{padding:0 7px}
+ body.focus-mode iframe{height:calc(100vh - 125px);min-height:500px}
+}
+@media print{.topbar,.hero,.reader-tools,.sidebar,.toolbar,.status{display:none!important}.layout{display:block;padding:0;margin:0}.framewrap{border:0;box-shadow:none}iframe{height:100vh;min-height:0}}
+</style><meta content="#102b55" name="theme-color"/></head>
+<body><header class="topbar"><div class="brand"><div class="brandmark">AI
+ML</div><div><div class="brandtitle">SÜNİ İNTELLEKT VƏ MAŞIN ÖYRƏNMƏSİ</div><div class="brandmeta">MİNGƏÇEVİR DÖVLƏT UNİVERSİTETİ · ELEKTRON DƏRSLİK</div></div></div><div class="top-actions"><button id="prev" title="Əvvəlki fəsil" type="button">←</button><button id="next" title="Növbəti fəsil" type="button">→</button><button id="theme" title="Gecə rejimi" type="button">◐</button></div></header><section class="hero" id="book-cover"><div class="cover-shell"><div class="cover-art-wrap"><img alt="Süni intellekt və maşın öyrənməsi elektron dərsliyinin üz qabığı" class="cover-art" src="assets/cover.png"/></div><div class="cover-copy"><div class="eyebrow">MİNGƏÇEVİR DÖVLƏT UNİVERSİTETİ · RİYAZİYYAT VƏ İNFORMASİYA TEXNOLOGİYALARI FAKÜLTƏSİ</div><h1>Süni intellekt və maşın öyrənməsi</h1><p>Süni intellektin nəzəri əsaslarından maşın öyrənməsi, dərin öyrənmə, təbii dilin emalı və kompüter görməsinə qədər sistemli bilik və praktiki bacarıqları birləşdirən interaktiv elektron dərslik.</p><div class="cover-pills"><span>20 fəsil</span><span>Nəzəri izahlar</span><span>Kod və nümunələr</span><span>İnteraktiv testlər</span><span>Praktiki layihələr</span></div><div class="author-card"><img alt="Müəllif Aidə Mustafayeva" class="author-photo" src="assets/author.jpg"/><div class="author-info"><div class="author-label">Müəllif haqqında</div><div class="author-name">dos. Aidə Mustafayeva</div><p class="author-bio">Texnika elmləri üzrə fəlsəfə doktoru. Elmi və pedaqoji fəaliyyət istiqamətləri: süni intellekt, maşın öyrənməsi, verilənlərin analitikası, kompüter görməsi və rəqəmsal texnologiyalar. Mingəçevir Dövlət Universitetində Riyaziyyat və İnformasiya Texnologiyaları fakültəsinin dekanı.</p></div></div><button class="cover-cta" id="start-reading" type="button">Kitabı oxumağa başla  →</button></div></div></section><section aria-label="Oxu rejimləri" class="reader-tools"><div class="reader-tools-inner"><span class="reader-tools-label">Oxuma rejimləri</span><button id="focus" type="button">☷ Oxu rejimi</button><button id="contents" type="button">Mündəricat</button><button id="smaller" type="button">A−</button><button id="larger" type="button">A+</button><button id="print" type="button">▤ Çap / PDF</button><div class="spacer"></div><div class="progress-wrap"><div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div><span class="progress-text" id="progress-text">00 / 20</span></div></div></section><main class="layout" id="reader"><aside class="sidebar" id="sidebar"><div class="sidehead"><h2>Kitabın mündəricatı</h2><input aria-label="Fəsil axtar" class="search" id="search" placeholder="Fəsil axtar..." type="search"/></div><nav aria-label="Fəsillər" class="nav" id="nav"></nav><div class="sidefoot">20 fəsil · İnteraktiv elektron dərslik · MDU 2026</div></aside><section class="content"><div class="toolbar"><div class="crumb" id="crumb">Giriş və metodiki bölmə</div><div class="spacer"></div><span class="crumb" id="counter">GİRİŞ / 20</span></div><div class="framewrap"><iframe id="bookframe" loading="eager" src="chapters/00_Giri_v_metodiki_b_lm/01_Giris_ve_Metodiki_Bolme/index.html" title="Süni intellekt və maşın öyrənməsi elektron kitabının oxu pəncərəsi"></iframe></div></section></main><div class="status"><span>Mühazirələr, diaqramlar, kod nümunələri, testlər və laboratoriya materialları ayrıca oxu pəncərəsində açılır.</span><span>MDU · 2026</span></div><script>
+const items=[{"label": "Giriş və metodiki bölmə", "path": "chapters/00_Giri_v_metodiki_b_lm/01_Giris_ve_Metodiki_Bolme/index.html", "section": 0}, {"label": "SÜNİ İNTELLEKTƏ GİRİŞ VƏ TARİXİ İNKİŞAF", "path": "chapters/01_F_sil_1/index.html", "section": 1}, {"label": "SÜNİ İNTELLEKTİN RİYAZİ ƏSASLARI", "path": "chapters/02_F_sil_2/03_Fesil_2_Riyazi_Esaslar/index.html", "section": 2}, {"label": ". Python və süni intellekt üçün proqramlaşdırma mühiti", "path": "chapters/03_F_sil_3/Fesil_3_Python_AI/index.html", "section": 3}, {"label": ". Verilənlər və onların ilkin təhlili", "path": "chapters/04_F_sil_4/Fesil_4_Verilenler_EDA/index.html", "section": 4}, {"label": ". Verilənlərin hazırlanması və ilkin emalı", "path": "chapters/05_F_sil_5/Fesil_5_Verilenlerin_Hazirlanmasi/index.html", "section": 5}, {"label": ". Maşın öyrənməsinin nəzəri əsasları", "path": "chapters/06_F_sil_6/Fesil_6/index.html", "section": 6}, {"label": ". Reqressiya modelləri və proqnozlaşdırma", "path": "chapters/07_F_sil_7/Fesil_7/index.html", "section": 7}, {"label": ". Təsnifat alqoritmləri", "path": "chapters/08_F_sil_8/09_Fesil_8_Tesnifat_Alqoritmleri/index.html", "section": 8}, {"label": "Nəzarətsiz öyrənmə və klasterləşdirmə", "path": "chapters/09_F_sil_9/Fesil_9/index.html", "section": 9}, {"label": "Modelin qiymətləndirilməsi və optimallaşdırılması", "path": "chapters/10_F_sil_10/Fesil_10/index.html", "section": 10}, {"label": "Süni neyron və perseptron", "path": "chapters/11_F_sil_11/Fesil_11/index.html", "section": 11}, {"label": ". Süni neyron şəbəkələrinin arxitekturası", "path": "chapters/12_F_sil_12/Fesil_12/index.html", "section": 12}, {"label": ". Neyron şəbəkələrinin öyrədilməsi və riyazi mexanizmləri", "path": "chapters/13_F_sil_13/Fesil_13/index.html", "section": 13}, {"label": ". Dərin öyrənmə və müasir neyron şəbəkələri", "path": "chapters/14_F_sil_14/Fesil_14/index.html", "section": 14}, {"label": ". Təbii dilin emalı", "path": "chapters/15_F_sil_15/Fesil_15/index.html", "section": 15}, {"label": ". İzaholunan süni intellekt, etika və etibarlılıq", "path": "chapters/16_F_sil_16/Fesil_16/index.html", "section": 16}, {"label": ". Süni intellekt layihəsinin həyat dövrü və elmi tədqiqat metodologiyası", "path": "chapters/17_F_sil_17/Fesil_17/index.html", "section": 17}, {"label": ". Kompüter görməsinin nəzəri əsasları və təsvirlərin emalı", "path": "chapters/18_F_sil_18/18_Fesil_Computer_Vision/index.html", "section": 18}, {"label": ". Dərin öyrənmə əsaslı kompüter görməsi və obyektlərin tanınması", "path": "chapters/19_F_sil_19/19_Fesil_Derin_Oyrenme_Kompüter_Gormesi/index.html", "section": 19}, {"label": ". Yekun layihə: Maşın öyrənməsi əsasında intellektual analiz sistemi", "path": "chapters/20_F_sil_20/20_Fesil_Yekun_ML_Layihe/index.html", "section": 20}];
+let current=0,baseFont=100;
+const nav=document.getElementById('nav'),frame=document.getElementById('bookframe');
+function renderNav(filter=''){
+ nav.innerHTML='';
+ items.forEach((item,i)=>{
+  if(filter&&!item.label.toLowerCase().includes(filter.toLowerCase()))return;
+  const a=document.createElement('a');a.href='#'+i;a.className=i===current?'active':'';
+  const n=document.createElement('span');n.className='num';n.textContent=i===0?'G':String(i).padStart(2,'0');
+  const t=document.createElement('span');t.textContent=item.label;
+  a.append(n,t);a.addEventListener('click',e=>{e.preventDefault();openSection(i);});
+  nav.append(a);
+ });
+}
+function openSection(i){
+ if(i<0||i>=items.length)return;
+ current=i;frame.src=items[i].path;
+ document.getElementById('crumb').textContent=items[i].label;
+ document.getElementById('counter').textContent=(i===0?'GİRİŞ':String(i).padStart(2,'0'))+' / 20';
+ document.getElementById('progress-text').textContent=String(i).padStart(2,'0')+' / 20';
+ document.getElementById('progress-fill').style.width=(i/20*100)+'%';
+ document.getElementById('prev').disabled=i===0;
+ document.getElementById('next').disabled=i===items.length-1;
+ renderNav(document.getElementById('search').value);
+ if(window.matchMedia('(max-width:620px)').matches){
+  document.getElementById('reader').scrollIntoView({behavior:'smooth',block:'start'});
+ }
+}
+document.getElementById('search').addEventListener('input',e=>renderNav(e.target.value));
+document.getElementById('prev').addEventListener('click',()=>openSection(current-1));
+document.getElementById('next').addEventListener('click',()=>openSection(current+1));
+document.getElementById('theme').addEventListener('click',()=>{
+ document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'':'dark';
+});
+document.getElementById('focus').addEventListener('click',()=>{
+ document.body.classList.toggle('focus-mode');
+ document.getElementById('focus').textContent=document.body.classList.contains('focus-mode')?'☷ Tam ekrandan çıx':'☷ Oxu rejimi';
+});
+document.getElementById('contents').addEventListener('click',()=>{
+ document.body.classList.toggle('contents-hidden');
+ document.getElementById('contents').textContent=document.body.classList.contains('contents-hidden')?'Mündəricatı göstər':'Mündəricat';
+});
+document.getElementById('smaller').addEventListener('click',()=>{
+ baseFont=Math.max(80,baseFont-5);frame.style.zoom=(baseFont/100);
+});
+document.getElementById('larger').addEventListener('click',()=>{
+ baseFont=Math.min(130,baseFont+5);frame.style.zoom=(baseFont/100);
+});
+document.getElementById('print').addEventListener('click',()=>{try{frame.contentWindow.focus();frame.contentWindow.print()}catch(e){window.print()}});
+document.getElementById('start-reading').addEventListener('click',()=>{
+ document.getElementById('reader').scrollIntoView({behavior:'smooth',block:'start'});
+ openSection(0);
+});
+renderNav();openSection(0);
+</script></body>
+</html>

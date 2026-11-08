@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fəsil 15 — Təbii dilin emalı | MDU</title>
+<style>
+:root{--bg:#f4f7fb;--paper:#fff;--ink:#17233b;--muted:#61708b;--line:#dce5f1;--blue:#2457d6;--cyan:#11a7b5;--purple:#7356d8;--green:#14845b;--orange:#d97706;--shadow:0 16px 44px rgba(28,48,88,.09)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.72 Inter,Segoe UI,Arial,sans-serif}
+.hero{background:radial-gradient(circle at 85% 20%,#3c72e8 0,transparent 27%),linear-gradient(125deg,#101b3a,#173d78 60%,#087f91);color:#fff;padding:52px max(22px,calc((100% - 1180px)/2)) 42px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:330px;height:330px;border:1px solid #ffffff35;border-radius:50%;right:8%;top:-150px;box-shadow:0 0 0 35px #ffffff0c,0 0 0 75px #ffffff08}
+.kicker{letter-spacing:.16em;text-transform:uppercase;font-size:.76rem;color:#b9d5ff;font-weight:800}.hero h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.12;max-width:850px;margin:12px 0}.hero p{max-width:760px;color:#dbe8ff;font-size:1.08rem}.hero-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.pill{border:1px solid #ffffff40;background:#ffffff14;padding:7px 12px;border-radius:99px;font-size:.85rem}
+.layout{max-width:1180px;margin:28px auto;padding:0 18px;display:grid;grid-template-columns:270px minmax(0,1fr);gap:24px}.sidebar{position:sticky;top:16px;align-self:start;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow);max-height:calc(100vh - 32px);overflow:auto}.sidebar h3{margin:0 0 12px;font-size:1rem}.sidebar a{display:block;text-decoration:none;color:var(--muted);padding:7px 9px;border-radius:8px;font-size:.88rem}.sidebar a:hover{background:#edf3ff;color:var(--blue)}.content{min-width:0}.intro,.chapter,.quiz,.lab,.references{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:clamp(20px,3vw,34px);margin-bottom:22px;box-shadow:var(--shadow)}h2{font-size:1.65rem;line-height:1.25;margin:0 0 16px}h3{font-size:1.2rem;margin:28px 0 10px;color:#1d3f78}h4{margin:14px 0 6px}.sub{border-top:1px solid var(--line);padding-top:20px;margin-top:24px}.sub:first-of-type{border:0;padding-top:0;margin-top:0}.tag{display:inline-block;background:#eaf1ff;color:#2457b8;border-radius:7px;padding:3px 8px;font-size:.78rem;font-weight:700}.callout{border-left:4px solid var(--cyan);background:#effbfc;padding:14px 17px;border-radius:0 12px 12px 0;margin:16px 0}.warning{border-left-color:var(--orange);background:#fff7e9}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.tile{background:#f7f9fd;border:1px solid var(--line);padding:16px;border-radius:14px}.tile strong{color:#20488e}.formula{font-family:Cambria,Georgia,serif;background:#101d39;color:#e7f1ff;border-radius:12px;padding:15px 18px;text-align:center;font-size:1.13rem;overflow:auto;margin:12px 0}.diagram{background:linear-gradient(135deg,#f7faff,#eef5ff);border:1px solid #d9e5f8;border-radius:16px;padding:14px;margin:16px 0;overflow:hidden}.diagram svg{width:100%;height:auto;display:block;max-height:340px}.caption{color:var(--muted);font-size:.87rem;margin-top:8px}.flow{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}.node{background:#fff;border:1px solid #b9c9e4;border-radius:11px;padding:10px 13px;text-align:center;min-width:105px;box-shadow:0 4px 12px #233e6610}.arrow{color:var(--blue);font-weight:900;font-size:1.3rem}.interactive{background:#f8faff;border:1px solid #cfddf3;border-radius:15px;padding:18px;margin:16px 0}.interactive label{display:block;font-weight:700;margin:8px 0 4px}.interactive input,.interactive select,.interactive textarea{width:100%;padding:10px 12px;border:1px solid #b9c9e4;border-radius:9px;background:white;font:inherit}.interactive textarea{min-height:90px}.btn{border:0;background:var(--blue);color:white;padding:10px 16px;border-radius:9px;font-weight:700;cursor:pointer;margin:8px 6px 0 0}.btn.secondary{background:#e7eefb;color:#234b91}.btn.green{background:var(--green)}.result{background:#eaf8f2;border:1px solid #b8e6d2;border-radius:10px;padding:12px;margin-top:12px;min-height:42px}.muted{color:var(--muted)}table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.93rem}th,td{padding:10px 12px;border:1px solid var(--line);text-align:left;vertical-align:top}th{background:#edf3ff;color:#24477f}pre{background:#101d39;color:#e5efff;padding:17px;border-radius:13px;overflow:auto;font-size:.88rem;line-height:1.55}code{font-family:Consolas,monospace}.codehead{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:.82rem;margin-top:12px}.quiz-q{border:1px solid var(--line);border-radius:13px;padding:15px;margin:13px 0;background:#fcfdff}.quiz-q p{font-weight:700;margin:0 0 8px}.quiz-q label{display:block;font-weight:400;margin:5px 0;cursor:pointer}.quiz-q input{margin-right:7px}.level{display:inline-block;border-radius:99px;padding:3px 9px;font-size:.75rem;font-weight:800;margin-right:6px}.easy{background:#e6f7ee;color:#117348}.medium{background:#fff2d9;color:#9b5c00}.hard{background:#fce8e8;color:#a32e35}.progress{height:9px;background:#e5ebf4;border-radius:99px;overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));width:0}.footer{text-align:center;color:var(--muted);padding:22px}.small{font-size:.88rem}.hide{display:none}.token{display:inline-block;padding:5px 9px;margin:4px;background:#e7efff;border-radius:7px;font-family:monospace}.source{overflow-wrap:anywhere}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{position:relative;top:auto;max-height:none}.grid2,.grid3{grid-template-columns:1fr}.hero{padding-top:36px}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="kicker">Mingəçevir Dövlət Universiteti · Magistratura səviyyəsi</div>
+<h1>Fəsil 15. Təbii dilin emalı</h1>
+<p>Mətn, təsvir, səs və davranış verilənlərindən məna çıxaran intellektual sistemlərin qurulması: NLP-dən tərcümə sistemlərinə, sentiment analizindən tövsiyə və qərar dəstəyinə qədər.</p>
+<div class="hero-meta"><span class="pill">İnteraktiv veb-mühazirə</span><span class="pill">12 alt bölmə</span><span class="pill">Nümunələr + düsturlar + laboratoriya</span></div>
+<div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="layout">
+<aside class="sidebar"><h3>Mündəricat</h3>
+<a href="#intro">Fəsilə giriş</a>
+<a href="#s151">15.1. İntellektual sistem anlayışı və arxitekturası</a>
+<a href="#s152">15.2. Mətn verilənlərinin emalı</a>
+<a href="#s153">15.3. Natural Language Processing (NLP)</a>
+<a href="#s154">15.4. Sentiment Analysis</a>
+<a href="#s155">15.5. Təsvirlərin tanınması və Computer Vision</a>
+<a href="#s156">15.6. Səs verilənlərinin emalı</a>
+<a href="#s157">15.7. Tövsiyə sistemləri</a>
+<a href="#s158">15.8. Proqnozlaşdırma və qərar dəstəyi sistemləri</a>
+<a href="#s159">15.9. Anomaliyaların aşkarlanması</a>
+<a href="#s1510">15.10. Azərbaycan dilində süni intellekt tətbiqləri</a>
+<a href="#s1511">15.11. Real verilənlər əsasında intellektual sistemin hazırlanması</a>
+<a href="#s1512">15.12. Modelin tətbiq mühitinə inteqrasiyası</a>
+<a href="#tasks">Praktiki tapşırıqlar</a><a href="#quiz">Özünü yoxlama sualları</a><a href="#refs">İstifadə olunan ədəbiyyat</a><a href="#lab">Laboratoriya işi №15</a>
+</aside>
+<main class="content">
+<section class="intro" id="intro"><span class="tag">Öyrənmə məqsədi</span><h2>Bu fəsildə nə öyrənəcəksiniz?</h2>
+<p>Bu fəsil intellektual sistemlərin müxtəlif verilən növləri ilə necə işlədiyini və real məhsula necə çevrildiyini izah edir. Əsas ideya yalnız alqoritmi tanımaq deyil: verilənin toplanması, təmizlənməsi, modelin öyrədilməsi, qiymətləndirilməsi, tətbiqi və monitorinqi mərhələlərini vahid sistem kimi düşünməkdir.</p>
+<div class="grid3"><div class="tile"><strong>Giriş</strong><br>Mətn, şəkil, səs, zaman sırası və istifadəçi davranışı</div><div class="tile"><strong>Emal və model</strong><br>Tokenləşdirmə, embedding, CNN, klassifikator, tövsiyə</div><div class="tile"><strong>Nəticə</strong><br>API, veb-interfeys, ölçmə, təhlükəsizlik və monitorinq</div></div>
+<div class="callout"><b>Əsas prinsip:</b> intellektual sistem yalnız modeldən ibarət deyil. Keyfiyyətli verilən, düzgün qiymətləndirmə, istifadəçi interfeysi və etibarlı inteqrasiya da sistemin ayrılmaz hissəsidir.</div>
+</section>
+
+<section class="chapter" id="s151">
+<h2>15.1. İntellektual sistem anlayışı və arxitekturası</h2>
+<p><b>İntellektual sistem</b> verilənləri qəbul edən, onlardan nümunə və əlaqələri öyrənən, nəticə çıxaran və müəyyən məqsədə uyğun qərar və ya tövsiyə yaradan proqram-aparat sistemidir. Məsələn, universitet müraciətlərini avtomatik kateqoriyalara ayıran sistem, istehsalat xəttində qüsuru aşkarlayan kamera və ya tələbəyə uyğun material təklif edən platforma.</p>
+<h3>Arxitekturanın əsas qatları</h3>
+<div class="diagram"><div class="flow"><div class="node">Verilən mənbələri<br><small>mətn · şəkil · səs</small></div><span class="arrow">→</span><div class="node">İlkin emal<br><small>təmizləmə · çevirmə</small></div><span class="arrow">→</span><div class="node">AI modeli<br><small>öyrənmə · inferens</small></div><span class="arrow">→</span><div class="node">Tətbiq qatı<br><small>API · veb · mobil</small></div><span class="arrow">→</span><div class="node">İstifadəçi<br><small>nəticə · rəy</small></div></div><p class="caption">Şəkil 15.1. İntellektual sistemin ümumi məlumat axını. İstifadəçi rəyi yenidən verilən bazasına qaytarıla bilər.</p></div>
+<p>Arxitekturada verilənlər bazası, emal modulu, model xidməti, biznes qaydaları, API, monitorinq və girişə nəzarət modulları ayrılıqda layihələndirilə bilər. Bu bölgü sistemin yenilənməsini və nasazlığın tapılmasını asanlaşdırır.</p>
+<table><tr><th>Komponent</th><th>Funksiya</th><th>Nümunə</th></tr><tr><td>Data ingestion</td><td>Verilənlərin qəbul edilməsi</td><td>REST API, CSV, kamera axını</td></tr><tr><td>Preprocessing</td><td>Formatın standartlaşdırılması</td><td>Boşluqların silinməsi, ölçünün dəyişdirilməsi</td></tr><tr><td>Model serving</td><td>Təlim keçmiş modeldən nəticə almaq</td><td>Sentiment klassifikatoru</td></tr><tr><td>Monitoring</td><td>Keyfiyyət və gecikməni izləmək</td><td>F1, cavab vaxtı, data drift</td></tr></table>
+<div class="callout warning"><b>Layihələndirmə sualı:</b> model səhv cavab verdikdə istifadəçi bunu necə bildirəcək, səhv necə qeydə alınacaq və modelin yenilənməsinə necə təsir edəcək?</div>
+</section>
+
+<section class="chapter" id="s152">
+<h2>15.2. Mətn verilənlərinin emalı</h2>
+<p>Mətn verilənləri e-poçt, rəy, müraciət, xəbər, sosial media paylaşımı və sənədlərdən əldə olunur. Maşın üçün mətn əvvəlcə rəqəmsal təsvirə çevrilməlidir. İlkin emal mərhələləri dilə və məsələyə uyğun seçilir.</p>
+<div class="diagram"><div class="flow"><div class="node">Xam mətn<br>“Salam, MDU!”</div><span class="arrow">→</span><div class="node">Normallaşdırma<br>kiçik hərf</div><span class="arrow">→</span><div class="node">Tokenləşdirmə<br>["salam","mdu"]</div><span class="arrow">→</span><div class="node">Vektorlaşdırma<br>[0.2, …]</div></div><p class="caption">Şəkil 15.2. Mətnin model üçün rəqəmsal təqdimata çevrilməsi.</p></div>
+<h3>Əsas əməliyyatlar</h3>
+<ul><li><b>Normallaşdırma:</b> hərflərin, boşluqların, durğu işarələrinin standartlaşdırılması.</li><li><b>Tokenləşdirmə:</b> mətnin sözlərə, alt-sözlərə və ya simvollara bölünməsi.</li><li><b>Stop-sözlərin idarəsi:</b> məsələyə az informasiya verən sözlərin ehtiyatla çıxarılması. “deyil” kimi inkar sözlərini silmək sentiment analizini poza bilər.</li><li><b>Lemmatizasiya/stemminq:</b> sözün lüğəvi formasına və ya kökünə yaxınlaşdırılması.</li><li><b>Vektorlaşdırma:</b> sözləri say, TF-IDF və ya öyrənilmiş embedding vektorları ilə təqdim etmək.</li></ul>
+<div class="interactive"><h4>İnteraktiv mətn emalı nümunəsi</h4><label for="rawtext">Mətni daxil edin</label><textarea id="rawtext">Salam, MDU! Süni intellekt mətnləri təhlil edir.</textarea><button class="btn" onclick="processText()">Mətni emal et</button><div id="textresult" class="result">Nəticə burada görünəcək.</div></div>
+<h3>TF-IDF ideyası</h3><p>TF-IDF sözün konkret sənəddə nə qədər əhəmiyyətli olduğunu, eyni zamanda bütün sənədlərdə nə qədər geniş yayıldığını nəzərə alır.</p>
+<div class="formula">TF-IDF(t,d) = TF(t,d) × log( N / DF(t) )</div>
+<p>Burada <i>TF</i> sözün sənəddəki tezliyi, <i>DF</i> sözün rast gəlindiyi sənədlərin sayı, <i>N</i> isə sənədlərin ümumi sayıdır. Bu yanaşma axtarış, sənəd təsnifatı və açar söz çıxarılmasında istifadə oluna bilər.</p>
+</section>
+
+<section class="chapter" id="s153">
+<h2>15.3. Natural Language Processing (NLP)</h2>
+<p><b>Natural Language Processing (NLP)</b> kompüterlərin insan dilindəki mətni və nitqi emal etməsi, təhlil etməsi və yaratması ilə məşğul olan süni intellekt sahəsidir. NLP-də qrammatika, statistika, maşın öyrənməsi və neyron şəbəkələri birləşir.</p>
+<div class="grid2"><div class="tile"><strong>Ənənəvi yanaşma</strong><p>Qayda, lüğət, n-gram, Bag-of-Words və TF-IDF. Kiçik verilənlərdə izahı nisbətən asan ola bilər.</p></div><div class="tile"><strong>Müasir yanaşma</strong><p>Embedding və Transformer modelləri konteksti nəzərə alaraq söz və cümlələrin mənasını öyrənir.</p></div></div>
+<h3>Maşın tərcümə sistemi necə işləyir?</h3>
+<p>Google Translate tipli sistemlər sadəcə sözləri lüğətdə əvəz etmir. Müasir neyron maşın tərcüməsi cümlənin kontekstini kodlaşdırır və başqa dildə uyğun ardıcıllığı yaradır. Sadələşdirilmiş ardıcıllıq:</p>
+<div class="diagram"><svg viewBox="0 0 900 260" role="img" aria-label="Neyron maşın tərcüməsinin sxemi"><defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="#2457d6"/></marker></defs><rect x="20" y="80" width="150" height="70" rx="13" fill="#dce9ff" stroke="#7397d8"/><text x="95" y="108" text-anchor="middle" font-size="16" fill="#173b78">Mənbə cümlə</text><text x="95" y="130" text-anchor="middle" font-size="13" fill="#173b78">“Good morning”</text><path d="M170 115 H235" stroke="#2457d6" stroke-width="3" marker-end="url(#arr)"/><rect x="240" y="80" width="155" height="70" rx="13" fill="#e7e1ff" stroke="#9581d9"/><text x="317" y="108" text-anchor="middle" font-size="16" fill="#49358c">Tokenizer</text><text x="317" y="130" text-anchor="middle" font-size="13" fill="#49358c">token ID-ləri</text><path d="M395 115 H460" stroke="#2457d6" stroke-width="3" marker-end="url(#arr)"/><rect x="465" y="65" width="175" height="100" rx="13" fill="#d9f4f2" stroke="#62b9b1"/><text x="552" y="100" text-anchor="middle" font-size="16" fill="#12645e">Transformer</text><text x="552" y="123" text-anchor="middle" font-size="13" fill="#12645e">kontekst + attention</text><text x="552" y="143" text-anchor="middle" font-size="12" fill="#12645e">encoder / decoder</text><path d="M640 115 H705" stroke="#2457d6" stroke-width="3" marker-end="url(#arr)"/><rect x="710" y="80" width="170" height="70" rx="13" fill="#dcf5e9" stroke="#72b99a"/><text x="795" y="108" text-anchor="middle" font-size="16" fill="#176b49">Hədəf cümlə</text><text x="795" y="130" text-anchor="middle" font-size="13" fill="#176b49">“Sabahınız xeyir”</text><text x="450" y="220" text-anchor="middle" font-size="14" fill="#526681">Təlim zamanı paralel cümlə cütləri əsasında parametr öyrənilir</text></svg><p class="caption">Şəkil 15.3. Neyron maşın tərcüməsinin sadələşdirilmiş konseptual sxemi.</p></div>
+<p><b>Necə yaradılır?</b> Əvvəlcə mənbə və hədəf dildə paralel cümlə korpusu toplanır; mətn təmizlənir və tokenləşdirilir; Transformer modeli öyrədilir; BLEU və ya chrF kimi göstəricilər, eləcə də insan qiymətləndirməsi ilə yoxlanılır; model API vasitəsilə tətbiqə inteqrasiya edilir. Lüğət, domen və dialekt fərqləri ayrıca nəzərə alınmalıdır.</p>
+<h3>Transformer və attention</h3>
+<p>Self-attention cümlədəki hər tokenin digər tokenlərlə əlaqəsini hesablamağa imkan verir. Bu, uzaq kontekstdəki sözlər arasında əlaqəni tutmağa kömək edir.</p>
+<div class="formula">Attention(Q,K,V) = softmax( QKᵀ / √dₖ ) V</div>
+<p>Q — sorğu (query), K — açar (key), V — dəyər (value), dₖ isə açar vektorunun ölçüsüdür. Softmax çəkiləri normallaşdırır; nəticədə model kontekstə uyğun informasiya birləşdirir.</p>
+<div class="interactive"><h4>Attention çəkilərinin mini-simulyasiyası</h4><p class="small muted">“Mən kitabı tələbəyə verdim” cümləsində “verdım” felinin hansı sözə diqqət ayırdığını təsəvvür edin.</p><label for="attn">“kitabı” tokeninə diqqət çəkisi: <b id="attnval">0.65</b></label><input id="attn" type="range" min="0" max="100" value="65" oninput="drawAttention(this.value)"><div id="attnbars"></div><p class="caption">Bu, mexanizmi izah edən tədris simulyasiyasıdır; real modelin çəkiləri deyil.</p></div>
+</section>
+
+<section class="chapter" id="s154">
+<h2>15.4. Sentiment Analysis</h2>
+<p><b>Sentiment Analysis</b> mətnin emosional istiqamətini və ya münasibətini müəyyən edir: müsbət, mənfi və neytral. Universitet rəyləri, məhsul şərhləri, müştəri müraciətləri və sosial media monitorinqində tətbiq olunur.</p>
+<div class="diagram"><div class="flow"><div class="node">Rəy mətni</div><span class="arrow">→</span><div class="node">Mətn emalı</div><span class="arrow">→</span><div class="node">Klassifikator</div><span class="arrow">→</span><div class="node">Müsbət / Neytral / Mənfi</div></div></div>
+<p>Sadə başlanğıc modeli TF-IDF + Logistic Regression ola bilər. Daha mürəkkəb sistemlərdə BERT tipli kontekstual dil modelləri incə mənaları daha yaxşı tuta bilər. Azərbaycan dilində ironiya, dialekt, şəkilçi və qarışıq dilli ifadələr ayrıca çətinlik yaradır.</p>
+<div class="formula">Precision = TP / (TP + FP) &nbsp;&nbsp; Recall = TP / (TP + FN)</div>
+<p>Modelin “mənfi” rəyi düzgün tapması vacibdirsə, yalnız Accuracy kifayət etməyə bilər; Precision, Recall və F1 birlikdə qiymətləndirilməlidir.</p>
+<div class="interactive"><h4>Sentiment analizinin izahlı demosu</h4><label for="senttext">Rəy yazın</label><input id="senttext" value="Xidmət çox yaxşı və sürətli idi"><button class="btn" onclick="sentimentDemo()">Təhlil et</button><div id="sentresult" class="result">Sistem söz siqnallarına əsaslanan sadə demo qaydası tətbiq edir.</div><p class="caption">Demo lüğət əsaslıdır; elmi nəticə və ya real öyrədilmiş model hesab edilmir.</p></div>
+</section>
+
+<section class="chapter" id="s155">
+<h2>15.5. Təsvirlərin tanınması və Computer Vision</h2>
+<p><b>Computer Vision</b> kompüterlərin təsvir və videodan obyekt, məkan, hərəkət və vizual nümunələr çıxarmasını təmin edir. Bu bölmə NLP ilə yanaşı multimodal intellektual sistemin digər mühüm istiqamətini göstərir.</p>
+<table><tr><th>Tapşırıq</th><th>Sual</th><th>Nəticə</th></tr><tr><td>Təsvir təsnifatı</td><td>Şəkildə nə var?</td><td>“avtomobil” sinfi</td></tr><tr><td>Obyekt aşkarlanması</td><td>Haradadır və nədir?</td><td>Sinif + bounding box</td></tr><tr><td>Semantik seqmentasiya</td><td>Hər piksel hansı sinfə aiddir?</td><td>Piksel maskası</td></tr><tr><td>OCR</td><td>Şəkildə hansı mətn var?</td><td>Oxunmuş simvollar</td></tr></table>
+<h3>CNN-in təsvir üzərində işi</h3>
+<div class="diagram"><svg viewBox="0 0 900 260" role="img" aria-label="CNN təsvir emalı"><rect x="20" y="65" width="125" height="115" rx="12" fill="#e5efff" stroke="#8ca8d8"/><g fill="#7ba4e8"><rect x="40" y="85" width="18" height="18"/><rect x="60" y="85" width="18" height="18"/><rect x="80" y="85" width="18" height="18"/><rect x="40" y="105" width="18" height="18"/><rect x="60" y="105" width="18" height="18"/><rect x="80" y="105" width="18" height="18"/><rect x="40" y="125" width="18" height="18"/><rect x="60" y="125" width="18" height="18"/><rect x="80" y="125" width="18" height="18"/></g><text x="82" y="164" text-anchor="middle" font-size="13" fill="#23477f">Piksel matrisi</text><path d="M145 122 H205" stroke="#2457d6" stroke-width="3"/><path d="M197 115 L207 122 L197 129" fill="none" stroke="#2457d6" stroke-width="3"/><rect x="210" y="80" width="145" height="85" rx="12" fill="#e4ddff" stroke="#9b8bdb"/><text x="282" y="112" text-anchor="middle" font-size="17" fill="#4a3989">Convolution</text><text x="282" y="137" text-anchor="middle" font-size="13" fill="#4a3989">feature maps</text><path d="M355 122 H415" stroke="#2457d6" stroke-width="3"/><path d="M407 115 L417 122 L407 129" fill="none" stroke="#2457d6" stroke-width="3"/><rect x="420" y="80" width="130" height="85" rx="12" fill="#d9f4f2" stroke="#68bcb4"/><text x="485" y="112" text-anchor="middle" font-size="17" fill="#12645e">Pooling</text><text x="485" y="137" text-anchor="middle" font-size="13" fill="#12645e">ölçü azaldılır</text><path d="M550 122 H610" stroke="#2457d6" stroke-width="3"/><path d="M602 115 L612 122 L602 129" fill="none" stroke="#2457d6" stroke-width="3"/><rect x="615" y="80" width="120" height="85" rx="12" fill="#fff0d9" stroke="#d5ae6c"/><text x="675" y="112" text-anchor="middle" font-size="17" fill="#8a590c">Dense</text><text x="675" y="137" text-anchor="middle" font-size="13" fill="#8a590c">klassifikator</text><path d="M735 122 H790" stroke="#2457d6" stroke-width="3"/><path d="M782 115 L792 122 L782 129" fill="none" stroke="#2457d6" stroke-width="3"/><rect x="795" y="80" width="90" height="85" rx="12" fill="#dcf5e9" stroke="#75b89a"/><text x="840" y="112" text-anchor="middle" font-size="16" fill="#176b49">Sinif</text><text x="840" y="137" text-anchor="middle" font-size="13" fill="#176b49">0.96</text></svg><p class="caption">Şəkil 15.4. CNN-in təsvir xüsusiyyətlərini mərhələli çıxarması.</p></div>
+<h3>Obyekt tanıma real nümunəsi</h3><p>Universitetin giriş kamerası avtomobil, piyada və velosiped aşkarlaya bilər. Detektor hər obyekt üçün sinif, etibarlılıq balı və məhdudlaşdırıcı düzbucaqlı (bounding box) qaytarır. NMS (Non-Maximum Suppression) eyni obyekt üçün üst-üstə düşən təkrar qutuları azaldır.</p>
+<div class="interactive"><h4>Etibarlılıq həddi və aşkarlama nəticəsi</h4><label for="threshold">Minimum confidence: <b id="thval">0.60</b></label><input id="threshold" type="range" min="30" max="95" value="60" oninput="showBoxes(this.value)"><div id="boxes" class="grid3"></div><p class="caption">Nümunə nəticələr sxematikdir, real kamera görüntüsü və ya öyrədilmiş detektor çıxışı deyil.</p></div>
+</section>
+
+<section class="chapter" id="s156">
+<h2>15.6. Səs verilənlərinin emalı</h2>
+<p>Səs sistemləri dalğa formasını rəqəmsal siqnala çevirir. Nitqin tanınması (ASR) səsi mətnə, nitqin sintezi (TTS) isə mətni səsə çevirir. Səsli köməkçi adətən ASR → NLP/LLM → dialoq idarəetməsi → TTS ardıcıllığı ilə işləyir.</p>
+<div class="diagram"><div class="flow"><div class="node">Mikrofon<br>audio waveform</div><span class="arrow">→</span><div class="node">ASR<br>səs → mətn</div><span class="arrow">→</span><div class="node">NLP<br>niyyət və məna</div><span class="arrow">→</span><div class="node">Cavab generatoru</div><span class="arrow">→</span><div class="node">TTS<br>mətn → səs</div></div></div>
+<p>Səs emalında nümunələmə tezliyi, amplituda, fon səs-küyü və danışanın xüsusiyyətləri nəzərə alınır. Mel-spektroqram zaman və tezlik komponentlərini vizuallaşdırmaq üçün istifadə oluna bilər.</p>
+<div class="formula">x[n] = x(n / fₛ) &nbsp;&nbsp; · &nbsp;&nbsp; Nyquist: fₛ ≥ 2 fₘₐₓ</div>
+<p>Burada fₛ nümunələmə tezliyi, fₘₐₓ isə saxlanılacaq ən yüksək tezlikdir. Nitq tanıma keyfiyyəti Word Error Rate (WER) ilə qiymətləndirilə bilər:</p>
+<div class="formula">WER = (S + D + I) / N</div><p>S — əvəzlənmə, D — silinmə, I — əlavə edilmə, N — istinad transkriptindəki sözlərin sayıdır.</p>
+</section>
+
+<section class="chapter" id="s157">
+<h2>15.7. Tövsiyə sistemləri</h2>
+<p>Tövsiyə sistemi istifadəçinin marağına uyğun məhsul, film, kurs, kitab və ya tədris resursu seçir. İki əsas yanaşma kollaborativ filtrləmə və məzmun əsaslı filtrləmədir.</p>
+<div class="grid2"><div class="tile"><strong>Collaborative filtering</strong><p>Oxşar davranış göstərən istifadəçilərin seçimlərindən öyrənir. “Sizə bənzər istifadəçilər bunu bəyənib.”</p></div><div class="tile"><strong>Content-based</strong><p>İstifadəçinin əvvəl bəyəndiyi obyektlərin xüsusiyyətlərinə baxır. “Bu kurs seçdiyiniz Python kursuna bənzəyir.”</p></div></div>
+<div class="formula">R̂ᵤᵢ = μ + bᵤ + bᵢ + pᵤᵀqᵢ</div><p>Bu faktorlaşdırma modelində μ ümumi orta reytinq, bᵤ və bᵢ istifadəçi və obyekt meylləri, pᵤ və qᵢ isə öyrənilən gizli vektorlardır.</p>
+<div class="interactive"><h4>Sadə kurs tövsiyəçisi</h4><label for="interest">Maraq sahənizi seçin</label><select id="interest"><option value="ai">Süni intellekt</option><option value="web">Veb proqramlaşdırma</option><option value="data">Data analitika</option><option value="security">Kibertəhlükəsizlik</option></select><button class="btn" onclick="recommend()">Kurs tövsiyə et</button><div id="recresult" class="result">Tövsiyə burada görünəcək.</div></div>
+<p><b>Çətinliklər:</b> yeni istifadəçi (cold start), az reytinq, populyarlıq qərəzi, məxfilik və tövsiyələrin müxtəlifliyinin qorunması.</p>
+</section>
+
+<section class="chapter" id="s158">
+<h2>15.8. Proqnozlaşdırma və qərar dəstəyi sistemləri</h2>
+<p>Proqnozlaşdırma keçmiş müşahidələrdən gələcək qiymət və ya sinfi təxmin edir. Qərar dəstəyi sistemi proqnozu biznes qaydaları, məhdudiyyətlər və risklərlə birləşdirərək qərar verən şəxsə alternativlər təqdim edir.</p>
+<div class="diagram"><div class="flow"><div class="node">Tarixi verilənlər</div><span class="arrow">→</span><div class="node">Proqnoz modeli</div><span class="arrow">→</span><div class="node">Risk / ssenari</div><span class="arrow">→</span><div class="node">Qərar tövsiyəsi</div><span class="arrow">→</span><div class="node">İnsan təsdiqi</div></div></div>
+<p>Məsələn, universitet tələbənin davamiyyət və qiymət dinamikasına əsasən akademik risk ehtimalını hesablaya bilər. Bu nəticə tələbəni avtomatik cəzalandırmaq üçün deyil, vaxtında akademik dəstək təklif etmək üçün istifadə olunmalıdır.</p>
+<h3>Sadə xətti proqnoz</h3><div class="formula">ŷ = β₀ + β₁x₁ + β₂x₂ + … + βₚxₚ</div>
+<p>Proqnozun keyfiyyəti MAE, RMSE, R² və ya təsnifat tapşırığında Precision/Recall ilə ölçülür. Qərar dəstəyi sistemində model qeyri-müəyyənliyi də göstərilməlidir.</p>
+</section>
+
+<section class="chapter" id="s159">
+<h2>15.9. Anomaliyaların aşkarlanması</h2>
+<p>Anomaliya verilənlərin adi davranışından kəskin fərqlənən müşahidədir. Bank əməliyyatında şübhəli davranış, serverdə qeyri-adi trafik və sensorun qəfil dəyişməsi nümunədir.</p>
+<table><tr><th>Metod</th><th>İdeya</th><th>Uyğun ssenari</th></tr><tr><td>Z-score</td><td>Orta qiymətdən standart kənarlaşma ilə məsafə</td><td>Paylanması təxminən normal olan göstərici</td></tr><tr><td>IQR</td><td>Q1 və Q3 kvartillərinə əsaslanır</td><td>Sadə statistik filtr</td></tr><tr><td>Isolation Forest</td><td>Nadir nöqtələri ayırmaq daha asandır</td><td>Çoxölçülü verilənlər</td></tr><tr><td>Autoencoder</td><td>Rekonstruksiya xətasını ölçür</td><td>Mürəkkəb nümunələr</td></tr></table>
+<div class="formula">z = (x − μ) / σ</div>
+<div class="interactive"><h4>Z-score kalkulyatoru</h4><div class="grid2"><div><label for="xval">Müşahidə x</label><input id="xval" type="number" value="92"></div><div><label for="mean">Orta μ</label><input id="mean" type="number" value="70"></div><div><label for="std">Standart kənarlaşma σ</label><input id="std" type="number" value="10" min="0.0001"></div></div><button class="btn" onclick="zscore()">Hesabla</button><div id="zresult" class="result">Z-score nəticəsi burada görünəcək.</div></div>
+<p class="callout warning">Anomaliya həmişə saxtakarlıq və ya nasazlıq demək deyil. Nəticə domen mütəxəssisi tərəfindən yoxlanmalı, yanlış pozitivlərin qiyməti nəzərə alınmalıdır.</p>
+</section>
+
+<section class="chapter" id="s1510">
+<h2>15.10. Azərbaycan dilində süni intellekt tətbiqləri</h2>
+<p>Azərbaycan dili üçün intellektual sistem hazırlayarkən dilin aqqlütinativ quruluşu, şəkilçilər, xüsusi hərflər (ə, ı, ö, ü, ğ, ş, ç), dialektlər, transliterasiya və kod qarışıqlığı nəzərə alınmalıdır. Eyni sözün fərqli yazılışları vahid normaya gətirilməlidir, lakin orijinal mətn də saxlanmalıdır.</p>
+<div class="grid2"><div class="tile"><strong>Universitetlər</strong><p>Elektron müraciətlərin təsnifatı, FAQ chatbot, tələbə rəylərinin sentiment analizi, akademik resurs axtarışı.</p></div><div class="tile"><strong>Dövlət xidmətləri</strong><p>Çoxdilli müraciətlərin yönləndirilməsi, sənəd OCR-i, nitq interfeysi və avtomatik cavab layihəsi.</p></div><div class="tile"><strong>Turizm və iqtisadiyyat</strong><p>Otel rəylərinin təhlili, turist sorğularının tərcüməsi, tələb proqnozu və fərdiləşdirilmiş tövsiyə.</p></div><div class="tile"><strong>Kənd təsərrüfatı və sənaye</strong><p>Sensor anomaliyası, avadanlıq vəziyyətinin proqnozu, təsvirlərdən xəstəlik və qüsur aşkarlanması.</p></div></div>
+<h3>Azərbaycan dili üçün korpus yaratma</h3>
+<ol><li>Məqsəd və lisenziyanı müəyyən edin.</li><li>İcazəli mənbələrdən müxtəlif janrlı mətn toplayın.</li><li>Şəxsi məlumatları anonimləşdirin.</li><li>Dublikatları və spamı təmizləyin.</li><li>Etiketləmə qaydası yaradıb annotatorlar arasında uyğunluğu yoxlayın.</li><li>Train/validation/test bölgüsünü müəllif və ya mənbə üzrə sızma yaratmadan aparın.</li></ol>
+<div class="callout"><b>Praktik tövsiyə:</b> Azərbaycan dili üçün modeli yalnız ingilisdilli benchmark ilə qiymətləndirmək olmaz. Yerli istifadəçilərdən toplanmış, hüquqi əsaslı və müxtəlif dialektləri əhatə edən test nümunələri vacibdir.</div>
+</section>
+
+<section class="chapter" id="s1511">
+<h2>15.11. Real verilənlər əsasında intellektual sistemin hazırlanması</h2>
+<p>Bu bölmədə universitetə daxil olan müraciətləri “tədris”, “təqaüd”, “texniki problem” və “digər” kateqoriyalarına ayıran mətn təsnifatı layihəsi nümunə götürülür. Eyni iş axını rəy analizi, müraciət yönləndirməsi və sənəd təsnifatına uyğunlaşdırıla bilər.</p>
+<h3>Layihənin mərhələləri</h3>
+<div class="diagram"><div class="flow"><div class="node">Problem və KPI</div><span class="arrow">→</span><div class="node">Dataset</div><span class="arrow">→</span><div class="node">Etiketləmə</div><span class="arrow">→</span><div class="node">Train / Test</div><span class="arrow">→</span><div class="node">Model</div><span class="arrow">→</span><div class="node">Qiymətləndirmə</div></div></div>
+<table><tr><th>Mərhələ</th><th>Görüləcək iş</th><th>Çıxış</th></tr><tr><td>Problem</td><td>İstifadəçi ehtiyacını və səhv qiymətini müəyyənləşdirmək</td><td>Tapşırıq spesifikasiyası</td></tr><tr><td>Dataset</td><td>İcazəli müraciətləri toplamaq və anonimləşdirmək</td><td>Etiketli cədvəl</td></tr><tr><td>Model</td><td>TF-IDF + Logistic Regression başlanğıc modeli</td><td>Öyrədilmiş model</td></tr><tr><td>Qiymətləndirmə</td><td>Macro-F1, confusion matrix və səhv təhlili</td><td>Qiymətləndirmə hesabatı</td></tr><tr><td>İstifadəyə vermə</td><td>API, jurnal və insan təsdiqi</td><td>İşlək prototip</td></tr></table>
+<h3>Python nümunəsi: TF-IDF + Logistic Regression</h3>
+<div class="codehead"><span>Python · scikit-learn</span><button class="btn secondary" onclick="copyCode('pycode')">Kodu köçür</button></div>
+<pre id="pycode"><code>import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report
+
+# CSV: text, category sütunları olmalıdır
+df = pd.read_csv("muracietler.csv").dropna(subset=["text", "category"])
+X_train, X_test, y_train, y_test = train_test_split(
+    df["text"], df["category"], test_size=0.2,
+    random_state=42, stratify=df["category"]
+)
+
+model = Pipeline([
+    ("tfidf", TfidfVectorizer(ngram_range=(1, 2), min_df=2)),
+    ("clf", LogisticRegression(max_iter=1000, class_weight="balanced"))
+])
+model.fit(X_train, y_train)
+print(classification_report(y_test, model.predict(X_test)))
+
+yeni_muraciet = ["Təqaüd üçün hansı sənədlər lazımdır?"]
+print(model.predict(yeni_muraciet))</code></pre>
+<p class="small muted">Kod real dataset faylı və uyğun etiketlər olduqda işlədilir. Kiçik nümunədə min_df parametrini dataset ölçüsünə uyğunlaşdırın. Mətnin dilinə uyğun tokenləşdirmə və normalizasiya ayrıca əlavə oluna bilər.</p>
+<h3>Kiçik məlumat axını məşqi</h3>
+<div class="interactive"><label for="request">Nümunə müraciət</label><input id="request" value="Təqaüd almaq üçün müraciət qaydasını öyrənmək istəyirəm"><button class="btn" onclick="routeRequest()">Kateqoriyanı təxmin et</button><div id="routeResult" class="result">Sistem sadə açar söz qaydası ilə demo nəticə çıxaracaq.</div></div>
+</section>
+
+<section class="chapter" id="s1512">
+<h2>15.12. Modelin tətbiq mühitinə inteqrasiyası</h2>
+<p>Təlim keçmiş modeli real istifadəçiyə çatdırmaq üçün model serving və tətbiq arxitekturası qurulur. Ən geniş yayılmış yanaşmalardan biri modelin REST API arxasında yerləşdirilməsidir.</p>
+<div class="diagram"><div class="flow"><div class="node">Veb / mobil tətbiq</div><span class="arrow">→ HTTP</span><div class="node">Backend API</div><span class="arrow">→</span><div class="node">Model xidməti</div><span class="arrow">→</span><div class="node">Nəticə JSON</div></div></div>
+<h3>İnteqrasiya üçün yoxlama siyahısı</h3>
+<ul><li>Model versiyası, kitabxana və asılılıqlar sabitlənir.</li><li>Giriş verilənləri üçün schema və validasiya qurulur.</li><li>API autentifikasiya, avtorizasiya və rate limiting ilə qorunur.</li><li>Şəxsi məlumatlar loglarda maskalanır.</li><li>Cavab vaxtı, xəta faizi, data drift və model keyfiyyəti izlənir.</li><li>Rollback və əvvəlki model versiyasına qayıtma planı hazırlanır.</li></ul>
+<h3>FastAPI ilə sadə model API-si</h3>
+<div class="codehead"><span>Python · FastAPI (konseptual nümunə)</span><button class="btn secondary" onclick="copyCode('apicode')">Kodu köçür</button></div>
+<pre id="apicode"><code>from fastapi import FastAPI
+from pydantic import BaseModel
+import joblib
+
+app = FastAPI(title="MDU NLP API")
+model = joblib.load("text_classifier.joblib")
+
+class TextRequest(BaseModel):
+    text: str
+
+@app.post("/predict")
+def predict(request: TextRequest):
+    label = model.predict([request.text])[0]
+    return {"category": str(label)}</code></pre>
+<p>Bu nümunədə model əvvəlcədən təlim keçib <code>joblib</code> ilə saxlanmalıdır. İstehsalat mühitində model faylının etibarlı mənbədən gəlməsi, giriş uzunluğunun məhdudlaşdırılması, autentifikasiya və audit vacibdir.</p>
+</section>
+
+<section class="chapter" id="tasks">
+<h2>Praktiki tapşırıqlar</h2>
+<ol>
+<li><b>Mətn emalı:</b> Azərbaycan dilində 30 qısa rəy toplayın (icazəli və anonim mənbədən), normallaşdırın, tokenləşdirin və tezlik cədvəli qurun.</li>
+<li><b>Sentiment analizi:</b> Rəyləri müsbət, mənfi və neytral siniflərinə etiketləyin. TF-IDF + Logistic Regression modeli qurub Precision, Recall və F1 göstəricilərini hesablayın.</li>
+<li><b>Multimodal sistem:</b> Eyni istifadəçi müraciətinə mətn və əlavə edilmiş təsvir daxil olan prototip dizayn edin. OCR və mətn təsnifatını birləşdirən arxitektura sxemi çəkin.</li>
+<li><b>Tövsiyə sistemi:</b> 5 istifadəçi və 6 tədris resursu üçün kiçik reytinq matrisi qurun; content-based və collaborative yanaşmaları müqayisə edin.</li>
+<li><b>İnteqrasiya:</b> Təlim edilmiş modeli API şəklində təqdim edin; giriş validasiyası, xəta cavabı və cavab vaxtını sənədləşdirin.</li>
+</ol>
+</section>
+
+<section class="quiz" id="quiz">
+<h2>Özünü yoxlama sualları</h2>
+<p class="muted">10 sual, 7 fərqli quiz formatı. Cavablarınızı daxil edin və nəticəni yoxlayın.</p>
+<div class="progress"><span id="qprogress"></span></div><div id="quizarea"></div>
+<button class="btn green" onclick="gradeQuiz()">Cavabları yoxla</button><button class="btn secondary" onclick="resetQuiz()">Yenidən başla</button>
+<div id="quizscore" class="result" aria-live="polite">Hər suala cavab verdikdən sonra nəticəni yoxlayın.</div>
+</section>
+
+<section class="references" id="refs">
+<h2>İstifadə olunan ədəbiyyat</h2>
+<ol class="source">
+<li>Jurafsky, D., & Martin, J. H. (2025). <i>Speech and Language Processing</i> (3rd ed. draft). Stanford University. <a href="https://web.stanford.edu/~jurafsky/slp3/" target="_blank" rel="noopener">Rəsmi elektron mənbə</a>.</li>
+<li>Vaswani, A. et al. (2017). Attention Is All You Need. <i>NeurIPS</i>. <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">arXiv</a>.</li>
+<li>Hugging Face. (2024–2026). <i>Transformers Documentation</i>. <a href="https://huggingface.co/docs/transformers/" target="_blank" rel="noopener">Rəsmi sənədləşmə</a>.</li>
+<li>Google. <i>Machine Learning Crash Course</i>. <a href="https://developers.google.com/machine-learning/crash-course" target="_blank" rel="noopener">Rəsmi tədris resursu</a>.</li>
+<li>TensorFlow. <i>Text classification and image classification tutorials</i>. <a href="https://www.tensorflow.org/tutorials" target="_blank" rel="noopener">Rəsmi sənədləşmə</a>.</li>
+<li>PyTorch. <i>Tutorials</i>. <a href="https://pytorch.org/tutorials/" target="_blank" rel="noopener">Rəsmi tədris resursu</a>.</li>
+<li>FastAPI. <i>FastAPI Documentation</i>. <a href="https://fastapi.tiangolo.com/" target="_blank" rel="noopener">Rəsmi sənədləşmə</a>.</li>
+<li>Rafiq R. Əliyev (2026). <i>Süni intellekt</i>. Azərnəşr.</li>
+<li>Gülçin Abdullayeva və Ülkər Əlizadə (2026). <i>Süni intellekt və təsvirlərin tanınması: nəzəri və praktiki əsaslar</i>. Elm.</li>
+<li>Russell, S., & Norvig, P. (2021). <i>Artificial Intelligence: A Modern Approach</i> (4th ed.). Pearson.</li>
+</ol>
+<p class="small muted">Qeyd: kitab və onlayn mənbələr mövzunun nəzəri və praktiki izahı üçün seçilmişdir. Onlayn sənədləşmələr dəyişə bildiyindən istifadə zamanı son versiyanı yoxlayın.</p>
+</section>
+
+<section class="lab" id="lab">
+<span class="tag">Laboratoriya işi №15</span><h2>Mətn və ya təsvir verilənləri əsasında sadə intellektual tanıma sisteminin hazırlanması</h2>
+<h3>İşin məqsədi</h3><p>Mətn və ya təsvir verilənlərini hazırlamaq, uyğun model seçmək, modeli öyrətmək və test nəticələrini qiymətləndirməklə işlək prototip yaratmaq.</p>
+<h3>Tapşırıq variantı A — Mətn tanıma</h3>
+<ol><li>Ən azı 3 kateqoriya üzrə etiketlənmiş mətn dataset-i hazırlayın.</li><li>Boş və təkrarlanan qeydləri təmizləyin, mətn normallaşdırması aparın.</li><li>TF-IDF + Logistic Regression modelini öyrədin.</li><li>Test dəstində classification report və confusion matrix yaradın.</li><li>Modeli sadə veb/API interfeysinə inteqrasiya edin.</li></ol>
+<h3>Tapşırıq variantı B — Təsvir tanıma</h3>
+<ol><li>Ən azı 2 sinifdən ibarət, istifadəyə icazəli təsvir dataset-i seçin.</li><li>Train/validation/test bölgüsü yaradın; təsvir ölçülərini eyniləşdirin.</li><li>Transfer learning və ya kiçik CNN modeli qurun.</li><li>Accuracy, Precision, Recall və confusion matrix hesablayın.</li><li>Yeni təsvir üçün sinif və confidence göstərən prototip hazırlayın.</li></ol>
+<h3>Qiymətləndirmə meyarları</h3>
+<table><tr><th>Meyar</th><th>Bal</th><th>Təsvir</th></tr><tr><td>Dataset və ilkin emal</td><td>20</td><td>Mənbə, lisenziya, təmizləmə və bölgü</td></tr><tr><td>Modelin qurulması</td><td>25</td><td>Uyğun alqoritm və təkrarlana bilən təlim</td></tr><tr><td>Qiymətləndirmə</td><td>25</td><td>Uyğun metriklər və səhv təhlili</td></tr><tr><td>İnteqrasiya</td><td>20</td><td>İşlək interfeys/API və təhlükəsizlik</td></tr><tr><td>Hesabat və təqdimat</td><td>10</td><td>Nəticələrin izahı və məhdudiyyətlər</td></tr><tr><th colspan="2">Cəmi</th><th>100</th></tr></table>
+<h3>Hesabatın strukturu</h3><p>Problemin qoyuluşu · dataset-in təsviri · ilkin emal · metod və model · eksperiment parametrləri · nəticələr · səhv təhlili · tətbiq arxitekturası · məhdudiyyətlər və etik məsələlər · nəticə.</p>
+<div class="callout"><b>Təhlükəsizlik və etika:</b> şəxsi məlumatları icazəsiz toplamamaq, məxfi müraciətləri açıq repozitoriyaya yükləməmək, müəllif hüquqlarına riayət etmək və modelin səhvlərini hesabatda göstərmək tələb olunur.</div>
+</section>
+<footer class="footer">Mingəçevir Dövlət Universiteti · Riyaziyyat və İnformasiya texnologiyaları fakültəsi<br>Fəsil 15 — Təbii dilin emalı</footer>
+</main></div>
+<script>
+function processText(){const t=document.getElementById('rawtext').value.toLocaleLowerCase('az');const cleaned=t.replace(/[.,!?;:()"]/g,' ').replace(/\s+/g,' ').trim();const tokens=cleaned?cleaned.split(' '):[];const counts={};tokens.forEach(x=>counts[x]=(counts[x]||0)+1);document.getElementById('textresult').innerHTML='<b>Normallaşdırılmış mətn:</b> '+(cleaned||'—')+'<br><b>Tokenlər:</b> '+tokens.map(x=>'<span class="token">'+x+'</span>').join('')+'<br><b>Token sayı:</b> '+tokens.length+' · <b>Unikal token:</b> '+Object.keys(counts).length;}
+function drawAttention(v){document.getElementById('attnval').textContent=(v/100).toFixed(2);let a=v/100,rest=(1-a)/3;let names=['Mən','kitabı','tələbəyə','verdım'];let vals=[.1,a,.15,Math.max(0,1-a-.25)];let html=names.map((n,i)=>'<div style="margin:8px 0"><div style="display:flex;justify-content:space-between"><b>'+n+'</b><span>'+vals[i].toFixed(2)+'</span></div><div style="height:12px;background:#e2e9f5;border-radius:9px;overflow:hidden"><div style="height:100%;width:'+(vals[i]*100)+'%;background:linear-gradient(90deg,#2457d6,#11a7b5)"></div></div></div>').join('');document.getElementById('attnbars').innerHTML=html;}
+function sentimentDemo(){let t=document.getElementById('senttext').value.toLocaleLowerCase('az');let pos=['yaxşı','əla','möhtəşəm','sürətli','razı','təşəkkür','keyfiyyətli','sevdim'];let neg=['pis','zəif','gecik','narazı','problem','bərbad','çətin','işləmir'];let p=pos.filter(w=>t.includes(w)).length,n=neg.filter(w=>t.includes(w)).length;let label=p>n?'Müsbət':n>p?'Mənfi':'Neytral / qeyri-müəyyən';document.getElementById('sentresult').innerHTML='<b>Nəticə: '+label+'</b><br>Müsbət siqnal: '+p+' · Mənfi siqnal: '+n+'<br><small>Qayda əsaslı tədris demosudur; kontekst, ironiya və inkarı tam anlamır.</small>';}
+const detections=[['Avtomobil',.94,'#dce9ff'],['Piyada',.87,'#dcf5e9'],['Velosiped',.62,'#fff0d9'],['İt',.41,'#fce8e8']];
+function showBoxes(v){let th=v/100;document.getElementById('thval').textContent=th.toFixed(2);document.getElementById('boxes').innerHTML=detections.filter(d=>d[1]>=th).map(d=>'<div class="tile" style="border-color:'+d[2]+'"><b>'+d[0]+'</b><div style="font-size:1.5rem;font-weight:800;color:#2457d6">'+d[1].toFixed(2)+'</div><small>confidence</small></div>').join('')||'<p>Bu həddən yuxarı aşkarlama yoxdur.</p>';}
+function recommend(){let map={ai:'Python ilə Maşın Öyrənməsi → Dərin Öyrənmə əsasları',web:'HTML, CSS və JavaScript → REST API-lər',data:'Python Data Analysis → Statistik modelləşdirmə',security:'Şəbəkə təhlükəsizliyi → Anomaliya aşkarlanması'};document.getElementById('recresult').innerHTML='<b>Tövsiyə olunan ardıcıllıq:</b> '+map[document.getElementById('interest').value]+'<br><small>Demo qayda əsaslıdır; real tövsiyə sistemi istifadəçi davranışı və resurs xüsusiyyətlərindən öyrənir.</small>';}
+function zscore(){let x=+document.getElementById('xval').value,m=+document.getElementById('mean').value,s=+document.getElementById('std').value;if(!s||s<0){document.getElementById('zresult').textContent='Standart kənarlaşma sıfırdan böyük olmalıdır.';return;}let z=(x-m)/s;document.getElementById('zresult').innerHTML='<b>Z-score = '+z.toFixed(3)+'</b><br>'+ (Math.abs(z)>=3?'|z| ≥ 3: güclü anomaliya siqnalı ola bilər.':'|z| < 3: seçilmiş həddə görə güclü anomaliya siqnalı deyil.')+'<br><small>Bu hədd yalnız ilkin yoxlama üçündür; paylanma və domen konteksti vacibdir.</small>';}
+function routeRequest(){let t=document.getElementById('request').value.toLocaleLowerCase('az');let rules=[['Təqaüd / maliyyə',['təqaüd','ödəniş','maddi']],['Tədris',['dərs','imtahan','mühazirə','kredit','qiymət']],['Texniki problem',['şifrə','sistem','portal','internet','işləmir']]];let found=rules.find(r=>r[1].some(k=>t.includes(k)));document.getElementById('routeResult').innerHTML='<b>Demo kateqoriya:</b> '+(found?found[0]:'Digər / operator yoxlaması')+'<br><small>Real sistem etiketli dataset və təlim edilmiş model tələb edir.</small>';}
+function copyCode(id){let el=document.getElementById(id);navigator.clipboard.writeText(el.innerText).then(()=>alert('Kod köçürüldü.')).catch(()=>alert('Brauzer köçürməyə icazə vermədi; kodu əl ilə seçin.'));}
+
+const quizItems = [{"t": "single", "q": "NLP sistemində tokenləşdirmənin əsas funksiyası hansıdır?", "o": ["Mətni tokenlərə — söz, alt-söz və ya simvollara bölmək", "Modeli serverə yerləşdirmək", "Şəkildə obyektlərin koordinatlarını tapmaq"], "a": 0, "e": "Tokenləşdirmə mətnin sonrakı emal üçün kiçik vahidlərə ayrılmasıdır."}, {"t": "single", "q": "Obyekt aşkarlanması təsvir təsnifatından hansı xüsusiyyətinə görə fərqlənir?", "o": ["Obyektin sinfi ilə yanaşı yerləşmə sərhədlərini də qaytarır", "Yalnız təsvirin ümumi sinfini qaytarır", "Heç bir öyrədilmiş modeldən istifadə etmir"], "a": 0, "e": "Obyekt detektoru sinif etiketi və bounding box koordinatları yaradır."}, {"t": "multi", "q": "Mətnin ilkin emalı mərhələlərinə aid olanları seçin.", "o": ["Normallaşdırma", "Tokenləşdirmə", "Lemmatizasiya", "GPU-nun fiziki quraşdırılması"], "a": [0, 1, 2], "e": "Normallaşdırma, tokenləşdirmə və lemmatizasiya mətn emalında istifadə olunur; GPU quraşdırılması mətnin ilkin emalı deyil."}, {"t": "multi", "q": "Tövsiyə sistemlərinin keyfiyyətinə təsir edən amilləri seçin.", "o": ["İstifadəçi–obyekt qarşılıqlı əlaqələri", "Verilənlərin aktuallığı və keyfiyyəti", "Cold-start probleminin idarə edilməsi", "Monitorinqin tamamilə ləğvi"], "a": [0, 1, 2], "e": "Qarşılıqlı əlaqələr, məlumatın aktuallığı və cold-start strategiyaları tövsiyə keyfiyyətinə təsir edir."}, {"t": "tf", "q": "Self-attention mexanizmi ardıcıllıqdakı tokenlər arasında kontekst əlaqələrini modelləşdirə bilər.", "a": true, "e": "Self-attention hər tokenin digər tokenlərlə əlaqəsini çəkilərlə ifadə edir."}, {"t": "match", "q": "Anlayışları uyğun funksiyaları ilə əlaqələndirin.", "pairs": [["ASR", "Səsdən mətnə çevirmə"], ["Sentiment Analysis", "Mətnin emosional/münasibət istiqamətinin təhlili"], ["CNN", "Təsvirlərdə məkan xüsusiyyətlərinin öyrənilməsi"]], "e": "ASR nitqin tanınması, sentiment analysis mətn münasibətinin təhlili, CNN isə təsvir xüsusiyyətlərinin öyrənilməsi üçün istifadə olunur."}, {"t": "fill", "q": "Mətndə sözlərin və ya alt-sözlərin vahidlərə ayrılması ______ adlanır.", "a": "tokenləşdirmə", "e": "Bu proses tokenləşdirmə (tokenization) adlanır."}, {"t": "order", "q": "Mətn təsnifatı üçün tipik emal ardıcıllığını düzgün qurun.", "items": ["Xam mətnin qəbulu", "Normallaşdırma və tokenləşdirmə", "Vektorlaşdırma", "Modelin proqnoz verməsi"], "a": [0, 1, 2, 3], "e": "Əvvəl mətn qəbul edilir, sonra normallaşdırılıb tokenləşdirilir, vektora çevrilir və modelə ötürülür."}, {"t": "calc", "q": "WER = (S + D + I) / N. S=2, D=1, I=1, N=20 olduqda WER neçə faizdir?", "a": "20", "e": "WER=(2+1+1)/20=0.20, yəni 20%."}, {"t": "calc", "q": "Detektor 50 obyekt aşkarlayıb, onlardan 40-ı düzgün tapılıb. Precision neçə faizdir?", "a": "80", "e": "Precision=TP/(TP+FP)=40/50=0.80, yəni 80%."}];
+function renderQuiz(){
+ const area=document.getElementById('quizarea');
+ area.innerHTML=quizItems.map((q,i)=>{
+  let body='';
+  if(q.t==='single'||q.t==='multi'){
+   body=q.o.map((v,j)=>`<label style="display:block;margin:7px 0"><input type="${q.t==='single'?'radio':'checkbox'}" name="q${i}" value="${j}"> ${v}</label>`).join('');
+  } else if(q.t==='tf'){
+   body=`<label><input type="radio" name="q${i}" value="true"> Doğru</label><label style="margin-left:18px"><input type="radio" name="q${i}" value="false"> Yanlış</label>`;
+  } else if(q.t==='match'){
+   body='<div class="matchgrid">'+q.pairs.map((p,j)=>`<label style="display:block;margin:8px 0">${p[0]} <select name="q${i}_${j}"><option value="">Seçin</option>${q.pairs.map((x,k)=>`<option value="${k}">${x[1]}</option>`).join('')}</select></label>`).join('')+'</div>';
+  } else if(q.t==='fill'||q.t==='calc'){
+   body=`<input type="text" name="q${i}" placeholder="${q.t==='calc'?'Nəticəni daxil edin':'Cavabı daxil edin'}" style="max-width:420px;width:90%;padding:10px;border:1px solid #bdc9dc;border-radius:8px">`;
+  } else if(q.t==='order'){
+   body=q.items.map((v,j)=>`<label style="display:block;margin:7px 0">${j+1}. ${v} <select name="q${i}_${j}"><option value="">Mövqe</option>${q.items.map((x,k)=>`<option value="${k}">${k+1}</option>`).join('')}</select></label>`).join('');
+  }
+  const typeNames={single:'Bir düzgün cavab',multi:'Bir neçə düzgün cavab',tf:'Doğru / Yanlış',match:'Uyğunlaşdırma',fill:'Boşluğu doldur',order:'Ardıcıllıq',calc:'Hesablama və təhlil'};
+  return `<div class="quiz-q quizq" id="qq${i}" style="padding:14px;margin:14px 0;border:1px solid #dbe3ef;border-radius:12px"><span class="tag">${typeNames[q.t]}</span><p><b>${i+1}.</b> ${q.q}</p>${body}<div class="small muted hide" id="feedback${i}"></div><div class="small muted hide" id="fb${i}"></div></div>`;
+ }).join('');
+ area.onchange=updateProgress;
+ area.oninput=updateProgress;
+ updateProgress();
+}
+function isAnswered(q,i){
+ if(q.t==='match'||q.t==='order') return q.pairs?q.pairs.every((p,j)=>document.querySelector(`[name="q${i}_${j}"]`)?.value!==''):q.items.every((p,j)=>document.querySelector(`[name="q${i}_${j}"]`)?.value!=='');
+ if(q.t==='multi') return document.querySelectorAll(`input[name="q${i}"]:checked`).length>0;
+ return !!document.querySelector(`[name="q${i}"]:checked`) || !!(document.querySelector(`[name="q${i}"]`)?.value.trim());
+}
+function updateProgress(){
+ let n=quizItems.filter((q,i)=>isAnswered(q,i)).length;
+ const p=document.getElementById('qprogress'); if(p)p.style.width=(n/quizItems.length*100)+'%';
+}
+function gradeQuiz(){
+ let score=0,answered=0;
+ quizItems.forEach((q,i)=>{
+  let ok=false,answer='';
+  if(q.t==='single'){let x=document.querySelector(`input[name="q${i}"]:checked`);answered+=!!x;ok=!!x&&+x.value===q.a;answer='Düzgün cavab: '+q.o[q.a]+'.';}
+  if(q.t==='multi'){let xs=[...document.querySelectorAll(`input[name="q${i}"]:checked`)].map(x=>+x.value).sort();answered+=xs.length>0;ok=JSON.stringify(xs)===JSON.stringify([...q.a].sort());answer='Düzgün cavablar: '+q.a.map(k=>q.o[k]).join('; ')+'.';}
+  if(q.t==='tf'){let x=document.querySelector(`input[name="q${i}"]:checked`);answered+=!!x;ok=!!x&&(x.value==='true')===q.a;answer='Düzgün cavab: '+(q.a?'Doğru':'Yanlış')+'.';}
+  if(q.t==='match'){let xs=q.pairs.map((p,j)=>document.querySelector(`[name="q${i}_${j}"]`)?.value);answered+=xs.every(x=>x!=='');ok=xs.every((x,j)=>+x===j);answer='Uyğunluq: '+q.pairs.map(p=>p[0]+' — '+p[1]).join('; ')+'.';}
+  if(q.t==='fill'||q.t==='calc'){let x=document.querySelector(`[name="q${i}"]`)?.value.trim();answered+=!!x;let norm=v=>String(v).toLocaleLowerCase('az').replace(/[, ]/g,'').replace('%','');ok=!!x&&norm(x)===norm(q.a);answer='Düzgün cavab: '+q.a+(q.t==='calc'?'%':'')+'.';}
+  if(q.t==='order'){let xs=q.items.map((p,j)=>document.querySelector(`[name="q${i}_${j}"]`)?.value);answered+=xs.every(x=>x!=='');ok=xs.every((x,j)=>+x===j);answer='Düzgün ardıcıllıq: '+q.items.join(' → ')+'.';}
+  if(ok)score++;
+  let f=document.getElementById('feedback'+i)||document.getElementById('fb'+i);
+  f.classList.remove('hide');f.style.color=ok?'#14845b':'#a32e35';
+  f.innerHTML=(ok?'✓ Düzgün. ':'✗ Yanlış və ya natamam. ')+answer+'<br>'+q.e;
+ });
+ let pct=Math.round(score/quizItems.length*100);
+ document.getElementById('quizscore').innerHTML=`<b>Nəticə: ${score}/${quizItems.length} (${pct}%)</b><br>Cavablandırılıb: ${answered}/${quizItems.length}<br>${pct>=85?'Əla nəticə!':pct>=65?'Yaxşı nəticə. İzahları nəzərdən keçirin.':'Mövzuları təkrar oxuyun və yenidən cəhd edin.'}`;
+}
+function resetQuiz(){renderQuiz();document.getElementById('quizscore').textContent='Sualları cavablandırın.';document.getElementById('qprogress').style.width='0%';}
+drawAttention(65);showBoxes(60);renderQuiz();
+</script>
+<script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

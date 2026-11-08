@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fəsil 12. Süni neyron şəbəkələrinin arxitekturası</title>
+<style>
+:root{--navy:#14213d;--blue:#2563eb;--cyan:#0891b2;--purple:#7c3aed;--green:#059669;--orange:#ea580c;--red:#dc2626;--ink:#243047;--muted:#64748b;--paper:#f5f8fc;--line:#dce5f0}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.68 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(120deg,#102a56,#2457a6 55%,#0891b2);color:white;padding:42px max(22px,calc((100% - 1120px)/2))}
+header .tag{letter-spacing:.12em;text-transform:uppercase;font-size:.78rem;opacity:.85}h1{font-size:clamp(2rem,5vw,3.3rem);line-height:1.12;margin:.4rem 0 1rem}header p{max-width:850px;font-size:1.08rem}
+.layout{max-width:1180px;margin:auto;padding:24px;display:grid;grid-template-columns:265px minmax(0,1fr);gap:24px}
+nav{position:sticky;top:16px;align-self:start;background:white;border:1px solid var(--line);border-radius:16px;padding:18px;max-height:calc(100vh - 32px);overflow:auto}
+nav strong{display:block;margin-bottom:10px;color:var(--navy)}nav a{display:block;text-decoration:none;color:#40516b;padding:5px 8px;border-radius:7px;font-size:.9rem}nav a:hover{background:#eaf2ff;color:var(--blue)}
+main{min-width:0}.card{background:white;border:1px solid var(--line);border-radius:17px;padding:24px;margin:0 0 20px;box-shadow:0 5px 20px #18345b0a}
+h2{color:var(--navy);font-size:1.55rem;margin:0 0 14px}h3{color:#194b8c;margin:24px 0 8px;font-size:1.16rem}h4{margin:12px 0 5px;color:#334155}
+p{margin:.65rem 0} .lead{font-size:1.05rem;color:#42536b}
+.note{border-left:4px solid var(--cyan);background:#ecfeff;padding:13px 16px;border-radius:8px;margin:15px 0}
+.warn{border-left:4px solid var(--orange);background:#fff7ed;padding:13px 16px;border-radius:8px;margin:15px 0}
+.formula{background:#101d35;color:#e7f0ff;border-radius:12px;padding:17px 20px;margin:13px 0;overflow:auto;font:1.05rem/1.8 ui-monospace,Consolas,monospace}
+.small{font-size:.9rem;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}
+.tile{border:1px solid var(--line);border-radius:12px;padding:15px;background:linear-gradient(145deg,#fff,#f6f9ff)}
+.tile b{color:#174c91}.pill{display:inline-block;padding:3px 9px;border-radius:20px;background:#e8efff;color:#1d4ed8;font-size:.8rem;font-weight:700}
+button{border:0;background:var(--blue);color:white;padding:10px 15px;border-radius:9px;cursor:pointer;font-weight:650}button:hover{filter:brightness(.92)}button.secondary{background:#e8eef8;color:#18345b}button.green{background:var(--green)}
+input,select{padding:9px;border:1px solid #bdcbe0;border-radius:8px;font:inherit;max-width:100%}label{display:block;font-size:.9rem;color:#475569;margin:7px 0 3px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:.93rem}th,td{border:1px solid var(--line);padding:9px;text-align:left}th{background:#edf4ff;color:#18345b}
+svg{display:block;width:100%;max-width:100%;height:auto;max-height:320px;margin:0 auto;overflow:hidden}
+.diagram{display:block;width:100%;max-width:100%;min-width:0;overflow:hidden;background:linear-gradient(145deg,#f8fbff,#eef5ff);border:1px solid #d8e7fb;border-radius:14px;padding:clamp(8px,2vw,14px);margin:15px 0}
+.diagram svg{width:100%;height:auto;max-height:290px;object-fit:contain}
+.card{min-width:0;overflow:hidden}
+main,nav{min-width:0}
+table{display:block;max-width:100%;overflow-x:auto}
+.code,.formula{max-width:100%;overflow-x:auto;overflow-wrap:normal}
+@media(max-width:600px){.card{padding:16px}.diagram{padding:6px}.diagram svg{max-height:230px}h2{font-size:1.3rem}body{font-size:15px}}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:end}.controls>div{min-width:130px}
+.result{font-weight:700;color:#047857;background:#ecfdf5;padding:10px;border-radius:9px;margin-top:10px}
+.code{background:#0c1729;color:#dbeafe;border-radius:12px;padding:17px;overflow:auto;font: .9rem/1.65 ui-monospace,Consolas,monospace;white-space:pre}
+.quizq{border:1px solid var(--line);border-radius:12px;padding:15px;margin:13px 0}.quizq label{display:flex;gap:8px;align-items:flex-start}.feedback{font-size:.9rem;margin-top:8px}
+footer{text-align:center;color:var(--muted);padding:28px}
+@media(max-width:850px){.layout{grid-template-columns:1fr;padding:14px}nav{position:relative;top:auto;max-height:none}header{padding:30px 20px}}
+
+.concept-figure{padding:10px 12px 12px;background:#f7faff}
+.ann-concept-image{display:block;width:100%;height:auto;max-width:100%;max-height:none;object-fit:contain;border-radius:10px}
+.concept-figure figcaption{font-size:.88rem;line-height:1.5;color:#52647d;text-align:center;margin:9px 5px 2px}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style>
+</head>
+<body>
+<header><div class="tag">MDU · Riyaziyyat və İnformasiya texnologiyaları fakültəsi</div><h1>Fəsil 12. Süni neyron şəbəkələrinin arxitekturası</h1><p>Süni neyron şəbəkəsinin qatlarını, əlaqələrini, riyazi modelini və Python mühitində qurulmasını addım-addım öyrənirik.</p><div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="layout">
+<nav><strong>Fəsil 12 — Mündəricat</strong>
+<a href="#s121">12.1. Süni neyron şəbəkəsi anlayışı</a><a href="#s122">12.2. Süni neyron şəbəkələrinin yaranması və inkişafı</a><a href="#s123">12.3. Giriş qatı (Input Layer)</a><a href="#s124">12.4. Gizli qatlar (Hidden Layers)</a><a href="#s125">12.5. Çıxış qatı (Output Layer)</a><a href="#s126">12.6. Neyronlararası əlaqələr və çəkilər</a><a href="#s127">12.7. Birqatlı və çoxqatlı şəbəkələr</a><a href="#s128">12.8. Feedforward Neural Network</a><a href="#s129">12.9. Şəbəkə arxitekturasının seçilməsi</a><a href="#s1210">12.10. Neyron sayının və qatların müəyyənləşdirilməsi</a><a href="#s1211">12.11. Forward Propagation</a><a href="#s1212">12.12. Süni neyron şəbəkəsinin Python ilə qurulması</a><a href="#s1213">12.13. TensorFlow/Keras və PyTorch-da şəbəkə yaradılması</a><a href="#tasks">Praktiki tapşırıqlar</a><a href="#quiz">Özünü yoxlama sualları</a><a href="#refs">İstifadə olunan ədəbiyyat</a><a href="#lab">Laboratoriya işi №12</a></nav>
+<main>
+<section class="card"><span class="pill">Öyrənmə məqsədləri</span><h2>Fəslin məqsədi və təlim nəticələri</h2><p class="lead">Bu fəslin məqsədi çoxqatlı süni neyron şəbəkəsinin quruluşunu, qatların funksiyalarını, parametrlərin riyazi mənasını və verilənlərin şəbəkədən keçmə mexanizmini dərindən izah etməkdir.</p>
+<div class="grid"><div class="tile"><b>Anlayış</b><p>ANN, neuron, layer, weight, bias anlayışlarını izah edir.</p></div><div class="tile"><b>Riyaziyyat</b><p>Çəkili cəm, aktivləşmə, matris vurması və forward propagation hesablayır.</p></div><div class="tile"><b>Arxitektura</b><p>Giriş, gizli və çıxış qatlarını layihələndirir.</p></div><div class="tile"><b>Proqramlaşdırma</b><p>NumPy, Keras və PyTorch ilə MLP qurur.</p></div></div></section>
+
+<section class="card" id="s121"><h2>12.1. Süni neyron şəbəkəsi anlayışı</h2>
+<p>Süni neyron şəbəkəsi (Artificial Neural Network — ANN) verilənlərdəki mürəkkəb əlaqələri öyrənmək üçün bir-biri ilə çəkili əlaqələr vasitəsilə birləşdirilmiş hesablama vahidlərindən — süni neyronlardan təşkil olunan hesablama modelidir. Şəbəkə giriş verilənlərini qəbul edir, onları qatlar üzrə emal edir və çıxışda proqnoz, sinif və ya başqa qiymət formalaşdırır.</p>
+<p>Bioloji neyronlardan ilhamlansa da, süni neyron bioloji hüceyrənin tam surəti deyil. O, riyazi əməliyyatlar yerinə yetirən abstrakt modeldir. Əsas ideya çoxsaylı sadə hesablamaları birləşdirərək mürəkkəb funksiyanı yaxınlaşdırmaqdır.</p>
+<figure class="diagram concept-figure">
+<img src="images/ann_umumi_qurulus_ve_hesablama.png"
+     alt="Süni neyron şəbəkəsinin giriş qatı, gizli qat, çıxış qatı, neyronlararası çəkilər, bias, aktivləşmə funksiyaları və hesablanma nümunəsi"
+     class="ann-concept-image">
+<figcaption>Şəkil 12.1. Süni neyron şəbəkəsinin ümumi quruluşu və hesablanma prosesi. Oxlar siqnalın irəli istiqamətdə ötürülməsini, w işarələri çəkiləri, b işarələri bias parametrlərini göstərir.</figcaption>
+</figure>
+<p>Şəbəkənin əsas hissələri: giriş qatı, bir və ya bir neçə gizli qat, çıxış qatı, çəkilər, sürüşmə əmsalları (bias) və aktivləşmə funksiyalarıdır. Təlim zamanı çəkilər və bias qiymətləri elə yenilənir ki, şəbəkənin proqnozu hədəf qiymətə yaxınlaşsın.</p>
+<h3>Şəbəkəni məlumat emal edən sistem kimi düşünək</h3>
+<p>Şəbəkənin işi üç mərhələdə baş verir. Birinci mərhələdə giriş verilənləri eyni ölçülü ədədi vektora çevrilir. İkinci mərhələdə hər neyron əvvəlki qatın qiymətlərini çəkilərlə vurur, toplayır və bias əlavə edir. Üçüncü mərhələdə aktivləşmə funksiyası nəticəni dəyişdirərək növbəti qata ötürür. Çıxış qatında isə tapşırığa uyğun proqnoz alınır. Bu prosesin təkrarlanması modelin mürəkkəb münasibətləri ifadə etməsinə imkan verir.</p>
+<div class="note"><b>Sadə analogiya:</b> Giriş qatı suallara verilən ilkin cavabları, gizli qatlar həmin cavablar arasındakı əlaqələrin emalını, çıxış qatı isə yekun qərarı xatırladır. Analogiya yalnız izah üçündür; neyron şəbəkəsi insan kimi düşünmür, parametrik funksiyanı hesablayır.</div>
+<h3>Arxitektura, parametr və öyrənmə fərqi</h3>
+<p><b>Arxitektura</b> qatların necə təşkil edildiyini, <b>parametrlər</b> çəkilər və bias qiymətlərini, <b>öyrənmə</b> isə bu parametrlərin verilənlərə əsasən optimallaşdırılmasını ifadə edir. Eyni arxitektura müxtəlif başlanğıc çəkiləri və təlim verilənləri ilə fərqli nəticələr verə bilər.</p>
+<div class="formula">ŷ = f(x; θ)       θ = {W¹, b¹, W², b², …, Wᴸ, bᴸ}</div>
+<p>Burada <b>x</b> giriş vektoru, <b>ŷ</b> proqnoz, <b>θ</b> isə şəbəkənin öyrənilən parametrlər toplusudur. Arxitektura qatların sayını və hər qatda neyronların sayını, əlaqələrin tipini və aktivləşmə funksiyalarını müəyyən edir.</p></section>
+
+<section class="card" id="s122"><h2>12.2. Süni neyron şəbəkələrinin yaranması və inkişafı</h2>
+<p>Süni neyron şəbəkələrinin inkişafı riyazi məntiq, hesablama nəzəriyyəsi, neyrofiziologiya və kompüter texnologiyalarının kəsişməsində formalaşıb. 1943-cü ildə McCulloch və Pitts neyronun məntiqi-riyazi modelini təklif etdilər. 1950-ci illərdə öyrənə bilən sadə modellər, 1980-ci illərdə çoxqatlı şəbəkələrin effektiv təlimi, 2000-ci illərdən sonra isə böyük verilənlər və GPU hesablamaları sahənin inkişafını sürətləndirdi.</p>
+<div class="diagram"><svg viewBox="0 0 850 190" aria-label="Neyron şəbəkələrinin inkişaf zaman xətti"><line x1="55" y1="90" x2="795" y2="90" stroke="#94a3b8" stroke-width="5"/><g font-size="13" text-anchor="middle"><circle cx="90" cy="90" r="11" fill="#0284c7"/><text x="90" y="45" font-weight="bold" fill="#075985">1943</text><text x="90" y="125">Riyazi neyron</text><circle cx="265" cy="90" r="11" fill="#7c3aed"/><text x="265" y="45" font-weight="bold" fill="#5b21b6">1958</text><text x="265" y="125">Perseptron</text><circle cx="440" cy="90" r="11" fill="#ea580c"/><text x="440" y="45" font-weight="bold" fill="#c2410c">1986</text><text x="440" y="125">Backpropagation</text><circle cx="615" cy="90" r="11" fill="#059669"/><text x="615" y="45" font-weight="bold" fill="#047857">2012</text><text x="615" y="125">Dərin öyrənmə sıçrayışı</text><circle cx="780" cy="90" r="11" fill="#db2777"/><text x="780" y="45" font-weight="bold" fill="#be185d">2020+</text><text x="780" y="125">Böyük neyron modelləri</text></g></svg></div>
+<p>İnkişaf xətti sadəcə tarixlərdən ibarət deyil: hər mərhələdə hesablama gücü, verilənlərin həcmi, optimallaşdırma üsulları və tətbiq tələbləri dəyişmişdir. Müasir arxitektura seçimi bu tarixi təcrübənin nəticəsidir.</p>
+<div class="note"><b>Əsas fərq:</b> “Dərin” şəbəkə gizli qatların çoxluğu ilə xarakterizə olunur. Qatların sayının artırılması avtomatik olaraq daha yaxşı model demək deyil; əlavə qatlar daha çox parametr, hesablama xərci və overfitting riski yarada bilər.</div></section>
+
+<section class="card" id="s123"><h2>12.3. Giriş qatı (Input Layer)</h2>
+<p>Giriş qatı verilənlərin şəbəkəyə daxil olduğu ilk mərhələdir. Bu qat adətən mürəkkəb öyrənmə hesablaması aparmır; giriş xüsusiyyətlərini (features) növbəti qata ötürür. Hər giriş neyronu bir xüsusiyyətə və ya əvvəlcədən müəyyən edilmiş giriş komponentinə uyğun gəlir.</p>
+<h3>Giriş ölçüsünün müəyyən edilməsi</h3><p>Əgər dataset-də 5 xüsusiyyət varsa, tam əlaqəli şəbəkənin giriş ölçüsü 5 olur. Məsələn, tələbənin nəticəsini proqnozlaşdırmaq üçün davamiyyət, aralıq bal, laboratoriya balı, müstəqil iş balı və öyrənmə saatı istifadə edilirsə, giriş vektoru belədir:</p>
+<div class="formula">x = [x₁, x₂, x₃, x₄, x₅]ᵀ ∈ ℝ⁵</div>
+<table><tr><th>Xüsusiyyət</th><th>Simvol</th><th>Nümunə qiymət</th><th>Ölçü vahidi</th></tr><tr><td>Davamiyyət</td><td>x₁</td><td>0.90</td><td>0–1</td></tr><tr><td>Aralıq imtahanı</td><td>x₂</td><td>78</td><td>bal</td></tr><tr><td>Laboratoriya</td><td>x₃</td><td>85</td><td>bal</td></tr><tr><td>Müstəqil iş</td><td>x₄</td><td>80</td><td>bal</td></tr><tr><td>Öyrənmə saatı</td><td>x₅</td><td>6</td><td>saat</td></tr></table>
+<p>Bu xüsusiyyətlərin diapazonları fərqlidir. Buna görə çox vaxt standartlaşdırma və ya normallaşdırma tətbiq edilir. Bu əməliyyat şəbəkənin optimallaşdırılmasını asanlaşdıra bilər. Məsələn, davamiyyət 0–1 aralığında, imtahan balı 0–100 aralığında, öyrənmə saatı isə 0–15 aralığında ola bilər. Miqyası böyük olan sütun bəzi optimallaşdırma mərhələlərində gradientin istiqamətinə və addım ölçüsünə qeyri-mütənasib təsir göstərə bilər.</p>
+<h3>Giriş ölçüsü və tensor forması</h3>
+<p>Bir müşahidə üçün giriş forması (5,), 100 müşahidədən ibarət mini-batch üçün isə (100, 5) olur. Burada birinci ölçü müşahidələrin sayını, ikinci ölçü hər müşahidədəki xüsusiyyətlərin sayını göstərir. Keras-da <code>Input(shape=(5,))</code> yazılışı bir müşahidənin 5 xüsusiyyət daşıdığını bildirir; batch ölçüsü adətən avtomatik idarə olunur.</p>
+<div class="note"><b>Data leakage xəbərdarlığı:</b> Orta qiymət və standart kənarlaşma bütün dataset-dən deyil, yalnız train hissəsindən hesablanmalıdır. Əks halda test məlumatı dolayı yolla təlim mərhələsinə sızır və modelin real ümumiləşdirmə keyfiyyəti olduğundan yüksək görünə bilər.</div>
+<div class="formula">xᵢ' = (xᵢ − μᵢ) / σᵢ       (standartlaşdırma)</div>
+<p>Burada μᵢ xüsusiyyətin orta qiyməti, σᵢ standart kənarlaşmasıdır. Bu statistik göstəricilər yalnız təlim verilənlərindən hesablanmalı, sonra validation/test verilənlərinə tətbiq edilməlidir.</p></section>
+
+<section class="card" id="s124"><h2>12.4. Gizli qatlar (Hidden Layers)</h2>
+<p>Gizli qatlar girişdən alınan məlumatı çəkili kombinasiyalar və qeyri-xətti aktivləşmə funksiyaları vasitəsilə emal edir. “Gizli” sözü bu qatların nəticələrinin adətən birbaşa istifadəçiyə göstərilməməsini bildirir; bu qatlar şəbəkənin daxili təqdimatlarını formalaşdırır.</p>
+<p>Bir gizli qat sadə xüsusiyyət kombinasiyalarını, sonrakı qatlar isə həmin kombinasiyalardan daha mürəkkəb nümunələri öyrənə bilər. Məsələn, təsvir emalında ilkin qatlar kənar və tekstura kimi sadə nümunələrə, daha dərin qatlar obyekt hissələrinə və bütöv obyektlərə həssas ola bilər. Bu, ümumi izahdır; konkret şəbəkədə öyrənilən təqdimatlar verilənlərdən asılıdır.</p>
+<div class="formula">a⁽ˡ⁾ = φ(z⁽ˡ⁾),   z⁽ˡ⁾ = W⁽ˡ⁾a⁽ˡ⁻¹⁾ + b⁽ˡ⁾</div>
+<p>Burada l qatın indeksidir; a⁽ˡ⁻¹⁾ əvvəlki qatın çıxışı, W⁽ˡ⁾ çəkilər matrisi, b⁽ˡ⁾ bias vektoru, φ aktivləşmə funksiyasıdır. Gizli qatların əsas gücü xətti olmayan əlaqələri modelləşdirməkdir.</p>
+<h3>Bir gizli neyronun hesablanması</h3>
+<p>Tutaq ki, iki giriş qiyməti x₁=2 və x₂=3, çəkilər w₁=0.4 və w₂=−0.2, bias b=0.1-dir. Neyron əvvəlcə z=2×0.4+3×(−0.2)+0.1=−0.1 hesablayır. ReLU seçilərsə a=max(0,−0.1)=0 alınır. Deməli, həmin neyron bu giriş kombinasiyası üçün növbəti qata sıfır aktivləşmə ötürür. Başqa giriş qiymətlərində nəticə fərqli ola bilər.</p>
+<div class="formula">z = 0.4(2) − 0.2(3) + 0.1 = −0.1<br>a = ReLU(z) = max(0, z) = 0</div>
+<p>Gizli qatların sayı dərinliyi, hər qatdakı neyronların sayı isə eni müəyyən edir. Dərinlik artdıqca ardıcıl transformasiyaların sayı, en artdıqca hər mərhələdə paralel öyrənilən xüsusiyyət kombinasiyalarının sayı artır. Bu artımın faydası validation nəticələri ilə yoxlanmalıdır.</p>
+<div class="grid"><div class="tile"><b>1 gizli qat</b><p>Bir qeyri-xətti transformasiya. Bəzi kompakt məsələlər üçün kifayət edə bilər.</p></div><div class="tile"><b>Bir neçə gizli qat</b><p>Hiyerarxik xüsusiyyətlərin öyrənilməsi. Daha çox parametr və hesablama tələb edə bilər.</p></div><div class="tile"><b>Çox geniş qat</b><p>Eyni dərinlikdə neyron sayını artırır; yaddaş və overfitting riskini yüksəldə bilər.</p></div></div></section>
+
+<section class="card" id="s125"><h2>12.5. Çıxış qatı (Output Layer)</h2>
+<p>Çıxış qatı məsələnin növünə uyğun proqnoz formalaşdırır. Çıxış neyronlarının sayı və aktivləşmə funksiyası hədəf dəyişənin quruluşundan asılıdır.</p>
+<table><tr><th>Məsələ</th><th>Çıxış neyronu</th><th>Tipik aktivləşmə</th><th>Şərh</th></tr><tr><td>İkili təsnifat</td><td>1</td><td>Sigmoid</td><td>0–1 aralığında ehtimal</td></tr><tr><td>Çoxsinifli təsnifat</td><td>K sinif</td><td>Softmax</td><td>Sinif ehtimalları cəmi 1</td></tr><tr><td>Reqressiya</td><td>1 və ya hədəf sayı</td><td>Linear</td><td>Davamlı qiymət</td></tr><tr><td>Çoxçıxışlı reqressiya</td><td>m</td><td>Adətən linear</td><td>m hədəf dəyişən</td></tr></table>
+<div class="formula">σ(z) = 1 / (1 + e⁻ᶻ)       Softmax(zᵢ) = eᶻⁱ / Σⱼ eᶻʲ</div>
+<p>Softmax çıxışları ehtimal kimi şərh edilir, lakin bu ehtimalların kalibrlənməsi ayrıca yoxlanmalıdır. Reqressiyada linear çıxış mənfi və müsbət qiymətlərə imkan verir; hədəf diapazonu məhdud olduqda başqa çıxış transformasiyası seçilə bilər.</p></section>
+
+<section class="card" id="s126"><h2>12.6. Neyronlararası əlaqələr və çəkilər</h2>
+<p>Əlaqə bir neyronun çıxışının növbəti neyrona ötürülməsini təmin edir. Çəki (weight) ötürülən siqnalın təsirini miqyaslandırır. Müsbət çəki əlaqənin həmin giriş artdıqda cəmi artırdığını, mənfi çəki isə azaltdığını göstərir. Lakin çəkinin özü səbəb-nəticə əlaqəsi və ya müstəqil xüsusiyyət əhəmiyyəti kimi şərh edilməməlidir; digər çəkilər və verilənlərin miqyası da nəzərə alınmalıdır.</p>
+<div class="formula">z = Σᵢ₌₁ⁿ wᵢxᵢ + b = wᵀx + b</div>
+<p>Burada xᵢ giriş, wᵢ uyğun çəki, b bias, z isə aktivləşmədən əvvəlki xətti birləşmədir. Bias girişlər sıfır olduqda belə neyronun aktivləşmə sərhədini tənzimləməyə imkan verir.</p>
+<h3>İnteraktiv çəkili cəm hesablayıcısı</h3>
+<div class="controls"><div><label>x₁</label><input id="x1" type="number" value="0.8" step=".1"></div><div><label>w₁</label><input id="w1" type="number" value="0.5" step=".1"></div><div><label>x₂</label><input id="x2" type="number" value="0.4" step=".1"></div><div><label>w₂</label><input id="w2" type="number" value="-0.3" step=".1"></div><div><label>Bias (b)</label><input id="bias" type="number" value="0.2" step=".1"></div><div><button onclick="calcSum()">Hesabla</button></div></div><div id="sumResult" class="result">z = 0.48</div>
+<p class="small">Nümunə: z = 0.8×0.5 + 0.4×(−0.3) + 0.2 = 0.48. Dəyərləri dəyişərək hər girişin və çəkisinin yekun nəticəyə təsirini müşahidə edin.</p>
+<h3>Parametrlərin sayı</h3><p>İki tam əlaqəli qat arasında n giriş və m çıxış neyronu olduqda, bias daxil parametrlərin sayı:</p><div class="formula">P = n × m + m = (n + 1)m</div>
+<p>Çünki hər çıxış neyronunun n çəkisi və bir bias parametri var.</p></section>
+
+<section class="card" id="s127"><h2>12.7. Birqatlı və çoxqatlı şəbəkələr</h2>
+<p>Birqatlı perseptron girişdən çıxışa bir hesablama qatına malikdir (giriş qatı adətən öyrənilən qat kimi sayılmır). O, xətti separasiya olunan məsələləri həll edə bilir. Çoxqatlı perseptron (MLP) isə bir və ya daha çox gizli qat əlavə etməklə qeyri-xətti qərar sərhədlərini öyrənə bilir.</p>
+<div class="grid"><div class="tile"><b>Birqatlı model</b><svg viewBox="0 0 260 130"><g fill="#38bdf8"><circle cx="35" cy="35" r="12"/><circle cx="35" cy="95" r="12"/></g><g fill="#34d399"><circle cx="220" cy="65" r="15"/></g><g stroke="#94a3b8" stroke-width="2"><path d="M47 35L205 65M47 95L205 65"/></g><text x="35" y="122" font-size="11" text-anchor="middle">Giriş</text><text x="220" y="100" font-size="11" text-anchor="middle">Çıxış</text></svg><p>Sadə və az parametrli; XOR kimi xətti ayrılmayan nümunələr üçün kifayət etmir.</p></div><div class="tile"><b>Çoxqatlı model</b><svg viewBox="0 0 260 130"><g fill="#38bdf8"><circle cx="25" cy="35" r="10"/><circle cx="25" cy="95" r="10"/></g><g fill="#a78bfa"><circle cx="115" cy="25" r="10"/><circle cx="115" cy="65" r="10"/><circle cx="115" cy="105" r="10"/></g><g fill="#34d399"><circle cx="225" cy="65" r="14"/></g><g stroke="#a5b4c7" stroke-width="1.5"><path d="M35 35L105 25M35 35L105 65M35 35L105 105M35 95L105 25M35 95L105 65M35 95L105 105M125 25L211 65M125 65L211 65M125 105L211 65"/></g></svg><p>Gizli qatlar qeyri-xətti transformasiyalar öyrənir; arxitektura daha çevikdir.</p></div></div>
+<p>XOR nümunəsində girişlər (0,0), (0,1), (1,0), (1,1) üçün çıxışlar 0,1,1,0-dır. Bu nöqtələr bir düz xəttlə iki sinfə ayrıla bilmədiyindən tək xətti perseptron problemi həll edə bilmir. Gizli qat və qeyri-xətti aktivləşmə ilə MLP uyğun qərar sərhədi yarada bilər.</p></section>
+
+<section class="card" id="s128"><h2>12.8. Feedforward Neural Network</h2>
+<p>Feedforward Neural Network (irəli istiqamətli neyron şəbəkəsi) məlumatın girişdən çıxışa doğru, dövrəvi geri əlaqə olmadan ötürüldüyü arxitekturadır. Hər qatın çıxışı növbəti qatın girişinə çevrilir. MLP bu ailənin geniş yayılmış nümunəsidir.</p>
+<div class="diagram"><svg viewBox="0 0 760 240" aria-label="Feedforward məlumat axını"><g font-size="14" text-anchor="middle"><text x="80" y="25" fill="#075985" font-weight="bold">Input</text><text x="275" y="25" fill="#6d28d9" font-weight="bold">Hidden 1</text><text x="475" y="25" fill="#6d28d9" font-weight="bold">Hidden 2</text><text x="675" y="25" fill="#047857" font-weight="bold">Output</text></g>
+<g fill="#38bdf8"><circle cx="80" cy="80" r="16"/><circle cx="80" cy="150" r="16"/><circle cx="80" cy="210" r="16"/></g><g fill="#a78bfa"><circle cx="275" cy="65" r="16"/><circle cx="275" cy="120" r="16"/><circle cx="275" cy="175" r="16"/><circle cx="275" cy="220" r="16"/><circle cx="475" cy="80" r="16"/><circle cx="475" cy="150" r="16"/><circle cx="475" cy="210" r="16"/></g><g fill="#34d399"><circle cx="675" cy="105" r="16"/><circle cx="675" cy="185" r="16"/></g>
+<g stroke="#94a3b8" opacity=".7" stroke-width="1.3"><path d="M96 80L259 65M96 80L259 120M96 80L259 175M96 80L259 220M96 150L259 65M96 150L259 120M96 150L259 175M96 150L259 220M96 210L259 65M96 210L259 120M96 210L259 175M96 210L259 220M291 65L459 80M291 65L459 150M291 65L459 210M291 120L459 80M291 120L459 150M291 120L459 210M291 175L459 80M291 175L459 150M291 175L459 210M291 220L459 80M291 220L459 150M291 220L459 210M491 80L659 105M491 80L659 185M491 150L659 105M491 150L659 185M491 210L659 105M491 210L659 185"/></g></svg></div>
+<p>Feedforward arxitekturada iki anlayışı fərqləndirin: <b>irəli yayılma</b> proqnozun hesablanmasıdır; <b>backpropagation</b> isə xəta funksiyasının törəmələrini zəncir qaydası ilə geriyə hesablayaraq parametrlərin yenilənməsi üçün gradientləri tapır. Təlim dövründə bu iki proses optimizatorla birlikdə işləyir.</p></section>
+
+<section class="card" id="s129"><h2>12.9. Şəbəkə arxitekturasının seçilməsi</h2>
+<p>Arxitektura seçimi məsələnin məqsədindən, verilənlərin ölçüsündən və strukturundan, hesablamanın mövcud resurslarından, gecikmə tələbindən və modelin izaholunma ehtiyacından asılıdır. Tabulyar verilənlərdə MLP faydalı başlanğıc ola bilər, lakin ağac əsaslı metodlar da güclü müqayisə bazasıdır. Təsvirlər üçün CNN, ardıcıl verilənlər üçün RNN/LSTM/Transformer tipli arxitekturalar nəzərdən keçirilə bilər.</p>
+<table><tr><th>Verilən tipi</th><th>Namizəd arxitektura</th><th>Əsas fikir</th></tr><tr><td>Tabulyar</td><td>MLP</td><td>Feature vektoru qatlara ötürülür</td></tr><tr><td>Təsvir</td><td>CNN</td><td>Məkan qonşuluğu və lokal filtrlər</td></tr><tr><td>Zaman sırası</td><td>LSTM / Transformer</td><td>Ardıcıllıq və zaman asılılıqları</td></tr><tr><td>Mətn</td><td>Transformer</td><td>Diqqət mexanizmi ilə kontekst</td></tr></table>
+<h3>Seçim üçün qərar ardıcıllığı</h3><ol><li>Problemi təsnifat, reqressiya və ya başqa tapşırıq kimi müəyyən edin.</li><li>Verilənlərin formasını və ölçüsünü araşdırın.</li><li>Sadə baseline model qurun.</li><li>Validation nəticələrinə əsasən arxitekturanı dəyişin.</li><li>Parametr sayı, hesablama vaxtı və ümumiləşdirmə keyfiyyətini birlikdə qiymətləndirin.</li><li>Son test dəstini yalnız yekun qiymətləndirmə üçün saxlayın.</li></ol>
+<div class="warn">Ən dərin və ən geniş şəbəkə həmişə ən yaxşı seçim deyil. Model mürəkkəbliyi verilənlərin həcmi və tapşırığın çətinliyi ilə əsaslandırılmalıdır.</div></section>
+
+<section class="card" id="s1210"><h2>12.10. Neyron sayının və qatların müəyyənləşdirilməsi</h2>
+<p>Gizli qatların və neyronların sayı üçün bütün məsələlərə uyğun universal düstur yoxdur. Bu hiperparametrlər validation nəticələri, hesablama büdcəsi və modelin davranışı əsasında seçilir. Kiçik modeldən başlayaraq tədricən genişləndirmək praktik strategiyadır.</p>
+<h3>İnteraktiv arxitektura qurucusu</h3><div class="controls"><div><label>Giriş neyronları</label><input id="nin" type="number" min="1" max="12" value="4"></div><div><label>Gizli qat 1</label><input id="h1" type="number" min="0" max="20" value="6"></div><div><label>Gizli qat 2</label><input id="h2" type="number" min="0" max="20" value="4"></div><div><label>Çıxış neyronları</label><input id="nout" type="number" min="1" max="12" value="2"></div><div><button onclick="drawArch()">Arxitekturanı qur</button></div></div><div class="diagram" id="archDiagram"></div><div id="paramResult" class="result"></div>
+<p>İki gizli qatlı tam əlaqəli şəbəkə üçün parametr sayı qat-qat hesablanır. Məsələn, 4→6→4→2 arxitekturasında:</p><div class="formula">P = (4+1)×6 + (6+1)×4 + (4+1)×2 = 30 + 28 + 10 = 68</div>
+<p>Bu say öyrənilən çəkilər və bias-ları əhatə edir. Aktivləşmə funksiyasının özündə öyrənilən parametr yoxdursa, o, parametr sayına daxil edilmir.</p>
+<h3>Hesablamanın mənası</h3>
+<p>4→6 keçidində 4 girişin hər biri 6 neyronun hər biri ilə əlaqələndirilir: 4×6=24 çəki yaranır. Hər 6 neyronun ayrıca bir bias-ı olduğundan 6 parametr də əlavə edilir. Beləliklə, həmin qat 30 parametrə malikdir. Növbəti qat üçün eyni qayda tətbiq edilir. Bu hesab modelin yaddaş tələbatını təxmin etməyə kömək edir.</p>
+<p>Parametr sayının çox olması modelin mütləq daha keyfiyyətli olacağı demək deyil. Parametrlərin sayı təlim nümunələrinin sayına nisbətən həddən artıq böyük olduqda overfitting riski yüksələ bilər. Bununla belə, risk yalnız parametr sayından deyil, verilənlərin müxtəlifliyindən, regularization-dan və təlim strategiyasından da asılıdır.</p></section>
+
+<section class="card" id="s1211"><h2>12.11. Forward Propagation</h2>
+<p>Forward Propagation (irəli yayılma) giriş verilənlərinin şəbəkə qatlarından ardıcıl keçirilməsi və çıxış proqnozunun hesablanması prosesidir. Hər qatda əvvəlcə xətti kombinasiya, sonra aktivləşmə funksiyası tətbiq olunur.</p>
+<div class="formula">a⁽⁰⁾ = x<br>z⁽¹⁾ = W⁽¹⁾a⁽⁰⁾ + b⁽¹⁾       a⁽¹⁾ = φ(z⁽¹⁾)<br>z⁽²⁾ = W⁽²⁾a⁽¹⁾ + b⁽²⁾       a⁽²⁾ = φ(z⁽²⁾)<br>ŷ = g(W⁽ᴸ⁾a⁽ᴸ⁻¹⁾ + b⁽ᴸ⁾)</div>
+<p>Burada g çıxış qatının aktivləşməsidir. Vektor-matris yazılışı çoxsaylı neyronların hesablamasını kompakt şəkildə ifadə edir.</p>
+<h3>Forward propagation zamanı ölçülərin uyğunluğu</h3>
+<p>Əgər əvvəlki qatın çıxışı 1×n ölçülü sətir vektoru, növbəti qatda m neyron varsa, çəkilər matrisi n×m, bias vektoru isə m ölçülü olur. Vurma nəticəsi 1×m ölçülü vektor verir. Bu ölçü uyğunluğu proqramlaşdırmada ən çox rast gəlinən səhvləri aşkar etməyə kömək edir.</p>
+<table><tr><th>Obyekt</th><th>Ölçü</th><th>Məzmun</th></tr><tr><td>a⁽ˡ⁻¹⁾</td><td>1×n</td><td>Əvvəlki qatın çıxışı</td></tr><tr><td>W⁽ˡ⁾</td><td>n×m</td><td>Əlaqələrin çəkiləri</td></tr><tr><td>b⁽ˡ⁾</td><td>1×m</td><td>Hər neyron üçün bias</td></tr><tr><td>z⁽ˡ⁾</td><td>1×m</td><td>Aktivləşmədən əvvəlki qiymətlər</td></tr><tr><td>a⁽ˡ⁾</td><td>1×m</td><td>Aktivləşmədən sonrakı çıxış</td></tr></table>
+<h3>İki girişli, iki neyronlu gizli qat nümunəsi</h3>
+<p>Giriş x=[1,2]ᵀ, çəkilər matrisi W=[[0.5,−0.2],[0.3,0.8]], bias b=[0.1,−0.1]ᵀ olsun. Onda:</p>
+<div class="formula">z₁ = 0.5×1 + (−0.2)×2 + 0.1 = 0.2<br>z₂ = 0.3×1 + 0.8×2 − 0.1 = 1.8</div>
+<p>ReLU tətbiq etdikdə a=[max(0,0.2), max(0,1.8)]ᵀ=[0.2,1.8]ᵀ alınır. Sonrakı qat bu vektoru yeni çəkilər və bias ilə emal edir.</p>
+<h3>İnteraktiv ReLU/Sigmoid hesablayıcısı</h3><div class="controls"><div><label>z qiyməti</label><input id="actZ" type="number" value="1.8" step=".1"></div><div><label>Aktivləşmə</label><select id="actType"><option value="relu">ReLU</option><option value="sigmoid">Sigmoid</option><option value="tanh">Tanh</option></select></div><div><button onclick="calcAct()">Hesabla</button></div></div><div class="result" id="actResult">Nəticə: ReLU(1.8) = 1.8</div>
+<p>Aktivləşmə funksiyası olmadan ardıcıl xətti qatların kompozisiyası yenə xətti funksiyadır. Buna görə gizli qatlarda qeyri-xətti aktivləşmə şəbəkənin qeyri-xətti əlaqələri öyrənməsi üçün vacibdir.</p></section>
+
+<section class="card" id="s1212"><h2>12.12. Süni neyron şəbəkəsinin Python ilə qurulması</h2>
+<p>Aşağıdakı nümunə NumPy ilə iki girişli və bir gizli qatlı kiçik MLP-nin irəli yayılmasını sıfırdan göstərir. Məqsəd kitabxana çağırışından əvvəl matris əməliyyatlarının məntiqini anlamaqdır. Nümunə təlim prosesi deyil; yalnız forward pass hesablayır.</p>
+<div class="code">import numpy as np
+
+# İki müşahidə, hər birində iki xüsusiyyət
+X = np.array([[1.0, 2.0],
+              [0.5, 1.0]])
+
+# Giriş -> gizli qat: 2 giriş, 3 gizli neyron
+W1 = np.array([[0.2, 0.4, -0.5],
+               [0.3, -0.1, 0.8]])
+b1 = np.array([0.1, 0.0, 0.2])
+
+# Gizli -> çıxış: 3 gizli neyron, 1 çıxış
+W2 = np.array([[0.7], [-0.3], [0.5]])
+b2 = np.array([0.05])
+
+def relu(z):
+    return np.maximum(0, z)
+
+# Forward propagation
+Z1 = X @ W1 + b1
+A1 = relu(Z1)
+Z2 = A1 @ W2 + b2
+
+print("Gizli qat aktivləşməsi:\n", A1)
+print("Şəbəkənin çıxışı:\n", Z2)</div>
+<p><b>İzah:</b> X matrisində sətirlər müşahidələri, sütunlar xüsusiyyətləri göstərir. X@W1 əməliyyatı bütün müşahidələri paralel emal edir. Bias NumPy broadcasting vasitəsilə hər müşahidəyə əlavə edilir. ReLU mənfi qiymətləri sıfıra çevirir. İkinci matris vurması çıxış qiymətini hesablayır.</p>
+<h3>Öyrədilə bilən MLP nümunəsi — scikit-learn</h3>
+<div class="code">from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+X, y = load_breast_cancer(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+model = make_pipeline(
+    StandardScaler(),
+    MLPClassifier(hidden_layer_sizes=(32, 16),
+                  activation="relu", max_iter=800,
+                  early_stopping=True, random_state=42)
+)
+model.fit(X_train, y_train)
+pred = model.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, pred))
+print(classification_report(y_test, pred))</div>
+<p>Pipeline standartlaşdırmanı yalnız təlim dəstində öyrənir və testə eyni transformasiyanı tətbiq edir. Bu yanaşma data leakage riskini azaldır. Real tədqiqatda accuracy ilə kifayətlənməyin; precision, recall, F1, ROC-AUC, confusion matrix və sinif balansını da araşdırın.</p>
+<h3>Model nəticəsini necə şərh etməli?</h3>
+<p>Accuracy yüksək olsa da, siniflər qeyri-balanslıdırsa, azsaylı sinifin nümunələri düzgün aşkarlanmaya bilər. Buna görə confusion matrix-də yanlış müsbət (FP) və yanlış mənfi (FN) nəticələri ayrıca araşdırın. Xüsusilə riskli qərar sistemlərində recall və precision arasındakı kompromis tətbiqin məqsədinə uyğun seçilməlidir.</p></section>
+
+<section class="card" id="s1213"><h2>12.13. TensorFlow/Keras və PyTorch-da şəbəkə yaradılması</h2>
+<h3>TensorFlow/Keras</h3><p>Keras yüksək səviyyəli API təqdim edir. Sequential modeli qatların ardıcıl yığılması üçün rahatdır. Aşağıdakı nümunə ikili təsnifat üçündür: gizli qatlarda ReLU, çıxışda sigmoid, itki funksiyası kimi binary cross-entropy istifadə olunur.</p>
+<div class="code">import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+
+model = keras.Sequential([
+    layers.Input(shape=(30,)),
+    layers.Dense(32, activation="relu"),
+    layers.Dense(16, activation="relu"),
+    layers.Dense(1, activation="sigmoid")
+])
+
+model.compile(
+    optimizer=keras.optimizers.Adam(learning_rate=0.001),
+    loss="binary_crossentropy",
+    metrics=["accuracy"]
+)
+model.summary()
+# model.fit(X_train, y_train, validation_split=0.2,
+#           epochs=50, batch_size=32)</div>
+<h3>PyTorch</h3><p>PyTorch-da model adətən nn.Module sinfindən törədilir. Qatların irəli hesablanması forward metodunda yazılır. PyTorch nümunəsində təlim dövrü daha açıq göstərildiyi üçün hər addımın məqsədini anlamaq vacibdir: <code>zero_grad()</code> əvvəlki batch-dən qalan gradientləri təmizləyir, <code>backward()</code> cari itkiyə görə gradientləri hesablayır, <code>step()</code> isə optimizator vasitəsilə parametrləri yeniləyir.</p>
+<h3>Framework-lər üzrə ümumi təlim dövrü</h3>
+<p>Hər iki kitabxanada əsas məntiq eynidir: batch verilənləri modelə ötürülür, proqnoz alınır, loss hesablanır, gradient tapılır və parametrlər yenilənir. Fərq daha çox API-nin quruluşunda və təlim dövrünün nə qədərinin avtomatlaşdırılmasındadır.</p>
+<div class="code">import torch
+from torch import nn
+
+class MLP(nn.Module):
+    def __init__(self, input_size=30):
+        super().__init__()
+        self.network = nn.Sequential(
+            nn.Linear(input_size, 32),
+            nn.ReLU(),
+            nn.Linear(32, 16),
+            nn.ReLU(),
+            nn.Linear(16, 1)
+        )
+
+    def forward(self, x):
+        return self.network(x)
+
+model = MLP(input_size=30)
+criterion = nn.BCEWithLogitsLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+
+# logits = model(X_batch)
+# loss = criterion(logits, y_batch.float().view(-1, 1))
+# optimizer.zero_grad()
+# loss.backward()
+# optimizer.step()</div>
+<div class="note"><b>Vacib texniki məqam:</b> PyTorch nümunəsində çıxış qatında sigmoid yoxdur, çünki BCEWithLogitsLoss sigmoid və binary cross-entropy əməliyyatlarını numerik baxımdan sabit şəkildə birləşdirir. Proqnoz ehtimalı lazım olduqda logits üzərinə torch.sigmoid tətbiq edilir.</div>
+<table><tr><th>Meyar</th><th>TensorFlow/Keras</th><th>PyTorch</th></tr><tr><td>Model qurulması</td><td>Sequential / Functional / Subclassing</td><td>nn.Module</td></tr><tr><td>Təlim addımları</td><td>compile və fit ilə qısa</td><td>Training loop daha açıq idarə olunur</td></tr><tr><td>Uyğun istifadə</td><td>Sürətli prototipləşdirmə və tətbiq</td><td>Çevik tədqiqat və xüsusi təlim dövrü</td></tr></table></section>
+
+<section class="card" id="tasks"><h2>Praktiki tapşırıqlar</h2>
+<div class="tile"><b>Tapşırıq 1 — Başlanğıc</b><p>5 giriş xüsusiyyəti, 8 neyronlu bir gizli qat və 1 çıxış neyronu olan tam əlaqəli şəbəkə qurun. Öyrənilən parametr sayını hesablayın və hər qatın ölçüsünü göstərin.</p></div>
+<div class="tile"><b>Tapşırıq 2 — Orta səviyyə</b><p>UCI və ya scikit-learn dataset-i seçərək 2 gizli qatlı MLPClassifier qurun. Standartlaşdırma, stratified train/test bölgüsü və ən azı dörd qiymətləndirmə metrikası tətbiq edin. Gizli qat ölçülərini (16), (32,16), (64,32) variantlarında müqayisə edin.</p></div>
+<div class="tile"><b>Tapşırıq 3 — Tədqiqat səviyyəsi</b><p>Eyni dataset üçün Keras və PyTorch MLP modelləri qurun. Parametr sayını, təlim vaxtını, validation nəticələrini və test metrikalarını müqayisə edin. Random seed, eyni data bölgüsü və eyni ilkin emal addımlarını qoruyun. Nəticələrin fərqlənməsinə təsir edən səbəbləri müzakirə edin.</p></div></section>
+
+<section class="card" id="quiz"><h2>Özünü yoxlama sualları</h2><p>Hər suala cavab verin, sonra “Nəticəni yoxla” düyməsi ilə balınızı və izahları görün.</p>
+<div id="questions"></div><button onclick="gradeQuiz()">Nəticəni yoxla</button><button class="secondary" onclick="resetQuiz()">Yenidən başla</button><div id="quizScore" class="result" aria-live="polite"></div></section>
+
+<section class="card" id="refs"><h2>İstifadə olunan ədəbiyyat</h2>
+<ol>
+<li>R. R. Əliyev (2026). <i>Süni intellekt</i>. Azərnəşr. <a href="https://www.libraff.az/suni-intellekt-az/" target="_blank">Nəşr məlumatı</a>.</li>
+<li>G. Abdullayeva, Ü. Əlizadə (2026). <i>Süni intellekt və təsvirlərin tanınması: nəzəri və praktiki əsaslar</i>. Elm. <a href="https://www.preslib.az/en/elibrary/ebook/uFMEvbR" target="_blank">Prezident Kitabxanası</a>.</li>
+<li>K. R. Əliyeva (2024). <i>Süni intellekt</i>. ADNSU. <a href="https://www.preslib.az/az/book/1OZWGAzwlCXVP7H" target="_blank">Prezident Kitabxanası</a>.</li>
+<li>N. T. İsmayılova (2023). <i>Süni intellekt: maşın öyrənmə üsulları</i>. Book Print. <a href="https://www.preslib.az/az/book/e9XDu2QMjsg6A4a" target="_blank">Prezident Kitabxanası</a>.</li>
+<li>Alpaydin, E. (2021). <i>Machine Learning: The New AI</i>. MIT Press. <a href="https://mitpress.mit.edu/9780262542524/machine-learning/" target="_blank">MIT Press</a>.</li>
+<li>Chollet, F. (2021). <i>Deep Learning with Python</i>, 2nd ed. Manning. <a href="https://www.manning.com/books/deep-learning-with-python-second-edition" target="_blank">Manning</a>.</li>
+<li>Géron, A. (2022). <i>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</i>, 3rd ed. O’Reilly. <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/" target="_blank">O’Reilly</a>.</li>
+<li>Goodfellow, I., Bengio, Y., Courville, A. (2016). <i>Deep Learning</i>. MIT Press. <a href="https://www.deeplearningbook.org/" target="_blank">Açıq kitab</a>. (Nəzəri baza üçün fundamental mənbə.)</li>
+<li>TensorFlow Keras guide: <a href="https://www.tensorflow.org/guide/keras/sequential_model" target="_blank">Sequential model</a>.</li>
+<li>PyTorch tutorials: <a href="https://pytorch.org/tutorials/" target="_blank">Official tutorials</a>.</li>
+<li>Scikit-learn: <a href="https://scikit-learn.org/stable/modules/neural_networks_supervised.html" target="_blank">Multi-layer Perceptron</a>.</li>
+</ol>
+</section>
+
+<section class="card" id="lab"><span class="pill">Laboratoriya işi №12</span><h2>Çoxqatlı süni neyron şəbəkəsinin qurulması və verilənlər üzərində öyrədilməsi</h2>
+<h3>1. İşin məqsədi</h3><p>Çoxqatlı süni neyron şəbəkəsinin arxitekturasını qurmaq, verilənləri hazırlamaq, modeli öyrətmək və test nəticələrini metrikalarla qiymətləndirmək.</p>
+<h3>2. Nəzəri məlumat</h3><p>Laboratoriyada Breast Cancer Wisconsin dataset-i istifadə olunur. Dataset tədris məqsədlidir; modelin nəticələri tibbi diaqnoz və ya klinik qərar üçün istifadə edilməməlidir. Dataset-də 30 ədədi xüsusiyyət və iki sinif mövcuddur.</p>
+<h3>3. İstifadə olunan vasitələr</h3><ul><li>Python 3.10+</li><li>Google Colab və ya Jupyter Notebook</li><li>NumPy, Pandas, Matplotlib, Scikit-learn</li><li>İstəyə görə TensorFlow/Keras və ya PyTorch</li></ul>
+<h3>4. İcra mərhələləri</h3><ol><li>Dataset-i yükləyin və ölçüsünü yoxlayın.</li><li>Sinif paylanmasını və xüsusiyyətləri araşdırın.</li><li>Train/test bölgüsünü stratify ilə aparın.</li><li>StandardScaler və MLP modelini Pipeline daxilində qurun.</li><li>Modeli öyrədin və test dəstində proqnoz alın.</li><li>Confusion matrix, precision, recall, F1 və ROC-AUC hesablayın.</li><li>Fərqli gizli qat ölçülərini müqayisə edin.</li></ol>
+<h3>5. Laboratoriya kodu</h3><div class="code">import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import (accuracy_score, precision_score,
+    recall_score, f1_score, roc_auc_score, ConfusionMatrixDisplay)
+
+data = load_breast_cancer()
+X, y = data.data, data.target
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+architectures = [(16,), (32, 16), (64, 32)]
+results = []
+
+for layers in architectures:
+    clf = make_pipeline(
+        StandardScaler(),
+        MLPClassifier(hidden_layer_sizes=layers,
+                      activation="relu", solver="adam",
+                      alpha=0.0001, max_iter=1000,
+                      early_stopping=True, random_state=42)
+    )
+    clf.fit(X_train, y_train)
+    pred = clf.predict(X_test)
+    prob = clf.predict_proba(X_test)[:, 1]
+
+    row = {
+        "architecture": str(layers),
+        "accuracy": accuracy_score(y_test, pred),
+        "precision": precision_score(y_test, pred),
+        "recall": recall_score(y_test, pred),
+        "f1": f1_score(y_test, pred),
+        "roc_auc": roc_auc_score(y_test, prob)
+    }
+    results.append(row)
+
+    if layers == (32, 16):
+        ConfusionMatrixDisplay.from_estimator(clf, X_test, y_test)
+        plt.title("MLP — Confusion Matrix")
+        plt.show()
+
+result_df = pd.DataFrame(results)
+print(result_df.round(4))</div>
+<h3>6. Nəticələrin təhlili</h3><p>Cədvəldəki metrikaları müqayisə edin. Accuracy ümumi düzgün təsnifat payını göstərir; precision müsbət proqnozların nə qədərinin düzgün olduğunu, recall real müsbət nümunələrin nə qədərinin tapıldığını, F1 isə precision və recall arasında harmonik orta göstəricini verir. ROC-AUC modelin müxtəlif hədlərdə sinifləri ayırma qabiliyyətini qiymətləndirir.</p>
+<div class="warn">MLPClassifier bəzi verilənlərdə convergence warning verə bilər. Bu, modelin verilmiş iterasiya limitində tam yaxınlaşmaması deməkdir. Max_iter, learning_rate_init, early_stopping və arxitekturanı əsaslandırılmış şəkildə dəyişin; yalnız xəbərdarlığı gizlətmək düzgün deyil.</div>
+<h3>7. Hesabatın strukturu</h3><ol><li>Laboratoriya işinin adı və məqsədi</li><li>Dataset haqqında məlumat və ilkin təhlil</li><li>Seçilmiş şəbəkə arxitekturası və parametr sayı</li><li>İstifadə olunan kod və izah</li><li>Qiymətləndirmə nəticələri və confusion matrix</li><li>Arxitekturaların müqayisəsi</li><li>Nəticə və təkliflər</li></ol>
+<h3>8. Yoxlama sualları</h3><ol><li>Giriş neyronlarının sayı necə müəyyən edilir?</li><li>Gizli qatın əsas funksiyası nədir?</li><li>Bias parametrinin rolu nədir?</li><li>Forward propagation və backpropagation arasında fərq nədir?</li><li>Çoxsinifli təsnifatda Softmax nə üçün istifadə olunur?</li><li>Standartlaşdırmanı niyə Pipeline daxilində tətbiq etdik?</li><li>Arxitekturanın genişləndirilməsi hansı riskləri yarada bilər?</li></ol></section>
+</main></div><footer>MDU · Süni intellekt və maşın öyrənməsi · Fəsil 12</footer>
+<script>
+function val(id){return Number(document.getElementById(id).value)||0}
+function calcSum(){let z=val('x1')*val('w1')+val('x2')*val('w2')+val('bias');document.getElementById('sumResult').textContent=`z = ${z.toFixed(4)}  (${val('x1')}×${val('w1')} + ${val('x2')}×${val('w2')} + ${val('bias')})`}
+function calcAct(){let z=val('actZ'),t=document.getElementById('actType').value,y=t==='relu'?Math.max(0,z):t==='sigmoid'?1/(1+Math.exp(-z)):Math.tanh(z);document.getElementById('actResult').textContent=`${t}( ${z} ) = ${y.toFixed(6)}`}
+function drawArch(){let sizes=[val('nin'),val('h1'),val('h2'),val('nout')].filter((v,i)=>i===0||i===3||v>0);sizes=sizes.map(v=>Math.max(1,Math.min(20,Math.round(v))));let colors=['#38bdf8','#a78bfa','#a78bfa','#34d399'],labels=['Giriş','Gizli 1','Gizli 2','Çıxış'];let width=760,height=300,xs=sizes.map((_,i)=>80+i*(600/(sizes.length-1||1)));let svg=`<svg viewBox="0 0 ${width} ${height}" aria-label="İstifadəçi tərəfindən qurulmuş neyron şəbəkəsi">`;
+sizes.forEach((n,l)=>{for(let j=0;j<n;j++){let y=45+(j+0.5)*(210/n);if(l<sizes.length-1){for(let k=0;k<sizes[l+1];k++){let y2=45+(k+0.5)*(210/sizes[l+1]);svg+=`<line x1="${xs[l]+13}" y1="${y}" x2="${xs[l+1]-13}" y2="${y2}" stroke="#aab8ca" stroke-width="1.1"/>`}}}});
+sizes.forEach((n,l)=>{for(let j=0;j<n;j++){let y=45+(j+0.5)*(210/n);svg+=`<circle cx="${xs[l]}" cy="${y}" r="12" fill="${colors[Math.min(l,3)]}" stroke="white" stroke-width="2"/>`}svg+=`<text x="${xs[l]}" y="285" text-anchor="middle" font-size="13" fill="#334155">${labels[Math.min(l,3)]} (${n})</text>`});svg+='</svg>';document.getElementById('archDiagram').innerHTML=svg;
+let p=0;for(let i=1;i<sizes.length;i++)p+=(sizes[i-1]+1)*sizes[i];document.getElementById('paramResult').textContent=`Qat ölçüləri: ${sizes.join(' → ')} | Öyrənilən parametr sayı: ${p}`}
+const qs=[
+{q:"Süni neyron şəbəkəsində giriş qatının əsas rolu nədir?",o:["Çəkiləri optimallaşdırmaq","Giriş xüsusiyyətlərini qəbul edib ötürmək","Xəta funksiyasını hesablamaq"],a:1,e:"Giriş qatı verilənlərin xüsusiyyətlərini şəbəkəyə təqdim edir."},
+{q:"Gizli qatlar nə üçün istifadə olunur?",o:["Yalnız nəticəni göstərmək","Qeyri-xətti təqdimatlar öyrənmək","Dataset-i fayla yazmaq"],a:1,e:"Gizli qatlar çəkili çevirmə və aktivləşmə ilə mürəkkəb əlaqələri modelləşdirir."},
+{q:"İkili təsnifat üçün bir çıxış neyronunda tipik aktivləşmə hansıdır?",o:["Sigmoid","ReLU","Tanh"],a:0,e:"Sigmoid 0–1 aralığında qiymət verir."},
+{q:"Doğru/Yanlış: Bir neçə xətti qatın aktivləşməsiz birləşməsi yenə xətti çevirmədir.",o:["Doğru","Yanlış"],a:0,e:"Xətti çevirmələrin kompozisiyası da xəttidir."},
+{q:"Tam əlaqəli qatda 4 giriş, 3 çıxış neyronu varsa, bias daxil parametr sayı neçədir?",o:["12","15","7","24"],a:1,e:"P=(4+1)×3=15 parametr."},
+{q:"Uyğunluğu seçin: Input Layer",o:["Proqnoz çıxarır","Giriş xüsusiyyətlərini qəbul edir","Gradienti hesablayır"],a:1,e:"Input Layer giriş xüsusiyyətlərini qəbul edir."},
+{q:"Uyğunluğu seçin: Softmax",o:["Çoxsinifli çıxışları normallaşdırır","Mənfi qiymətləri sıfırlayır","Məlumatı standartlaşdırır"],a:0,e:"Softmax çıxışlarını ehtimal paylanması kimi normallaşdırır."},
+{q:"Forward propagation addımlarının düzgün ardıcıllığı hansıdır?",o:["Aktivləşmə → xətti cəm → giriş","Giriş → xətti cəm → aktivləşmə → növbəti qat","Gradient → giriş → loss"],a:1,e:"Əvvəl z=Wa+b, sonra a=φ(z) hesablanır."},
+{q:"Boşluğu doldurun: z = W a + ____",o:["b","y","η"],a:0,e:"b bias vektorudur."},
+{q:"Kod çıxışı: ReLU(-2.5) neçədir?",o:["-2.5","0","1"],a:1,e:"ReLU(z)=max(0,z), nəticə 0-dır."}
+];
+function renderQuiz(){let host=document.getElementById('questions');host.innerHTML=qs.map((q,i)=>`<div class="quizq"><b>${i+1}. ${q.q}</b>${q.o.map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join('')}<div class="feedback" id="fb${i}"></div></div>`).join('')}
+function gradeQuiz(){let score=0;qs.forEach((q,i)=>{let a=document.querySelector(`input[name="q${i}"]:checked`);let fb=document.getElementById('fb'+i);if(a&&Number(a.value)===q.a){score++;fb.innerHTML='<span style="color:#047857">Düzgün.</span> '+q.e}else{fb.innerHTML='<span style="color:#dc2626">Yanlış və ya cavab seçilməyib.</span> '+q.e}});document.getElementById('quizScore').textContent=`Nəticə: ${score}/${qs.length} (${Math.round(score/qs.length*100)}%)`}
+function resetQuiz(){document.querySelectorAll('#questions input').forEach(x=>x.checked=false);document.querySelectorAll('.feedback').forEach(x=>x.textContent='');document.getElementById('quizScore').textContent=''}
+drawArch();renderQuiz();calcSum();calcAct();
+</script>
+<script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Süni intellekt və maşın öyrənməsi elektron dərsliyinin giriş və metodiki bölməsi">
+<title>Süni intellekt və maşın öyrənməsi — Giriş və metodiki bölmə | MDU</title>
+<style>
+:root{--navy:#102747;--blue:#2463a6;--cyan:#22a6a1;--gold:#e7a93b;--ink:#1d2b3f;--muted:#64748b;--paper:#fff;--bg:#eef3f9;--line:#dce5ef;--soft:#eaf2fb;--shadow:0 18px 50px rgba(16,39,71,.10)}
+[data-theme=dark]{--ink:#e8eef8;--muted:#aab8cb;--paper:#17263a;--bg:#0c1727;--line:#2b3e57;--soft:#203650;--shadow:0 18px 50px rgba(0,0,0,.25)}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.78 Georgia,"Times New Roman",serif}
+header.top{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--line);font:14px Arial,sans-serif}.topinner{max-width:1400px;margin:auto;padding:12px 22px;display:flex;align-items:center;gap:10px}.logo{font-weight:800;color:var(--blue);letter-spacing:.06em}.grow{flex:1}button{border:1px solid var(--line);border-radius:10px;padding:9px 13px;background:var(--paper);color:var(--ink);cursor:pointer;font:600 13px Arial,sans-serif}button:hover{border-color:var(--blue);color:var(--blue)}button.primary{background:var(--blue);color:white;border-color:var(--blue)}.progress{height:3px;background:var(--line)}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--blue))}
+.shell{max-width:1400px;margin:28px auto;padding:0 20px;display:grid;grid-template-columns:300px minmax(0,930px);gap:26px;justify-content:center;align-items:start}
+aside{position:sticky;top:82px;max-height:calc(100vh - 100px);overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:19px;box-shadow:var(--shadow);font:13px/1.55 Arial,sans-serif}aside h3{font-size:12px;letter-spacing:.12em;color:var(--muted);margin:0 0 12px}#search{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);margin-bottom:12px}nav a{display:block;text-decoration:none;color:var(--muted);padding:7px 9px;border-radius:8px;margin:2px 0}nav a:hover,nav a.active{background:var(--soft);color:var(--blue);font-weight:700}main{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:clamp(22px,4.5vw,64px);box-shadow:var(--shadow)}
+.cover{min-height:690px;margin:-3px -3px 42px;padding:55px 28px;border-radius:18px;background:radial-gradient(circle at 85% 20%,rgba(34,166,161,.28),transparent 25%),radial-gradient(circle at 10% 90%,rgba(231,169,59,.22),transparent 27%),linear-gradient(135deg,#0c1e38,#174b78 65%,#1d7a83);color:white;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden}.cover:after{content:"AI · ML";position:absolute;right:3%;bottom:5%;font:bold 76px/1 Arial,sans-serif;color:rgba(255,255,255,.07)}.cover .uni{font:700 13px/1.8 Arial,sans-serif;letter-spacing:.13em;color:#cce7f3}.cover .eyebrow{margin-top:72px;padding:7px 14px;border:1px solid rgba(255,255,255,.35);border-radius:30px;font:12px Arial,sans-serif;letter-spacing:.12em}.cover h1{font:900 clamp(34px,5.4vw,58px)/1.08 Arial,sans-serif;color:white;margin:25px 0 18px;max-width:780px}.cover p{font:18px/1.6 Arial,sans-serif;color:#d7e8f4;text-align:center;max-width:680px}.cover .author{font:700 19px Arial,sans-serif;margin-top:65px}.cover .year{font:12px Arial,sans-serif;letter-spacing:.2em;margin-top:15px;color:#cce7f3}
+h1,h2,h3,h4{font-family:Arial,sans-serif;line-height:1.3;color:var(--blue);scroll-margin-top:95px}h2{font-size:1.55rem;margin-top:2em;border-bottom:1px solid var(--line);padding-bottom:10px}h3{font-size:1.2rem;margin-top:1.6em;color:var(--navy)}p{margin:0 0 1.1em;text-align:justify}li{margin:.35em 0}ul,ol{padding-left:1.5em}.lead{font-size:1.12rem;color:var(--muted)}.kicker{font:700 11px Arial,sans-serif;letter-spacing:.15em;color:var(--cyan);text-transform:uppercase}.callout{padding:18px 22px;background:var(--soft);border-left:4px solid var(--cyan);border-radius:0 12px 12px 0;margin:22px 0}.callout strong{color:var(--blue)}.grid2,.grid3{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:22px 0}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:18px}.card h3{margin:0 0 8px}.card p{margin:0;font-size:.95rem}figure{margin:26px 0;padding:16px;background:var(--bg);border:1px solid var(--line);border-radius:16px}figure svg{display:block;width:100%;height:auto;max-height:430px}figcaption{text-align:center;color:var(--muted);font:12px/1.5 Arial,sans-serif;margin-top:10px}.tablewrap{overflow:auto;margin:20px 0}table{border-collapse:collapse;width:100%;font:14px/1.55 Arial,sans-serif}th,td{border:1px solid var(--line);padding:11px 13px;text-align:left;vertical-align:top}th{background:var(--soft);color:var(--blue)}.steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;position:relative;padding:3px 0 18px 48px;min-height:42px}.steps li:before{content:counter(step);position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:white;font:700 13px Arial,sans-serif}.note{font-size:.92rem;color:var(--muted)}.footer{border-top:1px solid var(--line);margin-top:55px;padding-top:20px;color:var(--muted);font:12px Arial,sans-serif;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.badge{display:inline-block;background:var(--soft);color:var(--blue);padding:4px 9px;border-radius:20px;font:700 11px Arial,sans-serif}.tool{background:var(--bg);border:1px solid var(--line);padding:18px;border-radius:14px;margin:20px 0}.tool label{display:block;font:13px Arial,sans-serif;margin:9px 0 4px}.tool input,.tool select{padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);max-width:100%}.quiz{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:20px;margin:22px 0}.quiz label{display:block;padding:8px 10px;margin:6px 0;border:1px solid var(--line);border-radius:9px;cursor:pointer}.quiz button{background:var(--blue);color:white;margin-top:12px}.result{font-weight:700;margin-top:12px}.checklist label{display:flex;gap:10px;align-items:flex-start;padding:8px 0}.checklist input{margin-top:6px}.small{font:12px Arial,sans-serif;color:var(--muted)}
+@media(max-width:980px){.shell{display:block;margin:14px auto;padding:0 12px}aside{position:relative;top:auto;max-height:280px;margin-bottom:14px}main{padding:24px 19px}.cover{min-height:560px}.grid2,.grid3{grid-template-columns:1fr}}
+@media print{body{background:white}.top,aside,.progress,.no-print{display:none!important}.shell{display:block;margin:0;padding:0}main{border:0;box-shadow:none;padding:0}.cover{break-after:page}h2,h3{break-after:avoid}figure,table{break-inside:avoid}}
+
+.author-profile{display:grid;grid-template-columns:minmax(190px,270px) minmax(0,1fr);gap:26px;align-items:start;margin:20px 0 28px;padding:20px;background:var(--bg);border:1px solid var(--line);border-radius:18px}
+.author-photo{margin:0;padding:8px;background:var(--paper);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}
+.author-photo img{display:block;width:100%;height:auto;max-height:350px;object-fit:cover;object-position:center 25%;border-radius:10px}
+.author-photo figcaption{font-size:11px}
+.author-bio p:last-child{margin-bottom:0}
+.method-map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:20px 0}
+.method-step{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:13px;min-width:0}
+.method-step b{display:block;color:var(--blue);font:700 13px Arial,sans-serif;margin-bottom:5px}
+.method-step span{display:block;color:var(--muted);font:12px/1.5 Arial,sans-serif}
+.outcome{border-left:3px solid var(--cyan);padding:9px 13px;margin:10px 0;background:var(--soft);border-radius:0 9px 9px 0}
+@media(max-width:760px){.author-profile{grid-template-columns:1fr}.author-photo{max-width:300px;margin:auto}.method-map{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.method-map{grid-template-columns:1fr}}
+
+
+.cover.cover-art{min-height:0;margin:0 auto 42px;padding:0;background:transparent;border-radius:0;display:block;overflow:visible;box-shadow:none}
+.cover.cover-art:after{display:none}
+.cover-figure{margin:0 auto;max-width:760px;padding:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 18px 44px rgba(16,39,71,.18)}
+.cover-figure img{display:block;width:100%;height:auto;aspect-ratio:1086/1448;object-fit:contain}
+.cover-figure figcaption{padding:9px 12px;text-align:center;font:12px/1.5 Arial,sans-serif;color:var(--muted);background:var(--paper)}
+@media(max-width:700px){.cover.cover-art{margin-bottom:28px}.cover-figure{border-radius:8px}}
+@media print{.cover.cover-art{break-after:page}.cover-figure{max-width:100%;box-shadow:none;border:0}.cover-figure figcaption{display:none}}
+
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+</style>
+</head>
+<body>
+<header class="top"><div class="topinner"><div class="logo">MDU · RƏQƏMSAL DƏRSLİK</div><div class="grow"></div><button onclick="changeFont(-1)" aria-label="Şrifti kiçilt">A−</button><button onclick="changeFont(1)" aria-label="Şrifti böyüt">A+</button><button onclick="toggleTheme()">◐ Gecə rejimi</button><button onclick="window.print()">Çap / PDF</button></div><div class="progress"><span id="bar"></span></div></header>
+<div class="shell">
+<aside><h3>MÜNDƏRİCAT</h3><input id="search" placeholder="Bölmə axtar..." aria-label="Bölmə axtar"><nav id="nav">
+<a href="#title">Titul səhifəsi</a><a href="#author">Müəllif haqqında</a><a href="#preface">Ön söz</a><a href="#about">Elektron dərslik haqqında</a><a href="#aim">Fənnin məqsədi və vəzifələri</a><a href="#outcomes">Fənnin təlim nəticələri</a><a href="#prereq">İlkin biliklər</a><a href="#roadmap">Öyrənmə yol xəritəsi</a><a href="#usage">İstifadə qaydası</a><a href="#symbols">İşarələr və qısaltmalar</a><a href="#environment">Proqramlaşdırma mühiti</a><a href="#labs">Laboratoriya qaydaları</a>
+</nav></aside>
+<main>
+<section class="cover cover-art" id="title" aria-label="Süni intellekt və maşın öyrənməsi kitabının üz qabığı">
+<figure class="cover-figure">
+<img src="assets/Suni_Intellekt_Masin_Oyrenmesi_Cover.png" alt="Süni intellekt və maşın öyrənməsi — Aidə Mustafayeva, dərslik üz qabığı">
+<figcaption>“Süni intellekt və maşın öyrənməsi” — elektron dərsliyin üz qabığı</figcaption>
+</figure>
+</section>
+<div class="kicker">I bölmə · Giriş və metodiki təminat</div>
+<h2 id="author">1. Müəllif haqqında</h2>
+<div class="author-profile">
+<figure class="author-photo"><img src="assets/A_Mustafayeva.jpg" alt="Dərsliyin müəllifi Aidə Mübariz qızı Mustafayeva"><figcaption>Dərsliyin müəllifi — Aidə Mübariz qızı Mustafayeva</figcaption></figure>
+<div class="author-bio">
+<p><strong>Aidə Mübariz qızı Mustafayeva</strong> 1981-ci il aprelin 10-da Qərbi Azərbaycanın Göyçə mahalının Qoşabulaq kəndində anadan olmuşdur. 1999–2003-cü illərdə Mingəçevir Politexnik İnstitutunda “İnformasiyanın işlənməsinin və idarəetmənin avtomatlaşdırılmış sistemləri” ixtisası üzrə bakalavr, 2003–2005-ci illərdə isə magistratura təhsilini fərqlənmə diplomları ilə başa vurmuşdur. Təhsil illərindən formalaşan elmi marağını peşəkar fəaliyyəti ilə birləşdirərək həyatını informasiya texnologiyalarının inkişafına, elmi tədqiqatlara və gənc mütəxəssislərin hazırlanmasına həsr etmişdir.</p>
+<p>2005-ci ildən ali təhsil sahəsində elmi-pedaqoji fəaliyyət göstərir. Müxtəlif illərdə müəllim, Mingəçevir Dövlət Universitetinin İnformasiya texnologiyaları kafedrasının müdiri və Süni İntellekt və Rəqəmsal Texnologiyalar İnstitutunun direktoru vəzifələrində çalışmışdır. 14 sentyabr 2026-cı ildən <strong>Mingəçevir Dövlət Universitetinin Riyaziyyat və İnformasiya Texnologiyaları fakültəsinin dekanı</strong> vəzifəsində fəaliyyət göstərir. Akademik idarəetmə, tədrisin təşkili, elmi fəaliyyətin inkişafı və innovativ təhsil mühitinin formalaşdırılması rəhbərlik fəaliyyətinin əsas istiqamətlərindəndir.</p>
+<p>2017-ci ildə Azərbaycan Milli Elmlər Akademiyasının İdarəetmə Sistemləri İnstitutunun Dissertasiya Şurasında 3338.01 – “Sistemli analiz, idarəetmə və informasiyanın işlənməsi” ixtisası üzrə texnika üzrə fəlsəfə doktoru elmi dərəcəsini almış, 2026-cı ildə dosent elmi adına layiq görülmüşdür. Hazırda AMEA Riyaziyyat İnstitutunda həmin ixtisas üzrə elmlər doktoru elmi dərəcəsi almaq məqsədilə tədqiqatlarını davam etdirir.</p>
+<p>İyirmi ildən artıq elmi-pedaqoji fəaliyyəti ərzində <strong>90-dan çox elmi məqalənin</strong>, 50-dən artıq fənn proqramının və müxtəlif tədris-metodiki materialların müəllifi olmuşdur. Elmi əsərləri Scopus, Springer, Crossref, EBSCO, Google Scholar, ResearchGate, RİNS və eLibrary elmi informasiya bazalarında və platformalarında indekslənmişdir. Scopus üzrə H-indeksi 3, Google Scholar üzrə H-indeksi 4-dür.</p>
+<p>Müəllifin tədris nəşrləri sırasında <strong>“Şəbəkə təhlükəsizliyi”</strong> adlı dərslik, həmçinin <strong>“Verilənlər bazası sistemləri: nəzəriyyə və praktika”, “Kompüter şəbəkələri üzrə praktiki iş”, “İqtisadi informatika” və “Multimediya texnologiyaları”</strong> adlı dərs vəsaitləri yer alır. Bu nəşrlərdə nəzəri biliklərin praktiki bacarıqlarla əlaqələndirilməsinə, müasir informasiya texnologiyalarının öyrədilməsinə və tələbələrin peşəkar hazırlığının gücləndirilməsinə xüsusi diqqət yetirilmişdir.</p>
+<p>Elmi-tədqiqat maraqları süni intellekt və maşın öyrənməsi, kompüter görməsi, robototexnika, sistemli analiz, kompüter modelləşdirilməsi və simulyasiya, kibertəhlükəsizlik, verilənlərin analitikası, əşyaların interneti (IoT), Smart City texnologiyaları və rəqəmsal təhsil istiqamətlərini əhatə edir. <strong>AI-SKYS</strong> (LiDAR və süni intellekt texnologiyaları), <strong>AZDATA-Hub</strong> – Milli Data Tədqiqat və İnkişaf Platforması və <strong>UNIVERSITY–INDUSTRY PRACTICE AND SPIN-OFF MODEL</strong> kimi elmi-innovativ təşəbbüslərdə iştirak etmişdir.</p>
+<p>Ali təhsildə innovativ yanaşmaların tətbiqinə xüsusi önəm verən müəllif kafedra müdiri olduğu dövrdə 47-dən çox elmi və tədris yönümlü tədbirin təşkilində iştirak etmiş, tələbələrin praktiki bacarıqlarının inkişafı üçün “İT Klub” və “Kiber Klub”un yaradılmasına və fəaliyyətinin təşkilinə rəhbərlik etmişdir. Pandemiya dövründə distant təhsilin təşkili və MS Teams platformasının tədris prosesində tətbiqi üzrə metodiki dəstək göstərmiş, kibertəhlükəsizlik, insan–kompüter interfeysləri və İKT infrastrukturunun inkişafına yönəlmiş yerli və beynəlxalq layihələrdə çalışmışdır. Türkiyənin Orta Doğu Texniki Universitetində (ODTÜ) keçirilən təlimləri uğurla tamamlayaraq beynəlxalq sertifikat əldə etmişdir.</p>
+<p>Peşəkar inkişafı çərçivəsində Cisco Networking Academy, CompTIA Security+, Front-End Web Programming (JavaScript), Information Security və Stepik Academy – Neural Networks and Computer Vision istiqamətləri üzrə sertifikatlara malikdir. UNICEF və UN Women təşkilatlarının Result-Based Management, Save the Children təşkilatının Proposal Writing və Spur Change təşkilatının Project Management təlimlərini başa vurmuşdur. Azərbaycan Kibertəhlükəsizlik Təşkilatları Assosiasiyasının rəsmi ekspert üzvüdür.</p>
+</div></div>
+<div class="callout"><strong>Elmi-pedaqoji missiyası:</strong> müasir elmi bilikləri praktiki təcrübə ilə birləşdirmək, innovativ texnologiyaların tədrisə tətbiqini genişləndirmək və müstəqil düşünən, analitik təhlil aparmağı bacaran, rəqəmsal dövrün çağırışlarına hazır mütəxəssislərin yetişdirilməsinə töhfə vermək. Müəllifin elmi və tədris nəşrlərində nəzəri əsaslandırma, praktiki tətbiq və tədqiqat yönümlü öyrənmə prinsipləri əsas götürülür.</div>
+
+<h2 id="preface">2. Ön söz</h2>
+<p>Süni intellekt XXI əsrin elmi-texnoloji inkişafını müəyyən edən əsas istiqamətlərdən birinə çevrilmişdir. Böyük həcmli verilənlərin toplanması, hesablama resurslarının əlçatanlığının artması və yeni alqoritmlərin inkişafı kompüter sistemlərinə mürəkkəb nümunələri aşkar etmək, proqnoz vermək, mətn və təsvirləri emal etmək, eləcə də müəyyən qərarları dəstəkləmək imkanı yaratmışdır.</p>
+<p>Bu dərslik süni intellekti yalnız hazır proqram kitabxanalarından istifadə etməklə öyrətməyi deyil, onun arxasında dayanan riyazi və alqoritmik mexanizmləri anlamağı qarşıya məqsəd qoyur. Tələbə əvvəlcə problemin necə riyazi təsvir edildiyini, verilənlərin necə hazırlandığını, modelin hansı meyarla öyrədildiyini və nəticənin necə qiymətləndirildiyini öyrənəcək; daha sonra bu bilikləri Python vasitəsilə tətbiq edəcəkdir.</p>
+<p>Dərslikdə nəzəri izahlar, hesablanmış nümunələr, kod parçaları, sxemlər, praktik tapşırıqlar, laboratoriya işləri və özünüqiymətləndirmə vasitələri bir-birini tamamlayır. Xüsusi diqqət alqoritmlərin mahiyyətini hazır nəticə kimi qəbul etməməyə, addım-addım araşdırmağa və alınan nəticələri elmi əsaslarla şərh etməyə yönəldilir.</p>
+<div class="callout"><strong>Öyrənmə fəlsəfəsi:</strong> “Əvvəl anla — sonra hesabla — daha sonra kodlaşdır — sonda nəticəni izah et.” Bu ardıcıllıq dərsliyin bütün fəsillərində qorunur.</div>
+<div class="callout"><strong>Tələbə üçün əsas yanaşma:</strong> Mövzunu oxuyarkən əvvəl anlayışın nə üçün lazım olduğunu müəyyən edin, sonra kiçik ədədi nümunəni əl ilə izləyin, daha sonra kodu icra edin. Kodun nəticəsini izah edə bilmirsinizsə, mövzu hələ tam mənimsənilməyib.</div>
+<h3>Öyrənmənin dörd pilləsi</h3>
+<div class="method-map">
+<div class="method-step"><b>1. Anla</b><span>Anlayış, problem, giriş və çıxış dəyişənlərini müəyyən et.</span></div>
+<div class="method-step"><b>2. Hesabla</b><span>Düsturu, ölçüləri və kiçik nümunəni addım-addım yoxla.</span></div>
+<div class="method-step"><b>3. Tətbiq et</b><span>Python kodunu icra et, parametrləri dəyiş və nəticəni müşahidə et.</span></div>
+<div class="method-step"><b>4. Şərh et</b><span>Nəticəni metriklərlə qiymətləndir, səhvləri və məhdudiyyətləri izah et.</span></div>
+</div>
+
+<h2 id="about">3. Elektron dərslik haqqında</h2>
+<p>Elektron dərslik magistratura səviyyəsində “Süni intellekt və maşın öyrənməsi” fənninin tədrisi üçün hazırlanmış interaktiv tədris resursudur. Məzmun 18 əsas fəsil üzrə qurulmuşdur. Fəsillər süni intellektin tarixi və konseptual əsaslarından başlayaraq riyazi baza, verilənlərin analizi, klassik maşın öyrənməsi, neyron şəbəkələri, dərin öyrənmə, etik və izahlana bilən AI mövzularına doğru inkişaf edir.</p>
+<div class="grid3"><div class="card"><h3>Nəzəri bilik</h3><p>Anlayışlar, prinsiplər, riyazi ifadələr və alqoritmlərin iş mexanizmləri.</p></div><div class="card"><h3>Proqramlaşdırma</h3><p>Python nümunələri, kitabxanalar, kodun izahı və nəticələrin təhlili.</p></div><div class="card"><h3>Tədqiqat</h3><p>Eksperiment, müqayisə, model qiymətləndirilməsi və elmi hesabat.</p></div></div>
+<h3>Dərsliyin struktur xəritəsi</h3>
+<figure><svg viewBox="0 0 850 300" role="img" aria-label="Dərsliyin dörd mərhələli struktur sxemi"><defs><marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#2463a6"/></marker></defs>
+<rect x="20" y="85" width="175" height="125" rx="15" fill="#eaf2fb" stroke="#2463a6" stroke-width="2"/><text x="107" y="120" text-anchor="middle" fill="#102747" font-size="16" font-weight="bold">I. TƏMƏL</text><text x="107" y="148" text-anchor="middle" fill="#40536b" font-size="12">AI tarixi və</text><text x="107" y="166" text-anchor="middle" fill="#40536b" font-size="12">riyazi baza</text>
+<path d="M197 147H225" stroke="#2463a6" stroke-width="2" marker-end="url(#arr1)"/>
+<rect x="235" y="85" width="175" height="125" rx="15" fill="#e6f6f3" stroke="#22a6a1" stroke-width="2"/><text x="322" y="120" text-anchor="middle" fill="#16817d" font-size="16" font-weight="bold">II. VERİLƏNLƏR</text><text x="322" y="148" text-anchor="middle" fill="#40536b" font-size="12">Emal, analiz və</text><text x="322" y="166" text-anchor="middle" fill="#40536b" font-size="12">klassik ML</text>
+<path d="M412 147H440" stroke="#2463a6" stroke-width="2" marker-end="url(#arr1)"/>
+<rect x="450" y="85" width="175" height="125" rx="15" fill="#fff4df" stroke="#e7a93b" stroke-width="2"/><text x="537" y="120" text-anchor="middle" fill="#9a6813" font-size="16" font-weight="bold">III. DƏRİN ÖYRƏNMƏ</text><text x="537" y="148" text-anchor="middle" fill="#40536b" font-size="12">Neyron şəbəkələri</text><text x="537" y="166" text-anchor="middle" fill="#40536b" font-size="12">və tətbiqlər</text>
+<path d="M627 147H655" stroke="#2463a6" stroke-width="2" marker-end="url(#arr1)"/>
+<rect x="665" y="85" width="165" height="125" rx="15" fill="#f2eafa" stroke="#8861a8" stroke-width="2"/><text x="747" y="120" text-anchor="middle" fill="#704b91" font-size="16" font-weight="bold">IV. TƏDQİQAT</text><text x="747" y="148" text-anchor="middle" fill="#40536b" font-size="12">Etika, izaholunma</text><text x="747" y="166" text-anchor="middle" fill="#40536b" font-size="12">və yekun layihə</text>
+<text x="425" y="260" text-anchor="middle" fill="#64748b" font-size="13">Mərhələlər bir-birinin üzərində qurulur və yekun intellektual layihə ilə tamamlanır.</text></svg><figcaption>Şəkil 1. Elektron dərsliyin konseptual tədris xəritəsi.</figcaption></figure>
+<p>Elektron resursun əsas üstünlüyü mövzular arasında sürətli keçid, mətnin oxunaqlılığının tənzimlənməsi, gecə rejimi, çap/PDF imkanı, daxili axtarış və özünü yoxlama elementləridir. Bu versiyada keçidlər və idarəetmə düymələri lokal işləyir; internet tələb edən xarici resurslar ayrıca işarələnir.</p>
+
+<h2 id="aim">4. Fənnin məqsədi və vəzifələri</h2>
+<p><strong>Fənnin məqsədi</strong> magistrantlarda süni intellekt və maşın öyrənməsinin nəzəri, riyazi və praktiki əsasları üzrə sistemli biliklər formalaşdırmaq, real problemlərin verilənlər və alqoritmlər əsasında modelləşdirilməsi, intellektual modellərin qurulması, öyrədilməsi, qiymətləndirilməsi və nəticələrin elmi şərhi bacarıqlarını inkişaf etdirməkdir.</p>
+<h3>Fənnin əsas vəzifələri</h3>
+<ol><li>Süni intellektin yaranma tarixini, əsas anlayışlarını və inkişaf istiqamətlərini izah etmək.</li><li>Maşın öyrənməsində istifadə olunan riyazi aparatın — xətti cəbr, ehtimal, statistika, törəmə və optimallaşdırmanın tətbiqini öyrətmək.</li><li>Verilənlərin toplanması, təmizlənməsi, çevrilməsi və ilkin təhlili bacarıqlarını formalaşdırmaq.</li><li>Nəzarətli, nəzarətsiz və möhkəmləndirmə əsasında öyrənmə yanaşmalarını müqayisə etmək.</li><li>Reqressiya, təsnifat, klasterləşdirmə və ansambl alqoritmlərini tətbiq etmək.</li><li>Süni neyronların və neyron şəbəkələrinin riyazi iş mexanizmlərini mənimsətmək.</li><li>Python ekosistemində modellərin qurulması və eksperimentlərin aparılması bacarığını inkişaf etdirmək.</li><li>Model nəticələrini uyğun metrikalarla qiymətləndirmək, qərəzlilik və etibarlılıq məsələlərini araşdırmaq.</li><li>Elmi tədqiqat və layihə yanaşması ilə müstəqil intellektual sistem prototipi hazırlamaq.</li></ol>
+
+<h2 id="outcomes">5. Fənnin təlim nəticələri</h2>
+<p>Fənni uğurla başa vuran magistrant aşağıdakı bilik və bacarıqları nümayiş etdirməlidir:</p>
+<div class="tablewrap"><table><thead><tr><th>Kod</th><th>Təlim nəticəsi</th><th>Ölçülə bilən fəaliyyət</th></tr></thead><tbody>
+<tr><td>TN1</td><td>Süni intellektin əsas anlayışlarını və inkişaf mərhələlərini izah edir.</td><td>Tarixi mərhələləri müqayisə edir, terminləri düzgün tətbiq edir.</td></tr>
+<tr><td>TN2</td><td>AI/ML məsələlərinin riyazi əsaslarını tətbiq edir.</td><td>Vektor, matris, ehtimal, törəmə və itki funksiyası üzrə hesablamalar aparır.</td></tr>
+<tr><td>TN3</td><td>Verilənləri təhlil və emal edir.</td><td>Çatışmayan dəyərləri, kənar qiymətləri və dəyişən tiplərini müəyyən edir.</td></tr>
+<tr><td>TN4</td><td>Maşın öyrənməsi alqoritmlərini seçir və tətbiq edir.</td><td>Ən azı iki modeli eyni verilənlərdə müqayisə edir.</td></tr>
+<tr><td>TN5</td><td>Neyron şəbəkəsinin əsas mexanizmlərini izah edir.</td><td>Perceptron, aktivləşmə, forward və backpropagation addımlarını şərh edir.</td></tr>
+<tr><td>TN6</td><td>Modelin keyfiyyətini qiymətləndirir.</td><td>Uyğun metrikaları hesablayır və nəticələri əsaslandırır.</td></tr>
+<tr><td>TN7</td><td>Etik və etibarlılıq risklərini təhlil edir.</td><td>Qərəzlilik, məxfilik, şəffaflıq və təhlükəsizlik risklərini müəyyən edir.</td></tr>
+<tr><td>TN8</td><td>Müstəqil AI layihəsi və elmi hesabat hazırlayır.</td><td>Problemi, metodologiyanı, eksperimenti və nəticələri sənədləşdirir.</td></tr>
+</tbody></table></div>
+
+<h3>Öyrənmə nəticələrinin nümayiş etdirilməsi</h3>
+<p>Təlim nəticəsi yalnız mövzunun oxunması ilə deyil, tələbənin müşahidə edilə bilən işi ilə təsdiqlənir. Buna görə hər fəsildə nəzəri bilik, proqramlaşdırma işi və nəticənin izahı bir-birini tamamlamalıdır.</p>
+<div class="tablewrap"><table><thead><tr><th>Nəticə sahəsi</th><th>Tələbənin nümayiş etdirməli olduğu fəaliyyət</th><th>Qiymətləndirmə sübutu</th></tr></thead><tbody>
+<tr><td>Anlayış və nəzəriyyə</td><td>Alqoritmin nəyi həll etdiyini və hansı fərziyyələrə söykəndiyini izah edir.</td><td>Şifahi cavab, qısa yazılı izah</td></tr>
+<tr><td>Riyazi əsaslandırma</td><td>Düsturdakı dəyişənləri müəyyən edir, hesablamanı addım-addım aparır.</td><td>Həll edilmiş nümunə, hesab cədvəli</td></tr>
+<tr><td>Proqramlaşdırma</td><td>Kodu icra edir, girişləri dəyişir, xətaları tapıb düzəldir.</td><td>Notebook, kod və icra nəticəsi</td></tr>
+<tr><td>Eksperiment</td><td>Modeli uyğun verilənlərdə öyrədir və ədalətli müqayisə aparır.</td><td>Eksperiment protokolu, metriklər</td></tr>
+<tr><td>Elmi şərh</td><td>Nəticəni, məhdudiyyəti və tətbiq riskini əsaslandırır.</td><td>Hesabat, təqdimat və müdafiə</td></tr>
+</tbody></table></div>
+<div class="outcome"><strong>Metodiki prinsip:</strong> “İcra olundu” ifadəsi “öyrənildi” demək deyil. Tələbə kodun nə etdiyini, niyə həmin metodu seçdiyini və nəticənin nə ifadə etdiyini izah etməlidir.</div>
+<h2 id="prereq">6. Fənnin öyrənilməsi üçün ilkin biliklər</h2>
+<p>Fənn sıfırdan başlayan magistrant üçün də mərhələli şəkildə qurulsa da, aşağıdakı ilkin biliklər öyrənmə prosesini asanlaşdırır. Hər hansı mövzuda boşluq olduqda tələbə müvafiq hazırlıq materialını paralel mənimsəyə bilər.</p>
+<div class="grid2"><div class="card"><h3>Riyaziyyat</h3><p>Cəbr, funksiyalar, qrafiklər, vektor və matrislər, törəmənin ilkin anlayışı, ehtimal və təsviri statistika.</p></div><div class="card"><h3>Proqramlaşdırma</h3><p>Dəyişənlər, verilən tipləri, şərt operatorları, dövrlər, funksiyalar, siyahılar və fayllarla iş.</p></div><div class="card"><h3>Kompüter savadlılığı</h3><p>Fayl sistemi, brauzer, əməliyyat sistemi, proqram quraşdırılması və internetdən təhlükəsiz istifadə.</p></div><div class="card"><h3>Elmi düşünmə</h3><p>Problemi müəyyənləşdirmək, fərziyyə qurmaq, müşahidə aparmaq və nəticəni əsaslandırmaq.</p></div></div>
+<div class="callout"><strong>Özünüqiymətləndirmə:</strong> Əgər Python təcrübəniz azdırsa, əvvəlcə 3-cü fəsildəki proqramlaşdırma mühitini və əsas Python konstruksiyalarını mənimsəyin. Riyazi boşluqlar üçün 2-ci fəslə təkrar qayıtmaq tövsiyə olunur.</div>
+
+<h2 id="roadmap">7. Süni intellektin öyrənilməsi üzrə yol xəritəsi</h2>
+<p>AI öyrənilməsi ardıcıl bilik quruculuğu tələb edir. Məsələn, neyron şəbəkəsini düzgün öyrətmək üçün əvvəlcə verilənlərin xüsusiyyətlərini, vektor-matris əməliyyatlarını, itki funksiyasını və optimallaşdırma ideyasını anlamaq vacibdir.</p>
+<figure><svg viewBox="0 0 820 540" role="img" aria-label="Süni intellekt öyrənmə yol xəritəsi"><defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#2463a6"/></marker></defs>
+<g font-family="Arial" text-anchor="middle"><rect x="250" y="15" width="320" height="55" rx="12" fill="#102747"/><text x="410" y="49" fill="white" font-size="17" font-weight="bold">1. Süni intellektə giriş</text>
+<path d="M410 70V98" stroke="#2463a6" stroke-width="2" marker-end="url(#arr2)"/><rect x="250" y="105" width="320" height="55" rx="12" fill="#2463a6"/><text x="410" y="139" fill="white" font-size="17">2. Riyazi baza və Python</text>
+<path d="M410 160V188" stroke="#2463a6" stroke-width="2" marker-end="url(#arr2)"/><rect x="250" y="195" width="320" height="55" rx="12" fill="#22a6a1"/><text x="410" y="229" fill="white" font-size="17">3. Verilənlər və ilkin emal</text>
+<path d="M410 250V278" stroke="#2463a6" stroke-width="2" marker-end="url(#arr2)"/><rect x="250" y="285" width="320" height="55" rx="12" fill="#d18c20"/><text x="410" y="319" fill="white" font-size="17">4. Klassik maşın öyrənməsi</text>
+<path d="M410 340V368" stroke="#2463a6" stroke-width="2" marker-end="url(#arr2)"/><rect x="250" y="375" width="320" height="55" rx="12" fill="#79569a"/><text x="410" y="409" fill="white" font-size="17">5. Neyron şəbəkələri və Deep Learning</text>
+<path d="M410 430V458" stroke="#2463a6" stroke-width="2" marker-end="url(#arr2)"/><rect x="250" y="465" width="320" height="55" rx="12" fill="#16817d"/><text x="410" y="499" fill="white" font-size="17">6. Tətbiq, tədqiqat və yekun layihə</text></g></svg><figcaption>Şəkil 2. Fənnin öyrənilməsi üçün mərhələli yol xəritəsi.</figcaption></figure>
+<div class="tablewrap"><table><thead><tr><th>Mərhələ</th><th>Əsas məzmun</th><th>Gözlənilən nəticə</th></tr></thead><tbody>
+<tr><td>1. Konseptual baza</td><td>AI tarixi, anlayışlar, simvolik və öyrənən sistemlər</td><td>AI problemini və tətbiq sahəsini tanımaq</td></tr>
+<tr><td>2. Riyaziyyat və alətlər</td><td>Vektor, matris, statistika, Python</td><td>Sadə hesablamaları kodlaşdırmaq</td></tr>
+<tr><td>3. Verilənlər</td><td>EDA, təmizləmə, çevirmə</td><td>Model üçün keyfiyyətli verilən hazırlamaq</td></tr>
+<tr><td>4. Klassik ML</td><td>Reqressiya, təsnifat, klasterləşdirmə</td><td>Uyğun alqoritm seçmək və müqayisə etmək</td></tr>
+<tr><td>5. Deep Learning</td><td>Perceptron, backpropagation, CNN və s.</td><td>Neyron modelini qurmaq və öyrətmək</td></tr>
+<tr><td>6. Tədqiqat</td><td>Etika, izahlana bilmə, eksperiment və layihə</td><td>Elmi əsaslandırılmış prototip hazırlamaq</td></tr>
+</tbody></table></div>
+
+<h2 id="usage">8. Elektron dərslikdən istifadə qaydası</h2>
+<ol class="steps"><li><strong>Mündəricatdan mövzu seçin.</strong> Sol paneldəki bölmə adına kliklədikdə səhifə həmin hissəyə keçir.</li><li><strong>Axtarışdan istifadə edin.</strong> Sol menyunun yuxarısındakı sahəyə açar söz yazaraq uyğun bölmələri süzün.</li><li><strong>Oxu görünüşünü tənzimləyin.</strong> A− və A+ düymələri mətn ölçüsünü dəyişir; gecə rejimi rəng palitrasını dəyişir.</li><li><strong>Çap/PDF funksiyasından istifadə edin.</strong> Brauzerin çap pəncərəsində “Save as PDF” seçərək bölməni PDF kimi saxlaya bilərsiniz.</li><li><strong>Şəkil və sxemləri izləyin.</strong> Hər fiqurun altında onun məzmununu izah edən başlıq verilir.</li><li><strong>Tapşırıq və yoxlamaları tamamlayın.</strong> Fəsil sonundakı sualları müstəqil cavablandırın və nəticəni təhlil edin.</li></ol>
+<div class="tool no-print"><strong>İnteraktiv oxu aləti</strong><p class="note">Bu paneldə mətn ölçüsünü və rəng rejimini sınaqdan keçirə bilərsiniz.</p><button onclick="changeFont(-1)">Şrifti kiçilt</button> <button onclick="changeFont(1)">Şrifti böyüt</button> <button onclick="toggleTheme()">Görünüşü dəyiş</button> <button onclick="window.scrollTo({top:0,behavior:'smooth'})">Səhifənin əvvəlinə qayıt</button></div>
+
+<h2 id="symbols">9. İstifadə olunan işarələr, simvollar və qısaltmalar</h2>
+<div class="tablewrap"><table><thead><tr><th>İşarə / qısaltma</th><th>İngiliscə açılışı</th><th>İzahı</th></tr></thead><tbody>
+<tr><td>AI</td><td>Artificial Intelligence</td><td>Süni intellekt — intellektual tapşırıqları yerinə yetirən metod və sistemlər sahəsi.</td></tr>
+<tr><td>ML</td><td>Machine Learning</td><td>Maşın öyrənməsi — verilənlərdən nümunə və qanunauyğunluq öyrənən metodlar.</td></tr>
+<tr><td>DL</td><td>Deep Learning</td><td>Dərin öyrənmə — çoxqatlı neyron şəbəkələrinə əsaslanan yanaşmalar.</td></tr>
+<tr><td>ANN</td><td>Artificial Neural Network</td><td>Süni neyron şəbəkəsi.</td></tr>
+<tr><td> dataset</td><td>Dataset</td><td>Analiz və model öyrədilməsi üçün istifadə olunan verilənlər toplusu.</td></tr>
+<tr><td>Feature (X)</td><td>Feature</td><td>Modelə giriş kimi verilən əlamət və ya dəyişən.</td></tr>
+<tr><td>Label (y)</td><td>Label / Target</td><td>Nəzarətli öyrənmədə proqnozlaşdırılan hədəf dəyişən.</td></tr>
+<tr><td>Model</td><td>Model</td><td>Verilənlərdən öyrənilmiş parametr və qaydalar sistemi.</td></tr>
+<tr><td>Loss (L)</td><td>Loss Function</td><td>Model proqnozunun səhvini ölçən funksiya.</td></tr>
+<tr><td>η</td><td>Learning Rate</td><td>Öyrənmə sürəti; optimallaşdırma addımının ölçüsünü müəyyən edir.</td></tr>
+<tr><td>∇</td><td>Gradient</td><td>Funksiyanın dəyişmə istiqamətini və sürətini göstərən vektor.</td></tr>
+<tr><td>TP / FP / TN / FN</td><td>Confusion Matrix Terms</td><td>Təsnifat nəticələrində doğru/m yanlış müsbət və mənfi hallar.</td></tr>
+<tr><td>EDA</td><td>Exploratory Data Analysis</td><td>Verilənlərin ilkin tədqiqat xarakterli təhlili.</td></tr>
+<tr><td>API</td><td>Application Programming Interface</td><td>Proqram komponentlərinin qarşılıqlı əlaqə interfeysi.</td></tr>
+<tr><td>GPU</td><td>Graphics Processing Unit</td><td>Paralel hesablamalar üçün istifadə olunan qrafik prosessor.</td></tr>
+</tbody></table></div>
+<div class="callout"><strong>Riyazi yazılış:</strong> \(x\) — giriş dəyişəni, \(y\) — hədəf dəyişəni, \(\hat y\) — modelin proqnozu, \(w\) — çəki, \(b\) — sürüşmə (bias), \(f(x)\) — funksiya, \(L\) — itki funksiyası.</div>
+
+<h2 id="environment">10. Proqramlaşdırma mühitinin hazırlanması</h2>
+<p>Praktiki məşğələlərdə əsas proqramlaşdırma dili Python olacaq. Başlanğıc mərhələdə tələbələrə brauzer üzərindən işləyən Google Colab mühiti tövsiyə edilir. Daha sonra lokal kompüterdə Python və Visual Studio Code quraşdırılaraq layihələr müstəqil idarə oluna bilər.</p>
+<div class="grid2"><div class="card"><h3>Google Colab</h3><p>Quraşdırma tələb etməyən bulud əsaslı Jupyter Notebook mühiti. Python kodunu brauzerdə icra etmək üçün uyğundur.</p><p><a href="https://colab.research.google.com/" target="_blank" rel="noopener">Google Colab-ı açın ↗</a></p></div><div class="card"><h3>Python</h3><p>Ümumi təyinatlı proqramlaşdırma dili. ML və elmi hesablamalar üçün geniş ekosistemə malikdir.</p><p><a href="https://www.python.org/downloads/" target="_blank" rel="noopener">Python yüklə ↗</a></p></div><div class="card"><h3>Visual Studio Code</h3><p>Kod redaktoru, terminal, Python genişlənməsi və layihə idarəetməsi.</p><p><a href="https://code.visualstudio.com/" target="_blank" rel="noopener">VS Code ↗</a></p></div><div class="card"><h3>Anaconda / Jupyter</h3><p>Elmi Python mühiti və notebook əsaslı interaktiv proqramlaşdırma.</p><p><a href="https://www.anaconda.com/download" target="_blank" rel="noopener">Anaconda ↗</a> · <a href="https://jupyter.org/" target="_blank" rel="noopener">Jupyter ↗</a></p></div></div>
+<h3>10.1. Google Colab-da ilk notebook</h3>
+<ol class="steps"><li><a href="https://colab.research.google.com/" target="_blank" rel="noopener">Google Colab</a> səhifəsini açın və Google hesabınızla daxil olun.</li><li>“New Notebook” seçərək yeni notebook yaradın.</li><li>Aşağıdakı kodu ilk hüceyrəyə daxil edin və Shift+Enter ilə icra edin.</li><li>Nəticənin ekranda göründüyünü yoxlayın və notebook-u Google Drive-da saxlayın.</li></ol>
+<div class="codehead"><span>Python · ilk sınaq</span><button class="copy" onclick="copyCode('code1')">Kodu köçür</button></div><pre id="code1">print("Salam, Süni İntellekt!")
+
+ad = "Magistrant"
+movzu = "Maşın öyrənməsi"
+print(f"{ad}, bu gün {movzu} öyrənirik.")</pre>
+<div class="callout"><strong>Gözlənilən nəticə:</strong><br><code>Salam, Süni İntellekt!</code><br><code>Magistrant, bu gün Maşın öyrənməsi öyrənirik.</code></div>
+<h3>10.2. Əsas kitabxanaların quraşdırılması</h3>
+<p>Google Colab-da NumPy, Pandas və Matplotlib adətən əvvəlcədən mövcuddur. Lokal mühitdə terminalda aşağıdakı əmri icra etmək olar:</p>
+<div class="codehead"><span>Terminal · kitabxanaların quraşdırılması</span><button class="copy" onclick="copyCode('code2')">Kodu köçür</button></div><pre id="code2">python -m pip install numpy pandas matplotlib scikit-learn jupyter</pre>
+<div class="tablewrap"><table><thead><tr><th>Kitabxana</th><th>Təyinatı</th><th>Rəsmi sənədləşmə</th></tr></thead><tbody>
+<tr><td>NumPy</td><td>Massivlər, vektor və matris hesablamaları</td><td><a href="https://numpy.org/doc/" target="_blank" rel="noopener">numpy.org/doc</a></td></tr>
+<tr><td>Pandas</td><td>Cədvəl tipli verilənlərin emalı</td><td><a href="https://pandas.pydata.org/docs/" target="_blank" rel="noopener">pandas.pydata.org/docs</a></td></tr>
+<tr><td>Matplotlib</td><td>Qrafik və vizuallaşdırma</td><td><a href="https://matplotlib.org/stable/" target="_blank" rel="noopener">matplotlib.org</a></td></tr>
+<tr><td>Scikit-learn</td><td>Klassik maşın öyrənməsi alqoritmləri</td><td><a href="https://scikit-learn.org/stable/user_guide.html" target="_blank" rel="noopener">scikit-learn.org</a></td></tr>
+<tr><td>PyTorch</td><td>Dərin öyrənmə və tensor əməliyyatları</td><td><a href="https://pytorch.org/docs/stable/index.html" target="_blank" rel="noopener">pytorch.org</a></td></tr>
+<tr><td>TensorFlow</td><td>Neyron şəbəkələri və ML platforması</td><td><a href="https://www.tensorflow.org/learn" target="_blank" rel="noopener">tensorflow.org</a></td></tr>
+</tbody></table></div>
+<div class="tool"><strong>Mühit hazırlığı üzrə yoxlama siyahısı</strong><div class="checklist" id="setupChecks">
+<label><input type="checkbox"> Google Colab və ya lokal Python mühiti açılıb.</label>
+<label><input type="checkbox"> İlk Python proqramı uğurla icra edilib.</label>
+<label><input type="checkbox"> NumPy və Pandas kitabxanaları əlçatandır.</label>
+<label><input type="checkbox"> Notebook saxlanılıb və yenidən açılması yoxlanılıb.</label>
+</div><p class="result" id="setupProgress">Tamamlanıb: 0 / 4</p></div>
+
+<h2 id="labs">11. Laboratoriya işlərinin icrası və qiymətləndirilməsi qaydaları</h2>
+<p>Laboratoriya işləri nəzəri biliklərin praktik tətbiqinə, proqramlaşdırma bacarıqlarının inkişafına və tədqiqat mədəniyyətinin formalaşmasına xidmət edir. Hər laboratoriya işi tələbənin müstəqil fəaliyyəti, kodun izahı və nəticələrin şərhi əsasında qiymətləndirilir.</p>
+<h3>11.1. Laboratoriya işinin standart mərhələləri</h3>
+<ol class="steps"><li><strong>Məqsəd və problem:</strong> işin məqsədini və həll ediləcək məsələni öz sözlərinizlə ifadə edin.</li><li><strong>Nəzəri hazırlıq:</strong> istifadə edilən anlayışları, düsturları və alqoritmin məntiqini izah edin.</li><li><strong>Mühitin hazırlanması:</strong> notebook, kitabxana, verilənlər və fayl yollarını yoxlayın.</li><li><strong>İcra:</strong> kodu mərhələlərlə yazın və hər mərhələnin nəticəsini yoxlayın.</li><li><strong>Nəticələrin təhlili:</strong> cədvəl, qrafik və metrikaları izah edin; gözlənilən nəticə ilə müqayisə aparın.</li><li><strong>Hesabat:</strong> məqsəd, nəzəri hissə, kod, nəticə, müzakirə və istifadə olunan mənbələri təqdim edin.</li><li><strong>Müdafiə:</strong> müəllimin suallarına cavab verin və kodun əsas hissələrini izah edin.</li></ol>
+<h3>11.2. Laboratoriya hesabatının tövsiyə olunan strukturu</h3>
+<div class="tablewrap"><table><thead><tr><th>Bölmə</th><th>Hesabatda təqdim edilməli məlumat</th></tr></thead><tbody>
+<tr><td>Başlıq</td><td>Universitet, fakültə, fənn, laboratoriya nömrəsi, tələbənin adı və tarix.</td></tr><tr><td>Məqsəd</td><td>İşin məqsədi və həll olunan problem.</td></tr><tr><td>Nəzəri əsas</td><td>Əsas anlayışlar, düsturlar və alqoritm.</td></tr><tr><td>İcra mühiti</td><td>Python versiyası, kitabxanalar, dataset və texniki vasitələr.</td></tr><tr><td>Proqram kodu</td><td>Şərhlərlə birlikdə işlək kod və lazım gəldikdə nəticə ekran görüntüsü.</td></tr><tr><td>Nəticələr</td><td>Hesablamalar, qrafiklər, cədvəllər və model metrikaları.</td></tr><tr><td>Müzakirə</td><td>Nəticələrin mənası, məhdudiyyətlər və mümkün səhv mənbələri.</td></tr><tr><td>Nəticə və mənbələr</td><td>Öyrənilənlər və istifadə olunmuş etibarlı mənbələr.</td></tr></tbody></table></div>
+<h3>11.3. Qiymətləndirmə meyarları</h3>
+<p>Aşağıdakı bölgü laboratoriya işlərinin vahid və şəffaf qiymətləndirilməsi üçün tövsiyə olunan 100 ballıq rubrikadır. Fənnin rəsmi sillabusunda fərqli bölgü təsdiq edilərsə, həmin bölgü əsas götürülməlidir.</p>
+<div class="tablewrap"><table><thead><tr><th>Meyar</th><th>Çəki</th><th>Qiymətləndirilən göstərici</th></tr></thead><tbody>
+<tr><td>Nəzəri hazırlıq</td><td>20 bal</td><td>Anlayışların və metodun düzgün izahı.</td></tr><tr><td>Kodun düzgünlüyü</td><td>25 bal</td><td>Kodun işləməsi, məntiqi və təkrar icra oluna bilməsi.</td></tr><tr><td>Nəticələrin təhlili</td><td>25 bal</td><td>Hesablamaların, qrafiklərin və metrikaların şərhi.</td></tr><tr><td>Müstəqillik və yaradıcılıq</td><td>15 bal</td><td>Əlavə sınaq, müqayisə və ya təkmilləşdirmə.</td></tr><tr><td>Hesabat və müdafiə</td><td>15 bal</td><td>Struktur, istinadlar, təqdimat və suallara cavab.</td></tr></tbody></table></div>
+<div class="tool"><strong>Qiymətləndirmə kalkulyatoru</strong><p class="note">Hər meyar üzrə topladığınız balı daxil edin. Maksimumlar müvafiq olaraq 20, 25, 25, 15 və 15-dir.</p>
+<div class="grid2"><label>Nəzəri hazırlıq (0–20)<br><input type="number" id="s1" min="0" max="20" value="0"></label><label>Kodun düzgünlüyü (0–25)<br><input type="number" id="s2" min="0" max="25" value="0"></label><label>Nəticələrin təhlili (0–25)<br><input type="number" id="s3" min="0" max="25" value="0"></label><label>Müstəqillik (0–15)<br><input type="number" id="s4" min="0" max="15" value="0"></label><label>Hesabat və müdafiə (0–15)<br><input type="number" id="s5" min="0" max="15" value="0"></label></div><button class="primary" onclick="calcScore()">Yekun balı hesabla</button><p class="result" id="scoreResult" aria-live="polite">Yekun nəticə: — / 100</p></div>
+<h3>11.4. Akademik dürüstlük və təhlükəsiz iş</h3>
+<ul><li>İstifadə olunan kod, dataset, şəkil və mətn mənbələri göstərilməlidir.</li><li>Başqasının kodunu öz işi kimi təqdim etmək yolverilməzdir; istifadə edilmiş nümunələrə istinad verilməlidir.</li><li>Şəxsi və məxfi məlumatlar açıq notebook və repozitoriyalara yerləşdirilməməlidir.</li><li>Eksperimentlərdə nəticəni dəyişdirən təsadüfi toxum (random seed), kitabxana versiyaları və verilənlərin mənbəyi qeyd olunmalıdır.</li><li>Generativ AI alətlərindən istifadə edildikdə onların hansı məqsədlə istifadə olunduğu müəllimin müəyyən etdiyi qaydada açıqlanmalıdır.</li></ul>
+
+<h2 id="studycycle">12. Fəsillərin öyrənilməsi üçün tövsiyə olunan iş dövrü</h2>
+<p>Hər mövzunu eyni ardıcıllıqla işləmək tələbəyə bilikləri mərhələli toplamağa və layihə hazırlamaq bacarığını inkişaf etdirməyə kömək edir. Müəllim fənnin təqvim planına uyğun olaraq müddətləri dəyişə bilər.</p>
+<ol class="steps">
+<li><strong>Mövzuya hazırlıq:</strong> əvvəlki bilikləri və yeni mövzunun əsas terminlərini nəzərdən keçirin.</li>
+<li><strong>Nəzəri oxu:</strong> anlayışları, diaqramları, düsturları və onların dəyişənlərini qeyd edin.</li>
+<li><strong>Əl ilə nümunə:</strong> kiçik verilənlər üzərində alqoritmin ən azı bir addımını özünüz hesablayın.</li>
+<li><strong>Kod laboratoriyası:</strong> notebook-u icra edin; nəticəni dəyişən girişlər və parametrlərlə yoxlayın.</li>
+<li><strong>Müstəqil tapşırıq:</strong> nümunədəki dataset və ya parametrlərdən fərqli variantı həll edin.</li>
+<li><strong>Refleksiya:</strong> nə öyrəndiyinizi, hansı çətinliklə qarşılaşdığınızı və nəticənin məhdudiyyətini yazın.</li>
+</ol>
+<h3>Həftəlik fərdi öyrənmə jurnalı</h3>
+<div class="tool"><label for="journalTopic">Öyrənilən mövzu</label><input id="journalTopic" placeholder="Məsələn: Logistic Regression" style="width:100%">
+<label for="journalLearn">Bu həftə nəyi öyrəndim?</label><textarea id="journalLearn" rows="3" style="width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)"></textarea>
+<label for="journalIssue">Hansı sual və ya çətinlik qaldı?</label><textarea id="journalIssue" rows="2" style="width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)"></textarea>
+<button type="button" onclick="makeJournal()">Öyrənmə qeydi yarat</button><div id="journalOut" class="result" aria-live="polite"></div></div>
+<h2>Yekun metodiki tövsiyələr</h2>
+<p>Bu giriş bölməsini tamamladıqdan sonra tələbə dərsliyin strukturunu, fənnin məqsəd və nəticələrini, öyrənmə ardıcıllığını, proqramlaşdırma mühitinin hazırlanmasını və laboratoriya hesabatının tələblərini bilməlidir. Əsas mühazirələrə keçməzdən əvvəl Python mühitinin işlək olduğunu yoxlamaq və yol xəritəsindəki mərhələləri nəzərdən keçirmək tövsiyə olunur.</p>
+<div class="callout"><strong>Növbəti bölmə:</strong> II. Əsas mühazirələr — Fəsil 1. “Süni intellektə giriş və tarixi inkişaf”. Bu fəsildə süni intellekt anlayışı, Turing testi, Dartmouth konfransı, AI qışları, ekspert sistemləri, maşın öyrənməsi və generativ AI ardıcıl şəkildə araşdırılacaq.</div>
+<div class="footer"><span>MDU · Riyaziyyat və İnformasiya Texnologiyaları fakültəsi</span><span>Süni intellekt və maşın öyrənməsi · Giriş və metodiki bölmə</span><a href="#title">Yuxarı qayıt ↑</a></div>
+</main></div>
+<script>
+let baseFont=16;
+function changeFont(d){baseFont=Math.min(22,Math.max(14,baseFont+d));document.querySelector('main').style.fontSize=baseFont+'px';}
+function toggleTheme(){document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';}
+function copyCode(id){const el=document.getElementById(id);navigator.clipboard.writeText(el.innerText).then(()=>{const b=event.currentTarget;const old=b.textContent;b.textContent='Köçürüldü ✓';setTimeout(()=>b.textContent=old,1300)}).catch(()=>alert('Kopyalama mümkün olmadı. Kodu seçib Ctrl+C istifadə edin.'))}
+function calcScore(){const ids=['s1','s2','s3','s4','s5'],max=[20,25,25,15,15];let sum=0,valid=true;ids.forEach((id,i)=>{let v=Number(document.getElementById(id).value);if(v<0||v>max[i]||!Number.isFinite(v)){valid=false}sum+=v});const out=document.getElementById('scoreResult');if(!valid){out.textContent='Xəta: daxil edilən ballar müəyyən edilmiş aralıqda olmalıdır.';return}let level=sum>=90?'Çox yüksək nəticə':sum>=80?'Yaxşı nəticə':sum>=70?'Kafi nəticə':sum>=60?'Minimum qənaətbəxş nəticə':'Təkmilləşdirməyə ehtiyac var';out.textContent=`Yekun nəticə: ${sum} / 100 — ${level}`;}
+document.querySelectorAll('#setupChecks input').forEach(x=>x.addEventListener('change',()=>{let n=[...document.querySelectorAll('#setupChecks input')].filter(y=>y.checked).length;document.getElementById('setupProgress').textContent=`Tamamlanıb: ${n} / 4`}));
+document.getElementById('search').addEventListener('input',e=>{let q=e.target.value.toLocaleLowerCase('az');document.querySelectorAll('#nav a').forEach(a=>a.style.display=a.textContent.toLocaleLowerCase('az').includes(q)?'block':'none')});
+const links=[...document.querySelectorAll('#nav a')];const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id))}}),{rootMargin:'-20% 0px -70% 0px'});sections.forEach(s=>obs.observe(s));
+window.addEventListener('scroll',()=>{let h=document.documentElement;document.getElementById('bar').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});
+
+function makeJournal(){
+ const topic=document.getElementById('journalTopic').value.trim();
+ const learn=document.getElementById('journalLearn').value.trim();
+ const issue=document.getElementById('journalIssue').value.trim();
+ const out=document.getElementById('journalOut');
+ if(!topic||!learn){out.textContent='Mövzunu və öyrəndiyiniz məqamı yazın.';return;}
+ out.innerHTML='<strong>'+escapeHtml(topic)+'</strong><br>Öyrəndiklərim: '+escapeHtml(learn)+'<br>Qalan sual: '+escapeHtml(issue||'Qeyd edilməyib');
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+</script>
+</body></html>

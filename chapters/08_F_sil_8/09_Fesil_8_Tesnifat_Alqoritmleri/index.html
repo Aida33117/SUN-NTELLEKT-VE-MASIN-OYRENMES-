@@ -1,0 +1,375 @@
+<!doctype html><html lang="az"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fəsil 8. Təsnifat alqoritmləri</title>
+<style>
+:root{--n:#14263e;--b:#2866a5;--t:#13857f;--g:#d69a2c;--ink:#263649;--mut:#637489;--bg:#f3f6fa;--line:#dce4ed}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 "Segoe UI",Arial}header{background:linear-gradient(120deg,#14263e,#245c91 65%,#11817d);color:white;padding:38px max(22px,calc((100% - 1200px)/2))}h1{font-size:clamp(28px,4vw,44px);line-height:1.15;margin:12px 0}header p{color:#e5eef8;max-width:950px}.shell{max-width:1200px;margin:auto;padding:22px;display:grid;grid-template-columns:255px 1fr;gap:22px}nav{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;background:white;border:1px solid var(--line);border-radius:14px;padding:14px}nav b{display:block;color:var(--n);margin-bottom:8px}nav a{display:block;color:#4b6178;text-decoration:none;padding:4px 7px;border-radius:6px;font-size:13px}nav a:hover{background:#edf4fb}main{min-width:0}.section,.card{background:white;border:1px solid var(--line);border-radius:15px;padding:22px;margin-bottom:18px;box-shadow:0 4px 16px #14243a08}h2{font-size:24px;color:var(--n);border-bottom:2px solid #eaf0f6;padding-bottom:9px;margin:0 0 14px}h3{color:#20547d;margin:22px 0 7px;font-size:19px}.lead{font-size:17px;color:#435a72}.pill{display:inline-block;background:#eaf2fb;color:#245b8d;border-radius:30px;padding:3px 10px;font-size:12px;font-weight:bold}.note{background:#eef8f7;border-left:4px solid var(--t);padding:12px 15px;border-radius:8px;margin:13px 0}.warn{background:#fff8e9;border-left-color:var(--g)}.formula{background:#f2f5fa;border:1px solid var(--line);padding:13px;border-radius:9px;text-align:center;font:18px Georgia;overflow:auto}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.tile{border:1px solid var(--line);background:#fbfcfe;border-radius:10px;padding:13px}.tile strong{color:var(--n)}table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}th,td{border:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}th{background:#edf3f8;color:#1a3d5e}tr:nth-child(even) td{background:#fafbfd}button,input,select{font:inherit}button{border:0;background:var(--b);color:white;border-radius:8px;padding:9px 14px;cursor:pointer;font-weight:600}button.secondary{background:#e8eff7;color:#244d74}button.green{background:#25845b}input,select{border:1px solid #cbd6e2;border-radius:7px;padding:7px;max-width:100%}.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}.result{padding:11px 13px;background:#f0f6fc;border-radius:8px;margin-top:10px;min-height:38px}.small{font-size:13px;color:var(--mut)}svg.diagram{width:100%;height:auto;max-height:340px;background:#fbfdff;border:1px solid var(--line);border-radius:12px;margin:10px 0}.dtext{font:14px Arial;fill:#18334e;text-anchor:middle}pre{background:#142338;color:#e6f0fb;padding:16px;border-radius:10px;overflow:auto;font:13px/1.6 Consolas,monospace;white-space:pre}.codehead{color:#47617a;font-size:13px;margin-top:14px}.quizq{border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0}.quizq label{display:block;margin:5px 0}.feedback{font-weight:600;margin-top:7px}.correct{color:#25845b}.incorrect{color:#b74b4b}.bar{height:14px;background:#e8edf3;border-radius:10px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,#2866a5,#138f85)}.matrix{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-width:430px}.mcell{padding:15px;text-align:center;border-radius:9px;background:#e9f2fb;border:1px solid #cbd9e8}.mcell strong{font-size:23px;display:block;color:#174c7b}footer{text-align:center;color:#718093;padding:25px}@media(max-width:850px){.shell{grid-template-columns:1fr}nav{position:relative;max-height:none;display:grid;grid-template-columns:repeat(2,1fr)}nav b{grid-column:1/-1}.grid2,.grid3{grid-template-columns:1fr}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style></head><body>
+<header><div class="pill">MDU · Riyaziyyat və İnformasiya Texnologiyaları fakültəsi</div><h1>Fəsil 8. Təsnifat alqoritmləri</h1><p>İkili və çoxsinifli təsnifat, Logistic Regression, KNN, Naive Bayes, Decision Tree, Random Forest, SVM, qiymətləndirmə metrikləri, ROC–AUC və sinif balanssızlığı üzrə interaktiv elektron mühazirə.</p><span class="pill">Magistratura səviyyəsi</span> <span class="pill">Laboratoriya №8</span><div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="shell"><nav><b>Fəsil üzrə naviqasiya</b>
+<a href="#out">Məqsəd və nəticələr</a><a href="#s81">8.1. Təsnifatın mahiyyəti</a><a href="#s82">8.2. İkili və çoxsinifli</a><a href="#s83">8.3. Logistic Regression</a><a href="#s84">8.4. KNN</a><a href="#s85">8.5. Naive Bayes</a><a href="#s86">8.6. Decision Tree</a><a href="#s87">8.7. Random Forest</a><a href="#s88">8.8. SVM</a><a href="#s89">8.9. Python modelləri</a><a href="#s810">8.10. Confusion Matrix</a><a href="#s811">8.11. Metriklər</a><a href="#s812">8.12. ROC və AUC</a><a href="#s813">8.13. Sinif balanssızlığı</a><a href="#s814">8.14. Müqayisə</a><a href="#practice">Praktiki tapşırıqlar</a><a href="#quiz">7 tip üzrə quiz</a><a href="#lab">Laboratoriya №8</a><a href="#glossary">Terminlər</a><a href="#refs">Ədəbiyyat</a></nav><main>
+<section class="card" id="out"><h2>Fəslin məqsədi və təlim nəticələri</h2><p class="lead">Təsnifat (Classification) — müşahidənin əvvəlcədən müəyyən edilmiş siniflərdən hansına aid olduğunu proqnozlaşdıran nəzarətli maşın öyrənməsi məsələsidir. Model xüsusiyyətlər və sinif etiketi arasındakı əlaqəni təlim verilənlərindən öyrənir.</p><div class="grid2"><div class="tile"><strong>Məqsəd</strong><p>Əsas təsnifat alqoritmlərinin riyazi məntiqini, tətbiqini, üstünlüklərini, məhdudiyyətlərini və qiymətləndirilməsini öyrətmək.</p></div><div class="tile"><strong>Əlaqəli mövzular</strong><p>Fəsil 4 — EDA; Fəsil 5 — preprocessing; Fəsil 6 — nəzarətli öyrənmə; Fəsil 7 — reqressiya.</p></div></div><p>Fəsli tamamlayan tələbə ikili və çoxsinifli təsnifat problemini qurur; altı alqoritmi tətbiq edir; Confusion Matrix, Precision, Recall, F1 və ROC–AUC nəticələrini şərh edir; balanssızlığın təsirini qiymətləndirir.</p></section>
+
+<section class="section" id="s81"><h2>8.1. Təsnifat məsələsinin mahiyyəti</h2><p>Təsnifat giriş xüsusiyyətləri vektoru <b>x</b> əsasında sinif etiketini <b>y</b> təyin edir. Təlim datasetində müşahidələrin xüsusiyyətləri (features) və məlum etiketləri (labels) olur. Alqoritm nümunələrdən qərar qaydası və ya ehtimal modeli öyrənir, sonra yeni müşahidənin sinfini proqnozlaşdırır.</p><div class="formula">f : X → Y &nbsp; ; &nbsp; ŷ = f(x)</div><p>X xüsusiyyətlər fəzası, Y mümkün siniflər çoxluğu, f öyrənilmiş təsnifat funksiyasıdır. Bir çox model əvvəlcə sinif ehtimalı və ya qərar skoru hesablayır, sonra threshold və ya maksimum ehtimala əsasən etiket seçir.</p>
+<svg class="diagram" viewBox="0 0 720 230"><defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L0 6L7 3z" fill="#58728b"/></marker></defs><rect x="15" y="65" width="135" height="70" rx="10" fill="#e9f2fb" stroke="#3976a8"/><text x="82" y="93" class="dtext">Giriş X</text><text x="82" y="113" class="dtext">x₁, x₂, …, xₚ</text><rect x="205" y="65" width="145" height="70" rx="10" fill="#fff4df" stroke="#c58b27"/><text x="277" y="93" class="dtext">Təsnifat modeli</text><text x="277" y="113" class="dtext">öyrənilmiş f(x)</text><rect x="405" y="65" width="135" height="70" rx="10" fill="#e8f6f2" stroke="#26917c"/><text x="472" y="93" class="dtext">Skor / ehtimal</text><text x="472" y="113" class="dtext">P(y|x)</text><rect x="595" y="65" width="110" height="70" rx="10" fill="#e9f2fb" stroke="#3976a8"/><text x="650" y="93" class="dtext">Sinif ŷ</text><text x="650" y="113" class="dtext">A / B / C</text><path d="M150 100H200 M350 100H400 M540 100H590" stroke="#58728b" stroke-width="2" marker-end="url(#ar)"/><text x="360" y="185" class="dtext">Təlim: etiketli nümunələrdən qayda öyrənilir · Proqnoz: yeni x üçün sinif seçilir</text></svg>
+<div class="grid3"><div class="tile"><strong>Kibertəhlükəsizlik</strong><p>Şəbəkə trafikinin normal və zərərli kimi təsnifatı.</p></div><div class="tile"><strong>Təhsil analitikası</strong><p>Tələbənin risk qrupuna aid olub-olmaması.</p></div><div class="tile"><strong>IoT</strong><p>Sensor vəziyyətinin normal, xəbərdarlıq və kritik sinifləri.</p></div><div class="tile"><strong>Maliyyə</strong><p>Əməliyyatın şübhəli və ya normal olması.</p></div><div class="tile"><strong>Computer Vision</strong><p>Obyektin kateqoriyasının tanınması.</p></div><div class="tile"><strong>Tibbi görüntü</strong><p>Şəkillərin siniflərə ayrılması; klinik qərarı əvəz etmir.</p></div></div><div class="note">Təsnifatla klasterləşdirməni qarışdırmayın: təsnifatda etiketlər təlimdə məlumdur; klasterləşdirmə adətən etiketsiz verilənlərdə qruplar axtarır.</div></section>
+
+<section class="section" id="s82"><h2>8.2. İkili və çoxsinifli təsnifat</h2><p><b>İkili təsnifat</b> iki sinifdən birini seçir (spam / spam deyil). <b>Çoxsinifli təsnifat</b> üç və daha çox qarşılıqlı istisna edən sinifdən birini seçir (məsələn, sensor statusu: normal, xəbərdarlıq, kritik). <b>Çoxetiketli təsnifat</b> bir müşahidəyə eyni vaxtda bir neçə etiket verə bilər.</p><table><tr><th>Tip</th><th>Etiket quruluşu</th><th>Nümunə</th></tr><tr><td>Binary</td><td>0 və ya 1</td><td>Spam / qeyri-spam</td></tr><tr><td>Multiclass</td><td>Yalnız bir neçə sinifdən biri</td><td>Iris: setosa, versicolor, virginica</td></tr><tr><td>Multilabel</td><td>Birdən çox etiket mümkündür</td><td>Şəkildə insan, avtomobil, yol nişanı</td></tr></table><p>Çoxsinifli problemlər OvR (hər sinifə qarşı qalanları) və OvO (sinif cütləri) strategiyaları ilə ikili məsələlərə parçalana bilər. Bəzi alqoritmlər çoxsinifli təsnifatı birbaşa dəstəkləyir.</p><div class="note">Sinifləri 0, 1, 2 kimi kodlaşdırmaq onların ədədi sırası olduğunu göstərmir. Nominal siniflərdə bu rəqəmlər sadəcə etiket kodlarıdır.</div></section>
+
+<section class="section" id="s83"><h2>8.3. Logistic Regression</h2><p>Adına baxmayaraq Logistic Regression təsnifat üçün istifadə olunan xətti qərar modelidir. Əvvəlcə z=β₀+βᵀx xətti skoru hesablanır, sonra sigmoid funksiyası onu 0–1 aralığında ehtimala çevirir.</p><div class="formula">σ(z) = 1 / (1 + e⁻ᶻ) &nbsp; ; &nbsp; P(y=1|x)=σ(β₀+βᵀx)</div><svg id="sigmoid" class="diagram" viewBox="0 0 650 270"></svg><p>Standart qaydada ehtimal threshold=0.5-dən böyükdürsə müsbət sinif seçilir. Bu hədd universal deyil: yanlış müsbət və yanlış mənfi nəticələrin qiyməti fərqlidirsə, threshold validasiya məlumatında seçilə bilər.</p><h3>Binary cross-entropy / Log-loss</h3><div class="formula">L = −(1/n) Σ [yᵢ log(pᵢ) + (1−yᵢ)log(1−pᵢ)]</div><p>Model doğru sinfə yüksək ehtimal verdikdə itki kiçik, yanlış sinfə yüksək inam verdikdə böyük olur. Regularizasiya modelin əmsallarına nəzarət edir; scikit-learn-də C cərimənin tərs gücüdür: C kiçildikcə regularizasiya güclənir.</p><div class="controls"><label>Skor z <input id="z" type="range" min="-6" max="6" step=".1" value="1.2" oninput="logCalc()"></label><b id="zv">1.2</b><label>Threshold <input id="th" type="range" min=".1" max=".9" step=".05" value=".5" oninput="logCalc()"></label><b id="thv">0.50</b></div><div class="result" id="logres"></div><pre><code>from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+
+model = make_pipeline(
+    StandardScaler(),
+    LogisticRegression(C=1.0, max_iter=2000)
+)
+model.fit(X_train, y_train)
+prob = model.predict_proba(X_test)[:, 1]
+pred = (prob >= 0.50).astype(int)</code></pre></section>
+
+<section class="section" id="s84"><h2>8.4. K-Nearest Neighbors (KNN)</h2><p>KNN yeni müşahidənin sinfini təlim nümunələri arasında ona ən yaxın k qonşunun etiketlərinə əsasən təyin edir. Bu, instance-based və lazy learning metodudur: nümunələr saxlanılır, proqnoz zamanı məsafələr hesablanır.</p><div class="formula">d(x,z) = √[Σⱼ (xⱼ−zⱼ)²] &nbsp; (Euclidean)</div><svg id="knn" class="diagram" viewBox="0 0 650 280"></svg><div class="controls"><label>k qonşu <input id="k" type="range" min="1" max="9" step="2" value="3" oninput="knnCalc()"></label><b id="kv">3</b></div><div class="result" id="knnres"></div><p>Kiçik k səs-küyə həssas, böyük k isə qərar sərhədini həddən artıq hamar edə bilər. Məsafə kimi Euclidean, Manhattan və Minkowski istifadə oluna bilər. Xüsusiyyət miqyası məsafəyə təsir etdiyindən standartlaşdırma adətən vacibdir.</p><div class="note warn">Yüksək ölçülü fəzalarda məsafələrin fərqləndiriciliyi zəifləyə bilər (curse of dimensionality). Böyük datasetlərdə proqnoz hesablama baxımından bahalı ola bilər.</div><pre><code>from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+
+knn = make_pipeline(
+    StandardScaler(),
+    KNeighborsClassifier(n_neighbors=5, weights="distance")
+)
+knn.fit(X_train, y_train)</code></pre></section>
+
+<section class="section" id="s85"><h2>8.5. Naive Bayes alqoritmi</h2><p>Naive Bayes Bayes teoreminə və xüsusiyyətlərin sinif verildikdə şərti müstəqilliyi fərziyyəsinə əsaslanır. “Naive” adı bu sadələşdirici fərziyyədən gəlir. Fərziyyə real verilənlərdə tam doğru olmasa da, metod sürətli və bəzi yüksəkölçülü məsələlərdə faydalıdır.</p><div class="formula">P(C|x) = P(x|C)P(C) / P(x)</div><p>P(C) prior, P(x|C) likelihood, P(C|x) posterior ehtimaldır. Təsnifat zamanı hər sinifin posterioru müqayisə olunur. Sadələşdirilmiş müstəqillik fərziyyəsi:</p><div class="formula">P(x|C) = Πⱼ P(xⱼ|C)</div><table><tr><th>Variant</th><th>Fərziyyə / verilən tipi</th><th>Tipik tətbiq</th></tr><tr><td>GaussianNB</td><td>Davamlı xüsusiyyətlər sinif daxilində normal paylanır</td><td>Sensor ölçmələri</td></tr><tr><td>MultinomialNB</td><td>Say və tezlik xüsusiyyətləri</td><td>Mətn, söz tezliyi</td></tr><tr><td>BernoulliNB</td><td>İkili xüsusiyyətlər</td><td>Sözün var/yox olması</td></tr><tr><td>CategoricalNB</td><td>Diskret kateqoriyalar</td><td>Kateqorik atributlar</td></tr></table><h3>Bayes teoremi — ədədi nümunə</h3><p>Hadisənin ilkin ehtimalı 10%, testin həssaslığı 90%, sağlam şəxsdə yalnış müsbət ehtimalı 5% olsun. Müsbət testdən sonra:</p><div class="formula">P(A|+) = (0.90×0.10) / [(0.90×0.10)+(0.05×0.90)] = 0.667</div><p>Posterior ehtimal 66.7%-dir. Nümunə ilkin yayılma (base rate) faktorunun vacibliyini göstərir.</p><div class="controls"><label>Prior <input id="prior" type="range" min=".01" max=".5" step=".01" value=".1" oninput="bayesCalc()"></label><label>Həssaslıq <input id="sens" type="range" min=".5" max="1" step=".01" value=".9" oninput="bayesCalc()"></label><label>False positive <input id="fpr" type="range" min=".01" max=".5" step=".01" value=".05" oninput="bayesCalc()"></label></div><div class="result" id="bayesres"></div><pre><code>from sklearn.naive_bayes import GaussianNB
+nb = GaussianNB()
+nb.fit(X_train, y_train)
+pred = nb.predict(X_test)
+probabilities = nb.predict_proba(X_test)</code></pre></section>
+
+<section class="section" id="s86"><h2>8.6. Decision Tree</h2><p>Qərar ağacı xüsusiyyətlər üzrə ardıcıl suallar verərək verilənləri alt qruplara bölür. Daxili düyün test, budaq testin nəticəsi, yarpaq isə yekun sinif proqnozudur.</p><svg class="diagram" viewBox="0 0 680 285"><rect x="245" y="12" width="190" height="52" rx="9" fill="#fff4df" stroke="#c58b27"/><text x="340" y="43" class="dtext">Şüalanma &gt; 500?</text><path d="M290 64L170 125 M390 64L510 125" stroke="#58728b" stroke-width="2" fill="none"/><rect x="80" y="125" width="180" height="52" rx="9" fill="#e9f2fb" stroke="#3976a8"/><text x="170" y="156" class="dtext">Temperatur &lt; 40?</text><rect x="420" y="125" width="180" height="52" rx="9" fill="#e8f6f2" stroke="#26917c"/><text x="510" y="156" class="dtext">Aşağı istehsal</text><path d="M130 177L80 225 M210 177L260 225" stroke="#58728b" stroke-width="2"/><rect x="15" y="225" width="130" height="45" rx="8" fill="#e8f6f2" stroke="#26917c"/><text x="80" y="253" class="dtext">Yüksək</text><rect x="195" y="225" width="130" height="45" rx="8" fill="#fff4df" stroke="#c58b27"/><text x="260" y="253" class="dtext">Orta</text><text x="195" y="98" class="dtext">Bəli</text><text x="465" y="98" class="dtext">Xeyr</text></svg><p>Bölünmələr Gini impurity və ya entropy kimi meyarlarla seçilir. İkili siniflər üçün:</p><div class="formula">Gini = 1 − Σₖ pₖ² &nbsp; ; &nbsp; H = −Σₖ pₖ log₂(pₖ)</div><p>Saf düyündə Gini=0 və entropy=0. Bölünmə uşaq düyünlərdə qarışıqlığı azaltmalıdır.</p><div class="controls"><label>Sinif A payı <input id="gp" type="range" min="0" max="1" step=".01" value=".7" oninput="giniCalc()"></label><b id="gpv">0.70</b></div><div class="result" id="ginir"></div><p>Ağacın dərinliyi və yarpaq ölçüsü məhdudlaşdırılmasa overfitting yarana bilər. <code>max_depth</code>, <code>min_samples_split</code>, <code>min_samples_leaf</code> və pruning mürəkkəbliyi idarə edir.</p><pre><code>from sklearn.tree import DecisionTreeClassifier
+tree = DecisionTreeClassifier(
+    criterion="gini", max_depth=4,
+    min_samples_leaf=5, random_state=42
+)
+tree.fit(X_train, y_train)</code></pre></section>
+
+<section class="section" id="s87"><h2>8.7. Random Forest</h2><p>Random Forest çoxsaylı qərar ağaclarının ansamblıdır. Hər ağac bootstrap nümunəsi və xüsusiyyətlərin təsadüfi alt çoxluğu əsasında qurulur. Təsnifatda ağacların səsləri birləşdirilir; sinif ehtimalı ağacların ehtimallarının ortası kimi hesablana bilər.</p><div class="formula">ŷ = mode{T₁(x), T₂(x), …, Tₘ(x)}</div><svg class="diagram" viewBox="0 0 700 235"><rect x="275" y="8" width="150" height="42" rx="8" fill="#e9f2fb" stroke="#3976a8"/><text x="350" y="35" class="dtext">Giriş x</text><g fill="#e8f6f2" stroke="#26917c"><rect x="20" y="90" width="145" height="52" rx="8"/><rect x="190" y="90" width="145" height="52" rx="8"/><rect x="360" y="90" width="145" height="52" rx="8"/><rect x="530" y="90" width="145" height="52" rx="8"/></g><text x="92" y="112" class="dtext">Ağac 1: A</text><text x="262" y="112" class="dtext">Ağac 2: B</text><text x="432" y="112" class="dtext">Ağac 3: A</text><text x="602" y="120" class="dtext">… Ağac M</text><path d="M350 50L92 85 M350 50L262 85 M350 50L432 85 M350 50L602 85" stroke="#58728b" fill="none"/><path d="M92 142L350 190 M262 142L350 190 M432 142L350 190 M602 142L350 190" stroke="#58728b" fill="none"/><rect x="245" y="190" width="210" height="38" rx="8" fill="#fff4df" stroke="#c58b27"/><text x="350" y="214" class="dtext">Səsvermə → sinif A</text></svg><p>Bagging ağacların fərqli bootstrap nümunələrində təlimini təmin edir; xüsusiyyət alt çoxluğu ağaclar arasında korrelyasiyanı azaltmağa kömək edir. Tək ağacla müqayisədə variasiya və overfitting riski azala bilər.</p><table><tr><th>Parametr</th><th>Mənası</th><th>Təsiri</th></tr><tr><td>n_estimators</td><td>Ağac sayı</td><td>Artması sabitliyi yaxşılaşdıra bilər, hesablama vaxtını artırır.</td></tr><tr><td>max_depth</td><td>Maksimum dərinlik</td><td>Dərinlik artdıqca mürəkkəblik yüksəlir.</td></tr><tr><td>max_features</td><td>Bölünmədə baxılan xüsusiyyət sayı</td><td>Ağaclar arasında müxtəlifliyə təsir edir.</td></tr><tr><td>class_weight</td><td>Sinif çəkiləri</td><td>Balanssızlıqda azlıq sinfinə diqqəti artıra bilər.</td></tr></table><pre><code>from sklearn.ensemble import RandomForestClassifier
+rf = RandomForestClassifier(
+    n_estimators=300, min_samples_leaf=2,
+    class_weight="balanced", random_state=42, n_jobs=-1
+)
+rf.fit(X_train, y_train)</code></pre><div class="note">Feature importance modeldə xüsusiyyətin proqnoz üçün istifadəsini göstərir, səbəbiyyət sübutu deyil. Permutation importance ayrıca qiymətləndirmə dəstində faydalı ola bilər.</div></section>
+
+<section class="section" id="s88"><h2>8.8. Support Vector Machine (SVM)</h2><p>SVM sinifləri ayıran hiperplanı elə seçir ki, ən yaxın təlim nöqtələrinə qədər margin maksimum olsun. Sərhədə ən yaxın müşahidələr support vectors adlanır.</p><div class="formula">wᵀx + b = 0 &nbsp; ; &nbsp; margin = 2 / ||w||</div><p>Soft-margin SVM bəzi nöqtələrin margin daxilində və ya yanlış tərəfdə qalmasına icazə verir. C parametri pozuntuların cəzasını idarə edir: böyük C təlim xətalarını sərt cəzalandırır, kiçik C daha geniş marginə üstünlük verir.</p><h3>Kernel trick</h3><div class="formula">K(x,z) = exp(−γ ||x−z||²) &nbsp; (RBF kernel)</div><p>Kernel açıq şəkildə yüksək ölçülü çevirmə aparmadan həmin fəzada daxili hasil hesablamağa imkan verir. γ böyük olduqda müşahidələrin təsir sahəsi daralır və sərhəd mürəkkəbləşə bilər; γ kiçik olduqda sərhəd hamarlaşır. C və γ validasiya ilə seçilməlidir.</p><svg class="diagram" viewBox="0 0 640 250"><path d="M40 220V20M40 220H610" stroke="#60758a" fill="none"/><path d="M90 200L520 35" stroke="#2878b8" stroke-width="3"/><path d="M65 240L495 75 M115 160L545 -5" stroke="#13857f" stroke-dasharray="7 5" stroke-width="2"/><g fill="#2878b8"><circle cx="110" cy="180" r="6"/><circle cx="190" cy="150" r="6"/><circle cx="260" cy="120" r="6"/><circle cx="315" cy="105" r="6"/></g><g fill="#d58d20"><circle cx="390" cy="82" r="6"/><circle cx="460" cy="58" r="6"/><circle cx="535" cy="28" r="6"/></g><circle cx="315" cy="105" r="10" fill="none" stroke="#b74b4b" stroke-width="2"/><circle cx="390" cy="82" r="10" fill="none" stroke="#b74b4b" stroke-width="2"/><text x="320" y="245" class="dtext">Xüsusiyyət 1 · xətti sərhəd və margin</text></svg><pre><code>from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+
+svm = make_pipeline(
+    StandardScaler(),
+    SVC(C=1.0, kernel="rbf", gamma="scale", probability=True)
+)
+svm.fit(X_train, y_train)</code></pre><p class="small">SVM xüsusiyyət miqyasına həssasdır. Kernel SVC böyük datasetlərdə baha ola bilər. Ehtimal çıxışı aktivləşdirildikdə əlavə kalibrləmə prosesi tətbiq edilir.</p></section>
+
+<section class="section" id="s89"><h2>8.9. Təsnifat modellərinin Python ilə qurulması</h2><p>Model müqayisəsində eyni dataset bölgüsü, eyni ilkin emal və eyni qiymətləndirmə protokolu istifadə edilməlidir. Nümunə Iris datasetində altı alqoritmi müqayisə edir.</p><pre><code>import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, f1_score, classification_report
+
+data = load_iris(as_frame=True)
+X, y = data.data, data.target
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, stratify=y, random_state=42
+)
+
+models = {
+ "Logistic Regression": make_pipeline(StandardScaler(), LogisticRegression(max_iter=2000)),
+ "KNN": make_pipeline(StandardScaler(), KNeighborsClassifier(n_neighbors=5)),
+ "GaussianNB": GaussianNB(),
+ "Decision Tree": DecisionTreeClassifier(max_depth=4, random_state=42),
+ "Random Forest": RandomForestClassifier(n_estimators=300, random_state=42),
+ "SVM-RBF": make_pipeline(StandardScaler(), SVC(kernel="rbf", probability=True))
+}
+rows = []
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    pred = model.predict(X_test)
+    rows.append({"Model": name,
+                 "Accuracy": accuracy_score(y_test, pred),
+                 "Macro-F1": f1_score(y_test, pred, average="macro")})
+    print(name, classification_report(y_test, pred))
+display(pd.DataFrame(rows).sort_values("Macro-F1", ascending=False))</code></pre><h3>Pipeline və data leakage</h3><p>Scaler, encoder və feature selection kimi transformasiyalar test məlumatından statistik məlumat öyrənməməlidir. Pipeline transformasiyaları model təliminə bağlayır; cross-validation zamanı hər fold üçün çevrilmələr yalnız həmin fold-un train hissəsində fit edilir.</p><pre><code>from sklearn.model_selection import StratifiedKFold, cross_validate
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+scores = cross_validate(
+    models["SVM-RBF"], X, y, cv=cv,
+    scoring=["accuracy", "f1_macro"]
+)
+print(scores["test_accuracy"].mean())
+print(scores["test_f1_macro"].mean())</code></pre></section>
+
+<section class="section" id="s810"><h2>8.10. Confusion Matrix</h2><p>Confusion Matrix faktiki siniflə proqnozlaşdırılmış sinfin kəsişməsini göstərir.</p><table><tr><th></th><th>Proqnoz +</th><th>Proqnoz −</th></tr><tr><th>Faktiki +</th><td><b>TP</b> — doğru müsbət</td><td><b>FN</b> — yanlış mənfi</td></tr><tr><th>Faktiki −</th><td><b>FP</b> — yanlış müsbət</td><td><b>TN</b> — doğru mənfi</td></tr></table><p>TP müsbət nümunənin düzgün tapılması; TN mənfi nümunənin düzgün tanınması; FP mənfi nümunənin səhvən müsbət; FN müsbət nümunənin səhvən mənfi tanınmasıdır.</p><h3>İnteraktiv Confusion Matrix</h3><div class="controls"><label>TP <input id="tp" type="number" value="42" min="0"></label><label>FN <input id="fn" type="number" value="8" min="0"></label><label>FP <input id="fp" type="number" value="10" min="0"></label><label>TN <input id="tn" type="number" value="40" min="0"></label><button onclick="matrixCalc()">Yenilə</button></div><div class="matrix" id="matrix"></div><div class="result" id="matrixres"></div><p>Çoxsinifli halda diaqonal düzgün, diaqonaldan kənar qiymətlər qarışdırılmış sinifləri göstərir. scikit-learn-də sətirlər faktiki, sütunlar proqnozlaşdırılmış siniflərdir.</p></section>
+
+<section class="section" id="s811"><h2>8.11. Accuracy, Precision, Recall və F1-score</h2><div class="formula">Accuracy = (TP+TN)/(TP+TN+FP+FN)</div><div class="formula">Precision = TP/(TP+FP)</div><div class="formula">Recall = TP/(TP+FN)</div><div class="formula">F1 = 2 × Precision × Recall / (Precision+Recall)</div><p>Accuracy ümumi düzgün proqnoz payıdır. Precision müsbət proqnozların nə qədərinin doğru olduğunu; Recall faktiki müsbətlərin nə qədərinin tapıldığını ölçür. F1 bu iki göstəricinin harmonik ortasıdır. Yanlış mənfi nəticə bahalıdırsa Recall, yanlış müsbət yoxlama bahalıdırsa Precision daha vacib ola bilər.</p><div class="note">Çoxsinifli təsnifatda macro average hər sinifin metrikini bərabər çəkidə ortalayır; weighted average sinif support-u ilə çəkiləndir; micro average bütün siniflər üzrə TP/FP/FN cəmlərindən hesablanır.</div><h3>İnteraktiv metrik kalkulyatoru</h3><div class="controls"><label>TP <input id="mtp" type="number" value="42" min="0"></label><label>FP <input id="mfp" type="number" value="10" min="0"></label><label>FN <input id="mfn" type="number" value="8" min="0"></label><label>TN <input id="mtn" type="number" value="40" min="0"></label><button onclick="metricCalc()">Hesabla</button></div><div class="grid2"><div class="tile"><b>Accuracy</b><div id="acc">—</div></div><div class="tile"><b>Precision</b><div id="prec">—</div></div><div class="tile"><b>Recall</b><div id="rec">—</div></div><div class="tile"><b>F1-score</b><div id="f1">—</div></div></div><div class="result" id="metricres"></div></section>
+
+<section class="section" id="s812"><h2>8.12. ROC əyrisi və AUC göstəricisi</h2><p>ROC əyrisi müxtəlif qərar hədlərində True Positive Rate (TPR=Recall) və False Positive Rate (FPR) arasındakı əlaqəni göstərir.</p><div class="formula">TPR = TP/(TP+FN) &nbsp; ; &nbsp; FPR = FP/(FP+TN)</div><p>AUC ROC əyrisinin altındakı sahədir. İkili təsnifatda AUC təsadüfi seçilmiş müsbət nümunənin mənfi nümunədən daha yüksək skor alması ehtimalı kimi şərh oluna bilər. AUC=0.5 təsadüfi sıralamaya, 1.0 ideal sıralamaya uyğundur. AUC qərar həddini seçmir və ehtimal kalibrlənməsi demək deyil.</p><svg id="roc" class="diagram" viewBox="0 0 620 300"></svg><div class="controls"><label>Threshold <input id="rth" type="range" min="0" max="1" step=".01" value=".5" oninput="rocCalc()"></label><b id="rthv">0.50</b></div><div class="result" id="rocres"></div><p>Balanssız datasetlərdə azlıq sinfi əsasdırsa Precision–Recall əyrisi və Average Precision da nəzərdən keçirilməlidir. Çoxsinifli ROC-AUC üçün OvR/OvO və macro/weighted average seçimi açıq göstərilməlidir.</p><pre><code>from sklearn.metrics import roc_curve, roc_auc_score
+proba = model.predict_proba(X_test)[:, 1]
+fpr, tpr, thresholds = roc_curve(y_test, proba)
+auc_value = roc_auc_score(y_test, proba)
+plt.plot(fpr, tpr, label=f"AUC={auc_value:.3f}")
+plt.plot([0, 1], [0, 1], "k--")
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.legend()</code></pre></section>
+
+<section class="section" id="s813"><h2>8.13. Sinif balanssızlığı və onun təsiri</h2><p>Sinif balanssızlığı bir sinfin müşahidələrinin digərindən xeyli çox olmasıdır. Məsələn, trafik 99% normal, 1% hücum olduqda bütün nümunələri normal deyən model 99% accuracy əldə edə bilər, amma hücumların heç birini aşkarlamaya bilər.</p><div class="grid2"><div class="tile"><b>Balanslı</b><p>Normal 500 · Hücum 500</p><div class="bar"><span style="width:50%"></span></div></div><div class="tile"><b>Balanssız</b><p>Normal 990 · Hücum 10</p><div class="bar"><span style="width:99%"></span></div></div></div><h3>İdarəetmə strategiyaları</h3><ul><li><b>Stratified split:</b> bölmələrdə sinif nisbətini qorumaq.</li><li><b>Class weights:</b> azlıq sinfinin səhvlərinə daha böyük çəki vermək.</li><li><b>Oversampling:</b> azlıq sinfi nümunələrini artırmaq; SMOTE yalnız train fold daxilində.</li><li><b>Undersampling:</b> çoxluq sinfini azaltmaq; informasiya itkisi riski.</li><li><b>Threshold tuning:</b> tətbiq xərclərinə uyğun qərar həddi seçmək.</li><li><b>Metriklər:</b> balanced accuracy, macro-F1, Recall, Precision–Recall curve.</li></ul><div class="note warn">Resampling bütün datasetə bölünmədən əvvəl tətbiq edilərsə data leakage yarana bilər. Resampling yalnız train məlumatında və CV pipeline daxilində aparılmalıdır.</div><div class="controls"><label>Çoxluq sinfi <input id="major" type="range" min="50" max="99" value="95" oninput="imbalanceCalc()"></label><b id="majorv">95%</b><label>Azlıq sinfi Recall <input id="minor" type="range" min="0" max="100" value="0" oninput="imbalanceCalc()"></label><b id="minorv">0%</b></div><div class="result" id="imbres"></div></section>
+
+<section class="section" id="s814"><h2>8.14. Alqoritmlərin müqayisəli təhlili</h2><table><tr><th>Alqoritm</th><th>Əsas ideya</th><th>Üstünlük</th><th>Məhdudiyyət</th></tr><tr><td>Logistic Regression</td><td>Sigmoid ehtimal modeli</td><td>Sürətli, interpretasiya edilən baseline</td><td>Qeyri-xətti sərhədlər üçün feature engineering</td></tr><tr><td>KNN</td><td>Qonşuların səsverməsi</td><td>Sadə, qeyri-xətti sərhəd</td><td>Ölçüləmə və yüksək ölçülülük</td></tr><tr><td>Naive Bayes</td><td>Bayes və şərti müstəqillik</td><td>Sürətli, az resurs</td><td>Fərziyyə pozula bilər</td></tr><tr><td>Decision Tree</td><td>Ardıcıl xüsusiyyət bölgüsü</td><td>Şərhi asan</td><td>Dərin ağac overfit edə bilər</td></tr><tr><td>Random Forest</td><td>Bootstrap ağaclar və səsvermə</td><td>Güclü ümumi nəticələr</td><td>Şərhi çətin, resurs sərfi</td></tr><tr><td>SVM</td><td>Maksimum margin və kernel</td><td>Yüksək ölçülü fəza üçün güclü</td><td>Ölçüləmə və C/γ sazlanması</td></tr></table><p>Universal “ən yaxşı alqoritm” yoxdur. Seçim datasetin ölçüsü, xüsusiyyətlərin tipi, sinif balansı, interpretasiya tələbi, resurslar və səhv növlərinin qiyməti əsasında aparılır. Müqayisə eyni split və ya eyni cross-validation fold-larında aparılmalıdır.</p></section>
+
+<section class="section" id="practice"><h2>Praktiki tapşırıqlar</h2><div class="tile"><span class="pill">Başlanğıc</span><h3>Tapşırıq 1. İris çiçəklərinin təsnifatı</h3><p>Iris datasetində Logistic Regression və KNN qurun. k=1,3,5,7 qiymətlərini müqayisə edin. Confusion Matrix və macro-F1-i şərh edin. KNN üçün standartlaşdırmanın əhəmiyyətini izah edin.</p></div><div class="tile"><span class="pill">Orta</span><h3>Tapşırıq 2. Alqoritmlərin müqayisəsi</h3><p>GaussianNB, Decision Tree, Random Forest və SVM əlavə edin. Eyni stratified 5-fold CV protokolunda Accuracy və macro-F1 ölçün. Nəticələri cədvəl və qrafiklə təqdim edin.</p></div><div class="tile"><span class="pill">Tədqiqat</span><h3>Tapşırıq 3. Balanssız siniflərin aşkarlanması</h3><p>UCI Credit Card Fraud və ya şəbəkə hücumları datasetində class weights və train fold daxilində resampling tətbiq edin. Accuracy ilə yanaşı Precision, Recall, F1, PR-AUC və ROC-AUC müqayisə edin. Threshold seçimini səhv xərcləri ilə əsaslandırın.</p><p><b>Tədqiqat sualı:</b> Sinif balanssızlığı şəraitində Random Forest və SVM modellərinin azlıq sinfini aşkarlama qabiliyyəti hansı qiymətləndirmə strategiyası ilə etibarlı müqayisə oluna bilər?</p></div></section>
+
+<section class="section" id="quiz"><h2>Özünü yoxlama sualları</h2><p>Mövzunu nə dərəcədə mənimsədiyinizi yoxlamaq üçün sualları cavablandırın.</p><div id="quizarea"></div><button class="green" onclick="gradeQuiz()">Nəticəni yoxla</button> <button class="secondary" onclick="resetQuiz()">Yenidən başla</button><div class="result" id="quizscore">Cavablarınızı seçin.</div></section>
+
+<section class="section" id="lab"><h2>Laboratoriya işi №8. Bir dataset üzərində ən azı üç təsnifat alqoritminin qurulması və nəticələrin müqayisəsi</h2><div class="grid2"><div class="tile"><b>Məqsəd</b><p>Eyni datasetdə bir neçə təsnifat alqoritmi qurmaq, preprocessing, stratified bölgü, metriklər və confusion matrix ilə müqayisə aparmaq.</p></div><div class="tile"><b>Mühit</b><p>Python 3.10+, Google Colab/Jupyter, NumPy, Pandas, Matplotlib, scikit-learn.</p></div></div><h3>Dataset: Breast Cancer Wisconsin (Diagnostic)</h3><p>Scikit-learn datasetində 569 müşahidə, 30 ədədi xüsusiyyət və iki sinif var. Bu laboratoriyada ikili təsnifat üçün istifadə edilir. Dataset tibbi məzmun daşısa da, laboratoriya modeli klinik diaqnoz və ya fərdi tibbi qərar üçün nəzərdə tutulmayıb.</p><h3>Addım 1. Dataset və ilkin təhlil</h3><pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_breast_cancer
+
+data = load_breast_cancer(as_frame=True)
+X, y = data.data, data.target
+print("Ölçü:", X.shape)
+print("Sinif payı:", y.value_counts(normalize=True))
+display(X.head())
+display(X.describe().T)</code></pre><h3>Addım 2. Stratified train/test bölgüsü</h3><pre><code>from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42, stratify=y
+)</code></pre><h3>Addım 3. Ən azı üç model</h3><pre><code>from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+
+models = {
+ "Logistic Regression": make_pipeline(StandardScaler(), LogisticRegression(max_iter=3000)),
+ "KNN": make_pipeline(StandardScaler(), KNeighborsClassifier(n_neighbors=5)),
+ "SVM": make_pipeline(StandardScaler(), SVC(kernel="rbf", probability=True)),
+ "Random Forest": RandomForestClassifier(
+     n_estimators=300, class_weight="balanced", random_state=42)
+}</code></pre><h3>Addım 4. Təlim və metriklər</h3><pre><code>from sklearn.metrics import (
+ accuracy_score, precision_score, recall_score,
+ f1_score, confusion_matrix, classification_report, roc_auc_score
+)
+rows, predictions, probabilities = [], {}, {}
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    pred = model.predict(X_test)
+    proba = model.predict_proba(X_test)[:, 1]
+    predictions[name], probabilities[name] = pred, proba
+    rows.append({
+      "Model": name,
+      "Accuracy": accuracy_score(y_test, pred),
+      "Precision": precision_score(y_test, pred),
+      "Recall": recall_score(y_test, pred),
+      "F1": f1_score(y_test, pred),
+      "ROC_AUC": roc_auc_score(y_test, proba)
+    })
+display(pd.DataFrame(rows).sort_values("F1", ascending=False).round(3))</code></pre><h3>Addım 5. Confusion Matrix və ROC</h3><pre><code>from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay
+for name, pred in predictions.items():
+    ConfusionMatrixDisplay.from_predictions(
+        y_test, pred, display_labels=data.target_names,
+        values_format="d"
+    )
+    plt.title(name); plt.show()
+
+fig, ax = plt.subplots(figsize=(7, 6))
+for name, proba in probabilities.items():
+    RocCurveDisplay.from_predictions(y_test, proba, name=name, ax=ax)
+ax.plot([0,1],[0,1],"k--",label="Random baseline")
+ax.legend(); plt.show()</code></pre><h3>Addım 6. Nəticələrin elmi təhlili</h3><ol><li>Hansı modelin F1 və ROC-AUC göstəricisi yüksəkdir?</li><li>Precision və Recall arasında fərq hansı modeldə böyükdür?</li><li>Confusion Matrix-də hansı səhv növü üstünlük təşkil edir?</li><li>Standartlaşdırmanın KNN, SVM və Logistic Regression nəticələrinə təsirini izah edin.</li><li>Random Forest feature importance nəticəsini səbəbiyyət kimi təqdim etmədən şərh edin.</li><li>Threshold dəyişdikdə Precision və Recall-un necə dəyişdiyini araşdırın.</li></ol><h3>Hesabatın strukturu</h3><ol><li>İşin adı, məqsədi və nəzəri əsaslar.</li><li>Dataset mənbəyi, ölçüsü, xüsusiyyətləri və sinif payı.</li><li>Preprocessing və train/test strategiyası.</li><li>Alqoritmlər və hiperparametrlər.</li><li>Accuracy, Precision, Recall, F1 və ROC-AUC cədvəli.</li><li>Confusion Matrix və ROC qrafikləri.</li><li>Müqayisə, məhdudiyyətlər və yekun nəticə.</li></ol><div class="note warn"><b>Etik xəbərdarlıq:</b> Laboratoriya yalnız alqoritmlərin tədrisi üçündür; klinik diaqnostika və müalicə qərarı üçün istifadə edilməməlidir.</div></section>
+
+<section class="section" id="glossary"><h2>Əsas terminlər və qısaltmalar</h2><table><tr><th>Termin</th><th>İzah</th></tr><tr><td>Classification</td><td>Təsnifat — sinif etiketinin proqnozlaşdırılması.</td></tr><tr><td>Class / Label</td><td>Sinif / etiket — kateqorik hədəf qiyməti.</td></tr><tr><td>Binary / Multiclass</td><td>İkili / çoxsinifli təsnifat.</td></tr><tr><td>Decision boundary</td><td>Qərar sərhədi — sinif bölgələrini ayıran sərhəd.</td></tr><tr><td>Sigmoid</td><td>Skoru 0–1 aralığına çevirən funksiya.</td></tr><tr><td>Prior / Likelihood / Posterior</td><td>İlkin ehtimal / ehtimal funksiyası / sonrakı ehtimal.</td></tr><tr><td>Nearest Neighbors</td><td>Ən yaxın qonşular — məsafəyə görə seçilən nümunələr.</td></tr><tr><td>Entropy / Gini</td><td>Düyündə sinif qarışıqlığını ölçən meyarlar.</td></tr><tr><td>Ensemble</td><td>Bir neçə modelin nəticələrinin birləşdirilməsi.</td></tr><tr><td>Support Vector</td><td>Qərar sərhədinə yaxın və onu müəyyən edən müşahidə.</td></tr><tr><td>Confusion Matrix</td><td>Faktiki və proqnozlaşdırılmış siniflərin cədvəli.</td></tr><tr><td>Precision</td><td>Müsbət proqnozların düzgünlük payı.</td></tr><tr><td>Recall / Sensitivity</td><td>Faktiki müsbətlərin tapılma payı.</td></tr><tr><td>F1-score</td><td>Precision və Recall-un harmonik ortası.</td></tr><tr><td>ROC / AUC</td><td>TPR–FPR əyrisi / əyrinin altındakı sahə.</td></tr><tr><td>Class imbalance</td><td>Sinif balanssızlığı — müşahidə saylarının kəskin fərqi.</td></tr><tr><td>Threshold</td><td>Sinif seçmək üçün ehtimal/skor həddi.</td></tr><tr><td>Stratified split</td><td>Sinif payını bölmələrdə qoruyan bölgü.</td></tr><tr><td>Data leakage</td><td>Test/gələcək məlumatın təlimə sızması.</td></tr></table></section>
+
+<section class="section" id="refs"><h2>İstifadə olunan ədəbiyyat və elektron resurslar</h2><p class="small">Əsas ədəbiyyat Fəsil 1-də seçilmiş müasir mənbələrə əsaslanır. Köhnə nəşrlər əlavə edilməyib. API parametrləri və metrik tərifləri Scikit-learn-in aktual rəsmi sənədləri ilə yoxlanılıb.</p><ol><li>Alpaydın, E. (2021). <i>Machine Learning: The New AI</i>. 2nd ed. MIT Press. <a href="https://mitpress.mit.edu/9780262542524/machine-learning/" target="_blank">MIT Press</a>.</li><li>Géron, A. (2022). <i>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</i>. 3rd ed. O’Reilly. <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/" target="_blank">O’Reilly</a>.</li><li>Murphy, K. P. (2022). <i>Probabilistic Machine Learning: An Introduction</i>. MIT Press. <a href="https://probml.github.io/book1" target="_blank">Kitab resursu</a>.</li><li>Chollet, F. (2021). <i>Deep Learning with Python</i>. 2nd ed. Manning. <a href="https://www.manning.com/books/deep-learning-with-python-second-edition" target="_blank">Manning</a>.</li><li>Martinez-Ramon, M., Ajith, P. M., &amp; Kurup, U. (2024). <i>Deep Learning: A Practical Introduction</i>. Wiley. <a href="https://onlinelibrary.wiley.com/doi/book/10.1002/9781119861898" target="_blank">Wiley</a>.</li><li>scikit-learn Developers. <i>Classification metrics</i> — confusion matrix, precision, recall, F1, ROC-AUC. <a href="https://scikit-learn.org/stable/modules/model_evaluation.html" target="_blank">Rəsmi sənədləşmə</a>.</li><li>scikit-learn Developers. <i>Supervised learning</i> — linear models, neighbors, Naive Bayes, trees, ensembles, SVM. <a href="https://scikit-learn.org/stable/supervised_learning.html" target="_blank">Rəsmi sənədləşmə</a>.</li><li>scikit-learn Developers. <i>Multiclass and multilabel algorithms</i>. <a href="https://scikit-learn.org/stable/modules/multiclass.html" target="_blank">Rəsmi sənədləşmə</a>.</li></ol><div class="note">Kitablar nəzəri çərçivə, rəsmi sənədlər proqram interfeysi, parametr və metrik tərifləri üçün istifadə olunub.</div></section><footer>MDU · Riyaziyyat və İnformasiya Texnologiyaları fakültəsi · Elektron mühazirə</footer>
+</main></div>
+<script>
+const $=id=>document.getElementById(id),sig=z=>1/(1+Math.exp(-z));
+function drawSig(){let p='';for(let i=0;i<=120;i++){let z=-6+i*.1,x=50+i*4.6,y=220-sig(z)*185;p+=(i?'L':'M')+x+','+y+' '}$('sigmoid').innerHTML=`<path d="M45 235V20M45 235H610" stroke="#60758a" fill="none"/><path d="${p}" stroke="#2878b8" stroke-width="3" fill="none"/><path d="M50 127H600" stroke="#d58d20" stroke-dasharray="5 4"/><text x="320" y="263" class="dtext">Xətti skor z</text><text x="18" y="16" class="dtext">P(y=1|x)</text>`}
+function logCalc(){let z=+$('z').value,t=+$('th').value,p=sig(z);$('zv').textContent=z.toFixed(1);$('thv').textContent=t.toFixed(2);$('logres').textContent=`σ(${z.toFixed(1)})=${p.toFixed(4)}. Proqnoz: ${p>=t?'müsbət sinif (1)':'mənfi sinif (0)'}.`}
+const pts=[[85,65,0],[125,95,0],[170,55,0],[210,115,0],[145,155,0],[300,65,1],[350,110,1],[390,55,1],[430,135,1],[360,180,1],[250,175,0],[470,80,1]];
+function knnCalc(){let k=+$('k').value,q=[280,120],d=pts.map((p,i)=>({i,c:p[2],d:Math.hypot(p[0]-q[0],p[1]-q[1])})).sort((a,b)=>a.d-b.d),near=d.slice(0,k),v=near.reduce((s,p)=>s+p.c,0),cl=v>k/2?1:0;let s='<path d="M35 250V20M35 250H620" stroke="#60758a" fill="none"/>';pts.forEach((p,i)=>{let n=near.some(x=>x.i===i);s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${n?10:7}" fill="${p[2]?'#d58d20':'#2878b8'}" stroke="${n?'#14263e':'white'}" stroke-width="${n?2:1}"/>`});s+='<path d="M267 120H293M280 107V133" stroke="#14263e" stroke-width="2"/><text x="320" y="273" class="dtext">Mavi: sinif 0 · Narıncı: sinif 1 · Halqa: k qonşu</text>';$('knn').innerHTML=s;$('kv').textContent=k;$('knnres').textContent=`k=${k}: sinif 0 səsi ${k-v}, sinif 1 səsi ${v}. Yeni nöqtənin proqnozu: ${cl}. Tədris məqsədli 2D simulyasiya.`}
+function bayesCalc(){let p=+$('prior').value,s=+$('sens').value,f=+$('fpr').value,post=s*p/(s*p+f*(1-p));$('bayesres').textContent=`P(A|+) = (${s.toFixed(2)}×${p.toFixed(2)})/[(${s.toFixed(2)}×${p.toFixed(2)})+(${f.toFixed(2)}×${(1-p).toFixed(2)})] = ${(post*100).toFixed(2)}%.`}
+function giniCalc(){let p=+$('gp').value,g=1-p*p-(1-p)*(1-p);$('gpv').textContent=p.toFixed(2);$('ginir').textContent=`Gini=1−(${p.toFixed(2)}²+${(1-p).toFixed(2)}²)=${g.toFixed(4)}. Saf düyündə 0, p=0.5-də maksimum 0.5.`}
+function matrixCalc(){let tp=+$('tp').value,fn=+$('fn').value,fp=+$('fp').value,tn=+$('tn').value;$('matrix').innerHTML=[['TP',tp],['FN',fn],['FP',fp],['TN',tn]].map(a=>`<div class="mcell">${a[0]}<strong>${a[1]}</strong></div>`).join('');$('matrixres').textContent=`Cəmi ${tp+fn+fp+tn}; düzgün ${tp+tn}; yanlış ${fp+fn}.`}
+function metricCalc(){let tp=+$('mtp').value,fp=+$('mfp').value,fn=+$('mfn').value,tn=+$('mtn').value,n=tp+fp+fn+tn,a=n?(tp+tn)/n:0,p=tp+fp?tp/(tp+fp):0,r=tp+fn?tp/(tp+fn):0,f=p+r?2*p*r/(p+r):0;$('acc').textContent=a.toFixed(3);$('prec').textContent=p.toFixed(3);$('rec').textContent=r.toFixed(3);$('f1').textContent=f.toFixed(3);$('metricres').textContent=`${n} müşahidə. Accuracy ümumi düzgünlükdür; Precision müsbət proqnozların, Recall faktiki müsbətlərin keyfiyyətidir.`}
+const rs=[.98,.94,.91,.88,.83,.79,.75,.69,.63,.57,.49,.42,.36,.28,.17,.08],ry=[1,1,1,1,1,1,0,1,0,0,1,0,0,0,0,0];
+function rocDraw(){$('roc').innerHTML='<path d="M55 255V25M55 255H600" stroke="#60758a" fill="none"/><path d="M55 255L590 30" stroke="#aab6c3" stroke-dasharray="5 5"/><path d="M55 255C85 135 150 65 240 48S470 25 590 25" stroke="#2878b8" stroke-width="3" fill="none"/><text x="325" y="290" class="dtext">False Positive Rate</text><text x="18" y="16" class="dtext">True Positive Rate</text>'}
+function rocCalc(){let t=+$('rth').value,tp=0,fn=0,fp=0,tn=0;rs.forEach((s,i)=>{let pr=s>=t?1:0;if(ry[i]&&pr)tp++;else if(ry[i])fn++;else if(pr)fp++;else tn++});$('rthv').textContent=t.toFixed(2);$('rocres').textContent=`TP=${tp}, FN=${fn}, FP=${fp}, TN=${tn}; TPR=${(tp/(tp+fn)).toFixed(2)}, FPR=${(fp/(fp+tn)).toFixed(2)}. Hədd azaldıqca adətən TPR və FPR artır.`}
+function imbalanceCalc(){let maj=+$('major').value,r=+$('minor').value/100,minor=100-maj,acc=maj/100+minor/100*r;$('majorv').textContent=maj+'%';$('minorv').textContent=Math.round(r*100)+'%';$('imbres').textContent=`Çoxluq ${maj}%, azlıq ${minor}%. Azlıq sinfinin Recall-u ${Math.round(r*100)}% olarsa, çoxluq sinfini hamısını düzgün tanıyan fərziyyədə accuracy ${(acc*100).toFixed(1)}% görünə bilər. Yüksək accuracy azlıq sinfi performansını gizlədə bilər.`}
+const quiz=[
+{t:'single',q:'Təsnifat modelinin əsas hədəfi nədir?',o:['Davamlı ədədi qiymət','Sinif etiketi','Yalnız klaster mərkəzi'],a:[1],e:'Təsnifat kateqorik sinif etiketini proqnozlaşdırır.'},
+{t:'multi',q:'KNN haqqında düzgün fikirləri seçin.',o:['Qonşuların səsverməsindən istifadə edir','Xüsusiyyət miqyasına həssasdır','k həmişə 1 olmalıdır','Böyük k sərhədi hamarlaşdıra bilər'],a:[0,1,3],e:'k hiperparametrdir və validasiya ilə seçilir.'},
+{t:'tf',q:'Random Forest çoxsaylı qərar ağaclarının nəticələrini birləşdirir.',o:['Doğru','Yanlış'],a:[0],e:'Bootstrap ağaclar və səsvermə ansambl yaradır.'},
+{t:'match',q:'Alqoritmi əsas ideyası ilə uyğunlaşdırın.',pairs:[['Logistic Regression','Sigmoid ehtimal modeli'],['KNN','Ən yaxın qonşular'],['Naive Bayes','Bayes və şərti müstəqillik'],['SVM','Maksimum margin']],e:'Hər alqoritmin əsas mexanizmi fərqlidir.'},
+{t:'fill',q:'Faktiki müsbət nümunələrin nə qədərinin tapıldığını ölçən metrik ______ adlanır.',aText:'recall',e:'Recall=TP/(TP+FN), sensitivity kimi də tanınır.'},
+{t:'order',q:'Təsnifat layihəsinin qiymətləndirmə ardıcıllığını seçin.',items:['Train/test bölgüsü','Preprocessing-i train-də fit etmək','Modeli train-də öyrətmək','Test proqnozu','Metrikləri hesablamaq'],e:'Test məlumatı fit prosesində iştirak etməməlidir.'},
+{t:'code',q:'<code>class_weight="balanced"</code> nə edir?',o:['Siniflərə saylarına görə tərs mütənasib çəki verir','Dataseti mütləq balanslaşdırır','Xüsusiyyətləri standartlaşdırır'],a:[0],e:'Bu parametr resampling etmir; sinif səhvlərinin çəkisini dəyişir.'},
+{t:'single',q:'Confusion Matrix-də FN nədir?',o:['Mənfi nümunənin düzgün mənfi proqnozu','Müsbət nümunənin yanlış mənfi proqnozu','Mənfi nümunənin yanlış müsbət proqnozu'],a:[1],e:'FN faktiki müsbət nümunənin mənfi proqnoz edilməsidir.'},
+{t:'multi',q:'Balanssız siniflərdə hansı strategiyalar uyğundur?',o:['Stratified split','Macro-F1 və Recall təhlili','Resampling-i bölünmədən əvvəl bütün data üzərində aparmaq','Class weights'],a:[0,1,3],e:'Resampling yalnız train fold daxilində edilməlidir.'},
+{t:'tf',q:'ROC-AUC=0.9 model ehtimallarının mütləq yaxşı kalibrləndiyini sübut edir.',o:['Doğru','Yanlış'],a:[1],e:'AUC sıralama qabiliyyətidir; kalibrlənmə ayrıca yoxlanır.'}
+];
+function renderQuiz(){let a=$('quizarea');a.innerHTML='';let names={single:'Tək cavab',multi:'Çoxsaylı cavab',tf:'Doğru/yanlış',match:'Uyğunlaşdırma',fill:'Boşluğu doldur',order:'Ardıcıllıq',code:'Kod təhlili'};quiz.forEach((q,i)=>{let d=document.createElement('div');d.className='quizq';let s=`<b>${i+1}. [${names[q.t]}]</b><p>${q.q}</p>`;if(['single','multi','tf','code'].includes(q.t))q.o.forEach((o,j)=>s+=`<label><input type="${q.t==='multi'?'checkbox':'radio'}" name="q${i}" value="${j}"> ${o}</label>`);if(q.t==='match')q.pairs.forEach((p,j)=>s+=`<label>${p[0]} → <select id="m${i}_${j}"><option value="">Seçin</option>${q.pairs.map((x,k)=>`<option value="${k}">${x[1]}</option>`).join('')}</select></label>`);if(q.t==='fill')s+=`<input id="fill${i}" placeholder="Cavabı yazın">`;if(q.t==='order')q.items.forEach((it,j)=>s+=`<label>${it} <select id="o${i}_${j}"><option value="">Sıra</option>${q.items.map((x,k)=>`<option value="${k}">${k+1}</option>`).join('')}</select></label>`);s+=`<div id="fb${i}" class="feedback"></div>`;d.innerHTML=s;a.appendChild(d)})}
+function gradeQuiz(){let score=0;quiz.forEach((q,i)=>{let ok=false;if(['single','multi','tf','code'].includes(q.t)){let c=[...document.querySelectorAll(`input[name="q${i}"]:checked`)].map(x=>+x.value);ok=c.length===q.a.length&&q.a.every(x=>c.includes(x))}if(q.t==='match')ok=q.pairs.every((p,j)=>$('m'+i+'_'+j).value==j);if(q.t==='fill')ok=$('fill'+i).value.trim().toLowerCase()==q.aText;if(q.t==='order')ok=q.items.every((p,j)=>$('o'+i+'_'+j).value==j);if(ok)score++;let f=$('fb'+i);f.className='feedback '+(ok?'correct':'incorrect');f.textContent=(ok?'Düzgün. ':'Yanlış və ya natamam. ')+q.e});let pct=Math.round(score/quiz.length*100);$('quizscore').innerHTML=`Nəticə: <b>${score}/10 (${pct}%)</b><div class="bar"><span style="width:${pct}%"></span></div>${pct>=80?'Əla nəticə!':pct>=60?'Yaxşıdır; izahları təkrarlayın.':'Mövzuları yenidən oxuyub quiz-i təkrarlayın.'}`}
+function resetQuiz(){renderQuiz();$('quizscore').textContent='Cavablarınızı seçin.'}
+drawSig();logCalc();knnCalc();bayesCalc();giniCalc();matrixCalc();metricCalc();rocDraw();rocCalc();imbalanceCalc();renderQuiz();
+</script></main></div><script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fəsil 14. Dərin öyrənmə və müasir neyron şəbəkələri</title>
+<style>
+:root{--ink:#17243b;--muted:#53657e;--blue:#2563eb;--purple:#7c3aed;--teal:#0f9d82;--orange:#ea580c;--line:#d9e3f0;--paper:#fff;--bg:#f3f7fc}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.72 Inter,Segoe UI,Arial,sans-serif}
+header{background:linear-gradient(120deg,#102c54,#234d83 60%,#5264ad);color:white;padding:38px max(22px,calc((100% - 1120px)/2))}
+header .eyebrow{letter-spacing:.13em;text-transform:uppercase;font-size:.78rem;opacity:.8}header h1{font-size:clamp(2rem,4vw,3.1rem);line-height:1.15;margin:.5rem 0}header p{max-width:850px;color:#e3edff}
+main{max-width:1120px;margin:24px auto;padding:0 18px 60px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:22px}
+nav{position:sticky;top:12px;align-self:start;background:white;border:1px solid var(--line);border-radius:16px;padding:17px;max-height:calc(100vh - 24px);overflow:auto}
+nav b{display:block;margin-bottom:8px;color:#1e3a5f}nav a{display:block;text-decoration:none;color:#43546c;padding:5px 8px;border-radius:7px;font-size:.9rem}nav a:hover{background:#edf4ff;color:#174ea6}
+article{min-width:0}.intro,.section,.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:18px;box-shadow:0 4px 16px #1e3a5f08}
+h2{font-size:1.55rem;line-height:1.3;margin:0 0 14px;color:#183c69}h3{font-size:1.15rem;margin:22px 0 8px;color:#254e7b}h4{margin:10px 0 5px}
+p{margin:9px 0}.lead{font-size:1.06rem;color:#344a66}.tag{display:inline-block;background:#eaf2ff;color:#1d4ed8;padding:3px 9px;border-radius:20px;font-size:.8rem;font-weight:700}
+figure{margin:18px 0;padding:14px;background:linear-gradient(145deg,#f8fbff,#eef5ff);border:1px solid #d4e2f4;border-radius:14px;overflow:hidden}
+figure svg{width:100%;height:auto;display:block}figcaption{font-size:.88rem;color:#53657e;text-align:center;margin:10px 4px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0}.tile{border:1px solid var(--line);border-radius:12px;padding:13px;background:#fbfdff}.tile strong{color:#20518b}
+.callout{border-left:4px solid var(--blue);background:#eff6ff;padding:12px 15px;border-radius:8px;margin:14px 0}.warning{border-left-color:var(--orange);background:#fff7ed}
+.math{background:#f5f3ff;border:1px solid #ddd6fe;border-radius:10px;padding:13px;margin:12px 0;font-family:Cambria,Georgia,serif;font-size:1.08rem;overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.94rem}th,td{border:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}th{background:#edf4ff;color:#234b78}
+.demo{background:#f8fafc;border:1px solid #cfdae8;border-radius:13px;padding:16px;margin:16px 0}.demo h3{margin-top:0}.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0}
+label{font-size:.9rem;color:#344a66}input,select,button{font:inherit}input[type=range]{accent-color:#2563eb;max-width:190px}input[type=number],select{border:1px solid #bdcadd;border-radius:8px;padding:7px;background:white}
+button{border:0;background:#2459a6;color:white;border-radius:9px;padding:9px 14px;cursor:pointer;font-weight:650}button:hover{background:#173f7b}button.secondary{background:#e6eef9;color:#244a78}
+.result{padding:11px;background:#eaf8f3;border:1px solid #bce6d6;border-radius:9px;margin-top:10px;font-weight:600}
+.pixelgrid{display:grid;grid-template-columns:repeat(6,34px);gap:3px;margin:12px 0}.pixelgrid button{height:34px;padding:0;border-radius:4px;background:#e7eef8;border:1px solid #c8d5e5}.pixelgrid button.on{background:#1e4d83}
+.small{font-size:.88rem;color:var(--muted)}pre{white-space:pre-wrap;overflow:auto;background:#101b2d;color:#e4efff;border-radius:11px;padding:15px;font-size:.87rem;line-height:1.55}code{font-family:Consolas,monospace}
+.quizq{border:1px solid var(--line);border-radius:11px;padding:13px;margin:12px 0}.quizq label{display:block;margin:6px 0}.feedback{font-weight:700;margin-top:6px}.footer{color:#60728a;font-size:.86rem}
+@media(max-width:850px){main{grid-template-columns:1fr}nav{position:relative;top:0;max-height:none}nav div{columns:2}}
+@media(max-width:480px){.intro,.section,.panel{padding:16px}.pixelgrid{grid-template-columns:repeat(6,28px)}.pixelgrid button{height:28px}}
+
+.object-lab{background:linear-gradient(140deg,#f7fbff,#edf5ff);border:1px solid #cbdcf0;border-radius:15px;padding:15px;margin:18px 0;overflow:hidden}
+.object-lab svg{width:100%;height:auto;display:block}
+.object-lab .scene{fill:#e8f1fb;stroke:#a8bdd6}
+.obj-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.88rem;color:#40536b;margin:8px 0}
+.obj-legend span:before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--c)}
+.detection-card{border:1px solid #d5e1ef;background:#fff;border-radius:10px;padding:12px;margin:8px 0}
+.quiz-level{display:inline-block;border-radius:20px;padding:2px 9px;font-size:.78rem;font-weight:700;background:#e8efff;color:#244f91}
+.quiz-block{border:1px solid #d6e1ee;border-radius:12px;padding:14px;margin:13px 0;background:#fff}
+.quiz-block label{display:block;margin:7px 0}
+.quiz-block input[type=text]{width:min(100%,340px);padding:8px;border:1px solid #bdcadd;border-radius:8px}
+.quiz-block select{margin:4px}
+.quiz-feedback{margin-top:8px;font-weight:650}
+@media(max-width:600px){.object-lab{padding:8px}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style></head>
+<body>
+<header><div class="eyebrow">MDU • Riyaziyyat və İnformasiya texnologiyaları fakültəsi</div>
+<h1>Fəsil 14. Dərin öyrənmə və müasir neyron şəbəkələri</h1>
+<p>Dərin öyrənmənin əsas arxitekturaları real təsvir, mətn və zaman ardıcıllığı nümunələri üzərində izah edilir. İnteraktiv laboratoriya bloklarında filtrin təsirini, pooling əməliyyatını, ardıcıllıq yaddaşını və attention çəkilərini sınaqdan keçirin.</p><div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<main>
+<nav><b>Mündəricat</b><div>
+<a href="#s141">14.1. Dərin öyrənmə anlayışı</a><a href="#s142">14.2. Maşın öyrənməsi və dərin öyrənmənin fərqi</a><a href="#s143">14.3. Deep Neural Networks</a><a href="#s144">14.4. Convolutional Neural Networks (CNN)</a><a href="#s145">14.5. CNN-də Convolution, Pooling və Flatten əməliyyatları</a><a href="#s146">14.6. Recurrent Neural Networks (RNN)</a><a href="#s147">14.7. LSTM və GRU arxitekturaları</a><a href="#s148">14.8. Attention mexanizmi</a><a href="#s149">14.9. Transformer arxitekturasına giriş</a><a href="#s1410">14.10. TensorFlow və Keras ilə dərin öyrənmə</a><a href="#s1411">14.11. PyTorch ilə neyron şəbəkələrinin qurulması</a><a href="#s1412">14.12. GPU və paralel hesablamaların rolu</a><a href="#s1413">14.13. Dərin öyrənmə modellərinin tətbiq sahələri</a><a href="#tasks">Praktiki tapşırıqlar</a><a href="#quiz">Özünü yoxlama sualları</a><a href="#refs">İstifadə olunan ədəbiyyat</a><a href="#lab">Laboratoriya işi №14</a>
+</div></nav>
+<article>
+<section class="intro"><span class="tag">Fəslin məqsədi</span><p class="lead">Bu fəsildə tələbə xam veriləndən avtomatik əlamət çıxarılmasına, arxitektura seçiminə və modelin öyrədilməsinə qədər dərin öyrənmə prosesini başa düşəcək. Əsas diqqət “şəkildə nə var?” sualına CNN vasitəsilə cavab verilməsinə yönəldilir; RNN, LSTM, Attention və Transformer isə mətn və ardıcıllıq nümunələri ilə əlaqələndirilir.</p>
+<div class="grid"><div class="tile"><strong>Bilik</strong><br>DL, CNN, RNN, LSTM, Attention və Transformer anlayışları.</div><div class="tile"><strong>Bacarıq</strong><br>Şəkil tensorunu emal etmək, CNN qatlarının ölçülərini hesablamaq.</div><div class="tile"><strong>Tətbiq</strong><br>Keras və PyTorch ilə təsnifat modeli qurmaq və nəticəni qiymətləndirmək.</div></div></section>
+
+<section class="section" id="s141"><h2>14.1. Dərin öyrənmə anlayışı</h2>
+<p>Dərin öyrənmə (Deep Learning, DL) çoxsaylı emal qatlarından ibarət neyron şəbəkələrinin verilənlərdən iyerarxik əlamətlər öyrənməsidir. “Dərin” sözü qatların sayına və ardıcıl çevrilmələrin mürəkkəbliyinə işarə edir. Modelin ilk qatları sadə nümunələri, sonrakı qatları isə daha mürəkkəb strukturları birləşdirə bilər.</p>
+<p>Məsələn, pişik və itin şəklini tanıyan CNN-də ilkin konvolyusiya qatları kənar və istiqamət dəyişikliklərinə həssas ola bilər. Orta qatlar qulaq, göz, tüklülük kimi hissələri, dərin qatlar isə obyektin bütöv təsvirini ayırd etməyə kömək edən kombinasiyaları öyrənir. Bu, hər qatın mütləq konkret bir orqana uyğun gəldiyi demək deyil; vizuallaşdırmalar öyrənilmiş filtrlərin davranışını şərh etməyə kömək edir.</p>
+<figure><svg viewBox="0 0 900 300" role="img" aria-label="Şəkildən yüksək səviyyəli anlayışa qədər dərin öyrənmə iyerarxiyası">
+<defs><marker id="a14" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#55708f"/></marker></defs>
+<rect x="18" y="76" width="150" height="150" rx="13" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="93" y="104" text-anchor="middle" font-weight="bold" fill="#1e40af">Xam şəkil</text><rect x="53" y="120" width="80" height="70" rx="8" fill="#94a3b8"/><circle cx="77" cy="143" r="8" fill="#fff"/><circle cx="109" cy="143" r="8" fill="#fff"/><path d="M70 169Q93 185 116 169" fill="none" stroke="#fff" stroke-width="4"/>
+<g><rect x="220" y="76" width="150" height="150" rx="13" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/><text x="295" y="104" text-anchor="middle" font-weight="bold" fill="#075985">İlkin əlamətlər</text><path d="M250 175L335 125M250 125L335 175M250 150H335" stroke="#0284c7" stroke-width="5"/></g>
+<g><rect x="422" y="76" width="150" height="150" rx="13" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><text x="497" y="104" text-anchor="middle" font-weight="bold" fill="#5b21b6">Hissələr</text><circle cx="470" cy="150" r="19" fill="#a78bfa"/><circle cx="525" cy="150" r="19" fill="#8b5cf6"/><path d="M457 185Q497 205 538 185" stroke="#6d28d9" stroke-width="4" fill="none"/></g>
+<g><rect x="624" y="76" width="150" height="150" rx="13" fill="#dcfce7" stroke="#059669" stroke-width="2"/><text x="699" y="104" text-anchor="middle" font-weight="bold" fill="#047857">Obyekt sinfi</text><path d="M667 172Q699 123 731 172Q699 196 667 172" fill="#34d399"/><text x="699" y="215" text-anchor="middle" fill="#047857">Pişik</text></g>
+<path d="M170 151H210M372 151H412M574 151H614" stroke="#55708f" stroke-width="3" marker-end="url(#a14)"/>
+<text x="450" y="270" text-anchor="middle" font-size="15" fill="#425670">Sadə piksel nümunələri → kombinə edilmiş əlamətlər → tanınma qərarı</text></svg><figcaption>Şəkil 14.1. Dərin şəbəkənin əlamətləri mərhələli öyrənməsi. Diaqram konseptualdır: real şəbəkədə hər qat çoxsaylı filtr və xüsusiyyət xəritələri yaradır.</figcaption></figure>
+<div class="math">Ümumi qat çevrilməsi: &nbsp; a<sup>(l)</sup> = φ(W<sup>(l)</sup>a<sup>(l−1)</sup> + b<sup>(l)</sup>)</div>
+<p>Burada <b>a</b> qatın aktivləşmə vektoru, <b>W</b> öyrənilən çəkilər, <b>b</b> sürüşmə əmsalı, <b>φ</b> isə ReLU kimi qeyri-xətti funksiyadır. Qatlar arasında qeyri-xəttilik olmasa, bir neçə xətti qat bir xətti çevrilməyə birləşər və şəbəkənin ifadə imkanları məhdudlaşar.</p>
+<div class="callout"><b>Sadə analogiya:</b> birinci mərhələ hərflərin xətlərini, növbəti mərhələ hərfləri, daha sonra sözləri tanıyan oxucu kimi düşünülə bilər. Şəbəkə qaydaları əl ilə yazmır; parametrləri təlim nümunələrindən öyrənir.</div></section>
+
+<section class="section" id="s142"><h2>14.2. Maşın öyrənməsi və dərin öyrənmənin fərqi</h2>
+<p>Maşın öyrənməsində (ML) əlamətlərin seçilməsi və hazırlanması çox vaxt insanın domen biliyinə əsaslanır. Dərin öyrənmə isə xam və ya az emal olunmuş veriləndən faydalı təqdimatları qatlar vasitəsilə avtomatik öyrənə bilir. Bunun əvəzində daha çox verilən, hesablama resursu və diqqətli optimallaşdırma tələb edə bilər.</p>
+<table><tr><th>Meyar</th><th>Ənənəvi ML</th><th>Dərin öyrənmə</th></tr><tr><td>Əlamət çıxarılması</td><td>Çox vaxt əl ilə layihələndirilir</td><td>Qatlarda avtomatik öyrənilir</td></tr><tr><td>Verilən</td><td>Cədvəl tipli veriləndə güclü ola bilər</td><td>Şəkil, audio, mətn kimi mürəkkəb veriləndə xüsusilə faydalıdır</td></tr><tr><td>Hesablama</td><td>Çox vaxt CPU kifayət edə bilər</td><td>Böyük modellərdə GPU faydalıdır</td></tr><tr><td>Şərh edilə bilmə</td><td>Modeldən asılıdır</td><td>Çoxqatlı təqdimatlar izahı çətinləşdirə bilər</td></tr><tr><td>Verilən ehtiyacı</td><td>Bəzi üsullar az verilənlə işləyir</td><td>Çox vaxt daha böyük verilən tələb edir; transfer learning istisna yarada bilər</td></tr></table>
+<p><b>Real nümunə:</b> avtomobilin şəklindən “avtomobil / motosiklet / velosiped” tanımaq üçün ənənəvi üsulda rəng histogramı, kənar sayı və forma descriptorları ayrıca hesablanır. CNN isə bu xüsusiyyətləri təlim zamanı filtrlərlə öyrənir. Lakin kiçik strukturlaşdırılmış cədvəldə gradient boosting kimi ML metodları DL-dən daha münasib ola bilər.</p></section>
+
+<section class="section" id="s143"><h2>14.3. Deep Neural Networks</h2>
+<p>Deep Neural Network (DNN) bir giriş qatı, bir neçə gizli qat və çıxış qatından təşkil oluna bilər. Tam əlaqəli DNN-də hər qatın neyronları növbəti qatın neyronları ilə çəkili əlaqələr qurur. Giriş şəkil olduqda piksel matrisi çox vaxt tensor şəklində təqdim edilir: <code>batch × height × width × channels</code> (TensorFlow kanalı sonuncu ölçüdə saxlayır) və ya PyTorch-da <code>batch × channels × height × width</code>.</p>
+<figure><svg viewBox="0 0 850 260" role="img" aria-label="DNN çoxqatlı neyron şəbəkəsi">
+<g font-size="14" text-anchor="middle" font-weight="bold"><rect x="20" y="35" width="125" height="185" rx="13" fill="#dbeafe" stroke="#2563eb"/><rect x="235" y="35" width="125" height="185" rx="13" fill="#ede9fe" stroke="#7c3aed"/><rect x="450" y="35" width="125" height="185" rx="13" fill="#f3e8ff" stroke="#9333ea"/><rect x="665" y="35" width="160" height="185" rx="13" fill="#dcfce7" stroke="#059669"/><text x="82" y="60" fill="#1e40af">Giriş</text><text x="297" y="60" fill="#5b21b6">Gizli qat 1</text><text x="512" y="60" fill="#7e22ce">Gizli qat 2</text><text x="745" y="60" fill="#047857">Çıxış</text></g>
+<g fill="#60a5fa"><circle cx="82" cy="100" r="11"/><circle cx="82" cy="145" r="11"/><circle cx="82" cy="190" r="11"/></g><g fill="#a78bfa"><circle cx="297" cy="90" r="11"/><circle cx="297" cy="130" r="11"/><circle cx="297" cy="170" r="11"/></g><g fill="#c084fc"><circle cx="512" cy="90" r="11"/><circle cx="512" cy="130" r="11"/><circle cx="512" cy="170" r="11"/></g><g fill="#34d399"><circle cx="745" cy="105" r="13"/><circle cx="745" cy="150" r="13"/><circle cx="745" cy="195" r="13"/></g>
+<g stroke="#94a3b8" stroke-width="1.6"><path d="M93 100L286 90M93 100L286 130M93 100L286 170M93 145L286 90M93 145L286 130M93 145L286 170M93 190L286 90M93 190L286 130M93 190L286 170"/><path d="M308 90L501 90M308 90L501 130M308 130L501 90M308 130L501 130M308 170L501 170M523 90L732 105M523 130L732 150M523 170L732 195"/></g>
+<text x="425" y="248" text-anchor="middle" fill="#52657d">Hər gizli qat əvvəlki təqdimatı yeni əlamət fəzasına çevirir.</text></svg><figcaption>Şəkil 14.2. Dərin neyron şəbəkəsinin sadələşdirilmiş quruluşu. Real modellərdə qatlar minlərlə və ya milyonlarla parametrə malik ola bilər.</figcaption></figure>
+<p>DNN-də parametrlərin sayı qatların ölçüsündən asılıdır. Əgər əvvəlki qatın 128, növbəti qatın 64 neyronu varsa, həmin keçiddə çəkilərin sayı 128×64=8192, bias sayı isə 64-dür. Deməli, ümumi parametr sayı 8256 olur.</p>
+<div class="demo"><h3>İnteraktiv parametr kalkulyatoru</h3><div class="controls"><label>Giriş neyronu <input id="din" type="number" min="1" max="4096" value="128"></label><label>Növbəti qat <input id="dout" type="number" min="1" max="4096" value="64"></label><button onclick="calcParams()">Hesabla</button></div><div class="result" id="paramResult">Çəkilər: 8192 • Bias: 64 • Cəmi: 8256 parametr</div><p class="small">Formula: Parametrlər = n<sub>in</sub> × n<sub>out</sub> + n<sub>out</sub>.</p></div></section>
+
+<section class="section" id="s144"><h2>14.4. Convolutional Neural Networks (CNN)</h2>
+<p>Convolutional Neural Network (CNN) təsvirlərdə məkan əlaqələrini nəzərə alan arxitekturadır. Şəkil sadəcə uzun piksel siyahısı kimi deyil, hündürlük, en və kanal ölçüləri olan tensor kimi qəbul edilir. Konvolyusiya filtri kiçik sahə üzərində sürüşür, lokal piksel kombinasiyalarını hesablayır və feature map yaradır.</p>
+<p>RGB şəkil 3 kanala malikdir: qırmızı, yaşıl və mavi. 64×64 ölçülü RGB təsvirin forması (64,64,3), piksel sayı isə 64×64×3=12 288-dir. CNN eyni filtri müxtəlif mövqelərdə tətbiq etməklə parametr paylaşımı yaradır. Bu, tam əlaqəli qatla müqayisədə parametr sayını azalda və lokal strukturları öyrənməyə kömək edə bilər.</p>
+<figure><svg viewBox="0 0 900 300" role="img" aria-label="CNN təsnifat axını">
+<rect x="20" y="65" width="145" height="170" rx="13" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="92" y="90" text-anchor="middle" font-weight="bold" fill="#1e40af">Giriş şəkli</text><rect x="48" y="110" width="90" height="90" fill="#cbd5e1"/><path d="M48 155Q92 98 138 155Q92 212 48 155" fill="#64748b"/><circle cx="92" cy="155" r="18" fill="#f8fafc"/>
+<rect x="220" y="65" width="145" height="170" rx="13" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/><text x="292" y="90" text-anchor="middle" font-weight="bold" fill="#075985">Convolution</text><g fill="#38bdf8"><rect x="250" y="120" width="24" height="24"/><rect x="280" y="120" width="24" height="24"/><rect x="310" y="120" width="24" height="24"/><rect x="250" y="150" width="24" height="24"/><rect x="280" y="150" width="24" height="24"/><rect x="310" y="150" width="24" height="24"/></g><text x="292" y="205" text-anchor="middle" font-size="12">Filtrlər</text>
+<rect x="420" y="65" width="145" height="170" rx="13" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><text x="492" y="90" text-anchor="middle" font-weight="bold" fill="#5b21b6">Pooling</text><g fill="#a78bfa"><rect x="450" y="120" width="40" height="35"/><rect x="495" y="120" width="40" height="35"/><rect x="450" y="160" width="40" height="35"/><rect x="495" y="160" width="40" height="35"/></g>
+<rect x="620" y="65" width="115" height="170" rx="13" fill="#f3e8ff" stroke="#9333ea" stroke-width="2"/><text x="677" y="90" text-anchor="middle" font-weight="bold" fill="#7e22ce">Flatten + Dense</text><g fill="#c084fc"><circle cx="655" cy="130" r="7"/><circle cx="655" cy="155" r="7"/><circle cx="655" cy="180" r="7"/><circle cx="695" cy="142" r="7"/><circle cx="695" cy="170" r="7"/></g>
+<rect x="780" y="65" width="100" height="170" rx="13" fill="#dcfce7" stroke="#059669" stroke-width="2"/><text x="830" y="90" text-anchor="middle" font-weight="bold" fill="#047857">Sinif</text><text x="830" y="150" text-anchor="middle" fill="#047857">Pişik</text><text x="830" y="175" text-anchor="middle" fill="#047857">0.93</text>
+<g stroke="#52657d" stroke-width="3"><path d="M165 150H210M365 150H410M565 150H610M735 150H770"/></g><text x="450" y="275" text-anchor="middle" fill="#53657e">Şəkil → lokal əlamətlər → ölçünün azaldılması → sinif ehtimalları</text></svg><figcaption>Şəkil 14.3. CNN ilə təsvir təsnifatının tipik axını. Arxitekturadan asılı olaraq bir neçə convolution və pooling bloku təkrarlana bilər.</figcaption></figure>
+<div class="callout"><b>Real tanıma nümunəsi:</b> kameradan alınan yarpaq şəklində model “sağlam”, “pas xəstəliyi”, “ləkə” siniflərindən birini seçə bilər. Təlim şəkilləri müxtəlif işıq, bucaq və fon şəraitini əhatə etməlidir; əks halda model fonu xəstəlik əlaməti kimi öyrənə bilər.</div></section>
+
+
+<div class="detection-card">
+<h3>Real nümunə: küçə kamerasında obyektlərin aşkarlanması</h3>
+<p>Təsəvvür edin ki, universitet kampusunun girişində kamera quraşdırılıb. Sistem bir kadrda avtomobili, piyadanı və velosipedi tapmalıdır. Bu tapşırıq <b>obyekt aşkarlanmasıdır (Object Detection)</b>: model həm obyektin sinfini, həm də onun təsvir daxilində yerini müəyyən edir. Sadə təsvir təsnifatında isə bütün şəkil üçün bir etiket verilə bilər; aşkarlamada hər obyekt üçün ayrıca çərçivə və sinif proqnozlaşdırılır.</p>
+<table><tr><th>Tapşırıq</th><th>Modelin cavabı</th><th>Nümunə</th></tr><tr><td>Təsvir təsnifatı</td><td>Şəklin əsas sinfi</td><td>“Bu şəkildə avtomobil var”</td></tr><tr><td>Obyekt aşkarlanması</td><td>Sinif + sərhəd çərçivəsi + etimad</td><td>“Avtomobil: (x₁,y₁,x₂,y₂), 0.94”</td></tr><tr><td>Semantik seqmentasiya</td><td>Hər piksel üçün sinif</td><td>Yol, səki, avtomobil pikselləri</td></tr><tr><td>Instance segmentation</td><td>Hər obyektin ayrıca piksel maskası</td><td>İki avtomobil ayrı maskalarla</td></tr></table>
+<div class="object-lab">
+<b>İnteraktiv aşkarlama səhnəsi</b>
+<p>Aşağıdakı sxem tədris üçün hazırlanmış küçə kadrıdır. Etimad həddini dəyişin: hədd yüksəldikcə aşağı etimadlı proqnozlar gizlənir.</p>
+<div class="controls"><label>Minimum confidence: <strong id="confValue">0.50</strong></label><input id="confSlider" type="range" min="20" max="95" value="50" oninput="updateDetections()"></div>
+<svg viewBox="0 0 760 360" role="img" aria-label="Piyada avtomobil və velosiped üzərində bounding box-lar olan küçə səhnəsi">
+<rect x="8" y="8" width="744" height="344" rx="15" class="scene"/>
+<rect x="8" y="8" width="744" height="190" rx="15" fill="#dceeff"/><circle cx="660" cy="58" r="28" fill="#ffd66b"/>
+<path d="M8 210L752 210L752 352L8 352Z" fill="#596b80"/><path d="M8 205H752" stroke="#fff" stroke-width="5"/>
+<path d="M80 290H190M280 290H390M480 290H590" stroke="#f8fafc" stroke-width="7" stroke-dasharray="50 30"/>
+<rect x="75" y="120" width="165" height="72" rx="12" fill="#4c78a8"/><rect x="100" y="95" width="95" height="40" rx="10" fill="#6f9ac5"/><circle cx="115" cy="195" r="17" fill="#1e293b"/><circle cx="205" cy="195" r="17" fill="#1e293b"/>
+<circle cx="405" cy="160" r="16" fill="#f0b98b"/><path d="M405 178L390 235L423 235Z" fill="#e45b68"/><path d="M398 195L370 220M412 195L440 220M397 235L380 270M417 235L435 270" stroke="#334155" stroke-width="9" stroke-linecap="round"/>
+<circle cx="585" cy="260" r="24" fill="none" stroke="#111827" stroke-width="5"/><circle cx="650" cy="260" r="24" fill="none" stroke="#111827" stroke-width="5"/><path d="M585 260L610 215L630 260L585 260L620 235L650 260M610 215L635 215" fill="none" stroke="#0f766e" stroke-width="5"/>
+<g id="boxCar"><rect x="65" y="88" width="185" height="135" fill="none" stroke="#2563eb" stroke-width="4"/><rect x="65" y="65" width="145" height="23" rx="5" fill="#2563eb"/><text x="74" y="82" fill="white" font-size="15" font-weight="bold">Avtomobil 0.94</text></g>
+<g id="boxPerson"><rect x="355" y="135" width="95" height="145" fill="none" stroke="#dc2626" stroke-width="4"/><rect x="355" y="112" width="125" height="23" rx="5" fill="#dc2626"/><text x="364" y="129" fill="white" font-size="15" font-weight="bold">Piyada 0.87</text></g>
+<g id="boxBike"><rect x="555" y="190" width="125" height="100" fill="none" stroke="#059669" stroke-width="4"/><rect x="555" y="167" width="135" height="23" rx="5" fill="#059669"/><text x="564" y="184" fill="white" font-size="15" font-weight="bold">Velosiped 0.62</text></g>
+</svg>
+<div class="obj-legend"><span style="--c:#2563eb">Avtomobil</span><span style="--c:#dc2626">Piyada</span><span style="--c:#059669">Velosiped</span></div>
+<div class="result" id="detResult">3 obyekt aşkarlanıb. Hədd 0.50 olduqda hər üç proqnoz göstərilir.</div>
+</div>
+<h3>Bounding box necə yazılır?</h3>
+<p>Çərçivə sol-yuxarı və sağ-aşağı koordinatlarla göstərilə bilər: <code>(x₁,y₁,x₂,y₂)</code>. Məsələn, <code>(65,88,250,223)</code> çərçivənin enini 250−65=185 piksel, hündürlüyünü 223−88=135 piksel edir. Bəzi modellər mərkəz və ölçü formasından istifadə edir: <code>(cₓ,cᵧ,w,h)</code>.</p>
+<div class="math">w = x₂ − x₁; &nbsp; h = y₂ − y₁; &nbsp; A = w × h</div>
+<p>Bu avtomobil çərçivəsinin sahəsi A=185×135=24 975 piksel²-dir. Modelin proqnoz çərçivəsi həqiqi işarələnmiş çərçivə ilə müqayisə olunur.</p>
+<h3>IoU — çərçivələrin üst-üstə düşmə dərəcəsi</h3>
+<div class="math">IoU = Sahə(B<sub>proqnoz</sub> ∩ B<sub>həqiqi</sub>) / Sahə(B<sub>proqnoz</sub> ∪ B<sub>həqiqi</sub>)</div>
+<p>IoU 0 olduqda çərçivələr kəsişmir; 1 olduqda tam üst-üstə düşür. Məsələn, kəsişmə 8 000 piksel², birləşmə 20 000 piksel² olarsa IoU=0.40. Deməli, proqnoz obyektin yerini yalnız qismən düzgün tutur.</p>
+<div class="demo"><h3>İnteraktiv IoU hesablayıcısı</h3><div class="controls"><label>Kəsişmə sahəsi <input id="interArea" type="number" min="0" value="8000"></label><label>Birləşmə sahəsi <input id="unionArea" type="number" min="1" value="20000"></label><button onclick="calcIoU()">IoU hesabla</button></div><div class="result" id="iouResult">IoU = 0.40</div></div>
+<h3>NMS — təkrarlanan çərçivələrin aradan qaldırılması</h3>
+<p>Bir obyekt üçün model bir neçə yaxın çərçivə verə bilər. Non-Maximum Suppression (NMS) ən yüksək confidence proqnozunu saxlayır, onunla həddən artıq üst-üstə düşən digər çərçivələri silir və növbəti obyektə keçir. Bu proses eyni avtomobilin ətrafında beş çərçivənin göstərilməsinin qarşısını alır.</p>
+<figure><svg viewBox="0 0 820 235" role="img" aria-label="NMS əvvəl və sonra çərçivələr">
+<rect x="20" y="20" width="350" height="180" rx="12" fill="#eff6ff" stroke="#93b4dc"/><rect x="450" y="20" width="350" height="180" rx="12" fill="#effaf5" stroke="#8acbb3"/>
+<text x="195" y="48" text-anchor="middle" font-weight="bold" fill="#1d4ed8">NMS-dən əvvəl</text><text x="625" y="48" text-anchor="middle" font-weight="bold" fill="#047857">NMS-dən sonra</text>
+<rect x="100" y="75" width="170" height="90" fill="none" stroke="#2563eb" stroke-width="4"/><rect x="120" y="85" width="165" height="88" fill="none" stroke="#dc2626" stroke-width="3"/><rect x="88" y="68" width="180" height="100" fill="none" stroke="#7c3aed" stroke-width="3"/><text x="195" y="190" text-anchor="middle" fill="#475569">Eyni obyektə 3 çərçivə</text>
+<rect x="535" y="75" width="170" height="90" fill="none" stroke="#059669" stroke-width="4"/><text x="620" y="190" text-anchor="middle" fill="#047857">Ən uyğun çərçivə saxlanır</text>
+<path d="M380 110H435" stroke="#64748b" stroke-width="4"/><path d="M426 100L438 110L426 120" stroke="#64748b" stroke-width="4" fill="none"/>
+</svg><figcaption>Şəkil 14.8. NMS-in təkrarlanan aşkarlamaları azaltma məntiqi.</figcaption></figure>
+<h3>Detection keyfiyyətinin qiymətləndirilməsi</h3>
+<div class="math">Precision = TP/(TP+FP); &nbsp; Recall = TP/(TP+FN)</div>
+<p>TP — düzgün aşkarlama, FP — yanlış aşkarlama, FN — tapılmayan real obyekt deməkdir. AP (Average Precision) precision–recall əyrisinin sahəsi, mAP isə siniflər üzrə AP göstəricilərinin orta qiymətidir. mAP hesablanarkən IoU həddi və qiymətləndirmə protokolu mütləq göstərilməlidir.</p>
+<div class="callout warning"><b>Vacib fərq:</b> yuxarıdakı səhnə real küçə təsviri deyil, anlayışı öyrətmək üçün çəkilmiş sxematik nümunədir. Real tətbiqdə nəticələr müxtəlif hava, işıq, kamera bucağı və obyekt ölçüləri ilə ayrıca yoxlanmalıdır.</div>
+</div>
+<section class="section" id="s145"><h2>14.5. CNN-də Convolution, Pooling və Flatten əməliyyatları</h2>
+<p><b>Convolution</b> filtrin lokal sahədəki qiymətlərlə elementar vurulmalarının cəmini hesablayır. <b>Pooling</b> feature map ölçüsünü azaldaraq dominant lokal cavabı saxlayır. <b>Flatten</b> çoxölçülü feature map-i birölçülü vektora çevirir ki, Dense qatına ötürülsün.</p>
+<div class="math">Y(i,j)=Σ<sub>m</sub>Σ<sub>n</sub> X(i+m,j+n)·K(m,n)+b</div>
+<p>Çıxış ölçüsünün hesablanması (padding və dilation nəzərə alınmadıqda):</p><div class="math">H<sub>out</sub> = ⌊(H−K+2P)/S⌋ + 1; &nbsp; W<sub>out</sub> = ⌊(W−K+2P)/S⌋ + 1</div>
+<p>Burada H və W girişin hündürlüyü və eni, K filtr ölçüsü, P padding, S stride addımıdır. Məsələn, 32×32 giriş, 3×3 filtr, P=1, S=1 olduqda çıxış 32×32 olur.</p>
+<div class="demo"><h3>İnteraktiv konvolyusiya laboratoriyası</h3><p>6×6 piksel matrisində aktiv xanaları dəyişin. Sonra 3×3 kənar filtri ilə mərkəzi sahədəki cavabı hesablayın.</p><div class="pixelgrid" id="pixels"></div><div class="controls"><label>Filtr <select id="filter"><option value="edge">Kənar filtri</option><option value="blur">Orta qiymət filtri</option><option value="sharpen">Kəskinləşdirmə</option></select></label><button onclick="runConv()">Konvolyusiyanı hesabla</button><button class="secondary" onclick="resetPixels()">Nümunəni bərpa et</button></div><div class="result" id="convResult">Filtr cavabı burada görünəcək.</div><p class="small">Bu tədris nümunəsi 6×6 boztonlu matrisin mərkəzində bir 3×3 pəncərəni hesablayır. Tam CNN çoxsaylı pəncərələri bütün şəkil boyunca sürüşdürür.</p></div>
+<div class="grid"><div class="tile"><strong>Max Pooling</strong><p>Hər pəncərədə ən böyük aktivləşməni saxlayır. Güclü əlamət cavabını qorumaq üçün istifadə oluna bilər.</p></div><div class="tile"><strong>Average Pooling</strong><p>Pəncərənin orta qiymətini götürür. Lokal aktivləşməni yumşaldır.</p></div><div class="tile"><strong>Flatten</strong><p>Məsələn, 7×7×64 tensoru 3136 uzunluqlu vektora çevirir; yeni öyrənilən parametr əlavə etmir.</p></div></div>
+<div class="demo"><h3>Pooling hesablayıcısı</h3><p>Bu 4×4 matrisi 2×2 pəncərələrə bölərək Max və Average Pooling nəticələrini müqayisə edin.</p><div class="controls"><label>Əməliyyat <select id="poolType"><option value="max">Max Pooling</option><option value="avg">Average Pooling</option></select></label><button onclick="poolCalc()">Hesabla</button></div><div class="result" id="poolResult">Matrisi: [1 3 2 0; 4 6 1 2; 2 1 5 3; 0 2 4 7]</div></div>
+</section>
+
+<section class="section" id="s146"><h2>14.6. Recurrent Neural Networks (RNN)</h2>
+<p>RNN ardıcıllıq verilənləri üçün nəzərdə tutulub. Mətn, nitq, sensor ölçmələri və zaman sıralarında cari addımın hesablanması əvvəlki gizli vəziyyətdən də asılıdır. Beləliklə, şəbəkə ardıcıllığın əvvəlki hissəsi haqqında məlumatı vəziyyət vektoru ilə ötürür.</p>
+<div class="math">h<sub>t</sub> = tanh(W<sub>xh</sub>x<sub>t</sub> + W<sub>hh</sub>h<sub>t−1</sub> + b<sub>h</sub>)</div>
+<p>Burada x<sub>t</sub> cari addımın girişi, h<sub>t−1</sub> əvvəlki gizli vəziyyət, h<sub>t</sub> yeni vəziyyətdir. Eyni W çəkiləri zaman addımlarında paylaşılır.</p>
+<figure><svg viewBox="0 0 850 270" role="img" aria-label="RNN zaman üzrə açılmış arxitektura">
+<g fill="#dbeafe" stroke="#2563eb" stroke-width="2"><rect x="45" y="115" width="115" height="70" rx="12"/><rect x="365" y="115" width="115" height="70" rx="12"/><rect x="685" y="115" width="115" height="70" rx="12"/></g>
+<g fill="#ede9fe" stroke="#7c3aed" stroke-width="2"><rect x="45" y="25" width="115" height="55" rx="12"/><rect x="365" y="25" width="115" height="55" rx="12"/><rect x="685" y="25" width="115" height="55" rx="12"/></g>
+<g font-size="15" text-anchor="middle" font-weight="bold"><text x="102" y="58" fill="#5b21b6">h₁</text><text x="422" y="58" fill="#5b21b6">h₂</text><text x="742" y="58" fill="#5b21b6">h₃</text><text x="102" y="155" fill="#1e40af">x₁</text><text x="422" y="155" fill="#1e40af">x₂</text><text x="742" y="155" fill="#1e40af">x₃</text><text x="102" y="215" fill="#52657e">t = 1</text><text x="422" y="215" fill="#52657e">t = 2</text><text x="742" y="215" fill="#52657e">t = 3</text></g>
+<g stroke="#7c3aed" stroke-width="3" fill="none"><path d="M102 115V83"/><path d="M422 115V83"/><path d="M742 115V83"/><path d="M160 52H355"/><path d="M480 52H675"/></g>
+<g stroke="#2563eb" stroke-width="3" fill="none"><path d="M160 150H355"/><path d="M480 150H675"/></g>
+<text x="260" y="37" text-anchor="middle" fill="#5b21b6">h₁ əvvəlki vəziyyəti ötürür</text><text x="580" y="37" text-anchor="middle" fill="#5b21b6">h₂ növbəti addıma ötürülür</text>
+<text x="425" y="255" text-anchor="middle" fill="#52657e">Eyni parametr matrisi hər zaman addımında təkrar istifadə olunur.</text></svg><figcaption>Şəkil 14.4. RNN-in zaman üzrə açılmış görünüşü. Hər addımda cari giriş və əvvəlki gizli vəziyyət birləşdirilir.</figcaption></figure>
+<p><b>Real nümunə:</b> “Bu film çox maraqlı idi” cümləsinin sentiment analizi. RNN sözləri ardıcıl oxuyaraq əvvəlki sözlərin kontekstini vəziyyətdə saxlayır. Uzun ardıcıllıqlarda gradientin sönməsi və ya partlaması sadə RNN-in çətinliklərindəndir.</p></section>
+
+<section class="section" id="s147"><h2>14.7. LSTM və GRU arxitekturaları</h2>
+<p>LSTM və GRU uzunmüddətli asılılıqları öyrənməyi asanlaşdırmaq üçün qapı mexanizmlərindən istifadə edən RNN variantlarıdır. LSTM-də yaddaş hüceyrəsi (cell state) və forget, input, output qapıları mövcuddur. GRU daha yığcam quruluşda update və reset qapılarından istifadə edir.</p>
+<figure><svg viewBox="0 0 900 300" role="img" aria-label="LSTM hüceyrəsində qapıların sxemi">
+<rect x="20" y="80" width="860" height="150" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/><path d="M55 145H845" stroke="#0f9d82" stroke-width="5"/><text x="60" y="125" fill="#047857" font-weight="bold">Cₜ₋₁</text><text x="835" y="125" fill="#047857" font-weight="bold">Cₜ</text>
+<g><rect x="155" y="100" width="135" height="95" rx="12" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/><text x="222" y="130" text-anchor="middle" fill="#b91c1c" font-weight="bold">Forget gate</text><text x="222" y="157" text-anchor="middle" fill="#7f1d1d">nə unudulsun?</text><text x="222" y="179" text-anchor="middle" fill="#7f1d1d">fₜ</text></g>
+<g><rect x="380" y="100" width="135" height="95" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="447" y="130" text-anchor="middle" fill="#1e40af" font-weight="bold">Input gate</text><text x="447" y="157" text-anchor="middle" fill="#1e40af">nə yazılsın?</text><text x="447" y="179" text-anchor="middle" fill="#1e40af">iₜ</text></g>
+<g><rect x="605" y="100" width="135" height="95" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><text x="672" y="130" text-anchor="middle" fill="#5b21b6" font-weight="bold">Output gate</text><text x="672" y="157" text-anchor="middle" fill="#5b21b6">nə ötürülsün?</text><text x="672" y="179" text-anchor="middle" fill="#5b21b6">oₜ</text></g>
+<path d="M222 80V48M447 80V48M672 80V48" stroke="#64748b" stroke-width="2"/><text x="447" y="28" text-anchor="middle" fill="#52657e">Cari giriş xₜ və əvvəlki gizli vəziyyət hₜ₋₁ qapıları idarə edir</text>
+<text x="450" y="270" text-anchor="middle" fill="#52657e">Cₜ = fₜ ⊙ Cₜ₋₁ + iₜ ⊙ C̃ₜ</text></svg><figcaption>Şəkil 14.5. LSTM yaddaş hüceyrəsinin konseptual sxemi. Qapılar 0–1 aralığında qiymət alaraq məlumat axınını tənzimləyir.</figcaption></figure>
+<table><tr><th>Arxitektura</th><th>Əsas mexanizm</th><th>Praktik müşahidə</th></tr><tr><td>Sadə RNN</td><td>Gizli vəziyyət</td><td>Sadədir, uzun asılılıqlarda çətinlik çəkə bilər</td></tr><tr><td>LSTM</td><td>Cell state və 3 qapı</td><td>Uzun konteksti saxlamaq üçün güclü seçim ola bilər</td></tr><tr><td>GRU</td><td>2 qapı, ayrıca cell state yoxdur</td><td>Çox vaxt daha yığcamdır; nəticə veriləndən asılıdır</td></tr></table></section>
+
+<section class="section" id="s148"><h2>14.8. Attention mexanizmi</h2>
+<p>Attention mexanizmi modelə cari tapşırıq üçün girişin hansı hissələrinin daha əhəmiyyətli olduğunu çəki ilə ifadə etməyə imkan verir. Mətndə “Bankın yanında çay axır” cümləsində “çay” sözünün mənası “bank” kontekstindən asılıdır. Attention əlaqəli sözlərə daha yüksək çəki verə bilər.</p>
+<div class="math">Attention(Q,K,V) = softmax(QKᵀ / √d<sub>k</sub>)V</div>
+<p>Q — Query, K — Key, V — Value matrisləridir. QKᵀ oxşarlıq balları yaradır; √d<sub>k</sub> ilə miqyaslama, softmax isə balları cəmi 1 olan çəkiyə çevirir. Çəkili V cəmi kontekst təqdimatını formalaşdırır.</p>
+<div class="demo"><h3>İnteraktiv Attention nümunəsi</h3><p>Cümlədə “çay” sözünün mənasını izah edərkən əlaqəli sözlərə diqqət çəkilərinin necə paylandığını müşahidə edin.</p><div class="controls"><label>Kontekst <select id="attContext" onchange="attentionDemo()"><option value="river">“Bankın yanında çay axır”</option><option value="drink">“Səhər çay içdim”</option></select></label></div><div id="attentionBars"></div><div class="result" id="attentionResult">Attention çəkiləri hesablanır.</div></div>
+<p>Attention çəkisi modelin izahı üçün faydalı siqnal ola bilər, lakin onu avtomatik olaraq səbəb-nəticə izahı kimi qəbul etmək olmaz. Modelin qərarını yoxlamaq üçün perturbasiya, gradient əsaslı metodlar və digər interpretasiya üsulları da tətbiq edilir.</p></section>
+
+<section class="section" id="s149"><h2>14.9. Transformer arxitekturasına giriş</h2>
+<p>Transformer ardıcıllığı emal etmək üçün self-attention və feed-forward bloklarından istifadə edir. RNN-dən fərqli olaraq, klassik Transformer giriş tokenlərini bir addım-addım zəncirə məcbur etmədən paralel emal edə bilər. Sözlərin ardıcıllıq mövqeyi positional encoding vasitəsilə təqdim olunur.</p>
+<figure><svg viewBox="0 0 900 340" role="img" aria-label="Transformer encoder decoder arxitekturasının sadələşdirilmiş sxemi">
+<rect x="35" y="245" width="190" height="55" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><text x="130" y="278" text-anchor="middle" fill="#1e40af" font-weight="bold">Token + mövqe</text>
+<rect x="35" y="135" width="190" height="75" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><text x="130" y="165" text-anchor="middle" fill="#5b21b6" font-weight="bold">Multi-Head</text><text x="130" y="188" text-anchor="middle" fill="#5b21b6">Self-Attention</text>
+<rect x="35" y="35" width="190" height="65" rx="10" fill="#dcfce7" stroke="#059669" stroke-width="2"/><text x="130" y="74" text-anchor="middle" fill="#047857" font-weight="bold">Feed Forward</text>
+<rect x="350" y="245" width="200" height="55" rx="10" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/><text x="450" y="278" text-anchor="middle" fill="#9a3412" font-weight="bold">Çıxış tokenləri</text>
+<rect x="350" y="135" width="200" height="75" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><text x="450" y="165" text-anchor="middle" fill="#5b21b6" font-weight="bold">Masked Self-</text><text x="450" y="188" text-anchor="middle" fill="#5b21b6">Attention</text>
+<rect x="350" y="35" width="200" height="65" rx="10" fill="#dcfce7" stroke="#059669" stroke-width="2"/><text x="450" y="74" text-anchor="middle" fill="#047857" font-weight="bold">Cross-Attention + FFN</text>
+<path d="M130 245V220M130 135V110M450 245V220M450 135V110" stroke="#52657e" stroke-width="3"/><path d="M225 172H330" stroke="#2563eb" stroke-width="3" stroke-dasharray="7 5"/><text x="278" y="157" text-anchor="middle" fill="#1d4ed8" font-size="12">encoder məlumatı</text>
+<text x="450" y="325" text-anchor="middle" fill="#52657e">Sxem ümumi Transformer ideyasını göstərir; encoder-only və decoder-only modellərdə bloklar fərqlənə bilər.</text></svg><figcaption>Şəkil 14.6. Encoder–decoder Transformer-in sadələşdirilmiş təsviri. Residual bağlantılar və layer normalization sxemin oxunaqlılığı üçün göstərilməyib.</figcaption></figure>
+<p><b>Multi-head attention</b> eyni anda müxtəlif münasibətləri öyrənmək üçün bir neçə attention başlığından istifadə edir. Məsələn, bir başlıq yaxın söz əlaqələrinə, digəri cümlənin uzaq hissələri arasındakı əlaqələrə həssas ola bilər. Bu izah intuitivdir; konkret başlıqların nə öyrəndiyini ayrıca analiz etmək lazımdır.</p>
+</section>
+
+<section class="section" id="s1410"><h2>14.10. TensorFlow və Keras ilə dərin öyrənmə</h2>
+<p>TensorFlow hesablama platforması, Keras isə yüksək səviyyəli model qurma API-sidir. Aşağıdakı nümunə 28×28 boztonlu təsvirlər üçün sadə CNN yaradır. MNIST datasetində 0–9 rəqəmlərinin şəkilləri mövcuddur.</p>
+<pre><code>import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+
+(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+x_train = x_train.astype("float32") / 255.0
+x_test  = x_test.astype("float32") / 255.0
+x_train = x_train[..., None]  # (N, 28, 28, 1)
+x_test  = x_test[..., None]
+
+model = keras.Sequential([
+    layers.Input(shape=(28, 28, 1)),
+    layers.Conv2D(32, 3, activation="relu"),
+    layers.MaxPooling2D(),
+    layers.Conv2D(64, 3, activation="relu"),
+    layers.MaxPooling2D(),
+    layers.Flatten(),
+    layers.Dense(64, activation="relu"),
+    layers.Dropout(0.3),
+    layers.Dense(10, activation="softmax")
+])
+model.compile(optimizer="adam",
+              loss="sparse_categorical_crossentropy",
+              metrics=["accuracy"])
+model.fit(x_train, y_train, epochs=5,
+          batch_size=64, validation_split=0.1)
+model.evaluate(x_test, y_test)</code></pre>
+<p><b>İzah:</b> normallaşdırma piksel qiymətlərini 0–1 intervalına gətirir. Conv2D filtrlərlə əlamət çıxarır. MaxPooling məkan ölçüsünü azaldır. Flatten vektora çevirir. Dense sinif qərarını formalaşdırır. Softmax 10 sinif üzrə ehtimallar verir. Dropout təlimdə overfitting riskini azaltmağa kömək edir.</p>
+<div class="callout warning">Təlim nəticəsi cihaz, kitabxana versiyası, təsadüfi başlanğıc və hiperparametrlərdən asılıdır. Konkret accuracy rəqəmini əvvəlcədən zəmanətli nəticə kimi qəbul etməyin; öz icranızın nəticəsini qeyd edin.</div></section>
+
+<section class="section" id="s1411"><h2>14.11. PyTorch ilə neyron şəbəkələrinin qurulması</h2>
+<p>PyTorch tensorlar, avtomatik diferensiallama və modul əsaslı model quruluşu təqdim edir. Aşağıdakı model Keras nümunəsi ilə eyni əsas ardıcıllığı — convolution, pooling, flatten və classifier — nümayiş etdirir.</p>
+<pre><code>import torch
+from torch import nn
+
+class SmallCNN(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(1, 32, kernel_size=3),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+            nn.Conv2d(32, 64, kernel_size=3),
+            nn.ReLU(),
+            nn.MaxPool2d(2)
+        )
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(64 * 4 * 4, 64),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(64, 10)
+        )
+
+    def forward(self, x):
+        x = self.features(x)
+        return self.classifier(x)
+
+model = SmallCNN()
+images = torch.randn(8, 1, 28, 28)
+logits = model(images)
+print(logits.shape)  # torch.Size([8, 10])</code></pre>
+<p>PyTorch-da giriş tensoru adətən <code>(batch, channels, height, width)</code> formasındadır. Model çıxışında logits qaytarılır; <code>CrossEntropyLoss</code> logits-i birbaşa qəbul edir, buna görə təlim zamanı əvvəlcədən softmax tətbiq edilmir.</p>
+<table><tr><th>Meyar</th><th>TensorFlow/Keras</th><th>PyTorch</th></tr><tr><td>Model quruluşu</td><td>Sequential və Functional API</td><td>nn.Module</td></tr><tr><td>Təlim</td><td>model.fit() kimi yüksək səviyyəli üsul</td><td>Adətən açıq training loop</td></tr><tr><td>Avtomatik gradient</td><td>GradientTape / Keras</td><td>autograd</td></tr><tr><td>Tipik tensor düzümü</td><td>NHWC</td><td>NCHW</td></tr></table></section>
+
+<section class="section" id="s1412"><h2>14.12. GPU və paralel hesablamaların rolu</h2>
+<p>Konvolyusiya və matris vurulması çoxsaylı müstəqil əməliyyatlardan ibarətdir. GPU minlərlə hesablama nüvəsi vasitəsilə bu əməliyyatların böyük hissəsini paralel icra edə bilər. Bununla belə, GPU istifadəsi hər tapşırıqda avtomatik sürət artımı demək deyil: verilənin köçürülməsi, modelin ölçüsü, yaddaş tutumu və kernel optimallaşdırılması da vacibdir.</p>
+<figure><svg viewBox="0 0 850 260" role="img" aria-label="CPU və GPU paralel hesablama müqayisəsi">
+<rect x="30" y="35" width="330" height="180" rx="15" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/><rect x="490" y="35" width="330" height="180" rx="15" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+<text x="195" y="65" text-anchor="middle" font-size="19" font-weight="bold" fill="#075985">CPU</text><text x="655" y="65" text-anchor="middle" font-size="19" font-weight="bold" fill="#5b21b6">GPU</text>
+<rect x="155" y="90" width="80" height="70" rx="10" fill="#38bdf8"/><text x="195" y="130" text-anchor="middle" font-weight="bold" fill="#083344">Az sayda</text><text x="195" y="147" text-anchor="middle" font-size="12" fill="#083344">güclü nüvə</text>
+<g fill="#a78bfa"><rect x="540" y="92" width="38" height="32" rx="5"/><rect x="586" y="92" width="38" height="32" rx="5"/><rect x="632" y="92" width="38" height="32" rx="5"/><rect x="678" y="92" width="38" height="32" rx="5"/><rect x="724" y="92" width="38" height="32" rx="5"/><rect x="540" y="132" width="38" height="32" rx="5"/><rect x="586" y="132" width="38" height="32" rx="5"/><rect x="632" y="132" width="38" height="32" rx="5"/><rect x="678" y="132" width="38" height="32" rx="5"/><rect x="724" y="132" width="38" height="32" rx="5"/></g><text x="655" y="190" text-anchor="middle" fill="#5b21b6">Çoxsaylı paralel nüvələr</text>
+<text x="195" y="190" text-anchor="middle" fill="#075985">Ardıcıl və ümumi işlər</text>
+<text x="425" y="245" text-anchor="middle" fill="#52657e">Dərin öyrənmədə böyük tensor əməliyyatları GPU paralelliyindən faydalana bilər.</text></svg><figcaption>Şəkil 14.7. CPU və GPU-nun tədris məqsədli konseptual müqayisəsi. Müasir CPU-lar da paralel nüvələrə malikdir; fərq arxitektura və paralellik miqyasındadır.</figcaption></figure>
+<p>GPU yaddaşı məhduddur. Batch ölçüsünü böyütmək hesablama səmərəliliyini artıra bilər, lakin VRAM tələbatını da yüksəldir. Mixed precision bəzi GPU-larda yaddaş və sürət üstünlüyü yarada bilər, amma ədədi sabitlik yoxlanmalıdır.</p></section>
+
+<section class="section" id="s1413"><h2>14.13. Dərin öyrənmə modellərinin tətbiq sahələri</h2>
+<div class="grid">
+<div class="tile"><strong>Kompüter görməsi</strong><p>Obyekt aşkarlanması, təsvir təsnifatı, tibbi təsvirlərin köməkçi analizi, sənaye qüsurlarının tanınması.</p></div>
+<div class="tile"><strong>Təbii dilin emalı</strong><p>Maşın tərcüməsi, mətn təsnifatı, sual-cavab, mətn xülasəsi və dialoq sistemləri.</p></div>
+<div class="tile"><strong>Audio və nitq</strong><p>Nitqin mətnə çevrilməsi, səs hadisələrinin aşkarlanması, danışanın tanınması.</p></div>
+<div class="tile"><strong>Robototexnika</strong><p>Kamera görüntüsündən obyekt qavrayışı, səhnə analizi və qərarvermə modullarına dəstək.</p></div>
+<div class="tile"><strong>Energetika və sənaye</strong><p>Sensor ardıcıllığından nasazlıq proqnozu, vizual keyfiyyətə nəzarət və enerji istehsalının proqnozlaşdırılması.</p></div>
+<div class="tile"><strong>Rəqəmsal təhsil</strong><p>Tədris materiallarının təsnifatı, nitq analizi və öyrənmə analitikası üçün köməkçi modellər.</p></div>
+</div>
+<p>Modelin uğuru yalnız accuracy ilə ölçülmür. Sinif balansı, yanlış müsbət və yanlış mənfi qərarların qiyməti, məlumatın məxfiliyi, qərəz, izah edilə bilmə və real mühitdə ümumiləşmə də nəzərə alınmalıdır.</p></section>
+
+<section class="section" id="tasks"><h2>Praktiki tapşırıqlar</h2>
+<ol><li><b>Başlanğıc:</b> 28×28 ölçülü MNIST təsvirinin tensor formasını yazın. 1, 16 və 64 şəkildən ibarət batch-lər üçün tensor ölçülərini müqayisə edin.</li><li><b>Orta:</b> 32×32 girişə 3×3 convolution, stride=1, padding=1 tətbiq olunduqda çıxış ölçüsünü hesablayın. Sonra 2×2 MaxPooling stride=2 tətbiq edin.</li><li><b>Tədqiqat:</b> Eyni təsvir datasetində sadə Dense model və CNN modelini müqayisə edin. Accuracy, macro-F1, təlim vaxtı, parametr sayı və qarışıqlıq matrisini hesabatda təqdim edin.</li><li><b>Real tətbiq:</b> Yarpaq şəkillərindən xəstəlik siniflərini tanımaq üçün dataset planı hazırlayın. Sinif balansını, təlim/test bölgüsünü, məlumat sızması riskini və etik məhdudiyyətləri izah edin.</li></ol></section>
+
+<section class="section" id="quiz"><h2>Özünü yoxlama sualları</h2><p class="small">Quiz 7 tipdə hazırlanıb: tək cavab, çox cavab, doğru/yanlış, uyğunlaşdırma, boşluğu doldurma, addımları sıralama və hesablama/kod təhlili. Suallar asan, orta və çətin səviyyələrə bölünüb.</p>
+<div id="quizArea"></div><button onclick="gradeQuiz()">Cavabları yoxla</button><div class="result" id="quizScore">Cavablarınızı seçin.</div></section>
+
+<section class="section" id="refs"><h2>İstifadə olunan ədəbiyyat</h2>
+<ol><li>Géron, A. (2022). <i>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</i>, 3rd ed. O’Reilly.</li><li>Chollet, F. (2021). <i>Deep Learning with Python</i>, 2nd ed. Manning.</li><li>Goodfellow, I., Bengio, Y., & Courville, A. (2016). <i>Deep Learning</i>. MIT Press. <a href="https://www.deeplearningbook.org/" target="_blank">Rəsmi elektron kitab</a>.</li><li>Alpaydın, E. (2021). <i>Machine Learning: The New AI</i>. MIT Press.</li><li>TensorFlow Tutorials. <a href="https://www.tensorflow.org/tutorials" target="_blank">tensorflow.org/tutorials</a>.</li><li>Keras Documentation. <a href="https://keras.io/" target="_blank">keras.io</a>.</li><li>PyTorch Tutorials. <a href="https://pytorch.org/tutorials/" target="_blank">pytorch.org/tutorials</a>.</li><li>Vaswani, A. et al. (2017). Attention Is All You Need. <a href="https://arxiv.org/abs/1706.03762" target="_blank">arXiv:1706.03762</a>.</li><li>LeCun, Y., Bengio, Y., & Hinton, G. (2015). Deep learning. <i>Nature</i>, 521, 436–444. <a href="https://doi.org/10.1038/nature14539" target="_blank">https://doi.org/10.1038/nature14539</a>.</li></ol>
+</section>
+
+<section class="section" id="lab"><h2>Laboratoriya işi №14: Təsvirlərin təsnifatı üçün CNN modelinin qurulması və təlim nəticələrinin qiymətləndirilməsi.</h2>
+<h3>İşin məqsədi</h3><p>MNIST təsvirləri üzərində CNN qurmaq, modelin təlimini aparmaq, test nəticələrini qiymətləndirmək və yanlış təsnif edilən nümunələri təhlil etmək.</p>
+<h3>İstifadə olunan vasitələr</h3><p>Python 3, Google Colab və ya Jupyter Notebook, TensorFlow/Keras, NumPy, Matplotlib, scikit-learn. Colab-da GPU runtime seçimi mümkündür.</p>
+<h3>İcra mərhələləri</h3><ol><li>Dataseti yükləyin, ölçüləri və sinif paylanmasını yoxlayın.</li><li>Piksel qiymətlərini 0–1 aralığında normallaşdırın və kanal ölçüsünü əlavə edin.</li><li>Conv2D → ReLU → MaxPooling bloklarından CNN yaradın.</li><li>Flatten və Dense qatları ilə 10 sinif üzrə çıxış yaradın.</li><li>Adam optimizatoru və sparse categorical cross-entropy itkisi ilə modeli öyrədin.</li><li>Test accuracy, macro precision, recall, F1 və confusion matrix hesablayın.</li><li>Yanlış tanınmış ən azı 5 şəkli göstərin və mümkün səbəbləri izah edin.</li></ol>
+<h3>Qiymətləndirmə üçün tam kod</h3>
+<pre><code>import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.metrics import classification_report, confusion_matrix
+
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+x_train = x_train.astype("float32") / 255.0
+x_test = x_test.astype("float32") / 255.0
+x_train = x_train[..., None]
+x_test = x_test[..., None]
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Input((28, 28, 1)),
+    tf.keras.layers.Conv2D(32, 3, activation="relu"),
+    tf.keras.layers.MaxPooling2D(2),
+    tf.keras.layers.Conv2D(64, 3, activation="relu"),
+    tf.keras.layers.MaxPooling2D(2),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(64, activation="relu"),
+    tf.keras.layers.Dropout(0.3),
+    tf.keras.layers.Dense(10, activation="softmax")
+])
+model.compile(optimizer="adam",
+              loss="sparse_categorical_crossentropy",
+              metrics=["accuracy"])
+history = model.fit(x_train, y_train, epochs=5,
+                    batch_size=64, validation_split=0.1)
+test_loss, test_acc = model.evaluate(x_test, y_test)
+prob = model.predict(x_test)
+pred = np.argmax(prob, axis=1)
+print("Test accuracy:", test_acc)
+print(classification_report(y_test, pred))
+print(confusion_matrix(y_test, pred))
+
+# Təlim və validasiya itkisi
+plt.plot(history.history["loss"], label="train")
+plt.plot(history.history["val_loss"], label="validation")
+plt.xlabel("Epoch"); plt.ylabel("Loss")
+plt.legend(); plt.show()
+
+# Yanlış tanınmış nümunələr
+wrong = np.where(pred != y_test)[0][:5]
+fig, axes = plt.subplots(1, len(wrong), figsize=(12, 3))
+for ax, idx in zip(axes, wrong):
+    ax.imshow(x_test[idx].squeeze(), cmap="gray")
+    ax.set_title(f"Real:{y_test[idx]} / Proqnoz:{pred[idx]}")
+    ax.axis("off")
+plt.show()</code></pre>
+<h3>Nəticələrin təhlili</h3><p>Hesabatda test itkisi və accuracy ilə kifayətlənməyin. Siniflər üzrə precision, recall və F1 göstəricilərini müqayisə edin. Confusion matrix-də bir-biri ilə qarışdırılan rəqəmləri müəyyənləşdirin. Təlim loss-u azalarkən validation loss yüksəlirsə, overfitting ehtimalını müzakirə edin.</p>
+<h3>Hesabatın strukturu</h3><ol><li>Laboratoriyanın məqsədi və nəzəri əsas.</li><li>Datasetin təsviri və ilkin təhlili.</li><li>Model arxitekturası və qatların ölçüləri.</li><li>Təlim parametrləri və mühit.</li><li>Qrafiklər, metriklər və confusion matrix.</li><li>Yanlış təsnifat nümunələrinin təhlili.</li><li>Nəticə və təkmilləşdirmə təklifləri.</li></ol>
+<div class="callout warning"><b>Qeyd:</b> MNIST laboratoriya məqsədi daşıyır. Bu model real sənədlərin, tibbi təsvirlərin və ya təhlükəsizlik qərarlarının avtomatik təsdiqi üçün nəzərdə tutulmayıb.</div>
+</section>
+<p class="footer">Mingəçevir Dövlət Universiteti • Süni intellekt və maşın öyrənməsi • Fəsil 14</p>
+</article></main>
+<script>
+function calcParams(){let a=+document.getElementById('din').value,b=+document.getElementById('dout').value;if(a<1||b<1){return}document.getElementById('paramResult').textContent=`Çəkilər: ${a*b} • Bias: ${b} • Cəmi: ${a*b+b} parametr`;}
+const defaultPixels=[0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+function drawPixels(){let el=document.getElementById('pixels');el.innerHTML='';defaultPixels.forEach((v,i)=>{let b=document.createElement('button');b.className=v?'on':'';b.setAttribute('aria-label','Piksel '+i);b.onclick=()=>b.classList.toggle('on');el.appendChild(b)})}
+function resetPixels(){drawPixels();document.getElementById('convResult').textContent='Nümunə bərpa edildi.'}
+function runConv(){let vals=[...document.querySelectorAll('#pixels button')].map(b=>b.classList.contains('on')?1:0);let k=document.getElementById('filter').value;let f=k==='edge'?[-1,-1,-1,-1,8,-1,-1,-1,-1]:k==='blur'?Array(9).fill(1/9):[0,-1,0,-1,5,-1,0,-1,0];let sum=0,parts=[];for(let r=0;r<3;r++)for(let c=0;c<3;c++){let p=vals[(r+1)*6+c+1]*f[r*3+c];sum+=p;parts.push(p.toFixed(2))}document.getElementById('convResult').textContent=`Mərkəzi pəncərənin konvolyusiya cavabı: ${sum.toFixed(3)}. Elementar hasillər: ${parts.join(', ')}.`}
+function poolCalc(){let a=[[1,3,2,0],[4,6,1,2],[2,1,5,3],[0,2,4,7]],typ=document.getElementById('poolType').value,res=[];for(let r=0;r<4;r+=2){let row=[];for(let c=0;c<4;c+=2){let v=[a[r][c],a[r][c+1],a[r+1][c],a[r+1][c+1]];row.push(typ==='max'?Math.max(...v):(v.reduce((x,y)=>x+y,0)/4).toFixed(2))}res.push(row.join(' | '))}document.getElementById('poolResult').textContent=(typ==='max'?'Max':'Average')+' Pooling nəticəsi: '+res.join(' ; ')}
+function attentionDemo(){let river=document.getElementById('attContext').value==='river';let words=river?['Bankın','yanında','çay','axır']:['Səhər','çay','içdim'];let vals=river?[.34,.28,.10,.28]:[.18,.52,.30];let html='';words.forEach((w,i)=>{html+=`<div style="display:grid;grid-template-columns:90px 1fr 48px;gap:8px;align-items:center;margin:8px 0"><b>${w}</b><div style="height:17px;background:#e2e8f0;border-radius:20px;overflow:hidden"><div style="height:100%;width:${vals[i]*100}%;background:linear-gradient(90deg,#60a5fa,#7c3aed)"></div></div><span>${(vals[i]*100).toFixed(0)}%</span></div>`});document.getElementById('attentionBars').innerHTML=html;document.getElementById('attentionResult').textContent=river?'Nümunəvi paylanmada “Bankın” sözü “çay” sözünün mənasını su axarı kontekstinə yönəldir.':'Nümunəvi paylanmada “içdim” felinin konteksti “çay” sözünün içki mənasında şərhinə kömək edir.'}
+
+const quizItems=[
+{level:'Asan',type:'Tək düzgün cavab',q:'CNN-də convolution əməliyyatının əsas işi nədir?',opts:['Filtri lokal piksel sahələrində tətbiq etmək','Şəkli mətnə çevirmək','Bütün pikselləri sıfırlamaq'],ans:0,why:'Convolution lokal sahələrdən filtr cavabları hesablayaraq feature map yaradır.'},
+{level:'Asan',type:'Doğru / Yanlış',q:'Flatten əməliyyatı feature map-i birölçülü vektora çevirir.',ans:true,why:'Flatten tensor elementlərini ardıcıl vektorda düzür; özlüyündə öyrənilən çəki yaratmır.'},
+{level:'Asan',type:'Boşluğu doldur',q:'Şəkildə obyektin yerini göstərən düzbucaqlı çərçivə ______ adlanır.',ans:'bounding box',why:'Bounding box obyektin sərhəd koordinatlarını göstərir.'},
+{level:'Asan',type:'Uyğunlaşdırma',q:'Anlayışları uyğunlaşdırın.',pairs:[['CNN','Şəkil və məkan əlamətləri'],['RNN','Ardıcıllıq və zaman asılılığı'],['Attention','Kontekst elementlərinə çəki']],ans:[0,1,2],why:'CNN lokal məkan əlaqələrini, RNN ardıcıllığı, Attention isə əlaqəli elementlərin əhəmiyyətini modelləşdirir.'},
+{level:'Orta',type:'Çox düzgün cavab',q:'Obyekt aşkarlanması nəticəsində hansı məlumatlar verilə bilər? (Bir neçə cavab seçin)',opts:['Obyekt sinfi','Bounding box koordinatları','Confidence score','Yalnız bütün şəkil üçün bir etiket'],ans:[0,1,2],why:'Detection obyektin sinfini, yerini və etimad qiymətini verir; tək etiket təsvir təsnifatına aiddir.'},
+{level:'Orta',type:'Hesablama',q:'Kəsişmə sahəsi 600, birləşmə sahəsi 1500-dür. IoU neçədir?',ans:'0.4',why:'IoU=600/1500=0.40.'},
+{level:'Orta',type:'Addımları sıralama',q:'Sadə CNN təsnifat axınını düzgün ardıcıllığa salın.',items:['Convolution + aktivləşmə','Giriş təsviri','Pooling','Flatten və Dense çıxış'],ans:[1,0,2,3],why:'Əvvəl təsvir daxil olur, sonra convolution ilə əlamətlər çıxarılır, pooling ölçünü azaldır, Dense sinif qərarını verir.'},
+{level:'Orta',type:'Kod çıxışının təhlili',q:'PyTorch CNN girişinin ölçüsü (8, 1, 28, 28)-dir. Burada batch sayı neçədir?',opts:['1','8','28','784'],ans:1,why:'NCHW düzümündə birinci ölçü batch ölçüsüdür: 8 şəkil.'},
+{level:'Çətin',type:'Çox düzgün cavab',q:'Precision və Recall haqqında hansı fikirlər doğrudur?',opts:['FP artdıqda precision azala bilər','FN artdıqda recall azala bilər','Precision=TP/(TP+FP)','Recall=TP/(TP+FP)'],ans:[0,1,2],why:'Precision FP ilə, Recall isə FN ilə həssasdır. Recall düsturu TP/(TP+FN)-dir.'},
+{level:'Çətin',type:'Doğru / Yanlış',q:'NMS adətən eyni obyekt üçün yüksək dərəcədə üst-üstə düşən aşağı confidence çərçivələri aradan qaldırır.',ans:true,why:'NMS yüksək confidence çərçivəsini saxlayaraq təkrarlanan proqnozları azaldır.'},
+{level:'Çətin',type:'Boşluğu doldur',q:'Precision–Recall əyrisinin altındakı sahə sinif üzrə ______ adlanır.',ans:'average precision',why:'AP (Average Precision) precision–recall əyrisi əsasında hesablanır.'},
+{level:'Çətin',type:'Uyğunlaşdırma',q:'Aşkarlama sisteminin qiymətləndirmə anlayışlarını uyğunlaşdırın.',pairs:[['TP','Düzgün aşkarlanmış obyekt'],['FP','Obyekt olmayan yerdə aşkarlama'],['FN','Real obyektin tapılmaması']],ans:[0,1,2],why:'TP doğru tapıntı, FP yanlış siqnal, FN isə buraxılmış obyektdir.'},
+{level:'Çətin',type:'Hesablama',q:'TP=36, FP=4, FN=9 olduqda Recall neçədir? (iki onluğa yuvarlaqlaşdırın)',ans:'0.8',why:'Recall=36/(36+9)=36/45=0.80.'},
+{level:'Çətin',type:'Addımları sıralama',q:'Obyekt aşkarlama sistemində tipik post-processing addımlarını sıralayın.',items:['Confidence həddindən aşağı proqnozları süzmək','Modelin bounding box və sinif proqnozlarını almaq','NMS ilə təkrarlanan çərçivələri azaltmaq','Qalan aşkarlamaları göstərmək'],ans:[1,0,2,3],why:'Model proqnoz verir; confidence filtri tətbiq olunur; sonra NMS təkrarlanan çərçivələri azaldır; sonda nəticələr göstərilir.'}
+];
+function renderQuiz(){let root=document.getElementById('quizArea');root.innerHTML='';quizItems.forEach((q,i)=>{let box=document.createElement('div');box.className='quiz-block';let html=`<span class="quiz-level">${q.level}</span> <span class="small">${q.type}</span><p><b>${i+1}. ${q.q}</b></p>`;
+if(q.opts){html+=q.opts.map((o,j)=>`<label><input type="${Array.isArray(q.ans)?'checkbox':'radio'}" name="qq${i}" value="${j}"> ${o}</label>`).join('')}
+if(q.ans===true||q.ans===false){html+=`<label><input type="radio" name="qq${i}" value="true"> Doğru</label><label><input type="radio" name="qq${i}" value="false"> Yanlış</label>`}
+if(q.pairs){html+=q.pairs.map((p,j)=>`<div class="controls"><b>${p[0]}</b><select id="pair${i}_${j}"><option value="">Seçin</option>${q.pairs.map((x,k)=>`<option value="${k}">${x[1]}</option>`).join('')}</select></div>`).join('')}
+if(q.items){html+=`<p class="small">Hər addımın qarşısında onun sıra nömrəsini seçin.</p>`+q.items.map((it,j)=>`<div class="controls"><select id="order${i}_${j}"><option value="">Sıra</option>${q.items.map((x,k)=>`<option value="${k+1}">${k+1}</option>`).join('')}</select><span>${it}</span></div>`).join('')}
+if(typeof q.ans==='string'){html+=`<input type="text" id="text${i}" placeholder="Cavabı daxil edin">`}
+html+=`<div class="quiz-feedback" id="quizFb${i}"></div>`;box.innerHTML=html;root.appendChild(box)})}
+function normalizeAnswer(s){return String(s).toLowerCase().trim().replace(/,/g,'.').replace(/\s+/g,' ')}
+function gradeQuiz(){let score=0;quizItems.forEach((q,i)=>{let ok=false;
+if(q.opts){let chosen=[...document.querySelectorAll(`input[name="qq${i}"]:checked`)].map(x=>+x.value);let correct=Array.isArray(q.ans)?q.ans:[q.ans];ok=chosen.length===correct.length&&chosen.every(x=>correct.includes(x))}
+else if(q.ans===true||q.ans===false){let v=document.querySelector(`input[name="qq${i}"]:checked`);ok=!!v&&(v.value==='true')===q.ans}
+else if(q.pairs){ok=q.ans.every((v,j)=>document.getElementById(`pair${i}_${j}`).value!==''&&+document.getElementById(`pair${i}_${j}`).value===v)}
+else if(q.items){let vals=q.items.map((_,j)=>document.getElementById(`order${i}_${j}`).value);ok=vals.every((v,j)=>v!==''&&+v===q.ans[j])}
+else if(typeof q.ans==='string'){let v=document.getElementById(`text${i}`).value;ok=normalizeAnswer(v)===normalizeAnswer(q.ans)||normalizeAnswer(v)===normalizeAnswer(q.ans.replace('average precision','ap'))}
+if(ok)score++;let fb=document.getElementById('quizFb'+i);fb.textContent=(ok?'Doğru! ':'Düzgün cavab izahı: ')+q.why;fb.style.color=ok?'#047857':'#a33'}
+);document.getElementById('quizScore').textContent=`Nəticə: ${score}/${quizItems.length} (${Math.round(score/quizItems.length*100)}%). Asan, orta və çətin səviyyələr üzrə cavablar yoxlanıldı.`}
+function updateDetections(){let t=+document.getElementById('confSlider').value/100;document.getElementById('confValue').textContent=t.toFixed(2);let items=[['boxCar',.94,'Avtomobil'],['boxPerson',.87,'Piyada'],['boxBike',.62,'Velosiped']];let shown=[];items.forEach(x=>{let el=document.getElementById(x[0]);el.style.display=x[1]>=t?'':'none';if(x[1]>=t)shown.push(x[2])});document.getElementById('detResult').textContent=shown.length?`${shown.length} obyekt göstərilir: ${shown.join(', ')}. Confidence həddi ${t.toFixed(2)}.`:'Bu confidence həddində obyekt qalmadı. Həddi azaldın.'}
+function calcIoU(){let a=+document.getElementById('interArea').value,b=+document.getElementById('unionArea').value;let el=document.getElementById('iouResult');if(b<=0||a<0||a>b){el.textContent='Yoxlama: kəsişmə 0 və birləşmə müsbət olmalı, kəsişmə birləşmədən böyük olmamalıdır.';return}el.textContent=`IoU = ${a}/${b} = ${(a/b).toFixed(3)} (${(a/b*100).toFixed(1)}%)`}
+drawPixels();attentionDemo();renderQuiz();updateDetections();calcIoU();
+
+</script><script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

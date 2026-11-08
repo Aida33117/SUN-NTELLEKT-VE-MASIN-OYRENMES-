@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fəsil 17. Süni intellekt layihəsinin həyat dövrü və elmi tədqiqat metodologiyası</title>
+<style>
+:root{--ink:#17243b;--muted:#5d6b82;--blue:#2457c5;--cyan:#0d9aa6;--pale:#eef4ff;--line:#dce4f0;--bg:#f4f7fb;--white:#fff;--green:#16845b;--red:#b83c48;--gold:#a76b08}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.68 Inter,Segoe UI,Arial,sans-serif}
+.hero{background:linear-gradient(125deg,#122445,#1d4d8d 58%,#087e8a);color:white;padding:48px max(22px,calc((100% - 1200px)/2)) 38px}
+.kicker{display:inline-block;border:1px solid #ffffff55;border-radius:30px;padding:5px 12px;font-size:.82rem;letter-spacing:.04em}
+.hero h1{font-size:clamp(2rem,4vw,3.25rem);line-height:1.15;max-width:950px;margin:18px 0}
+.hero p{max-width:900px;color:#e2edff;font-size:1.08rem}
+.meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:24px}.pill{background:#ffffff18;border:1px solid #ffffff42;border-radius:30px;padding:6px 12px;font-size:.84rem}
+.layout{max-width:1400px;margin:auto;display:grid;grid-template-columns:280px minmax(0,1fr);gap:24px;padding:24px}
+.side{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto;background:white;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 6px 22px #19365d0a}
+.side h3{margin:0 0 12px}.side a{display:block;text-decoration:none;color:#334765;padding:7px 9px;border-radius:8px;font-size:.9rem;line-height:1.4}.side a:hover{background:var(--pale);color:var(--blue)}
+main{min-width:0}.panel,.intro,.quiz,.refs,.lab{background:white;border:1px solid var(--line);border-radius:17px;padding:clamp(20px,3vw,34px);margin-bottom:20px;box-shadow:0 6px 22px #19365d08}
+h2{font-size:1.65rem;line-height:1.25;margin:0 0 16px;color:#17345e}h3{font-size:1.22rem;margin:26px 0 9px;color:#1e467e}h4{font-size:1.02rem;margin:18px 0 8px;color:#2457a0}p{margin:10px 0}li{margin:6px 0}.muted,.small{color:var(--muted)}.small{font-size:.88rem}.tag{display:inline-block;color:#175a9c;background:#eaf2ff;border-radius:30px;padding:4px 10px;font-size:.8rem;font-weight:700}
+.callout{background:#edf5ff;border-left:4px solid var(--blue);padding:14px 17px;border-radius:10px;margin:17px 0}.warning{background:#fff7e9;border-left-color:#d18a16}.success{background:#ecf8f2;border-left-color:var(--green)}
+.grid2,.grid3{display:grid;gap:13px;margin:15px 0}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.tile{border:1px solid var(--line);background:#fbfdff;border-radius:13px;padding:15px}.tile b{color:#214d88}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.94rem}th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}th{background:#edf3fc;color:#203e68}
+.formula{background:#132b4c;color:#f2f7ff;padding:14px 18px;border-radius:11px;text-align:center;font:600 1.05rem/1.7 Georgia,serif;margin:15px 0;overflow:auto}
+.diagram{border:1px solid var(--line);border-radius:14px;background:#fbfdff;padding:16px;margin:15px 0;overflow:auto}.flow{display:flex;align-items:stretch;justify-content:center;gap:8px;min-width:650px}.node{flex:1;background:#eaf2ff;border:1px solid #b9cbea;border-radius:12px;padding:12px;text-align:center;font-weight:700;color:#234b80}.node small{display:block;font-weight:400;color:#506987}.arrow{align-self:center;font-size:1.4rem;color:#258b9c;font-weight:800}.caption{text-align:center;color:var(--muted);font-size:.86rem;margin:10px 0 0}
+.interactive{border:1px solid #cbd9ee;background:#f8fbff;border-radius:14px;padding:17px;margin:16px 0}.interactive h4{margin-top:0}.btn{border:0;background:var(--blue);color:white;border-radius:9px;padding:10px 16px;font-weight:700;cursor:pointer;margin:6px 5px 6px 0}.btn:hover{filter:brightness(1.08)}.btn.secondary{background:#e8eef8;color:#25446f}.btn.green{background:var(--green)}
+input[type=text],input[type=number],select,textarea{padding:9px 11px;border:1px solid #bdcbe0;border-radius:8px;font:inherit;max-width:100%}input[type=range]{width:min(420px,100%)}label{display:block;margin:7px 0}.result{background:white;border:1px solid var(--line);padding:12px 14px;border-radius:10px;margin-top:12px;min-height:40px}
+.progress{height:8px;background:#e4ebf5;border-radius:20px;overflow:hidden;margin:15px 0}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .2s}
+.quiz-q{border:1px solid var(--line);border-radius:13px;padding:16px;margin:14px 0;background:#fff}.quiz-q p{font-weight:650}.quiz-q label{font-weight:400}.quiz-q select{margin-left:8px;max-width:100%}
+.codehead{display:flex;justify-content:space-between;align-items:center;background:#142b4c;color:white;padding:8px 12px;border-radius:10px 10px 0 0;font-size:.86rem}pre{margin:0 0 16px;background:#0f1e34;color:#e7f0ff;padding:17px;overflow:auto;border-radius:0 0 10px 10px;font:13px/1.6 Consolas,monospace}
+.chartwrap{background:white;border:1px solid var(--line);border-radius:12px;padding:12px;margin:14px 0}canvas{max-width:100%;width:100%;height:280px}
+.footer{text-align:center;color:var(--muted);font-size:.88rem;padding:24px}
+@media(max-width:900px){.layout{grid-template-columns:1fr;padding:12px}.side{position:relative;top:auto;max-height:none}.grid3{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.hero{padding:35px 20px}.flow{min-width:620px}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style>
+</head>
+<body>
+<header class="hero">
+<span class="kicker">İNTERAKTİV ELEKTRON DƏRSLİK · MAGİSTR SƏVİYYƏSİ</span>
+<h1>Fəsil 17. Süni intellekt layihəsinin həyat dövrü və elmi tədqiqat metodologiyası</h1>
+<p>Elmi ideyanı yoxlanıla bilən tədqiqat sualına, tədqiqat sualını eksperimentə, eksperiment nəticələrini isə təkrarlana bilən elmi sübuta çevirməyin metodoloji əsasları.</p>
+<div class="meta"><span class="pill">12 alt bölmə</span><span class="pill">AI layihə həyat dövrü</span><span class="pill">Eksperiment · Statistik təhlil</span><span class="pill">10 sual · 7 quiz forması</span><span class="pill">Laboratoriya №17</span></div>
+<div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="layout">
+<aside class="side">
+<h3>Mündəricat</h3>
+<a href="#intro">Fəsilə giriş</a>
+<a href="#s171">17.1. Süni intellekt layihəsinin planlaşdırılması</a>
+<a href="#s172">17.2. Tədqiqat probleminin müəyyənləşdirilməsi</a>
+<a href="#s173">17.3. Elmi hipotezin formalaşdırılması</a>
+<a href="#s174">17.4. Dataset seçimi və məlumat mənbələrinin əsaslandırılması</a>
+<a href="#s175">17.5. Baseline modelin qurulması</a>
+<a href="#s176">17.6. Eksperiment dizaynı</a>
+<a href="#s177">17.7. Modellərin müqayisəli qiymətləndirilməsi</a>
+<a href="#s178">17.8. Statistik nəticələrin təhlili</a>
+<a href="#s179">17.9. Eksperimentlərin təkrarlana bilməsi (Reproducibility)</a>
+<a href="#s1710">17.10. Elmi nəticələrin vizuallaşdırılması</a>
+<a href="#s1711">17.11. Tədqiqat hesabatının hazırlanması</a>
+<a href="#s1712">17.12. Elmi məqalə və layihə nəticələrinin təqdimatı</a>
+<a href="#tasks">Praktiki tapşırıqlar</a>
+<a href="#quiz">Özünü yoxlama sualları</a>
+<a href="#refs">İstifadə olunan ədəbiyyat</a>
+<a href="#lab">Laboratoriya işi №17</a>
+</aside>
+<main>
+<section class="intro" id="intro">
+<span class="tag">Öyrənmə məqsədi</span>
+<h2>Bu fəsildə nə öyrənəcəksiniz?</h2>
+<p>Süni intellekt tədqiqatı yalnız alqoritm seçmək və kod yazmaqdan ibarət deyil. Elmi nəticənin etibarlı olması üçün problemin düzgün qoyulması, hipotezin yoxlanıla bilən formada ifadəsi, dataset-in əsaslandırılması, müqayisə üçün baseline modelin seçilməsi, eksperimentin ədalətli qurulması, statistik qeyri-müəyyənliyin təhlili və nəticələrin təkrar əldə edilə bilməsi tələb olunur.</p>
+<div class="grid3">
+<div class="tile"><b>Elmi sual</b><p>Hansı problemi həll edirik və mövcud bilikdə hansı boşluğu doldururuq?</p></div>
+<div class="tile"><b>Eksperiment</b><p>Hipotezi hansı verilən, model, metrik və müqayisə ilə yoxlayırıq?</p></div>
+<div class="tile"><b>Elmi sübut</b><p>Nəticə statistik baxımdan nə qədər əsaslıdır və başqa tədqiqatçı onu təkrarlaya bilərmi?</p></div>
+</div>
+<div class="callout"><b>Əsas prinsip:</b> yaxşı AI tədqiqatı “ən yüksək Accuracy” nəticəsini tapmaq deyil. Tədqiqat sualına uyğun metod seçmək, müqayisəni ədalətli aparmaq, məhdudiyyətləri açıq göstərmək və nəticənin hansı şəraitdə keçərli olduğunu izah etməkdir.</div>
+<h3>AI layihəsinin elmi həyat dövrü</h3>
+<div class="diagram"><div class="flow">
+<div class="node">Problem<br><small>ehtiyac və boşluq</small></div><span class="arrow">→</span>
+<div class="node">Hipotez<br><small>yoxlanıla bilən iddia</small></div><span class="arrow">→</span>
+<div class="node">Dataset<br><small>mənbə və keyfiyyət</small></div><span class="arrow">→</span>
+<div class="node">Eksperiment<br><small>baseline və modellər</small></div><span class="arrow">→</span>
+<div class="node">Sübut<br><small>statistika və hesabat</small></div>
+</div><p class="caption">Şəkil 17.1. AI tədqiqatının əsas metodoloji mərhələləri. Nəticələr yeni tədqiqat sualı yarada bilər; proses iterativdir.</p></div>
+</section>
+
+<section class="panel" id="s171">
+<h2>17.1. Süni intellekt layihəsinin planlaşdırılması</h2>
+<p>AI layihəsinin planlaşdırılması texniki işlər başlamazdan əvvəl məqsədi, istifadə kontekstini, resursları, riskləri, uğur meyarlarını və icra ardıcıllığını müəyyən etməkdir. Planlaşdırma layihənin “nə quracağıq?” sualı ilə yanaşı “niyə qururuq?”, “kim istifadə edəcək?”, “nəticəni necə ölçəcəyik?” və “uğursuzluq riskləri hansılardır?” suallarına da cavab verir.</p>
+<h3>Layihə planının əsas komponentləri</h3>
+<table><tr><th>Komponent</th><th>İzah</th><th>Nümunə: tələbə akademik riskinin proqnozlaşdırılması</th></tr>
+<tr><td>Məqsəd</td><td>Layihənin arzulanan nəticəsi</td><td>Akademik dəstəyə ehtiyacı olan tələbələri erkən müəyyənləşdirmək</td></tr>
+<tr><td>Əhatə dairəsi</td><td>Sistemin edəcəyi və etməyəcəyi işlər</td><td>Dəstək siqnalı yaradır; tələbənin taleyi barədə avtomatik qərar vermir</td></tr>
+<tr><td>Maraqlı tərəflər</td><td>İstifadəçi, sifarişçi, texniki və etik məsul şəxslər</td><td>Tələbə, müəllim, dekanlıq, İT mütəxəssisi</td></tr>
+<tr><td>Verilən və infrastruktur</td><td>Dataset, hesablama resursu, proqram təminatı</td><td>Anonimləşdirilmiş tədris göstəriciləri, Python, GPU ehtiyacının qiymətləndirilməsi</td></tr>
+<tr><td>Uğur meyarları</td><td>Ölçülə bilən nəticələr</td><td>Recall, F1, kalibrləmə, yanlış xəbərdarlıqların sayı</td></tr>
+<tr><td>Risk və etika</td><td>Məxfilik, qərəz, təhlükəsizlik, yanlış qərar</td><td>İnsan yoxlaması və apellyasiya mexanizmi</td></tr>
+<tr><td>Vaxt və resurs</td><td>Mərhələlər, məsul şəxslər, büdcə</td><td>8 həftəlik pilot, iki tədqiqatçı, bir domen eksperti</td></tr></table>
+<h3>Layihənin mərhələləndirilməsi</h3>
+<div class="diagram"><div class="flow"><div class="node">1. Kəşfiyyat<br><small>problem və ədəbiyyat</small></div><span class="arrow">→</span><div class="node">2. Hazırlıq<br><small>dataset və protokol</small></div><span class="arrow">→</span><div class="node">3. Modelləşdirmə<br><small>baseline və namizədlər</small></div><span class="arrow">→</span><div class="node">4. Validasiya<br><small>test və statistika</small></div><span class="arrow">→</span><div class="node">5. Təqdimat<br><small>hesabat və tətbiq</small></div></div><p class="caption">Şəkil 17.2. Layihə mərhələləri və qərar qapıları. Hər mərhələnin sonunda davam, düzəliş və ya dayandırma qərarı verilə bilər.</p></div>
+<h3>İnteraktiv layihə planlayıcısı</h3>
+<div class="interactive">
+<label>Layihənin adı <input id="projectName" type="text" value="Tələbə akademik riskinin proqnozlaşdırılması"></label>
+<label>Planlaşdırılan müddət (həftə) <input id="projectWeeks" type="number" min="1" max="52" value="8"></label>
+<label>Komanda üzvlərinin sayı <input id="projectTeam" type="number" min="1" max="30" value="3"></label>
+<label>Əsas nəticə metriyi <select id="projectMetric"><option>F1-score</option><option>Recall</option><option>MAE</option><option>RMSE</option><option>ROC-AUC</option></select></label>
+<button class="btn" onclick="makePlan()">Plan xülasəsini yarat</button>
+<div id="planResult" class="result">Məlumatları dəyişərək plan xülasəsi yaradın.</div>
+</div>
+<div class="callout warning"><b>Tipik planlaşdırma səhvi:</b> əvvəlcə mürəkkəb neyron şəbəkəsi seçib, sonra ona uyğun problem axtarmaq. Elmi yanaşmada əvvəl problem və qiymətləndirmə meyarı müəyyən edilir, model seçimi isə həmin tələblərdən irəli gəlir.</div>
+</section>
+
+<section class="panel" id="s172">
+<h2>17.2. Tədqiqat probleminin müəyyənləşdirilməsi</h2>
+<p>Tədqiqat problemi mövcud bilik, metod və ya praktikada həllini gözləyən, elmi üsulla araşdırıla bilən boşluqdur. “Süni intellekt təhsildə faydalıdırmı?” çox geniş mövzudur. “OULAD verilənləri əsasında tələbənin kursu tərk etmə riskini hansı erkən fəaliyyət göstəriciləri daha yaxşı proqnozlaşdırır?” isə daha konkret və ölçülə bilən tədqiqat problemidir.</p>
+<h3>Problemin daraldılması</h3>
+<div class="diagram"><div class="flow"><div class="node">Geniş sahə<br><small>AI və təhsil</small></div><span class="arrow">→</span><div class="node">Praktik problem<br><small>kursu tərk etmə</small></div><span class="arrow">→</span><div class="node">Elmi boşluq<br><small>erkən göstəricilərin rolu</small></div><span class="arrow">→</span><div class="node">Tədqiqat sualı<br><small>hansı model / hansı dövr?</small></div></div><p class="caption">Şəkil 17.3. Geniş mövzudan konkret tədqiqat sualına keçid.</p></div>
+<h3>Yaxşı tədqiqat probleminin xüsusiyyətləri</h3>
+<ul><li><b>Konkretlik:</b> dəyişənlər, hədəf və tədqiqat vahidi aydın göstərilir.</li><li><b>Əhəmiyyət:</b> elmi və ya praktik nəticəsi izah olunur.</li><li><b>Yoxlanıla bilmə:</b> uyğun verilən və metodla cavablandırmaq mümkündür.</li><li><b>Yenilik:</b> əvvəlki işlərdən fərqi və əlavə töhfəsi göstərilir.</li><li><b>İcraolunma:</b> vaxt, məlumat, texniki imkan və etik icazə mövcuddur.</li></ul>
+<h3>PICO/PECO məntiqinin AI tədqiqatına uyğunlaşdırılması</h3>
+<table><tr><th>Element</th><th>AI tədqiqatında sual</th><th>Nümunə</th></tr><tr><td>P — Population</td><td>Hansı obyektlər?</td><td>Onlayn kurs tələbələri</td></tr><tr><td>I — Intervention / Input</td><td>Hansı metod və ya giriş?</td><td>İlk 4 həftənin VLE fəaliyyəti</td></tr><tr><td>C — Comparison</td><td>Nə ilə müqayisə?</td><td>Logistic Regression və Random Forest</td></tr><tr><td>O — Outcome</td><td>Hansı nəticə?</td><td>Withdrawn sinfinin Recall göstəricisi</td></tr></table>
+<div class="interactive">
+<h4>Tədqiqat sualını qur</h4>
+<label>Populyasiya <input id="rqPop" type="text" value="Onlayn kurs tələbələri"></label>
+<label>Giriş / metod <input id="rqInput" type="text" value="İlk 4 həftənin VLE fəaliyyəti"></label>
+<label>Müqayisə <input id="rqCompare" type="text" value="Logistic Regression və Random Forest"></label>
+<label>Nəticə <input id="rqOutcome" type="text" value="Kursu tərk etmənin Recall göstəricisi"></label>
+<button class="btn" onclick="buildRQ()">Tədqiqat sualını formalaşdır</button>
+<div id="rqResult" class="result">Formanı doldurub sualı yaradın.</div>
+</div>
+<p><b>Nümunə tədqiqat sualı:</b> “Onlayn kurs tələbələrinin ilk dörd həftədəki VLE fəaliyyət göstəriciləri əsasında kursu tərk etmə halını proqnozlaşdırarkən Random Forest modeli Logistic Regression ilə müqayisədə Recall göstəricisini artırırmı?”</p>
+</section>
+
+<section class="panel" id="s173">
+<h2>17.3. Elmi hipotezin formalaşdırılması</h2>
+<p>Hipotez tədqiqat sualına verilən, empirik məlumatlarla yoxlanıla bilən ilkin cavabdır. Hipotez sadəcə gözlənti deyil; dəyişənlər arasındakı əlaqəni və ya metodlar arasındakı fərqi ölçülə bilən formada ifadə etməlidir.</p>
+<h3>Hipotezin növləri</h3>
+<table><tr><th>Növ</th><th>Məzmun</th><th>Nümunə</th></tr><tr><td>H₀ — sıfır hipotezi</td><td>Fərq və ya əlaqə yoxdur</td><td>İki modelin orta F1 göstəriciləri arasında fərq yoxdur</td></tr><tr><td>H₁ — alternativ hipotez</td><td>Fərq və ya əlaqə mövcuddur</td><td>Random Forest-in orta F1 göstəricisi Logistic Regression-dan yüksəkdir</td></tr><tr><td>İstiqamətli</td><td>Fərqin istiqaməti əvvəlcədən müəyyən edilir</td><td>Model A model B-dən yüksək Recall verir</td></tr><tr><td>İstiqamətsiz</td><td>Fərq var, istiqamət əvvəlcədən iddia edilmir</td><td>İki modelin nəticələri fərqlənir</td></tr></table>
+<h3>Hipotezin yoxlanması üçün əsas anlayışlar</h3>
+<div class="grid2"><div class="tile"><b>Asılı dəyişən</b><p>Ölçülən nəticə: Accuracy, F1, MAE, RMSE və ya gecikmə.</p></div><div class="tile"><b>Müstəqil dəyişən</b><p>Təsiri araşdırılan amil: alqoritm, feature dəsti, hiperparametr və ya təlim strategiyası.</p></div><div class="tile"><b>Əhəmiyyət səviyyəsi α</b><p>Yanlış müsbət nəticə ehtimalı üçün əvvəlcədən seçilən hədd; çox vaxt 0.05.</p></div><div class="tile"><b>Effekt ölçüsü</b><p>Fərqin yalnız statistik deyil, praktik böyüklüyünü ifadə edir.</p></div></div>
+<div class="formula">H₀: μ<sub>A</sub> = μ<sub>B</sub> &nbsp;&nbsp;&nbsp; H₁: μ<sub>A</sub> ≠ μ<sub>B</sub></div>
+<p>Burada μ<sub>A</sub> və μ<sub>B</sub> eyni eksperiment protokolu üzrə alınan nəticələrin orta qiymətləridir. Bir neçə təsadüfi seed və ya fold istifadə edilirsə, müqayisə cütləşdirilmiş müşahidələr əsasında qurula bilər.</p>
+<div class="interactive">
+<h4>Hipotez yoxlama simulyatoru</h4>
+<label>Model A orta F1 <input id="meanA" type="number" step="0.01" min="0" max="1" value="0.82"></label>
+<label>Model B orta F1 <input id="meanB" type="number" step="0.01" min="0" max="1" value="0.78"></label>
+<label>p-value <input id="pValue" type="number" step="0.001" min="0" max="1" value="0.032"></label>
+<label>α <select id="alpha"><option value="0.05">0.05</option><option value="0.01">0.01</option><option value="0.10">0.10</option></select></label>
+<button class="btn" onclick="testHypothesis()">Nəticəni şərh et</button>
+<div id="hypResult" class="result">p-value və orta göstəriciləri daxil edin.</div>
+</div>
+<div class="callout warning"><b>Diqqət:</b> p-value H₀ hipotezinin doğru olma ehtimalı deyil. O, H₀ doğru qəbul edildikdə müşahidə edilən və ya daha ekstremal nəticənin əldə olunma ehtimalını ifadə edir. Statistik əhəmiyyət praktik əhəmiyyətlə eyni deyil.</div>
+</section>
+
+<section class="panel" id="s174">
+<h2>17.4. Dataset seçimi və məlumat mənbələrinin əsaslandırılması</h2>
+<p>Dataset tədqiqatın sübut bazasıdır. Uyğun olmayan və ya zəif əsaslandırılmış dataset üzərində qurulan model yüksək metrik göstərsə belə, elmi nəticə etibarlı olmaya bilər. Dataset seçərkən onun tədqiqat sualına uyğunluğu, mənşəyi, lisenziyası, ölçüsü, təmsilçiliyi, etiket keyfiyyəti və zaman konteksti araşdırılmalıdır.</p>
+<h3>Dataset seçiminin meyarları</h3>
+<table><tr><th>Meyar</th><th>Yoxlama sualı</th><th>Risk nümunəsi</th></tr><tr><td>Relevans</td><td>Dataset tədqiqat sualındakı populyasiyanı əks etdirirmi?</td><td>Bir ölkənin dataset-i başqa ölkəyə birbaşa ümumiləşdirilir</td></tr><tr><td>Mənşə</td><td>Kim, nə vaxt və hansı məqsədlə toplayıb?</td><td>Naməlum mənbədən əldə edilən fayl</td></tr><tr><td>Lisenziya</td><td>Elmi və kommersiya istifadəsinə icazə varmı?</td><td>İstifadə şərtlərinin pozulması</td></tr><tr><td>Etiket keyfiyyəti</td><td>Hədəf sinifləri necə təyin edilib?</td><td>Qeyri-dəqiq və subyektiv etiket</td></tr><tr><td>Təmsilçilik</td><td>Alt qruplar kifayət qədər təmsil olunubmu?</td><td>Nadir siniflərdə zəif performans</td></tr><tr><td>Zaman və sızma</td><td>Gələcək məlumatı modelə sızırmı?</td><td>Proqnoz vaxtından sonra yaranan dəyişənlər feature kimi daxil edilir</td></tr></table>
+<h3>Dataset kartı (Dataset Card)</h3>
+<p>Dataset kartı məlumatın mənşəyini, məqsədini, toplanma prosesini, strukturunu, lisenziyasını, məhdudiyyətlərini və etik risklərini sənədləşdirir. Bu sənəd başqa tədqiqatçıya verilənin hansı kontekstdə yarandığını anlamağa imkan verir.</p>
+<div class="interactive">
+<h4>Dataset kartı generatoru</h4>
+<label>Dataset adı <input id="dsName" type="text" value="OULAD"></label>
+<label>Mənbə / URL <input id="dsSource" type="text" value="Open University Learning Analytics Dataset"></label>
+<label>Hədəf dəyişən <input id="dsTarget" type="text" value="Final_result"></label>
+<label>Əsas məhdudiyyət <input id="dsLimit" type="text" value="Müəyyən universitet və kurs konteksti ilə məhdudlaşır"></label>
+<button class="btn" onclick="makeDatasetCard()">Dataset kartını yarat</button>
+<div id="dsResult" class="result">Daxil edilən məlumatlardan qısa kart yaradılacaq.</div>
+</div>
+<div class="callout"><b>Data leakage nümunəsi:</b> tələbənin kursu tərk edib-etmədiyini ilk dörd həftədə proqnozlaşdırmaq istəyirik. Əgər modelə semestrin sonunda hesablanan yekun nəticə və ya sonrakı həftələrin fəaliyyəti daxil edilirsə, model gələcək məlumatı görmüş olur. Bu, real proqnoz şəraitini təhrif edir.</div>
+</section>
+
+<section class="panel" id="s175">
+<h2>17.5. Baseline modelin qurulması</h2>
+<p><b>Baseline</b> mürəkkəb modelin nəticəsini müqayisə etmək üçün qurulan ilkin istinad modelidir. Baseline sadə qayda, ən çox rast gəlinən sinif, orta qiymət, Logistic Regression və ya Decision Tree ola bilər. Onun məqsədi “ən yaxşı model olmaq” deyil; yeni yanaşmanın həqiqətən əlavə dəyər yaratdığını göstərməkdir.</p>
+<h3>Baseline seçiminin məntiqi</h3>
+<div class="diagram"><div class="flow"><div class="node">Sadə qayda<br><small>majority class</small></div><span class="arrow">→</span><div class="node">Klassik model<br><small>Logistic Regression</small></div><span class="arrow">→</span><div class="node">Namizəd model<br><small>Random Forest / XGBoost</small></div><span class="arrow">→</span><div class="node">Müqayisə<br><small>eyni test protokolu</small></div></div><p class="caption">Şəkil 17.4. Baseline-dan daha mürəkkəb modellərə doğru qiymətləndirmə.</p></div>
+<table><tr><th>Məsələ</th><th>Baseline nümunəsi</th><th>Əlavə mürəkkəb model</th></tr><tr><td>İkili təsnifat</td><td>DummyClassifier, Logistic Regression</td><td>Random Forest, SVM, XGBoost</td></tr><tr><td>Reqressiya</td><td>Orta/median proqnozu, Linear Regression</td><td>Random Forest Regressor, Gradient Boosting</td></tr><tr><td>Klasterləşdirmə</td><td>K-Means</td><td>Hierarchical, DBSCAN</td></tr><tr><td>Mətn təsnifatı</td><td>TF-IDF + Logistic Regression</td><td>Transformer əsaslı model</td></tr></table>
+<h3>Baseline nəticəsinin nümunə müqayisəsi</h3>
+<div class="chartwrap"><canvas id="baselineChart" width="850" height="300" aria-label="Baseline və namizəd modellərin F1 müqayisəsi"></canvas><p class="caption">Şəkil 17.5. Tədris üçün nümunəvi F1 göstəriciləri. Bunlar real eksperiment nəticəsi deyil.</p></div>
+<p>Modelin üstünlüyünü sübut etmək üçün bütün modellər eyni train/test bölgüsü, eyni preprocessing qaydası, eyni hədəf dəyişən və eyni metriklə qiymətləndirilməlidir. Test dəstinə baxaraq hiperparametr seçmək olmaz; bu, test dəstini dolayı yolla təlim prosesinə daxil edir.</p>
+<h3>Python: sadə baseline nümunəsi</h3>
+<div class="codehead"><span>Python · scikit-learn</span><button class="btn secondary" onclick="copyCode('baselineCode')">Kodu köçür</button></div>
+<pre id="baselineCode"><code>from sklearn.dummy import DummyClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report
+
+# X_train, X_test, y_train, y_test əvvəlcədən hazırlanıb
+dummy = DummyClassifier(strategy="most_frequent")
+dummy.fit(X_train, y_train)
+dummy_pred = dummy.predict(X_test)
+
+baseline = Pipeline([
+    ("scale", StandardScaler()),
+    ("model", LogisticRegression(max_iter=1000))
+])
+baseline.fit(X_train, y_train)
+baseline_pred = baseline.predict(X_test)
+
+print("Dummy baseline")
+print(classification_report(y_test, dummy_pred))
+print("Logistic Regression baseline")
+print(classification_report(y_test, baseline_pred))</code></pre>
+</section>
+
+<section class="panel" id="s176">
+<h2>17.6. Eksperiment dizaynı</h2>
+<p>Eksperiment dizaynı hipotezi yoxlamaq üçün hansı məlumatın, hansı modelin, hansı parametrlərin, hansı qiymətləndirmə protokolunun və hansı statistik metodun istifadə ediləcəyini əvvəlcədən müəyyən edir. Düzgün dizayn təsadüfi dəyişikliklərin təsirini azaldır və modellər arasında ədalətli müqayisə yaradır.</p>
+<h3>Eksperimentin əsas elementləri</h3>
+<table><tr><th>Element</th><th>İzah</th><th>Nümunə</th></tr><tr><td>Eksperimental vahid</td><td>Qiymətləndirilən obyekt</td><td>Tələbə qeydi</td></tr><tr><td>Müdaxilə / faktor</td><td>Dəyişdirilən şərt</td><td>Model alqoritmi və feature dəsti</td></tr><tr><td>Nəzarət şərti</td><td>Müqayisə üçün istinad</td><td>Logistic Regression</td></tr><tr><td>Nəticə dəyişəni</td><td>Ölçülən performans</td><td>Macro-F1 və Recall</td></tr><tr><td>Nəzarət olunan şərtlər</td><td>Eyni saxlanılan amillər</td><td>Eyni split, preprocessing və metrik</td></tr><tr><td>Təkrar sayı</td><td>Təsadüfi dəyişkənliyi ölçmək üçün təkrar</td><td>5 fold və ya bir neçə seed</td></tr></table>
+<h3>Train, validation və test bölgüsü</h3>
+<div class="diagram"><div class="flow"><div class="node" style="background:#e4f6ed;border-color:#9bd1b4">Train · 70%<br><small>model parametrlərini öyrənir</small></div><div class="node" style="background:#fff4df;border-color:#e8c47d">Validation · 15%<br><small>model və hiperparametr seçimi</small></div><div class="node" style="background:#f1eaff;border-color:#c9b2e8">Test · 15%<br><small>yekun müstəqil qiymətləndirmə</small></div></div><p class="caption">Şəkil 17.6. Nümunəvi bölgü. Faizlər dataset və problemə görə dəyişə bilər; zaman və qrup strukturu varsa uyğun split seçilməlidir.</p></div>
+<h3>Cross-validation</h3>
+<p>K-Fold cross-validation dataset-i K hissəyə ayırır. Hər iterasiyada bir hissə validasiya, qalan K−1 hissə təlim üçün istifadə olunur. Bu proses hər hissə bir dəfə validasiya olana qədər davam edir. Nəticədə bir neçə ölçmə əldə edilir və modelin dəyişkənliyi haqqında fikir yaranır.</p>
+<div class="interactive">
+<h4>K-Fold bölgüsünün interaktiv təsviri</h4>
+<label>Fold sayı: <input id="foldCount" type="range" min="3" max="10" value="5" oninput="drawFolds()"><b id="foldVal">5</b></label>
+<div id="foldDiagram"></div>
+<div class="small muted">Hər sətirdə bir fold validasiya, qalanları təlim üçün seçilir.</div>
+</div>
+<h3>Eksperiment protokolu</h3>
+<ol><li>Dataset və hədəf dəyişəni sabitləşdirin.</li><li>Train/test bölgüsünü model qurulmazdan əvvəl yaradın.</li><li>Preprocessing addımlarını yalnız təlim məlumatında öyrədin (məsələn, scaler).</li><li>Baseline və namizəd modelləri eyni şərtlərdə öyrədin.</li><li>Hiperparametrləri yalnız train/validation və ya cross-validation üzərində seçin.</li><li>Test dəstini yekun qiymətləndirməyə qədər toxunulmaz saxlayın.</li><li>Seed, versiya, konfiqurasiya və metrikləri qeyd edin.</li></ol>
+</section>
+
+<section class="panel" id="s177">
+<h2>17.7. Modellərin müqayisəli qiymətləndirilməsi</h2>
+<p>Model müqayisəsi yalnız bir metrikə əsaslanmamalıdır. Məsələnin məqsədi, sinif balansı, yanlış pozitiv və yanlış neqativlərin nəticəsi, proqnoz sürəti, resurs sərfi və izaholunma ehtiyacı nəzərə alınmalıdır.</p>
+<h3>Təsnifat üçün metriklər</h3>
+<table><tr><th>Metrik</th><th>Düstur</th><th>Nəyi göstərir?</th><th>Nə zaman faydalıdır?</th></tr><tr><td>Accuracy</td><td> (TP+TN)/(TP+TN+FP+FN)</td><td>Bütün proqnozların düzgün payı</td><td>Siniflər balanslı olduqda ilkin göstərici</td></tr><tr><td>Precision</td><td>TP/(TP+FP)</td><td>Müsbət proqnozların nə qədəri doğrudur</td><td>Yanlış xəbərdarlıq baha başa gələndə</td></tr><tr><td>Recall</td><td>TP/(TP+FN)</td><td>Həqiqi müsbətlərin nə qədəri tapılıb</td><td>Hadisəni qaçırmaq təhlükəli olduqda</td></tr><tr><td>F1</td><td>2·P·R/(P+R)</td><td>Precision və Recall harmonik ortası</td><td>İki göstərici arasında balans lazım olduqda</td></tr><tr><td>ROC-AUC</td><td>ROC əyrisinin altındakı sahə</td><td>Sinifləri ayırma qabiliyyəti</td><td>Threshold-dan asılı olmayan sıralama ölçüsü</td></tr></table>
+<h3>Reqressiya üçün metriklər</h3>
+<div class="formula">MAE = (1/n) Σ |yᵢ − ŷᵢ| &nbsp;&nbsp; · &nbsp;&nbsp; RMSE = √[(1/n) Σ (yᵢ − ŷᵢ)²]</div>
+<p>MAE orta mütləq xətanı, RMSE isə böyük xətalara daha çox cəza verən kvadrat köklü orta kvadratik xətanı göstərir. R² modelin hədəf dəyişənin variasiyasını nə dərəcədə izah etdiyini qiymətləndirir; mənfi R² test nəticəsinin sadə orta proqnozundan da zəif ola biləcəyini göstərir.</p>
+<h3>İnteraktiv confusion matrix</h3>
+<div class="interactive">
+<p class="small muted">TP, FP, FN və TN dəyərlərini dəyişərək Precision, Recall və Accuracy hesablayın.</p>
+<div class="grid2">
+<label>TP <input id="cmTP" type="number" min="0" value="42"></label><label>FP <input id="cmFP" type="number" min="0" value="8"></label>
+<label>FN <input id="cmFN" type="number" min="0" value="10"></label><label>TN <input id="cmTN" type="number" min="0" value="40"></label>
+</div>
+<button class="btn" onclick="calcCM()">Metrikləri hesabla</button><div id="cmResult" class="result"></div>
+</div>
+<h3>Model müqayisəsi — nümunə qrafik</h3>
+<div class="chartwrap"><canvas id="modelChart" width="850" height="310" aria-label="Model metriklərinin müqayisəsi"></canvas><p class="caption">Şəkil 17.7. Nümunəvi modellər üzrə Precision, Recall və F1. Dəyərlər metodun izahı üçündür.</p></div>
+<p>Model A daha yüksək F1 verə bilər, lakin tətbiqdə Recall daha vacibdirsə Model B seçilə bilər. Model seçimi metriklərə baxıb avtomatik qərar vermək deyil; tədqiqat probleminin məqsədi və səhvlərin qiyməti ilə əsaslandırılmalıdır.</p>
+</section>
+
+<section class="panel" id="s178">
+<h2>17.8. Statistik nəticələrin təhlili</h2>
+<p>Eksperiment nəticələri təsadüfi bölünmə, seed, nümunə seçimi və ölçmə xətası səbəbindən dəyişə bilər. Statistik təhlil müşahidə olunan fərqin təsadüfi dəyişkənliklə izah olunub-olunmadığını və fərqin nə qədər böyük olduğunu araşdırmağa kömək edir.</p>
+<h3>Əsas statistik anlayışlar</h3>
+<div class="grid2">
+<div class="tile"><b>Orta qiymət</b><p>Bir neçə ölçmənin mərkəzi tendensiyası: x̄ = Σxᵢ/n.</p></div>
+<div class="tile"><b>Standart kənarlaşma</b><p>Nəticələrin orta ətrafında yayılmasını göstərir.</p></div>
+<div class="tile"><b>Etibar intervalı</b><p>Parametr üçün verilən etibar səviyyəsinə uyğun interval qiymətləndirməsi.</p></div>
+<div class="tile"><b>p-value</b><p>H₀ doğru olduqda müşahidə edilən qədər və ya daha ekstremal nəticənin ehtimalı.</p></div>
+</div>
+<h3>Effekt ölçüsü və statistik əhəmiyyət</h3>
+<p>p-value kiçik olması fərqin praktik cəhətdən böyük olması demək deyil. Məsələn, iki model arasında F1 fərqi 0.002 ola bilər; böyük dataset-də bu fərq statistik əhəmiyyətli görünsə də, tətbiq xərci və əlavə mürəkkəblik baxımından faydasız ola bilər. Buna görə effekt ölçüsü və etibar intervalı da verilməlidir.</p>
+<h3>Hansı testdən istifadə etməli?</h3>
+<table><tr><th>Vəziyyət</th><th>Mümkün metod</th><th>Qeyd</th></tr><tr><td>Eyni obyektlərdə iki metodun ölçmələri, təxminən normal fərqlər</td><td>Paired t-test</td><td>Asılı müşahidələr üçün</td></tr><tr><td>Cüt fərqlərin normal paylanması əsaslandırılmır</td><td>Wilcoxon signed-rank</td><td>Qeyri-parametrik alternativ</td></tr><tr><td>Üç və daha çox əlaqəli model / metod</td><td>Repeated-measures ANOVA və ya Friedman</td><td>Post-hoc müqayisə və çoxsaylı test düzəlişi lazım ola bilər</td></tr><tr><td>İki müstəqil qrup</td><td>Independent t-test və ya Mann–Whitney U</td><td>Qrupların müstəqilliyi yoxlanmalıdır</td></tr></table>
+<div class="interactive">
+<h4>Orta və standart kənarlaşma kalkulyatoru</h4>
+<label>Ölçmələri vergüllə daxil edin <input id="statValues" type="text" value="0.81, 0.83, 0.80, 0.84, 0.82" style="width:min(100%,520px)"></label>
+<button class="btn" onclick="calcStats()">Statistikanı hesabla</button>
+<div id="statResult" class="result">Məsələn: 0.81, 0.83, 0.80, 0.84, 0.82</div>
+</div>
+<div class="callout warning"><b>Metodoloji xəbərdarlıq:</b> eyni test dəstində təkrar-təkrar model seçmək nəticəni optimist edə bilər. Bir çox model və metrik yoxlanıldıqda çoxsaylı müqayisə problemi yaranır. Test protokolu əvvəlcədən müəyyən edilməli, mümkün olduqda müstəqil test və ya xarici validasiya aparılmalıdır.</div>
+</section>
+
+<section class="panel" id="s179">
+<h2>17.9. Eksperimentlərin təkrarlana bilməsi (Reproducibility)</h2>
+<p>Reproducibility başqa tədqiqatçının eyni məlumat, kod, konfiqurasiya və metodoloji addımlardan istifadə etməklə nəticəni yenidən əldə edə bilməsidir. Reproducibility elmi etibarlılığın mühüm hissəsidir. Təkcə kodu paylaşmaq kifayət deyil: dataset versiyası, preprocessing, seed, kitabxana versiyaları, hiperparametrlər və qiymətləndirmə protokolu da sənədləşdirilməlidir.</p>
+<h3>Təkrarlana bilmə üçün checklist</h3>
+<table><tr><th>Element</th><th>Nə qeyd olunmalıdır?</th><th>Nümunə</th></tr><tr><td>Verilənlər</td><td>Mənbə, versiya, lisenziya, hash</td><td>dataset_v1.csv, SHA-256</td></tr><tr><td>Split</td><td>Train/validation/test və random seed</td><td>test_size=0.2, random_state=42</td></tr><tr><td>Proqram mühiti</td><td>Python və paket versiyaları</td><td>Python 3.11, scikit-learn 1.x</td></tr><tr><td>Model</td><td>Alqoritm, hiperparametrlər, çəkilər</td><td>max_depth, n_estimators</td></tr><tr><td>Eksperiment</td><td>Komanda, tarix, konfiqurasiya</td><td>config.yaml, run_id</td></tr><tr><td>Nəticə</td><td>Metrik, log, qrafik, model kartı</td><td>metrics.json, confusion_matrix.png</td></tr></table>
+<h3>Seed və deterministik nəticə</h3>
+<div class="codehead"><span>Python · reproducibility</span><button class="btn secondary" onclick="copyCode('reproCode')">Kodu köçür</button></div>
+<pre id="reproCode"><code>import os
+import random
+import numpy as np
+
+SEED = 42
+os.environ["PYTHONHASHSEED"] = str(SEED)
+random.seed(SEED)
+np.random.seed(SEED)
+
+# Scikit-learn modellərində:
+# model = RandomForestClassifier(random_state=SEED)
+
+# Qeyd: GPU və paralel kitabxanalarda tam deterministik
+# nəticəyə zəmanət verilmir. Mühit və kitabxana versiyalarını
+# da sənədləşdirmək lazımdır.</code></pre>
+<h3>Layihə qovluğunun tövsiyə olunan strukturu</h3>
+<pre><code>ai-research-project/
+├── README.md
+├── data/
+│   ├── raw/
+│   └── processed/
+├── notebooks/
+├── src/
+│   ├── preprocessing.py
+│   ├── train.py
+│   └── evaluate.py
+├── configs/
+│   └── experiment.yaml
+├── outputs/
+│   ├── figures/
+│   ├── metrics/
+│   └── models/
+├── environment/
+│   └── requirements.txt
+└── reports/
+    └── research_report.pdf</code></pre>
+<p>Həssas və lisenziyalı dataset-lər açıq repozitoriyaya yüklənməməlidir. Belə hallarda məlumatın əldə olunma qaydası, icazə prosesi və anonimləşdirmə addımları sənədləşdirilir; kod və sintetik nümunələr paylaşılır.</p>
+</section>
+
+<section class="panel" id="s1710">
+<h2>17.10. Elmi nəticələrin vizuallaşdırılması</h2>
+<p>Vizuallaşdırma nəticəni sadəcə gözəl göstərmək üçün deyil, məlumatdakı strukturu, fərqi, qeyri-müəyyənliyi və mümkün səhvləri aydınlaşdırmaq üçün istifadə olunur. Qrafik düzgün seçilmədikdə oxucunu yanılda bilər; buna görə oxlar, vahidlər, nümunə sayı, xəta zolaqları və məlumat mənbəyi göstərilməlidir.</p>
+<h3>Hansı məqsəd üçün hansı qrafik?</h3>
+<table><tr><th>Məqsəd</th><th>Qrafik</th><th>İstifadə nümunəsi</th></tr><tr><td>Kateqoriyaları müqayisə etmək</td><td>Sütun qrafiki</td><td>Modellərin F1 nəticələri</td></tr><tr><td>Zaman üzrə dəyişmə</td><td>Xətti qrafik</td><td>Epoch-lar üzrə loss və accuracy</td></tr><tr><td>Dəyişənlər arası əlaqə</td><td>Scatter plot</td><td>Proqnoz və faktiki qiymət</td></tr><tr><td>Paylanma</td><td>Histogram / boxplot</td><td>Model xətalarının paylanması</td></tr><tr><td>Qarışıqlıq və korrelyasiya</td><td>Heatmap</td><td>Confusion matrix, correlation matrix</td></tr><tr><td>Qeyri-müəyyənlik</td><td>Error bar / interval plot</td><td>Fold-lar üzrə orta F1 və SD</td></tr></table>
+<h3>İnteraktiv nəticə qrafiki</h3>
+<div class="interactive">
+<label>Model A F1 <input id="plotA" type="range" min="50" max="100" value="82" oninput="drawResearchPlot()"><b id="plotAval">0.82</b></label>
+<label>Model B F1 <input id="plotB" type="range" min="50" max="100" value="86" oninput="drawResearchPlot()"><b id="plotBval">0.86</b></label>
+<label>Model C F1 <input id="plotC" type="range" min="50" max="100" value="79" oninput="drawResearchPlot()"><b id="plotCval">0.79</b></label>
+<div class="chartwrap"><canvas id="researchPlot" width="850" height="300"></canvas></div>
+<p class="small muted">Slider-ləri dəyişərək qrafikin necə yeniləndiyini müşahidə edin. Bu göstəricilər tədris üçün nümunədir.</p>
+</div>
+<h3>Elmi qrafik üçün keyfiyyət qaydaları</h3>
+<ul><li>Başlıq tədqiqat sualına uyğun və konkret olmalıdır.</li><li>Oxların adı, ölçü vahidi və diapazonu göstərilməlidir.</li><li>Rənglər yalnız dekorativ deyil, mənalı fərqləndirmə üçün seçilməlidir; rəng korluğu nəzərə alınmalıdır.</li><li>Orta qiymət verilirsə, standart kənarlaşma və ya etibar intervalı da göstərilməlidir.</li><li>Qrafikdə istifadə olunan dataset, split və nümunə sayı qeyd olunmalıdır.</li><li>3D qrafiklər real əlavə məlumat vermirsə, onlardan qaçmaq lazımdır.</li></ul>
+</section>
+
+<section class="panel" id="s1711">
+<h2>17.11. Tədqiqat hesabatının hazırlanması</h2>
+<p>Tədqiqat hesabatı problemin necə qoyulduğunu, hansı metodun seçildiyini, eksperimentin necə aparıldığını, hansı nəticələrin alındığını və bu nəticələrin nə demək olduğunu ardıcıl şəkildə təqdim edir. Yaxşı hesabat nəticəni təkrarlamaq və tənqidi qiymətləndirmək üçün kifayət qədər metodoloji detal verir.</p>
+<h3>Hesabatın tövsiyə olunan strukturu</h3>
+<table><tr><th>Bölmə</th><th>Əsas sual</th><th>Daxil edilən məzmun</th></tr><tr><td>Annotasiya</td><td>Nə araşdırılıb və nə tapılıb?</td><td>Məqsəd, metod, əsas nəticə, töhfə</td></tr><tr><td>Giriş</td><td>Problem niyə vacibdir?</td><td>Kontekst, boşluq, məqsəd, tədqiqat sualı</td></tr><tr><td>Əlaqəli işlər</td><td>Əvvəl nə məlumdur?</td><td>Ədəbiyyatın sistemli təhlili</td></tr><tr><td>Metodologiya</td><td>Necə araşdırılıb?</td><td>Dataset, preprocessing, model, protokol, metrik</td></tr><tr><td>Nəticələr</td><td>Nə əldə olunub?</td><td>Cədvəl, qrafik, statistik göstəricilər</td></tr><tr><td>Müzakirə</td><td>Nəticə nə deməkdir?</td><td>Hipotez, əvvəlki işlə müqayisə, izah</td></tr><tr><td>Məhdudiyyətlər</td><td>Nəticənin sərhədi nədir?</td><td>Dataset, ümumiləşdirmə, bias, hesablama</td></tr><tr><td>Nəticə</td><td>Əsas töhfə nədir?</td><td>Yekun cavab və gələcək iş</td></tr><tr><td>Əlavələr</td><td>Nəticəni necə təkrarlamaq olar?</td><td>Kod, konfiqurasiya, əlavə cədvəl</td></tr></table>
+<h3>Nəticə və müzakirənin fərqi</h3>
+<div class="grid2"><div class="tile"><b>Nəticələr (Results)</b><p>Ölçülən faktları təqdim edir: Model A F1=0.82, Model B F1=0.86; 5 fold üzrə orta və SD.</p></div><div class="tile"><b>Müzakirə (Discussion)</b><p>Nəticəni izah edir: fərq hansı səbəbdən yarana bilər, əvvəlki işlərlə uyğun gəlirmi, praktik təsiri nədir?</p></div></div>
+<h3>Hesabat yoxlama siyahısı</h3>
+<ul><li>Tədqiqat sualı və hipotez aydın yazılıb.</li><li>Dataset mənbəyi, lisenziyası və seçilmə səbəbi göstərilib.</li><li>Baseline və müqayisə protokolu təsvir edilib.</li><li>Metriklərin seçilmə səbəbi əsaslandırılıb.</li><li>Statistik nəticə və effekt ölçüsü verilib.</li><li>Məhdudiyyətlər və etik məsələlər gizlədilməyib.</li><li>İstinadlar və əlavə materiallar yoxlanılıb.</li></ul>
+</section>
+
+<section class="panel" id="s1712">
+<h2>17.12. Elmi məqalə və layihə nəticələrinin təqdimatı</h2>
+<p>Elmi nəticələrin təqdimatı tədqiqatın auditoriyaya uyğun, aydın və yoxlanıla bilən formada çatdırılmasıdır. Məqalə, konfrans çıxışı, poster, texniki hesabat, kod repozitoriyası və demonstrasiya fərqli auditoriya və məqsədlərə xidmət edir. Təqdimatın gücü yalnız nəticənin böyüklüyündən deyil, metodoloji şəffaflıqdan və töhfənin aydın ifadəsindən asılıdır.</p>
+<h3>Məqalə və təqdimat formatları</h3>
+<table><tr><th>Format</th><th>Məqsəd</th><th>Əsas tələblər</th></tr><tr><td>Elmi jurnal məqaləsi</td><td>Ətraflı metod və nəticəni elmi ictimaiyyətə təqdim etmək</td><td>Jurnalın scope-u, formatı, etik və istinad qaydaları</td></tr><tr><td>Konfrans məqaləsi</td><td>Yeni nəticəni elmi müzakirəyə çıxarmaq</td><td>Konfrans şablonu, limit, təqdimat</td></tr><tr><td>Poster</td><td>Qısa vizual izah və dialoq</td><td>Problem, metod, 2–3 əsas nəticə, QR/kod</td></tr><tr><td>Texniki hesabat</td><td>Layihə sifarişçisi və icraçı üçün ətraflı sənəd</td><td>Arxitektura, risk, test, tətbiq tövsiyəsi</td></tr><tr><td>Reproducibility paketi</td><td>Nəticənin təkrar əldə edilməsini asanlaşdırmaq</td><td>Kod, konfiqurasiya, data qaydası, README</td></tr></table>
+<h3>Elmi təqdimatın 10 slaydlıq məntiqi</h3>
+<div class="diagram"><div class="flow"><div class="node">Problem<br><small>niyə vacibdir?</small></div><span class="arrow">→</span><div class="node">Boşluq<br><small>nə məlum deyil?</small></div><span class="arrow">→</span><div class="node">Metod<br><small>necə yoxladıq?</small></div><span class="arrow">→</span><div class="node">Nəticə<br><small>nə tapdıq?</small></div><span class="arrow">→</span><div class="node">Töhfə<br><small>nə dəyişdi?</small></div></div><p class="caption">Şəkil 17.8. Qısa elmi təqdimatın hekayə xətti.</p></div>
+<h3>Elmi töhfəni düzgün ifadə etmək</h3>
+<p>“Biz ən yaxşı modeli yaratdıq” iddiası əvəzinə töhfə ölçülə bilən və kontekstli yazılmalıdır. Məsələn: “Müəyyən kurs təqdimatları üzrə ilk dörd həftənin VLE göstəriciləri ilə qurulan model, eyni split və qiymətləndirmə protokolu daxilində Logistic Regression baseline ilə müqayisədə Macro-F1 göstəricisini 0.04 artırmışdır. Nəticə digər universitetlərə avtomatik ümumiləşdirilmir və xarici validasiya tələb edir.”</p>
+<div class="callout warning"><b>Elmi dürüstlük:</b> mənfi və ya gözlənilməz nəticələri gizlətmək, metrikləri seçərək təqdim etmək, eyni nəticəni yeni tədqiqat kimi təkrar nəşr etmək, saxta istinad və ya uydurma eksperiment yaratmaq yolverilməzdir. Generativ AI istifadə olunubsa, nəşriyyat və qurum qaydalarına uyğun açıqlama edilməli, fakt və istinadlar müəllif tərəfindən yoxlanılmalıdır.</div>
+</section>
+
+<section class="panel" id="tasks">
+<h2>Praktiki tapşırıqlar</h2>
+<ol>
+<li><b>Tədqiqat probleminin formalaşdırılması:</b> təhsil, səhiyyə, sənaye və ya kibertəhlükəsizlik sahəsindən bir problem seçin. Geniş mövzunu konkret tədqiqat sualına çevirin və problemin elmi/praktik əhəmiyyətini əsaslandırın.</li>
+<li><b>Hipotez və dəyişənlər:</b> seçilmiş problem üzrə H₀ və H₁ hipotezlərini yazın. Asılı, müstəqil və nəzarət dəyişənlərini müəyyən edin.</li>
+<li><b>Dataset kartı:</b> açıq dataset seçin. Mənbə, lisenziya, nümunə sayı, feature-lər, hədəf dəyişən, çatışmazlıqlar və etik məhdudiyyətləri sənədləşdirin.</li>
+<li><b>Baseline qurulması:</b> təsnifat problemi üçün DummyClassifier və Logistic Regression, reqressiya problemi üçün DummyRegressor və Linear Regression qurun.</li>
+<li><b>Eksperiment protokolu:</b> train/validation/test bölgüsü, cross-validation, random seed, metrik və hiperparametr axtarışını əvvəlcədən təsvir edin.</li>
+<li><b>Müqayisəli qiymətləndirmə:</b> ən azı üç modeli eyni protokolla qiymətləndirin. Macro-F1, Recall, Precision və ROC-AUC və ya MAE/RMSE metriklərindən uyğun olanları seçin.</li>
+<li><b>Statistik təhlil:</b> təkrar ölçmələr üzrə orta, standart kənarlaşma və etibar intervalı hesablayın. Uyğun statistik test seçiminizi əsaslandırın.</li>
+<li><b>Təkrarlana bilmə paketi:</b> README, requirements.txt, seed, konfiqurasiya faylı, nəticə cədvəli və qrafiklərdən ibarət layihə qovluğu yaradın.</li>
+<li><b>Elmi vizuallaşdırma:</b> nəticələri ən azı iki qrafik və bir cədvəldə təqdim edin. Ox adlarını, vahidləri, nümunə sayını və qrafikin izahını əlavə edin.</li>
+<li><b>Elmi hesabat:</b> tədqiqatın giriş, metodologiya, nəticə, müzakirə, məhdudiyyət və nəticə bölmələrini hazırlayın.</li>
+</ol>
+</section>
+
+<section class="quiz" id="quiz">
+<h2>Özünü yoxlama sualları</h2>
+<p class="muted">10 sual, 7 fərqli quiz forması. Cavablarınızı daxil edin və avtomatik nəticə ilə izahları yoxlayın.</p>
+<div class="progress"><span id="qprogress"></span></div>
+<div id="quizarea"></div>
+<button class="btn green" onclick="gradeQuiz()">Cavabları yoxla</button>
+<button class="btn secondary" onclick="resetQuiz()">Yenidən başla</button>
+<div id="quizscore" class="result">Sualları cavablandırın.</div>
+</section>
+
+<section class="refs" id="refs">
+<h2>İstifadə olunan ədəbiyyat</h2>
+<ol>
+<li>J. Cohen. (1988). <i>Statistical Power Analysis for the Behavioral Sciences</i> (2nd ed.). Lawrence Erlbaum Associates.</li>
+<li>J. W. Tukey. (1977). <i>Exploratory Data Analysis</i>. Addison-Wesley.</li>
+<li>H. Wickham & G. Grolemund. (2017). <i>R for Data Science</i>. O’Reilly. <a href="https://r4ds.hadley.nz/" target="_blank" rel="noopener">Açıq elektron resurs</a>.</li>
+<li>G. James, D. Witten, T. Hastie, R. Tibshirani & J. Taylor. (2023). <i>An Introduction to Statistical Learning</i> (2nd ed.). Springer. <a href="https://www.statlearning.com/" target="_blank" rel="noopener">Rəsmi resurs</a>.</li>
+<li>F. Pedregosa et al. (2011). Scikit-learn: Machine Learning in Python. <i>Journal of Machine Learning Research</i>, 12, 2825–2830. <a href="https://jmlr.org/papers/v12/pedregosa11a.html" target="_blank" rel="noopener">Məqalə</a>.</li>
+<li>R. Kohavi. (1995). A Study of Cross-Validation and Bootstrap for Accuracy Estimation and Model Selection. <i>IJCAI</i>. <a href="https://www.ijcai.org/Proceedings/95-2/Papers/016.pdf" target="_blank" rel="noopener">Məqalə</a>.</li>
+<li>D. M. W. Powers. (2011). Evaluation: From Precision, Recall and F-Measure to ROC, Informedness, Markedness & Correlation. <i>Journal of Machine Learning Technologies</i>, 2(1), 37–63. <a href="https://www.bioinfo.in/uploadfiles/1303130228_1_1.pdf" target="_blank" rel="noopener">Məqalə</a>.</li>
+<li>J. Demšar. (2006). Statistical Comparisons of Classifiers over Multiple Data Sets. <i>Journal of Machine Learning Research</i>, 7, 1–30. <a href="https://jmlr.org/papers/v7/demsar06a.html" target="_blank" rel="noopener">Məqalə</a>.</li>
+<li>J. Pineau et al. (2021). Improving Reproducibility in Machine Learning Research. <i>Journal of Machine Learning Research</i>, 22(164), 1–20. <a href="https://jmlr.org/papers/v22/20-303.html" target="_blank" rel="noopener">Məqalə</a>.</li>
+<li> scikit-learn Developers. <i>Model evaluation and cross-validation documentation</i>. <a href="https://scikit-learn.org/stable/model_selection.html" target="_blank" rel="noopener">Rəsmi sənədləşmə</a>.</li>
+<li>Google. <i>Machine Learning Crash Course</i>. <a href="https://developers.google.com/machine-learning/crash-course" target="_blank" rel="noopener">Rəsmi tədris resursu</a>.</li>
+<li>ACM. <i>Artifact Review and Badging</i>. <a href="https://www.acm.org/publications/policies/artifact-review-and-badging-current" target="_blank" rel="noopener">Rəsmi siyasət</a>.</li>
+</ol>
+<p class="small muted">Ədəbiyyat statistik təhlil, maşın öyrənməsi, model qiymətləndirilməsi, eksperiment dizaynı və təkrarlana bilən elmi tədqiqat üzrə əsas mənbələrdən seçilmişdir. Məqalə və layihə təqdim edilərkən konkret jurnal və konfransın aktual müəllif təlimatı ayrıca yoxlanılmalıdır.</p>
+</section>
+
+<section class="lab" id="lab">
+<span class="tag">Laboratoriya işi №17</span>
+<h2>Elmi tədqiqat problemi üzrə eksperimentin planlaşdırılması, baseline modelin qurulması və nəticələrin müqayisəli təhlili</h2>
+<h3>İşin məqsədi</h3>
+<p>Tədqiqat problemini elmi sual və hipotez formasında ifadə etmək, dataset-i əsaslandırmaq, baseline model qurmaq, ən azı iki alternativ modeli eyni eksperiment protokolu ilə müqayisə etmək və nəticələri statistik-vizual formada təqdim etmək.</p>
+<h3>İlkin şərtlər və alətlər</h3>
+<ul><li>Python 3.10 və ya daha yeni versiya.</li><li>Jupyter Notebook və ya Google Colab.</li><li>pandas, numpy, scikit-learn, matplotlib və scipy kitabxanaları.</li><li>Açıq və istifadəsinə icazə verilən dataset; məsələn, UCI, OpenML və ya OULAD.</li></ul>
+<h3>İcra mərhələləri</h3>
+<ol>
+<li><b>Problemin qoyuluşu:</b> tədqiqat problemini, məqsədi, tədqiqat sualını və gözlənilən töhfəni yazın.</li>
+<li><b>Hipotez:</b> H₀ və H₁ hipotezlərini formalaşdırın; əsas nəticə metrikini əvvəlcədən seçin.</li>
+<li><b>Dataset:</b> mənbə, lisenziya, dəyişənlər, sinif balansı, çatışmayan dəyərlər və etik riskləri təsvir edin.</li>
+<li><b>İlkin emal:</b> dublikat, missing values və data leakage risklərini yoxlayın; preprocessing-i pipeline daxilində qurun.</li>
+<li><b>Split:</b> stratified train/test bölgüsü və ya uyğun cross-validation yaradın.</li>
+<li><b>Baseline:</b> DummyClassifier və Logistic Regression modellərini öyrədin.</li>
+<li><b>Alternativ modellər:</b> Random Forest və SVM və ya tədqiqat sualına uyğun başqa model əlavə edin.</li>
+<li><b>Qiymətləndirmə:</b> Accuracy, Precision, Recall, F1 və confusion matrix hesablayın; sinif balanssızlığı varsa Macro-F1 və PR-AUC-ni nəzərdən keçirin.</li>
+<li><b>Müqayisə:</b> nəticələri vahid cədvəldə toplayın, fold-lar üzrə orta və standart kənarlaşmanı hesablayın.</li>
+<li><b>Vizuallaşdırma:</b> ən azı iki qrafik yaradın və hər birinin nəticəyə nə əlavə etdiyini izah edin.</li>
+<li><b>Reproducibility:</b> seed, paket versiyaları, split, hiperparametrlər və kodu sənədləşdirin.</li>
+<li><b>Hesabat:</b> nəticə, müzakirə, məhdudiyyət və gələcək iş bölmələrini yazın.</li>
+</ol>
+<h3>Python üçün başlanğıc kod nümunəsi</h3>
+<div class="codehead"><span>Python · eksperiment skeleti</span><button class="btn secondary" onclick="copyCode('labCode')">Kodu köçür</button></div>
+<pre id="labCode"><code>import numpy as np
+import pandas as pd
+
+from sklearn.model_selection import train_test_split, StratifiedKFold, cross_validate
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.dummy import DummyClassifier
+
+SEED = 42
+
+# Dataset-i yükləyin və X, y dəyişənlərini müəyyən edin
+# df = pd.read_csv("dataset.csv")
+# X = df.drop(columns=["target"])
+# y = df["target"]
+
+# Stratified bölgü: sinif nisbətlərini qorumağa çalışır
+# X_train, X_test, y_train, y_test = train_test_split(
+#     X, y, test_size=0.2, random_state=SEED, stratify=y
+# )
+
+# Nümunə pipeline: preprocessing təlim fold-u daxilində fit olunur
+baseline = Pipeline([
+    ("imputer", SimpleImputer(strategy="median")),
+    ("scale", StandardScaler()),
+    ("model", LogisticRegression(max_iter=1000, random_state=SEED))
+])
+
+candidate = Pipeline([
+    ("imputer", SimpleImputer(strategy="median")),
+    ("scale", StandardScaler()),
+    ("model", RandomForestClassifier(
+        n_estimators=300, random_state=SEED, class_weight="balanced"
+    ))
+])
+
+# baseline.fit(X_train, y_train)
+# candidate.fit(X_train, y_train)
+# print(classification_report(y_test, baseline.predict(X_test)))
+# print(classification_report(y_test, candidate.predict(X_test)))
+
+# Cross-validation yalnız train hissəsində aparılmalıdır
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
+# scores = cross_validate(
+#     candidate, X_train, y_train, cv=cv,
+#     scoring=["accuracy", "precision_macro", "recall_macro", "f1_macro"]
+# )
+# print(pd.DataFrame(scores).mean())</code></pre>
+<h3>Qiymətləndirmə meyarları</h3>
+<table><tr><th>Meyar</th><th>Bal</th><th>Gözlənilən sübut</th></tr>
+<tr><td>Problem, sual və hipotez</td><td>15</td><td>Əsaslandırılmış tədqiqat sualı və H₀/H₁</td></tr>
+<tr><td>Dataset seçimi və ilkin təhlil</td><td>15</td><td>Dataset kartı, mənbə və risk təhlili</td></tr>
+<tr><td>Baseline və alternativ modellər</td><td>20</td><td>İşlək kod və eyni eksperiment protokolu</td></tr>
+<tr><td>Statistik və müqayisəli təhlil</td><td>20</td><td>Metriklər, orta/SD, uyğun testin əsaslandırılması</td></tr>
+<tr><td>Vizuallaşdırma və reproducibility</td><td>15</td><td>Qrafiklər, seed, konfiqurasiya və README</td></tr>
+<tr><td>Elmi hesabat və müzakirə</td><td>15</td><td>Nəticə, məhdudiyyət, töhfə və gələcək iş</td></tr>
+<tr><td><b>Cəmi</b></td><td><b>100</b></td><td></td></tr></table>
+<h3>Hesabatın strukturu</h3>
+<p>Başlıq · annotasiya · giriş və problem · tədqiqat sualı və hipotez · dataset və ilkin emal · eksperiment dizaynı · baseline və alternativ modellər · nəticələr və statistik təhlil · müzakirə · məhdudiyyətlər · nəticə və gələcək iş · istinadlar · kod və konfiqurasiya əlavələri.</p>
+<div class="callout success"><b>Laboratoriyanın yekun nəticəsi:</b> tələbə yalnız işləyən model təqdim etməməli, modelin niyə seçildiyini, hansı baseline ilə müqayisə edildiyini, fərqin necə ölçüldüyünü və nəticənin hansı məhdudiyyətlər daxilində keçərli olduğunu elmi əsaslarla izah etməlidir.</div>
+</section>
+<footer class="footer">Mingəçevir Dövlət Universiteti · Riyaziyyat və İnformasiya texnologiyaları fakültəsi<br>Fəsil 17 — Süni intellekt layihəsinin həyat dövrü və elmi tədqiqat metodologiyası</footer>
+</main></div>
+<script>
+const quizItems = [
+{t:"single",q:"AI tədqiqatında baseline modelin əsas məqsədi nədir?",o:["Yeni modelin nəticəsini müqayisə etmək üçün ilkin istinad yaratmaq","Mütləq ən yüksək nəticəni vermək","Dataset-i avtomatik təmizləmək"],a:0,e:"Baseline mürəkkəb modelin əlavə dəyərini ölçmək üçün müqayisə nöqtəsidir."},
+{t:"single",q:"Test dəsti hansı məqsədlə istifadə edilməlidir?",o:["Yekun, mümkün qədər müstəqil qiymətləndirmə üçün","Hər hiperparametri seçmək üçün","Train məlumatını artırmaq üçün"],a:0,e:"Test dəsti model seçimi və hiperparametr tənzimlənməsi üçün təkrar-təkrar istifadə edilməməlidir."},
+{t:"multi",q:"Dataset seçərkən hansı amillər əsaslandırılmalıdır?",o:["Mənbə və lisenziya","Tədqiqat sualına uyğunluq","Etiketlərin keyfiyyəti","Yalnız faylın rəng dizaynı"],a:[0,1,2],e:"Mənşə, istifadə hüququ, relevans, təmsilçilik və etiket keyfiyyəti elmi əsaslandırmanın hissəsidir."},
+{t:"multi",q:"Reproducibility üçün hansı məlumatları saxlamaq vacibdir?",o:["Random seed","Kitabxana və proqram versiyaları","Dataset versiyası və split qaydası","Yalnız yekun Accuracy"],a:[0,1,2],e:"Təkrar icra üçün seed, mühit, data versiyası, kod, konfiqurasiya və metriklər qeyd olunmalıdır."},
+{t:"tf",q:"p-value H₀ hipotezinin doğru olma ehtimalını birbaşa göstərir.",a:false,e:"p-value H₀ doğru fərz edildikdə müşahidə edilən və ya daha ekstremal nəticənin ehtimalıdır."},
+{t:"match",q:"Tədqiqat anlayışlarını uyğun funksiyaları ilə əlaqələndirin.",pairs:[["Baseline","Müqayisə üçün ilkin istinad model"],["Validation set","Model və hiperparametr seçimi"],["Test set","Yekun müstəqil qiymətləndirmə"]],e:"Baseline istinad nöqtəsi, validation seçim mərhələsi, test isə yekun qiymətləndirmə üçündür."},
+{t:"fill",q:"Modelin train və test məlumatı arasında gələcək məlumatın və ya hədəfə dair sızmanın yaranması data ______ adlanır.",a:"leakage",e:"Data leakage modelin real şəraitdə əldə edə bilməyəcəyi məlumatı təlim və ya qiymətləndirmədə görməsidir."},
+{t:"order",q:"Elmi AI tədqiqatının əsas mərhələlərini düzgün ardıcıllıqla düzün.",items:["Tədqiqat probleminin müəyyənləşdirilməsi","Hipotezin formalaşdırılması","Dataset və eksperiment dizaynı","Baseline və modellərin qiymətləndirilməsi","Statistik təhlil və hesabat"],a:[0,1,2,3,4],e:"Əvvəl problem və hipotez, sonra dataset və dizayn, modelləşdirmə, statistik təhlil və hesabat gəlir."},
+{t:"calc",q:"TP=36, FP=9 olduqda Precision neçə faizdir? Precision=TP/(TP+FP).",a:"80",e:"36/(36+9)=36/45=0.8, yəni 80%."},
+{t:"calc",q:"Beş fold üzrə F1 nəticələri 0.80, 0.82, 0.78, 0.84 və 0.81-dir. Orta F1 neçədir? Cavabı iki onluqla yazın.",a:"0.81",e:"Cəm 4.05-dir; 4.05/5=0.81."}
+];
+function renderQuiz(){
+ const area=document.getElementById("quizarea");
+ area.innerHTML=quizItems.map((q,i)=>{
+  let body="";
+  if(q.t==="single"||q.t==="multi") body=q.o.map((v,j)=>`<label><input type="${q.t==="single"?"radio":"checkbox"}" name="q${i}" value="${j}"> ${v}</label>`).join("");
+  if(q.t==="tf") body=`<label><input type="radio" name="q${i}" value="true"> Doğru</label><label><input type="radio" name="q${i}" value="false"> Yanlış</label>`;
+  if(q.t==="match") body=q.pairs.map((p,j)=>`<label>${p[0]} <select name="q${i}_${j}"><option value="">Uyğun cavabı seçin</option>${q.pairs.map((x,k)=>`<option value="${k}">${x[1]}</option>`).join("")}</select></label>`).join("");
+  if(q.t==="fill"||q.t==="calc") body=`<input type="text" name="q${i}" placeholder="Cavabı daxil edin">`;
+  if(q.t==="order") body=q.items.map((v,j)=>`<label>${v} <select name="q${i}_${j}"><option value="">Mövqe seçin</option>${q.items.map((x,k)=>`<option value="${k}">${k+1}</option>`).join("")}</select></label>`).join("");
+  const names={single:"Bir düzgün cavab",multi:"Bir neçə düzgün cavab",tf:"Doğru / Yanlış",match:"Uyğunlaşdırma",fill:"Boşluğun doldurulması",order:"Ardıcıllığın qurulması",calc:"Hesablama və nəticə təhlili"};
+  return `<div class="quiz-q"><span class="tag">${names[q.t]}</span><p>${i+1}. ${q.q}</p>${body}<div id="fb${i}" class="small" style="display:none;margin-top:10px"></div></div>`;
+ }).join("");
+ area.onchange=updateProgress;area.oninput=updateProgress;updateProgress();
+}
+function answered(q,i){
+ if(q.t==="match"||q.t==="order"){let n=q.pairs?q.pairs.length:q.items.length;return Array.from({length:n},(_,j)=>document.querySelector(`[name="q${i}_${j}"]`)?.value).every(v=>v!=="")}
+ if(q.t==="multi")return document.querySelectorAll(`input[name="q${i}"]:checked`).length>0;
+ if(q.t==="fill"||q.t==="calc")return !!document.querySelector(`[name="q${i}"]`)?.value.trim();
+ return !!document.querySelector(`input[name="q${i}"]:checked`);
+}
+function updateProgress(){let n=quizItems.filter(answered).length;document.getElementById("qprogress").style.width=(n/quizItems.length*100)+"%"}
+function gradeQuiz(){
+ let score=0,done=0;
+ quizItems.forEach((q,i)=>{
+  let ok=false,ans="";
+  if(q.t==="single"){let x=document.querySelector(`input[name="q${i}"]:checked`);if(x)done++;ok=!!x&&+x.value===q.a;ans="Düzgün cavab: "+q.o[q.a]}
+  if(q.t==="multi"){let x=[...document.querySelectorAll(`input[name="q${i}"]:checked`)].map(e=>+e.value).sort();if(x.length)done++;ok=JSON.stringify(x)===JSON.stringify([...q.a].sort());ans="Düzgün cavablar: "+q.a.map(k=>q.o[k]).join("; ")}
+  if(q.t==="tf"){let x=document.querySelector(`input[name="q${i}"]:checked`);if(x)done++;ok=!!x&&(x.value==="true")===q.a;ans="Düzgün cavab: "+(q.a?"Doğru":"Yanlış")}
+  if(q.t==="match"){let x=q.pairs.map((p,j)=>document.querySelector(`[name="q${i}_${j}"]`)?.value);if(x.every(v=>v!==""))done++;ok=x.every((v,j)=>+v===j);ans="Uyğunluq: "+q.pairs.map(p=>p[0]+" — "+p[1]).join("; ")}
+  if(q.t==="order"){let x=q.items.map((p,j)=>document.querySelector(`[name="q${i}_${j}"]`)?.value);if(x.every(v=>v!==""))done++;ok=x.every((v,j)=>+v===j);ans="Düzgün ardıcıllıq: "+q.items.join(" → ")}
+  if(q.t==="fill"||q.t==="calc"){let x=document.querySelector(`[name="q${i}"]`)?.value.trim();if(x)done++;let norm=v=>String(v).toLowerCase().replace(/[, %]/g,"");ok=!!x&&norm(x)===norm(q.a);ans="Düzgün cavab: "+q.a+(q.t==="calc"?"%":"")}
+  if(ok)score++;
+  const f=document.getElementById("fb"+i);f.style.display="block";f.style.color=ok?"#16845b":"#b83c48";f.innerHTML=(ok?"✓ Düzgün. ":"✗ Yanlış və ya natamam. ")+ans+".<br>"+q.e;
+ });
+ let pct=Math.round(score/quizItems.length*100);
+ document.getElementById("quizscore").innerHTML=`<b>Nəticə: ${score}/${quizItems.length} (${pct}%)</b><br>Cavablandırılıb: ${done}/${quizItems.length}<br>${pct>=85?"Əla nəticə!":pct>=65?"Yaxşı nəticə. İzahları yenidən nəzərdən keçirin.":"Mövzuları təkrar oxuyub yenidən cəhd edin."}`;
+}
+function resetQuiz(){renderQuiz();document.getElementById("quizscore").textContent="Sualları cavablandırın.";document.getElementById("qprogress").style.width="0%"}
+function makePlan(){let n=document.getElementById("projectName").value,w=+document.getElementById("projectWeeks").value,t=+document.getElementById("projectTeam").value,m=document.getElementById("projectMetric").value;document.getElementById("planResult").innerHTML=`<b>${n}</b><br>Müddət: ${w} həftə · Komanda: ${t} nəfər · Əsas metrik: ${m}<br>Tövsiyə olunan bölgü: problem və ədəbiyyat 15%, data 20%, modelləşdirmə 30%, qiymətləndirmə 20%, hesabat 15%.`;}
+function buildRQ(){let p=document.getElementById("rqPop").value,i=document.getElementById("rqInput").value,c=document.getElementById("rqCompare").value,o=document.getElementById("rqOutcome").value;document.getElementById("rqResult").innerHTML=`<b>Tədqiqat sualı:</b> ${p} üçün ${i} istifadə etməklə ${c} müqayisə edildikdə ${o} baxımından hansı fərq müşahidə olunur?`;}
+function testHypothesis(){let a=+document.getElementById("meanA").value,b=+document.getElementById("meanB").value,p=+document.getElementById("pValue").value,alpha=+document.getElementById("alpha").value;document.getElementById("hypResult").innerHTML=`Orta fərq: ${(a-b).toFixed(3)} · p-value: ${p} · α: ${alpha}<br>${p<alpha?"H₀ rədd edilir: seçilmiş əhəmiyyət səviyyəsində statistik sübut var.":"H₀ rədd edilmir: statistik əhəmiyyət üçün kifayət qədər sübut yoxdur."}<br><span class="small">Bu sadə şərh testin fərziyyələrinin ödənildiyini və testin düzgün seçildiyini fərz edir.</span>`;}
+function makeDatasetCard(){let n=document.getElementById("dsName").value,s=document.getElementById("dsSource").value,t=document.getElementById("dsTarget").value,l=document.getElementById("dsLimit").value;document.getElementById("dsResult").innerHTML=`<b>Dataset Card: ${n}</b><br>Mənbə: ${s}<br>Hədəf: ${t}<br>Məhdudiyyət: ${l}<br><span class="small">Əlavə olaraq versiya, lisenziya, toplama prosesi, nümunə sayı və etik icazə sənədləşdirilməlidir.</span>`;}
+function drawFolds(){let k=+document.getElementById("foldCount").value;document.getElementById("foldVal").textContent=k;document.getElementById("foldDiagram").innerHTML=Array.from({length:k},(_,r)=>`<div style="display:flex;gap:4px;margin:7px 0;align-items:center"><b style="width:75px">Run ${r+1}</b>${Array.from({length:k},(_,c)=>`<div style="flex:1;text-align:center;padding:7px 2px;border-radius:6px;background:${r===c?"#ffe7b8":"#dceafa"};border:1px solid ${r===c?"#d9a64a":"#b8cce7"}">${r===c?"Valid.":"Train"}</div>`).join("")}</div>`).join("");}
+function calcCM(){let tp=+cmTP.value,fp=+cmFP.value,fn=+cmFN.value,tn=+cmTN.value;let p=tp/(tp+fp)||0,r=tp/(tp+fn)||0,a=(tp+tn)/(tp+fp+fn+tn)||0,f=2*p*r/(p+r)||0;cmResult.innerHTML=`Precision: ${(p*100).toFixed(1)}% · Recall: ${(r*100).toFixed(1)}% · F1: ${(f*100).toFixed(1)}% · Accuracy: ${(a*100).toFixed(1)}%`;}
+function calcStats(){let xs=statValues.value.split(",").map(Number).filter(Number.isFinite);if(!xs.length){statResult.textContent="Düzgün ədədlər daxil edin.";return}let m=xs.reduce((a,b)=>a+b,0)/xs.length,sd=Math.sqrt(xs.reduce((a,b)=>a+(b-m)**2,0)/(xs.length-1||1));statResult.innerHTML=`n=${xs.length} · Orta=${m.toFixed(4)} · Standart kənarlaşma=${sd.toFixed(4)}<br><span class="small">Burada nümunə standart kənarlaşması hesablanır.</span>`;}
+function drawResearchPlot(){let vals=[+plotA.value/100,+plotB.value/100,+plotC.value/100];["plotAval","plotBval","plotCval"].forEach((id,i)=>document.getElementById(id).textContent=vals[i].toFixed(2));let c=document.getElementById("researchPlot"),ctx=c.getContext("2d");drawBars(ctx,c,["Model A","Model B","Model C"],vals);}
+function drawBars(ctx,c,labels,vals){let w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.font="18px Arial";ctx.fillStyle="#52647e";for(let i=0;i<=5;i++){let y=30+i*(h-75)/5;ctx.strokeStyle="#e2e8f1";ctx.beginPath();ctx.moveTo(55,y);ctx.lineTo(w-20,y);ctx.stroke();ctx.fillText((1-i*.2).toFixed(1),12,y+5)}let bw=110,gap=(w-100-labels.length*bw)/(labels.length+1);vals.forEach((v,i)=>{let x=55+gap*(i+1)+bw*i,bar=(h-75)*v;ctx.fillStyle=["#3267c8","#0e9ca4","#8c6bc1"][i];ctx.fillRect(x,h-45-bar,bw,bar);ctx.fillStyle="#203a60";ctx.fillText(labels[i],x,h-15);ctx.fillText(v.toFixed(2),x+30,h-53-bar)});}
+function drawStaticChart(id,labels,vals){let c=document.getElementById(id),ctx=c.getContext("2d");drawBars(ctx,c,labels,vals);}
+function copyCode(id){let t=document.getElementById(id).innerText;navigator.clipboard?.writeText(t).then(()=>alert("Kod köçürüldü.")).catch(()=>alert("Kodu əl ilə seçib köçürün."));}
+renderQuiz();drawFolds();calcCM();calcStats();drawResearchPlot();
+drawStaticChart("baselineChart",["Dummy","Logistic Reg.","Random Forest"],[.52,.78,.84]);
+drawStaticChart("modelChart",["LogReg F1","RF F1","SVM F1"],[.78,.86,.82]);
+</script>
+<script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

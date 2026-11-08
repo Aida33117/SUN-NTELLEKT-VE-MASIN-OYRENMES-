@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fəsil 18 — Kompüter görməsinin nəzəri əsasları və təsvirlərin emalı</title>
+<style>
+:root{--ink:#17243a;--muted:#5e6d82;--blue:#155eef;--teal:#0b8f87;--pale:#edf4ff;--line:#dbe3ef;--paper:#fff;--bg:#f4f7fb;--gold:#a15c00}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.72 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+header{background:linear-gradient(120deg,#10264b,#155eef 70%,#0b8f87);color:white;padding:42px max(22px,calc((100% - 1160px)/2))}
+header .tag{opacity:.85;font-size:.9rem;letter-spacing:.08em;text-transform:uppercase}h1{font-size:clamp(2rem,4vw,3.2rem);line-height:1.15;margin:.6rem 0}header p{max-width:850px;color:#e9f1ff}
+.shell{max-width:1160px;margin:24px auto;padding:0 18px;display:grid;grid-template-columns:275px minmax(0,1fr);gap:24px}
+nav{position:sticky;top:16px;align-self:start;background:white;border:1px solid var(--line);border-radius:16px;padding:18px;max-height:calc(100vh - 32px);overflow:auto}
+nav strong{display:block;margin-bottom:10px}nav a{display:block;color:#33445f;text-decoration:none;padding:5px 8px;border-radius:7px;font-size:.9rem}nav a:hover{background:var(--pale);color:var(--blue)}
+main{min-width:0}.intro,.chapter,.lab,.quiz,.refs{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:clamp(18px,3vw,30px);margin-bottom:20px;box-shadow:0 5px 20px #1c35550a}
+h2{font-size:1.65rem;line-height:1.3;margin:0 0 18px;border-bottom:2px solid var(--pale);padding-bottom:12px}h3{font-size:1.2rem;margin:25px 0 8px;color:#123d76}h4{margin:16px 0 6px}
+p{margin:9px 0}ul,ol{padding-left:24px}li{margin:5px 0}.note{background:#eef7ff;border-left:4px solid var(--blue);padding:12px 15px;border-radius:8px;margin:14px 0}.warn{background:#fff7e8;border-left:4px solid #d78a13;padding:12px 15px;border-radius:8px;margin:14px 0}.good{background:#ecfdf7;border-left:4px solid var(--teal);padding:12px 15px;border-radius:8px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}.tile{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fbfdff}.tile b{color:#123d76}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.94rem}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:#edf4ff;color:#183c70}
+code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}pre{background:#101c2f;color:#f1f5ff;padding:18px;border-radius:12px;overflow:auto;line-height:1.65;font-size:.92rem;border:1px solid #263852;white-space:pre}
+pre code{background:transparent!important;color:#f1f5ff!important;padding:0!important;border-radius:0!important;font:inherit}
+code{background:#eef2f8;color:#18324f;padding:2px 5px;border-radius:4px}
+.codehead{display:flex;justify-content:space-between;align-items:center;color:#c8d7ee;font-size:.82rem;margin:0 0 6px}
+.copybtn{background:#314766;color:#fff;padding:5px 10px;font-size:.78rem}
+.realphoto{width:100%;max-height:360px;object-fit:contain;background:#e8eef6;border-radius:12px;border:1px solid var(--line)}
+.realgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.realcard{border:1px solid var(--line);border-radius:13px;padding:12px;background:#fff}
+.realcard img{width:100%;height:210px;object-fit:contain;background:#edf2f7;border-radius:9px}
+.diagram{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fbfdff;margin:16px 0;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}
+button{border:0;border-radius:9px;padding:10px 15px;background:var(--blue);color:white;font-weight:650;cursor:pointer;margin:5px 4px 5px 0}button.secondary{background:#eaf0f9;color:#183c70}button:hover{filter:brightness(.96)}input[type=range]{width:100%;accent-color:var(--blue)}input[type=number],select{padding:9px;border:1px solid #bcc9da;border-radius:8px;font:inherit;max-width:100%}
+canvas{max-width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:white}.small{font-size:.9rem;color:var(--muted)}.result{background:#f1f8ff;border-radius:9px;padding:10px;margin:10px 0;min-height:42px}.pill{display:inline-block;background:#eaf2ff;color:#174b99;border-radius:30px;padding:3px 9px;font-size:.8rem;margin:2px}
+.quizq{border-top:1px solid var(--line);padding:14px 0}.quizq label{display:block;margin:6px 0}.correct{color:#087c50;font-weight:700}.wrong{color:#b42318;font-weight:700}
+footer{text-align:center;color:var(--muted);padding:25px}
+@media(max-width:850px){.shell{display:block}nav{position:relative;top:auto;max-height:300px;margin-bottom:18px}header{padding:30px 20px}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style></head>
+<body>
+<header><div class="tag">MDU · Riyaziyyat və İnformasiya texnologiyaları fakültəsi · Magistratura</div>
+<h1>Fəsil 18. Kompüter görməsinin nəzəri əsasları və təsvirlərin emalı</h1>
+<p>Nəzəriyyə, aparat təminatı, sistem arxitekturası, interaktiv sxemlər, OpenCV laboratoriyaları, Google Colab və video üzərində obyektlərin aşkarlanması.</p><div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="shell">
+<nav><strong>Fəsil üzrə naviqasiya</strong>
+<a href="#giris">Öyrənmə xəritəsi</a>
+<a href="#s1">18.1. Kompüter görməsi anlayışı və inkişaf mərhələləri</a><a href="#s2">18.2. Kompüter görmə sistemlərinin arxitekturası və iş prinsipi</a><a href="#s3">18.3. Rəqəmsal təsvirlərin formalaşması və təqdim olunması</a><a href="#s4">18.4. Piksel, rəng kanalları və təsvir ölçüləri</a><a href="#s5">18.5. RGB, BGR, HSV və Grayscale rəng modelləri</a><a href="#s6">18.6. Təsvirlərin yüklənməsi, göstərilməsi və saxlanılması</a><a href="#s7">18.7. OpenCV kitabxanası və əsas funksiyaları</a><a href="#s8">18.8. Həndəsi çevrilmələr: ölçüləndirmə, döndərmə və kəsmə</a><a href="#s9">18.9. Rəng və intensivlik üzrə emal</a><a href="#s10">18.10. Səs-küy və filtrləmə</a><a href="#s11">18.11. Gaussian, Median və Bilateral filtrlər</a><a href="#s12">18.12. Kənarların aşkarlanması: Sobel, Laplacian və Canny</a><a href="#s13">18.13. Binarlaşdırma və thresholding</a><a href="#s14">18.14. Morfoloji əməliyyatlar</a><a href="#s15">18.15. Konturlar və xüsusiyyətlərin çıxarılması</a><a href="#s16">18.16. Təsvirlərin seqmentasiyası</a><a href="#s17">18.17. Histogram və statistik təhlil</a><a href="#s18">18.18. Python və OpenCV ilə ilkin tətbiqlər</a>
+<a href="#aparat">Aparat təminatı və qoşulma</a><a href="#video">Video üzrə obyektlərin aşkarlanması</a><a href="#real-examples">Real foto nümunələri</a><a href="#dataset">Dataset və Google Colab</a><a href="#lab">Laboratoriya işi №18</a><a href="#tasks">Praktiki tapşırıqlar</a><a href="#quiz">Özünü yoxlama sualları</a><a href="#refs">İstifadə olunan ədəbiyyat</a>
+</nav><main>
+<section class="intro" id="giris"><h2>Fəsilə giriş və öyrənmə xəritəsi</h2>
+<p><b>Kompüter görməsi</b> kompüterə foto, video və kameradan gələn görüntülərdən faydalı məlumat çıxarmağı öyrədən süni intellekt sahəsidir. İnsan gözlə avtomobili, piyadanı və yol nişanını tanıyır; kompüter görmə sistemi isə piksel ədədlərini emal edir, nümunələri model vasitəsilə öyrənir və nəticədə obyektin sinfini, yerini və bəzən hərəkətini müəyyən edir.</p>
+<div class="grid"><div class="tile"><b>Giriş</b><p>Kamera, şəkil, video, skaner, mikroskop və ya sensor.</p></div><div class="tile"><b>Emal</b><p>Rəng çevirmə, filtr, kənar, kontur, seqmentasiya və neyron şəbəkə.</p></div><div class="tile"><b>Nəticə</b><p>Sinif, koordinat, maska, say, izləmə və qərar.</p></div></div>
+<div class="note"><b>Fəslin sonunda tələbə bacarmalıdır:</b> kameranı və hesablama qurğusunu sistemə qoşmağı; piksel və rəng kanallarını izah etməyi; OpenCV ilə şəkli oxumağı, çevirməyi, filtrləməyi; kontur və kənarları tapmağı; Google Colab-da real dataset üzərində YOLO ilə video kadrlarında obyektləri aşkarlamağı.</div>
+</section>
+
+<section class="chapter" id="aparat"><h2>Aparat təminatı: qurğular, quraşdırma və əlaqələndirmə</h2>
+<p>Kompüter görmə sistemi təkcə proqramdan ibarət deyil. Görüntünü əldə edən sensor, onu ötürən interfeys, hesablayan qurğu, yaddaş və nəticəni göstərən qurğular birlikdə işləyir. Qurğuların seçimi tapşırığın məqsədindən asılıdır: laboratoriyada USB kamera kifayət edə bilər, avtonom robotda isə kamera, dərinlik sensoru, GPU və real-vaxt idarəetmə modulu tələb oluna bilər.</p>
+<h3>Əsas aparat komponentləri</h3>
+<table><tr><th>Komponent</th><th>Funksiyası</th><th>Seçim zamanı vacib parametr</th><th>Nümunə</th></tr>
+<tr><td>Kamera / görüntü sensoru</td><td>İşığı rəqəmsal təsvirə çevirir</td><td>Çözünürlük, FPS, sensor ölçüsü, dinamik diapazon, obyektiv</td><td>USB webcam, IP kamera, sənaye kamerası</td></tr>
+<tr><td>Obyektiv</td><td>İşığı sensora fokuslayır</td><td>Fokus məsafəsi, baxış bucağı, diafraqma</td><td>Genişbucaqlı və teleobyektiv</td></tr>
+<tr><td>İşıqlandırma</td><td>Obyektin görünməsini sabitləşdirir</td><td>İşıq gücü, rəng temperaturu, titrəməsizlik</td><td>LED panel, IR işıqlandırıcı</td></tr>
+<tr><td>Hesablama qurğusu</td><td>Emal və model inferensini icra edir</td><td>CPU, GPU, RAM, enerji sərfi</td><td>PC, NVIDIA Jetson, edge kompüter</td></tr>
+<tr><td>Yaddaş</td><td>Video, şəkil, model və jurnalları saxlayır</td><td>Həcm, sürət, davamlı yazma</td><td>SSD, NVMe, NAS</td></tr>
+<tr><td>Şəbəkə / interfeys</td><td>Görüntünü və nəticəni ötürür</td><td>USB 3, GigE, Wi-Fi, PoE, gecikmə</td><td>USB, Ethernet, RTSP</td></tr>
+<tr><td>Enerji və soyutma</td><td>Sistemin fasiləsiz işləməsini təmin edir</td><td>Güc ehtiyatı, temperatur, UPS</td><td>Adapter, UPS, ventilyator</td></tr></table>
+<h3>Quraşdırma və əlaqələndirmənin mərhələləri</h3>
+<ol><li><b>Tələbi müəyyən edin:</b> hansı obyekt, hansı məsafə, hansı işıq, neçə kadr/saniyə və hansı dəqiqlik lazımdır?</li><li><b>Kameranı yerləşdirin:</b> görüntü sahəsi, kamera bucağı, fokus və işıqlandırmanı yoxlayın.</li><li><b>Fiziki qoşulma:</b> USB kameranı USB portuna; IP kameranı Ethernet/PoE şəbəkəsinə; sensoru istehsalçının interfeysinə qoşun. Gərginlik və kabel standartını yoxlamadan enerji verməyin.</li><li><b>Drayver və proqram:</b> əməliyyat sisteminin kameranı tanıdığını yoxlayın; OpenCV və ya istehsalçı SDK-sını quraşdırın.</li><li><b>Kalibrləmə:</b> lazım olduqda kamera daxili parametrlərini (focal length, principal point, distortion) şahmat taxtası nümunəsi ilə hesablayın.</li><li><b>Test:</b> görüntü, FPS, gecikmə, fokus, kadr itkisi və temperaturu ölçün.</li></ol>
+<div class="diagram"><svg viewBox="0 0 900 255" role="img" aria-label="Kompüter görmə aparat arxitekturası"><defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#155eef"/></marker></defs>
+<g font-family="Arial" text-anchor="middle"><rect x="20" y="72" width="145" height="90" rx="12" fill="#eaf2ff" stroke="#155eef" stroke-width="2"/><text x="92" y="105" font-size="17" fill="#173b70">Kamera</text><text x="92" y="130" font-size="13" fill="#334">Sensor + obyektiv</text>
+<rect x="205" y="72" width="145" height="90" rx="12" fill="#eaf8f5" stroke="#0b8f87" stroke-width="2"/><text x="277" y="105" font-size="17" fill="#075e59">İnterfeys</text><text x="277" y="130" font-size="13" fill="#334">USB / GigE / RTSP</text>
+<rect x="390" y="72" width="160" height="90" rx="12" fill="#fff5e7" stroke="#c17a13" stroke-width="2"/><text x="470" y="105" font-size="17" fill="#80500b">Hesablama</text><text x="470" y="130" font-size="13" fill="#334">CPU / GPU / Edge</text>
+<rect x="590" y="20" width="135" height="82" rx="12" fill="#f3edff" stroke="#7753b5" stroke-width="2"/><text x="657" y="53" font-size="16" fill="#52358a">Model</text><text x="657" y="75" font-size="13" fill="#334">OpenCV / YOLO</text>
+<rect x="590" y="145" width="135" height="82" rx="12" fill="#edf8ee" stroke="#29934b" stroke-width="2"/><text x="657" y="178" font-size="16" fill="#17602e">Yaddaş</text><text x="657" y="200" font-size="13" fill="#334">SSD / NAS</text>
+<rect x="770" y="72" width="115" height="90" rx="12" fill="#eaf2ff" stroke="#155eef" stroke-width="2"/><text x="827" y="105" font-size="16" fill="#173b70">Nəticə</text><text x="827" y="130" font-size="13" fill="#334">Ekran / API</text>
+<g stroke="#155eef" stroke-width="3" fill="none" marker-end="url(#arr)"><path d="M165 117H200"/><path d="M350 117H385"/><path d="M550 95L585 65"/><path d="M550 135L585 185"/><path d="M725 65L765 100"/><path d="M725 185L765 135"/></g></g></svg><p class="small">Məlumat axını: kamera görüntünü yaradır, interfeys ötürür, hesablama qurğusu emal edir; model qərar verir, yaddaş nəticələri saxlayır, tətbiq isə istifadəçiyə təqdim edir.</p></div>
+<h3>Kamera görüntüsünü OpenCV ilə yoxlama</h3><pre><code>import cv2
+
+cap = cv2.VideoCapture(0)  # 0: ilk lokal kamera
+if not cap.isOpened():
+    raise RuntimeError("Kamera açılmadı")
+
+ret, frame = cap.read()
+if ret:
+    print("Kadr ölçüsü:", frame.shape)  # hündürlük, en, kanal
+    cv2.imwrite("kamera_test.jpg", frame)
+
+cap.release()</code></pre>
+<div class="warn"><b>Təhlükəsizlik:</b> laboratoriyada kameranı, GPU qurğusunu və enerji blokunu yalnız uyğun gərginlik/cərəyan göstəriciləri ilə qoşun. Şəbəkə kamerasının parolunu açıq kodda saxlamayın. İnsanların görüntülərini toplayarkən məxfilik, razılıq və məlumatların saxlanma müddətini nəzərə alın.</div>
+</section>
+<section class="chapter" id="s1"><h2>18.1. Kompüter görməsi (Computer Vision) anlayışı və inkişaf mərhələləri</h2>
+<p>Kompüter görməsi kompüter elminin görüntüdən məna çıxarmaqla məşğul olan sahəsidir. Sadə dillə desək, kompüterə “şəkildə nə var?”, “haradadır?”, “neçə dənədir?” və “nə baş verir?” suallarına cavab verməyi öyrədir. İnsan görməsi ilə kompüter görməsini eyniləşdirmək olmaz: insan beyni dünyanı bütöv təcrübə ilə qavrayır, kompüter isə rəqəmsal piksel massivlərini və öyrədilmiş riyazi modelləri emal edir.</p>
+<div class="grid"><div class="tile"><b>Təsnifat (classification)</b><p>Bütün təsvirə bir və ya bir neçə sinif etiketi verir: “avtomobil”, “pişik”.</p></div><div class="tile"><b>Obyekt aşkarlanması (detection)</b><p>Obyektin sinfini və sərhəd düzbucaqlısını (bounding box) tapır.</p></div><div class="tile"><b>Seqmentasiya</b><p>Hər pikseli obyektə və ya fon sinfinə aid edir.</p></div><div class="tile"><b>İzləmə (tracking)</b><p>Obyektin ardıcıl video kadrlarında kimliyini izləyir.</p></div></div>
+<p>İnkişaf mərhələləri: 1960–1980-ci illərdə həndəsi və qayda əsaslı yanaşmalar; 1980–2000-ci illərdə xüsusiyyət çıxarılması, SIFT/HOG kimi metodlar; 2012-ci ildən sonra GPU və dərin CNN modellərinin geniş tətbiqi; 2020-ci illərdə Transformer, multimodal modellər, real-vaxt aşkarlama və edge AI.</p>
+<p><b>Nümunə:</b> kamera qarşısında avtomobil görünür. Təsnifat yalnız “avtomobil” deyə bilər. Aşkarlama avtomobilin çərçivəsini çəkir. Seqmentasiya avtomobilin formasını piksel-piksel ayırır. İzləmə isə avtomobilin növbəti kadrlarda hərəkətini izləyir.</p></section>
+<section class="chapter" id="s2"><h2>18.2. Kompüter görmə sistemlərinin arxitekturası və iş prinsipi</h2>
+<p>Arxitektura sistemin hissələrinin necə təşkil olunduğunu və məlumatın hansı ardıcıllıqla keçdiyini göstərir. Tipik sistemdə <b>görüntünün alınması → ilkin emal → xüsusiyyət/model → qərar → nəticənin saxlanması və təqdimatı</b> mərhələləri var.</p>
+<ol><li><b>Acquisition:</b> kamera və ya fayldan kadr alınır.</li><li><b>Preprocessing:</b> ölçü uyğunlaşdırılır, rəng çevrilir, səs-küy azaldılır, normallaşdırılır.</li><li><b>Feature extraction:</b> klassik üsullarda kənar, tekstura, histogram; dərin öyrənmədə CNN/Transformer xüsusiyyətləri öyrənir.</li><li><b>Inference:</b> model sinif ehtimalı, bounding box və ya maska çıxarır.</li><li><b>Postprocessing:</b> hədd (confidence threshold), NMS və koordinatların ilkin ölçüyə qaytarılması tətbiq olunur.</li><li><b>Output:</b> görüntü üzərində işarələr, hesabat, xəbərdarlıq və ya idarəetmə siqnalı.</li></ol>
+<p>İş prinsipi: model əvvəlcədən etiketlənmiş nümunələrdə öyrədilir. Təlim zamanı proqnoz ilə düzgün cavab arasındakı itki hesablanır və çəkilər yenilənir. İstifadə zamanı model yeni görüntüyə proqnoz verir. Təlim (training) və proqnoz (inference) fərqli mərhələlərdir.</p>
+<div class="note">Sistemin keyfiyyəti yalnız modelin dəqiqliyi deyil. Kamera bucağı, işıq, bulanıqlıq, məlumatların təmsilçiliyi, hesablama gecikməsi və səhv qərarın nəticəsi də vacibdir.</div></section>
+<section class="chapter" id="s3"><h2>18.3. Rəqəmsal təsvirlərin formalaşması və təsvirin təqdim olunması</h2>
+<p>Kamera obyektivindən keçən işıq sensorun fotohəssas elementlərinə düşür. Sensor işıq enerjisini elektrik siqnalına çevirir; analoq-rəqəmsal çevirici bu siqnalı ədədi qiymətlərə çevirir. Rəngli kamerada Bayer filtri kimi quruluşlar vasitəsilə rəng kanalları bərpa oluna bilər. Nəticə kompüter yaddaşında massiv kimi saxlanır.</p>
+<p>Rəqəmsal təsvir iki ölçülü piksel torudur. Boz təsvir üçün bir piksel intensivlik qiyməti daşıyır. Rəngli təsvir üçün hər piksel bir neçə kanalın qiymətlərindən ibarətdir. 8-bit kanal adətən 0–255 aralığındadır: 0 qaranlıq, 255 yüksək intensivlik deməkdir.</p>
+<p>Rəqəmsallaşdırmada iki anlayış vacibdir: <b>məkan nümunələnməsi</b> — təsvirin neçə piksel ilə təmsil olunması; <b>kvantlaşdırma</b> — hər pikselin neçə mümkün intensivlik səviyyəsi ala bilməsi. Daha yüksək çözünürlük daha çox detal verə bilər, lakin yaddaş və emal xərci artır.</p>
+<div class="note">Məsələn, 1920×1080 ölçülü RGB təsvir 2,073,600 piksel və hər piksel üçün 3 kanal saxlayır. Sıxılmamış 8-bit təsvirin təxmini həcmi: 1920 × 1080 × 3 = 6,220,800 bayt ≈ 5.93 MiB.</div></section>
+<section class="chapter" id="s4"><h2>18.4. Piksel, rəng kanalları və təsvir ölçüləri</h2>
+<p><b>Piksel</b> (picture element) rəqəmsal təsvirin ən kiçik ünvanlana bilən elementidir. <code>shape</code> çox vaxt <code>(height, width, channels)</code> ardıcıllığı ilə qaytarılır. Məsələn, <code>(480, 640, 3)</code> — 480 sətir, 640 sütun, 3 rəng kanalıdır. Diqqət: OpenCV massivlərində əvvəl hündürlük, sonra en göstərilir.</p>
+<p>Koordinat başlanğıcı adətən sol yuxarı küncdür: x sağa, y aşağıya artır. Pikselə müraciət <code>image[y, x]</code> şəklindədir; əvvəl sətir (y), sonra sütun (x) yazılır.</p>
+<div class="diagram"><svg viewBox="0 0 620 260" role="img" aria-label="Piksel toru"><g transform="translate(90 25)" stroke="#9aabc0"><rect width="210" height="168" fill="#fff"/><path d="M0 28H210M0 56H210M0 84H210M0 112H210M0 140H210M35 0V168M70 0V168M105 0V168M140 0V168M175 0V168" stroke-width="1.5"/><rect x="70" y="56" width="35" height="28" fill="#4e91ef" stroke="#155eef" stroke-width="2"/></g><g font-family="Arial" fill="#233" font-size="14"><text x="90" y="220">x → sütun</text><text x="20" y="42">y ↓</text><text x="390" y="90">Seçilmiş piksel</text><text x="390" y="115">image[y, x]</text><text x="390" y="140">Hər xana = 1 piksel</text></g></svg></div>
+<p>Bit dərinliyi də vacibdir: 8-bit boz təsvir 256 intensivlik səviyyəsi, 8-bit × 3 kanallı RGB isə hər kanal üçün 256 mümkün qiymət daşıyır. 16-bit tibbi və elmi görüntülərdə daha geniş dinamik diapazon saxlanıla bilər.</p></section>
+<section class="chapter" id="s5"><h2>18.5. RGB, BGR, HSV və Grayscale rəng modelləri</h2>
+<p><b>RGB</b> qırmızı, yaşıl, mavi kanallarının qarışığıdır. Ekranlarda geniş yayılıb. <b>BGR</b> eyni üç kanalın fərqli ardıcıllıqla saxlanmasıdır; OpenCV-nin <code>imread</code> funksiyası standart olaraq BGR qaytarır. Buna görə Matplotlib/PIL ilə göstərərkən BGR→RGB çevirməsi vacibdir.</p>
+<table><tr><th>Model</th><th>Tərkib</th><th>İstifadə</th><th>Üstünlük / məhdudiyyət</th></tr><tr><td>RGB</td><td>R, G, B</td><td>Ekran, ümumi görüntü</td><td>İnsan üçün intuitiv; rəngə görə obyekt seçmək çətin ola bilər.</td></tr><tr><td>BGR</td><td>B, G, R</td><td>OpenCV standartı</td><td>RGB ilə eyni məlumat, yalnız kanal sırası fərqlidir.</td></tr><tr><td>HSV</td><td>Hue, Saturation, Value</td><td>Rəng diapazonu ilə obyekt seçimi</td><td>Rəng tonu ayrıca idarə olunur; işıq dəyişmələrindən tam azad deyil.</td></tr><tr><td>Grayscale</td><td>Bir intensivlik kanalı</td><td>Kənar, threshold, sadə analiz</td><td>Hesablama sadələşir, rəng məlumatı itir.</td></tr></table>
+<p>RGB-dən boz rəngə təxmini çevirmə: <code>Y = 0.299R + 0.587G + 0.114B</code>. Yaşıl kanalın çəkisi böyükdür, çünki insan görməsi yaşıl diapazona daha həssasdır.</p>
+<pre><code>gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+hsv  = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+rgb  = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)</code></pre>
+<div class="note">HSV-də H rəng tonunu, S rəngin doymasını, V parlaqlığı ifadə edir. OpenCV-nin 8-bit HSV təqdimatında Hue diapazonu çox vaxt 0–179 olur; kitabxanalar arasında diapazon fərqlərinə diqqət edin.</div></section>
+<section class="chapter" id="s6"><h2>18.6. Təsvirlərin yüklənməsi, göstərilməsi və saxlanılması</h2>
+<p>Şəkil faylı yaddaşdan oxunarkən əvvəlcə fayl yolu düzgün olmalıdır. <code>cv2.imread()</code> faylı oxuya bilməsə <code>None</code> qaytara bilər. Buna görə hər zaman nəticəni yoxlamaq lazımdır. <code>cv2.imwrite()</code> emal edilmiş təsviri diskə yazır.</p>
+<pre><code>import cv2
+img = cv2.imread("photo.jpg")
+if img is None:
+    raise FileNotFoundError("Şəkil tapılmadı və ya format oxunmadı")
+
+print(img.shape, img.dtype)
+cv2.imshow("Original", img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+cv2.imwrite("photo_copy.png", img)</code></pre>
+<p>Google Colab mühitində lokal pəncərə açmaq əvəzinə <code>from google.colab.patches import cv2_imshow</code> istifadə edin və ya Matplotlib ilə göstərin. Faylları Colab-a yükləmək, Google Drive qoşmaq və ya açıq datasetdən götürmək mümkündür.</p></section>
+<section class="chapter" id="s7"><h2>18.7. OpenCV kitabxanası və onun əsas funksiyaları</h2>
+<p><b>OpenCV</b> (Open Source Computer Vision Library) kompüter görməsi və görüntü emalı üçün geniş istifadə olunan açıq mənbəli kitabxanadır. Python-da <code>opencv-python</code> paketi quraşdırılır, kodda isə <code>cv2</code> kimi import edilir.</p>
+<table><tr><th>Funksiya</th><th>Təyinat</th></tr><tr><td><code>cv2.imread()</code></td><td>Şəkli oxumaq</td></tr><tr><td><code>cv2.imshow()</code></td><td>Şəkli pəncərədə göstərmək</td></tr><tr><td><code>cv2.imwrite()</code></td><td>Şəkli fayla yazmaq</td></tr><tr><td><code>cv2.resize()</code></td><td>Ölçünü dəyişmək</td></tr><tr><td><code>cv2.cvtColor()</code></td><td>Rəng modelini çevirmək</td></tr><tr><td><code>cv2.GaussianBlur()</code></td><td>Gaussian filtr tətbiq etmək</td></tr><tr><td><code>cv2.Canny()</code></td><td>Kənarları aşkarlamaq</td></tr><tr><td><code>cv2.findContours()</code></td><td>Konturları tapmaq</td></tr><tr><td><code>cv2.threshold()</code></td><td>Qlobal hədləmə</td></tr></table>
+<pre><code># Quraşdırma (terminal / Colab)
+pip install opencv-python
+
+# Paket yoxlaması
+import cv2
+print("OpenCV:", cv2.__version__)</code></pre>
+<p>OpenCV əsasən aşağı səviyyəli görüntü əməliyyatları üçün uyğundur. Dərin öyrənmə modeli qurmaq üçün PyTorch/TensorFlow, hazır obyekt aşkarlama üçün isə Ultralytics YOLO kimi çərçivələrdən istifadə oluna bilər.</p></section>
+<section class="chapter" id="s8"><h2>18.8. Həndəsi çevrilmələr: ölçüləndirmə, döndərmə və kəsmə</h2>
+<p>Həndəsi çevrilmələr pikselin koordinatını dəyişir. <b>Resize</b> təsvirin enini və hündürlüyünü dəyişir. <b>Rotation</b> təsviri müəyyən bucaq qədər döndərir. <b>Crop</b> maraq doğuran sahəni seçir. Ölçünü kiçiltmək üçün <code>INTER_AREA</code>, böyütmək üçün <code>INTER_LINEAR</code> və ya <code>INTER_CUBIC</code> çox vaxt münasib seçimdir.</p>
+<pre><code>resized = cv2.resize(img, (640, 480))
+h, w = img.shape[:2]
+M = cv2.getRotationMatrix2D((w/2, h/2), 30, 1.0)
+rotated = cv2.warpAffine(img, M, (w, h))
+crop = img[100:300, 150:450]  # y1:y2, x1:x2</code></pre>
+<p>Ölçüləndirmə nisbəti qorunmadan aparılarsa obyekt uzana və ya yastılana bilər. Dərin öyrənmə modelləri üçün letterbox yanaşması (nisbəti saxlayıb boş sahə əlavə etmək) geniş istifadə olunur.</p></section>
+<section class="chapter" id="s9"><h2>18.9. Rəng və intensivlik üzrə emal</h2>
+<p>İntensivlik pikselin parlaqlıq qiymətidir. Parlaqlıq artırılması, kontrastın dəyişdirilməsi, gamma korreksiyası və histogram bərabərləşdirilməsi zəif görünən detalları üzə çıxara bilər.</p>
+<p>Sadə xətti çevirmə: <code>g(x,y)=αf(x,y)+β</code>. Burada α kontrastı, β parlaqlığı dəyişir. Məsələn, α=1.3 kontrastı artırır; β=20 bütün piksellərə 20 əlavə edir (qiymətlər diapazonda kəsilir).</p>
+<pre><code>bright = cv2.convertScaleAbs(img, alpha=1.2, beta=25)
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+equalized = cv2.equalizeHist(gray)</code></pre>
+<p>CLAHE lokal histogram bərabərləşdirməsidir: təsviri kiçik bloklara bölür və kontrastı lokal artırır. Həddən artıq tətbiq səs-küyü də gücləndirə bilər.</p></section>
+<section class="chapter" id="s10"><h2>18.10. Səs-küy növləri və təsvirlərin filtrlənməsi</h2>
+<p>Səs-küy görüntüyə təsadüfi və ya sistematik şəkildə qarışan arzuolunmaz dəyişiklikdir. Sensorun istiliyi, zəif işıq, ötürmə xətası və sıxılma artefaktları səbəb ola bilər.</p>
+<table><tr><th>Səs-küy</th><th>Görünüş</th><th>Uyğun ilkin yanaşma</th></tr><tr><td>Gaussian</td><td>Piksellərdə normal paylanmış kiçik dəyişmələr</td><td>Gaussian və ya digər hamarlaşdırıcı filtr</td></tr><tr><td>Salt-and-pepper</td><td>Ağ və qara nöqtələr</td><td>Median filtr</td></tr><tr><td>Speckle</td><td>Multiplikativ dənəvərlik, radar/ultrasəs</td><td>Median, adaptiv və ya xüsusi speckle filtrləri</td></tr><tr><td>Compression artifacts</td><td>Bloklaşma və halqalanma</td><td>Keyfiyyətli sıxılma, deblocking yanaşmaları</td></tr></table>
+<p>Filtrləmə səs-küyü azaldır, amma çox güclü filtr incə kənarları və teksturanı da silə bilər. Ona görə “ən hamar görüntü” həmişə “ən yaxşı görüntü” deyil.</p></section>
+<section class="chapter" id="s11"><h2>18.11. Gaussian, Median və Bilateral filtrlər</h2>
+<p><b>Gaussian blur</b> qonşu pikselləri məsafəyə görə çəkiləndirir. Mərkəzə yaxın piksellərin təsiri daha böyükdür. <b>Median blur</b> qonşuluqdakı qiymətlərin medianını götürür; kəskin impuls nöqtələrini aradan qaldırmaqda faydalıdır. <b>Bilateral filter</b> həm məkan yaxınlığını, həm də rəng/intensivlik oxşarlığını nəzərə alır; kənarları qorumağa çalışaraq hamarlaşdırır.</p>
+<table><tr><th>Filtr</th><th>Yaxşı tərəfi</th><th>Məhdudiyyəti</th><th>OpenCV</th></tr><tr><td>Gaussian</td><td>Ümumi hamarlaşdırma</td><td>Kənarları yumşalda bilər</td><td><code>GaussianBlur</code></td></tr><tr><td>Median</td><td>Salt-and-pepper səs-küyü</td><td>Hesablama nisbətən baha ola bilər</td><td><code>medianBlur</code></td></tr><tr><td>Bilateral</td><td>Kənar qorunması</td><td>Yavaş ola bilər</td><td><code>bilateralFilter</code></td></tr></table>
+<pre><code>g = cv2.GaussianBlur(img, (5,5), 0)
+m = cv2.medianBlur(img, 5)
+b = cv2.bilateralFilter(img, 9, 75, 75)</code></pre></section>
+<section class="chapter" id="s12"><h2>18.12. Kənarların aşkarlanması: Sobel, Laplacian və Canny</h2>
+<p>Kənar təsvirin intensivliyinin sürətlə dəyişdiyi sərhəddir. Obyektin formasını, xəttini və konturunu tapmaq üçün istifadə olunur. Sobel x və y istiqamətlərində birinci törəməni təxmini hesablayır. Laplacian ikinci törəməyə əsaslanır. Canny bir neçə mərhələni birləşdirir: səs-küyü yumşaltma, gradient hesabı, non-maximum suppression, iki hədd və hysteresis.</p>
+<p>Gradientin modulu: <code>G = √(Gx² + Gy²)</code>. İstiqamət: <code>θ = atan2(Gy,Gx)</code>. Gradient böyükdürsə, həmin yerdə kənar olma ehtimalı yüksəkdir.</p>
+<pre><code>gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+sx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)
+lap = cv2.Laplacian(gray, cv2.CV_64F)
+edges = cv2.Canny(gray, 80, 160)</code></pre>
+<p>Canny hədləri aşağı və yuxarı həddir. Aşağı hədd zəif kənar namizədlərini, yuxarı hədd güclü kənarları müəyyən edir. Hədləri görüntüyə uyğun seçmək lazımdır.</p></section>
+<section class="chapter" id="s13"><h2>18.13. Binarlaşdırma və thresholding üsulları</h2>
+<p>Binarlaşdırma boz təsviri iki sinifli təsvirə çevirir: ön plan və fon. Qlobal threshold hər pikselə eyni T həddini tətbiq edir: <code>g(x,y)=255</code>, əgər <code>f(x,y)&gt;T</code>, əks halda 0. Adaptive threshold lokal qonşuluqdan hədd hesablayır. Otsu metodu isə histogram əsasında siniflərarası dispersiyanı maksimum edən həddi avtomatik seçir.</p>
+<pre><code>_, binary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+adaptive = cv2.adaptiveThreshold(
+    gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+    cv2.THRESH_BINARY, 11, 2)
+_, otsu = cv2.threshold(
+    gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)</code></pre>
+<p>Qlobal hədləmə işıqlandırma sabit olanda yaxşı işləyə bilər. Sənəd şəkli kölgəli və qeyri-bərabər işıqlıdırsa adaptive threshold daha münasib ola bilər.</p></section>
+<section class="chapter" id="s14"><h2>18.14. Morfoloji əməliyyatlar: Erosion, Dilation, Opening və Closing</h2>
+<p>Morfoloji əməliyyatlar binar təsvirin formasını struktur elementi (kernel) ilə dəyişir. <b>Erosion</b> ön plan sahəsini daraldır və kiçik ağ nöqtələri silə bilər. <b>Dilation</b> ön planı genişləndirir və yaxın sahələri birləşdirə bilər. <b>Opening = erosion → dilation</b> kiçik ağ səs-küyü azaltmaq üçün; <b>Closing = dilation → erosion</b> kiçik qara boşluqları doldurmaq üçün istifadə olunur.</p>
+<pre><code>kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
+eroded = cv2.erode(binary, kernel, iterations=1)
+dilated = cv2.dilate(binary, kernel, iterations=1)
+opened = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel)
+closed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)</code></pre>
+<p>Kernel ölçüsü nəticəyə birbaşa təsir edir. Böyük kernel obyektin incə hissələrini yox edə və ya yaxın obyektləri birləşdirə bilər.</p></section>
+<section class="chapter" id="s15"><h2>18.15. Konturların aşkarlanması və təsvir xüsusiyyətlərinin çıxarılması</h2>
+<p>Kontur eyni rəngə və ya intensivliyə malik əlaqəli sahənin sərhəd nöqtələrinin ardıcıllığıdır. Konturların sahəsi, perimetri, sərhəd düzbucaqlısı, mərkəzi, dairəviliyi və aspekt nisbəti hesablana bilər.</p>
+<pre><code>contours, hierarchy = cv2.findContours(
+    binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+for c in contours:
+    area = cv2.contourArea(c)
+    perimeter = cv2.arcLength(c, True)
+    x,y,w,h = cv2.boundingRect(c)
+    if area > 100:
+        print(area, perimeter, (x,y,w,h))</code></pre>
+<p>Kontur əsaslı xüsusiyyətlər sadə formalı obyektlərdə faydalıdır. Mürəkkəb görüntülərdə işıq, örtülmə və fon dəyişməsi kontur çıxarılmasını çətinləşdirir. Dərin öyrənmə modelləri daha mürəkkəb xüsusiyyətləri məlumatdan öyrənə bilər.</p></section>
+<section class="chapter" id="s16"><h2>18.16. Təsvirlərin seqmentasiyasına giriş</h2>
+<p>Seqmentasiya təsviri mənalı sahələrə ayırır. <b>Semantic segmentation</b> hər pikselə sinif verir (bütün avtomobillər eyni sinif). <b>Instance segmentation</b> eyni sinifdəki ayrı-ayrı obyektləri fərqləndirir (avtomobil A və avtomobil B). <b>Panoptic segmentation</b> hər piksel üçün həm sinif, həm də obyekt identifikasiyasını birləşdirir.</p>
+<p>Sadə seqmentasiya threshold, rəng diapazonu, watershed və region-growing ilə aparıla bilər. Müasir yanaşmalar U-Net, Mask R-CNN və digər neyron şəbəkələrindən istifadə edir. Seqmentasiya nəticəsi maskadır: maskada obyektə aid piksellər 1, fon pikselləri 0 kimi kodlana bilər.</p></section>
+<section class="chapter" id="s17"><h2>18.17. Histogram və təsvirlərin statistik təhlili</h2>
+<p>Histogram piksel intensivliklərinin neçə dəfə rast gəlindiyini göstərir. X oxu intensivlik (0–255), Y oxu həmin qiymətin tezliyidir. Histogramın sola yığılması qaranlıq, sağa yığılması parlaq görüntüyə işarə edə bilər. Geniş yayılma yüksək kontrastla əlaqəli ola bilər.</p>
+<p>Əsas statistik göstəricilər: orta qiymət <code>μ = (1/N)Σxi</code>, dispersiya <code>σ²=(1/N)Σ(xi−μ)²</code>, standart kənarlaşma <code>σ=√σ²</code>. Bu göstəricilər təsvirin ümumi parlaqlığı və dəyişkənliyi barədə ilkin fikir verir, lakin məkan quruluşunu təkbaşına izah etmir.</p>
+<pre><code>hist = cv2.calcHist([gray], [0], None, [256], [0,256])
+mean, std = cv2.meanStdDev(gray)
+print("Orta:", mean[0][0], "Std:", std[0][0])</code></pre></section>
+<section class="chapter" id="s18"><h2>18.18. Python və OpenCV ilə ilkin kompüter görmə tətbiqləri</h2>
+<p>İlkin tətbiqdə məqsəd proqramın bütün mərhələlərini birləşdirməkdir: faylı oxumaq, ölçünü yoxlamaq, boz rəngə çevirmək, filtrləmək, kənarları tapmaq, konturları çəkmək və nəticəni saxlamaq.</p>
+<pre><code>import cv2
+img = cv2.imread("sample.jpg")
+if img is None:
+    raise ValueError("sample.jpg tapılmadı")
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+blur = cv2.GaussianBlur(gray, (5,5), 0)
+edges = cv2.Canny(blur, 70, 150)
+contours, _ = cv2.findContours(
+    edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+out = img.copy()
+cv2.drawContours(out, contours, -1, (0,255,0), 2)
+cv2.imwrite("edges.png", edges)
+cv2.imwrite("contours.png", out)</code></pre>
+<p>Bu klassik emal nümunəsi obyektin semantik sinfini öz-özünə öyrənmir. O, yalnız piksel dəyişmələri və konturlarla işləyir. “Bu kontur avtomobildir” qərarı üçün təlim edilmiş təsnifat/aşkarlama modeli tələb oluna bilər.</p></section>
+
+<section class="chapter" id="video"><h2>Video görüntüdən obyektlərin təsnifatı və aşkarlanması</h2>
+<p>Video ardıcıl kadrlardan (frame) ibarətdir. Video analitikası hər kadrı emal edir, nəticələri zaman üzrə birləşdirir. Tələbələr çox vaxt “təsnifat” və “aşkarlama” anlayışlarını qarışdırırlar: təsnifat təsvirə sinif etiketi verir; aşkarlama isə eyni zamanda obyektin yerini də tapır. Video üzərində aşkarlama modelinin hər kadrda tapdığı obyektləri göstərir. Obyektin kadrlar arasında eyni identifikatorla izlənməsi üçün əlavə tracking alqoritmi lazımdır.</p>
+<table><tr><th>Tapşırıq</th><th>Model çıxışı</th><th>Nümunə</th></tr><tr><td>Classification</td><td>Sinif ehtimalı</td><td>Bu kadrda avtobus var.</td></tr><tr><td>Detection</td><td>Sinif + bounding box + confidence</td><td>Avtobus (x1,y1,x2,y2).</td></tr><tr><td>Segmentation</td><td>Sinif + piksel maskası</td><td>Avtobusun dəqiq konturu.</td></tr><tr><td>Tracking</td><td>Detection + track ID</td><td>Eyni avtobus 17 nömrəli obyekt kimi izlənir.</td></tr></table>
+<h3>Video axınının arxitekturası</h3>
+<div class="diagram"><svg viewBox="0 0 900 180" role="img" aria-label="Video emal axını"><defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#155eef"/></marker></defs><g font-family="Arial" text-anchor="middle"><g fill="#edf4ff" stroke="#155eef" stroke-width="2"><rect x="8" y="45" width="135" height="75" rx="10"/><rect x="185" y="45" width="135" height="75" rx="10"/><rect x="362" y="45" width="135" height="75" rx="10"/><rect x="539" y="45" width="135" height="75" rx="10"/><rect x="716" y="45" width="175" height="75" rx="10"/></g><g fill="#173b70" font-size="16"><text x="75" y="77">Video / Kamera</text><text x="75" y="99" font-size="12">MP4, RTSP, USB</text><text x="252" y="77">Kadr çıxarışı</text><text x="252" y="99" font-size="12">FPS / resize</text><text x="429" y="77">YOLO modeli</text><text x="429" y="99" font-size="12">inference</text><text x="606" y="77">Postprocessing</text><text x="606" y="99" font-size="12">confidence / NMS</text><text x="803" y="77">Nəticə</text><text x="803" y="99" font-size="12">box / label / video</text></g><g stroke="#155eef" stroke-width="3" fill="none" marker-end="url(#ar2)"><path d="M143 82H180M320 82H357M497 82H534M674 82H711"/></g></g></svg></div>
+<h3>YOLO ilə hazır modeldən video üzərində inference</h3>
+<p>YOLO tipli model görüntüdə obyektləri aşkarlayır. Hazır çəkilərdən istifadə etdikdə model təlim keçmiş sinifləri tanıyır; öz laboratoriya obyektlərinizi tanıtmaq üçün ayrıca etiketlənmiş dataset və təlim mərhələsi lazımdır.</p>
+<pre><code># Google Colab hüceyrəsi
+!pip -q install ultralytics
+
+from ultralytics import YOLO
+model = YOLO("yolo26n.pt")  # kiçik, əvvəlcədən öyrədilmiş model
+results = model.predict(
+    source="/content/sample_video.mp4",
+    conf=0.25,
+    save=True,
+    stream=True
+)
+for result in results:
+    print(result.path, len(result.boxes))</code></pre>
+<p><code>conf=0.25</code> minimum confidence həddidir. Həddi artırmaq zəif əminlikli aşkarlamaları azalda bilər, amma həqiqi obyektlərin bir hissəsini də itirə bilər. <code>stream=True</code> uzun videoda nəticələri generator kimi bir-bir emal etməyə kömək edir.</p>
+<div class="note"><b>Confidence nə deməkdir?</b> Modelin aşkarlama nəticəsinə verdiyi əminlik göstəricisidir. 0.90 nəticəsi modelin həmin aşkarlamaya daha yüksək əminlik verdiyini bildirir, amma bu, avtomatik olaraq 90% real düzgünlük zəmanəti deyil. Modelin kalibrlənməsi və test nəticələri ayrıca yoxlanmalıdır.</div>
+<h3>Canlı kameradan aşkarlama</h3><pre><code>from ultralytics import YOLO
+model = YOLO("yolo26n.pt")
+# source=0 lokal kompüterdə ilk kameradır.
+# Colab serverinin source=0 kameranıza birbaşa çıxışı olmaya bilər.
+results = model.predict(source=0, show=True, conf=0.35)</code></pre>
+<div class="warn">Google Colab uzaq serverdə işləyir. Buna görə Colab-da lokal USB kameraya <code>source=0</code> ilə birbaşa çıxış adətən mümkün olmur. Colab üçün video faylını yükləyin və ya dəstəklənən şəbəkə axınından istifadə edin; lokal kompüterdə isə OpenCV/YOLO ilə webcam açın.</div>
+</section>
+<section class="chapter" id="real-examples"><h2>Real görüntülər üzərində nümunələr: ilkin təsvir, aşkarlama və nəticənin təhlili</h2>
+<p>Bu hissədə sxematik təsvir əvəzinə açıq texniki resurslarda istifadə olunan real foto nümunəsi ilə işləyirik. Aşağıdakı avtobus görüntüsü Ultralytics-in YOLO sənədlərində inference nümunəsi kimi göstərilən ictimai demo təsviridir. Şəkil internet bağlantısı olduqda yüklənir; dərsliyin əsas mətni isə offline da açılır.</p>
+<div class="realgrid"><div class="realcard"><b>Real giriş təsviri</b><img class="realphoto" src="https://ultralytics.com/images/bus.jpg" alt="Ultralytics bus demo real photo"><p class="small">Giriş: avtobus dayanacağı səhnəsi. Modelə ötürüləcək ilkin foto.</p></div>
+<div class="realcard"><b>Emal nəticəsi necə alınır?</b><p>Bu nümunədə tələbə öz Colab notebook-unda modeli işə salır. Model obyekt siniflərini, sərhəd qutularını və confidence qiymətlərini çıxarır. Nəticə şəkli `result.plot()` ilə annotasiya olunur və ayrıca fayl kimi saxlanır.</p><span class="pill">Object detection</span><span class="pill">Bounding box</span><span class="pill">Confidence</span></div></div>
+<h3>Real foto üzərində YOLO inference — Colab kodu</h3>
+<pre><code>!pip -q install ultralytics
+
+from ultralytics import YOLO
+from IPython.display import display
+from PIL import Image
+
+# Ultralytics-in rəsmi demo şəkli
+image_url = "https://ultralytics.com/images/bus.jpg"
+model = YOLO("yolo26n.pt")
+
+results = model.predict(source=image_url, conf=0.25)
+annotated = results[0].plot()  # BGR NumPy image
+display(Image.fromarray(annotated[:, :, ::-1]))
+results[0].save(filename="bus_detection_result.jpg")</code></pre>
+<div class="note"><b>Nəticəni necə oxumalı?</b> Hər çərçivə bir obyekt namizədinin yerini göstərir. Etiket sinfi, məsələn “bus” və ya “person” ola bilər. Confidence modelin həmin proqnoza verdiyi skordur. Bu skoru modelin ümumi dəqiqliyi ilə qarışdırmayın.</div>
+<h3>Eyni real fotoda klassik OpenCV emalı</h3>
+<pre><code>import cv2
+import matplotlib.pyplot as plt
+
+img = cv2.imread("bus.jpg")
+if img is None:
+    raise FileNotFoundError("bus.jpg yüklənməyib")
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+blur = cv2.GaussianBlur(gray, (5, 5), 0)
+edges = cv2.Canny(blur, 70, 150)
+
+fig, ax = plt.subplots(1, 3, figsize=(15, 5))
+ax[0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB)); ax[0].set_title("Original")
+ax[1].imshow(gray, cmap="gray"); ax[1].set_title("Grayscale")
+ax[2].imshow(edges, cmap="gray"); ax[2].set_title("Canny edges")
+for a in ax: a.axis("off")
+plt.show()</code></pre>
+<p>Burada iki fərqli yanaşmanı müqayisə edirik: OpenCV kənar və intensivlik dəyişmələrini hesablayır; YOLO isə öyrədilmiş model vasitəsilə semantik obyekt siniflərini müəyyən edir. Canny “avtobus” anlayışını bilmir — yalnız kənar strukturlarını çıxarır.</p>
+<p class="small">Mənbə: <a href="https://docs.ultralytics.com/modes/predict" target="_blank">Ultralytics Predict sənədləri</a> · <a href="https://docs.opencv.org/5.0/py_tutorials/py_imgproc/py_table_of_contents_imgproc.html" target="_blank">OpenCV Image Processing Tutorials</a>.</p>
+</section>
+<section class="chapter" id="dataset"><h2>Real dataset, proqramlar və Google Colab praktikası</h2>
+<h3>Dataset seçimi</h3>
+<table><tr><th>Dataset</th><th>İstifadə məqsədi</th><th>Qeyd</th></tr>
+<tr><td>COCO</td><td>Ümumi obyekt aşkarlanması, seqmentasiya, captioning</td><td>Gündəlik səhnələr və çoxsaylı siniflər; annotasiyaları ilə məşhurdur.</td></tr>
+<tr><td>Pascal VOC</td><td>Obyekt aşkarlanması və təsnifat</td><td>Tədris və klassik müqayisələr üçün nisbətən kiçik benchmark.</td></tr>
+<tr><td>Open Images</td><td>Çoxsaylı obyekt sinifləri və vizual əlaqələr</td><td>Böyük həcm; seçilmiş alt dəstlərlə işləmək məqsədəuyğundur.</td></tr>
+<tr><td>UA-DETRAC</td><td>Nəqliyyat videosunda avtomobil aşkarlanması və izləmə</td><td>Yol səhnələri və trafik analitikası üçün.</td></tr>
+<tr><td>Roboflow Universe</td><td>Layihəyə uyğun xüsusi dataset tapmaq</td><td>Lisenziyanı, annotasiya formatını və dataset keyfiyyətini ayrıca yoxlayın.</td></tr></table>
+<p>Dataset seçərkən siniflərin balansını, görüntülərin müxtəlifliyini, etiketlərin keyfiyyətini, lisenziyanı, şəxsi məlumat riskini və train/validation/test bölgüsünü yoxlayın. Eyni videodan ardıcıl kadrları təsadüfi şəkildə həm train, həm testə salmaq məlumat sızmasına (data leakage) səbəb ola bilər; videoları və ya çəkiliş sessiyalarını bütöv şəkildə ayırmaq daha düzgündür.</p>
+<h3>İstifadə olunan proqram və alətlər</h3>
+<div class="grid"><div class="tile"><b>Python</b><p>Əsas proqramlaşdırma dili.</p><a href="https://www.python.org/" target="_blank">Rəsmi sayt</a></div><div class="tile"><b>OpenCV</b><p>Şəkil/video oxuma və emal.</p><a href="https://opencv.org/" target="_blank">Rəsmi sayt</a></div><div class="tile"><b>Google Colab</b><p>Bulud notebook mühiti, ehtiyac olduqda GPU.</p><a href="https://colab.research.google.com/" target="_blank">Colab aç</a></div><div class="tile"><b>Ultralytics</b><p>YOLO ilə detection, segmentation, tracking.</p><a href="https://docs.ultralytics.com/" target="_blank">Sənədlər</a></div><div class="tile"><b>PyTorch</b><p>Dərin öyrənmə modeli qurmaq və təlim.</p><a href="https://pytorch.org/" target="_blank">Rəsmi sayt</a></div><div class="tile"><b>CVAT</b><p>Şəkil/video annotasiyası.</p><a href="https://www.cvat.ai/" target="_blank">Rəsmi sayt</a></div></div>
+<h3>Google Colab-da addım-addım iş prosesi</h3>
+<ol><li>colab.research.google.com saytını açın və yeni notebook yaradın.</li><li>Runtime → Change runtime type bölməsində GPU seçimi mövcuddursa aktivləşdirin. GPU əlçatanlığı və limitləri hesab/vaxt üzrə dəyişə bilər.</li><li>Kitabxanaları quraşdırın.</li><li>Dataset və ya öz videonuzu yükləyin.</li><li>Faylın mövcudluğunu və formatını yoxlayın.</li><li>Hazır model ilə inference edin.</li><li>Nəticə videosunu və metrikləri saxlayın; modelin səhvlərini əl ilə yoxlayın.</li></ol>
+<pre><code>!pip -q install opencv-python ultralytics matplotlib
+
+import cv2, torch
+print("OpenCV:", cv2.__version__)
+print("CUDA/GPU mövcuddurmu:", torch.cuda.is_available())
+if torch.cuda.is_available():
+    print(torch.cuda.get_device_name(0))</code></pre>
+<h3>Video faylını Colab-a yükləmək və emal etmək</h3><pre><code>from google.colab import files
+uploaded = files.upload()  # MP4 faylını seçin
+
+video_path = next(iter(uploaded.keys()))
+cap = cv2.VideoCapture(video_path)
+print("Açıldı:", cap.isOpened())
+print("FPS:", cap.get(cv2.CAP_PROP_FPS))
+print("Kadr sayı:", cap.get(cv2.CAP_PROP_FRAME_COUNT))
+cap.release()</code></pre>
+<div class="good">Bu fəsillə birlikdə təqdim olunan ZIP daxilində ayrıca <b>Colab notebook (.ipynb)</b> mövcuddur. Notebook kitabxanaların quraşdırılmasını, şəkil emalını, filtrləri, histogramı, kənar aşkarlanmasını və YOLO video inference nümunəsini ardıcıl hüceyrələrdə göstərir.</div>
+</section>
+<section class="chapter" id="interactive"><h2>İnteraktiv laboratoriya: piksel, threshold və filtr parametrləri</h2>
+<p>Aşağıdakı nümunə real kamera şəkli deyil; öyrənmə üçün brauzerdə yaradılan sintetik təsvir üzərində parametrlərin təsirini göstərir.</p>
+<div class="grid"><div class="tile"><label for="thresh">Threshold həddi: <b id="thv">128</b></label><input id="thresh" type="range" min="0" max="255" value="128"><canvas id="thcanvas" width="420" height="180"></canvas><div class="small">Hədd artdıqca ağ piksel sayı azalır.</div></div>
+<div class="tile"><label for="blur">Hamarlaşdırma gücü: <b id="blv">1</b></label><input id="blur" type="range" min="1" max="9" step="2" value="1"><canvas id="blcanvas" width="420" height="180"></canvas><div class="small">Sadə vizual simulyasiya: blokların orta qiymətlə yumşaldılması.</div></div></div>
+<h3>RGB rəng kanallarının qarışığı</h3><div class="grid"><div class="tile"><label>R: <span id="rv">180</span></label><input id="rr" type="range" min="0" max="255" value="180"></div><div class="tile"><label>G: <span id="gv">90</span></label><input id="gg" type="range" min="0" max="255" value="90"></div><div class="tile"><label>B: <span id="bv">40</span></label><input id="bb" type="range" min="0" max="255" value="40"></div></div><div id="swatch" style="height:75px;border-radius:12px;border:1px solid #cbd5e1"></div><div class="result" id="rgbresult"></div>
+</section>
+<section class="lab" id="lab"><h2>Laboratoriya işi №18: OpenCV ilə təsvir emalı və video kadrlarında obyektlərin aşkarlanması</h2>
+<p><b>Məqsəd:</b> rəqəmsal təsvirin əsas parametrlərini öyrənmək, OpenCV vasitəsilə ilkin emal əməliyyatlarını yerinə yetirmək və hazır obyekt aşkarlama modeli ilə video üzərində nəticə almaq.</p>
+<h3>Laboratoriyanın A hissəsi — klassik görüntü emalı</h3>
+<ol><li>Google Colab notebook-u açın və OpenCV-ni quraşdırın.</li><li>Özünüzə aid, açıq lisenziyalı və ya müəllif hüquqları icazə verən bir şəkil yükləyin.</li><li><code>shape</code>, <code>dtype</code>, piksel qiymətləri və kanal sayını təyin edin.</li><li>BGR→RGB və BGR→Grayscale çevirmələrini edin.</li><li>Resize, crop və rotation tətbiq edin.</li><li>Gaussian, Median və Bilateral filtrləri müqayisə edin.</li><li>Sobel və Canny ilə kənarları tapın; threshold və morfoloji əməliyyatları yoxlayın.</li><li>Konturları, sahəni və perimetri hesablayın; histogramı qurun.</li></ol>
+<h3>Laboratoriyanın B hissəsi — video obyekt aşkarlanması</h3>
+<ol><li>Qısa, icazəli video seçin (məsələn, küçə/avtodayanacaq səhnəsi; şəxslərin identifikasiyasına yönəlməyin).</li><li>Colab-a yükləyin və FPS/kadr ölçüsünü oxuyun.</li><li>YOLO-nun əvvəlcədən öyrədilmiş yüngül modelini yükləyin.</li><li>Video üzərində inference edin; confidence həddini 0.20, 0.35 və 0.50 üçün müqayisə edin.</li><li>Aşkarlanan sinifləri və obyekt sayını qeyd edin.</li><li>Yanlış müsbət (FP) və yanlış mənfi (FN) nümunələrini seçib səbəblərini izah edin.</li><li>Nəticə videosunu və qısa hesabatı saxlayın.</li></ol>
+<h3>Qiymətləndirmə meyarları</h3><table><tr><th>Meyar</th><th>Bal</th></tr><tr><td>Şəkil yükləmə, ölçü və kanal təhlili</td><td>10</td></tr><tr><td>Rəng çevirmə və həndəsi əməliyyatlar</td><td>15</td></tr><tr><td>Filtrlərin müqayisəsi və əsaslandırma</td><td>15</td></tr><tr><td>Kənar, threshold, morfologiya və konturlar</td><td>20</td></tr><tr><td>Video inference və confidence müqayisəsi</td><td>20</td></tr><tr><td>Nəticələrin təhlili, məxfilik və hesabat</td><td>20</td></tr><tr><th>Yekun</th><th>100</th></tr></table>
+<p><b>Hesabatda olmalıdır:</b> məqsəd, aparat/proqram mühiti, dataset/video mənbəyi və lisenziya, kod, ilkin və emal edilmiş şəkillər, parametrlər, nəticələr, səhv təhlili, məhdudiyyətlər və nəticə.</p>
+</section>
+<section class="chapter" id="tasks"><h2>Praktiki tapşırıqlar</h2><ol>
+<li>640×480 ölçülü RGB təsvirin sıxılmamış 8-bit yaddaş həcmini bayt və MiB ilə hesablayın.</li>
+<li>Eyni təsviri RGB, BGR və Grayscale formatlarında göstərin; kanal sırasının səhv seçilməsinin nəticəsini izah edin.</li>
+<li>Şəkli 50%, 150% ölçüləndirin və keyfiyyət fərqini müşahidə edin.</li>
+<li>Gaussian, Median və Bilateral filtrləri eyni şəkil üzərində müqayisə edin.</li>
+<li>Canny üçün fərqli iki hədd cütü seçin və kənar xəritələrinin fərqini izah edin.</li>
+<li>Otsu və Adaptive Threshold nəticələrini qeyri-bərabər işıqlandırılmış sənəd fotosunda müqayisə edin.</li>
+<li>Erosion və Dilation əməliyyatlarının obyekt sahəsinə təsirini ölçün.</li>
+<li>Konturlar üçün sahə, perimetr və bounding box hesablayın.</li>
+<li>COCO və UA-DETRAC datasetlərinin hansı tədqiqat sualları üçün uyğun olduğunu müqayisə edin.</li>
+<li>YOLO ilə qısa videoda avtomobil və piyadaları aşkarlayın; confidence həddinin nəticəyə təsirini cədvəldə göstərin.</li>
+<li>Eyni videonun kadrlarını təsadüfi train/test bölməsinə salmağın data leakage riskini izah edin.</li>
+<li>Laboratoriya otağında USB kamera ilə görüntü alıb sistem arxitekturasını blok-sxemlə təqdim edin.</li>
+</ol></section>
+<section class="quiz" id="quiz"><h2>Özünü yoxlama sualları</h2><div id="questions"></div><button onclick="gradeQuiz()">Cavabları yoxla</button><button class="secondary" onclick="resetQuiz()">Yenidən başla</button><div class="result" id="quizresult">Sualları cavablandırın və nəticəni yoxlayın.</div></section>
+<section class="refs" id="refs"><h2>İstifadə olunan ədəbiyyat</h2><ol>
+<li>OpenCV Documentation, Image Processing Tutorials. <a href="https://docs.opencv.org/5.0/py_tutorials/py_imgproc/py_table_of_contents_imgproc.html" target="_blank">Rəsmi sənədlər</a>.</li>
+<li>OpenCV, Image Processing (imgproc) Module. <a href="https://docs.opencv.org/5.0/tutorials/imgproc/table_of_content_imgproc.html" target="_blank">Rəsmi təlimatlar</a>.</li>
+<li>Google Colaboratory FAQ. <a href="https://research.google.com/colaboratory/faq.html" target="_blank">Colab FAQ</a>.</li>
+<li>Ultralytics Documentation, Predict Mode. <a href="https://docs.ultralytics.com/modes/predict" target="_blank">YOLO inference sənədləri</a>.</li>
+<li>Ultralytics Documentation, Train Mode. <a href="https://docs.ultralytics.com/modes/train" target="_blank">Model təlimi</a>.</li>
+<li>Lin, T.-Y. et al. (2014). Microsoft COCO: Common Objects in Context. ECCV. <a href="https://cocodataset.org/" target="_blank">COCO dataset</a>.</li>
+<li>Everingham, M. et al. The PASCAL Visual Object Classes Challenge. <a href="http://host.robots.ox.ac.uk/pascal/VOC/" target="_blank">PASCAL VOC</a>.</li>
+<li>Wojke, N. et al. (2017). Simple Online and Realtime Tracking with a Deep Association Metric. <a href="https://arxiv.org/abs/1703.07402" target="_blank">Deep SORT</a>.</li>
+<li>Bradski, G. (2000). The OpenCV Library. Dr. Dobb’s Journal.</li>
+<li>Szeliski, R. (2022). Computer Vision: Algorithms and Applications, 2nd ed. <a href="https://szeliski.org/Book/" target="_blank">Kitabın saytı</a>.</li>
+<li>Gonzalez, R. C. & Woods, R. E. Digital Image Processing, 4th ed. Pearson.</li>
+</ol><div class="note"><b>Akademik qeyd:</b> Dataset və proqramların istifadə şərtləri, lisenziyaları, model çəkilərinin kommersiya istifadəsi və şəxsi məlumat tələbləri layihə başlamazdan əvvəl ayrıca yoxlanmalıdır.</div></section>
+</main></div><footer>MDU · Süni intellekt və maşın öyrənməsi · Fəsil 18</footer>
+<script>
+const $=id=>document.getElementById(id);
+function drawBase(c,threshold=128,blur=1){let x=c.getContext('2d'),w=c.width,h=c.height;x.clearRect(0,0,w,h);for(let j=0;j<9;j++)for(let i=0;i<21;i++){let v=Math.max(0,Math.min(255,Math.round(30+i*9+j*7+35*Math.sin(i*.7+j*.5))));if(threshold!==null)v=v>threshold?255:20;x.fillStyle=`rgb(${v},${v},${v})`;x.fillRect(i*20+1,j*19+1,18,17)}}
+function render(){let t=+$('thresh').value,b=+$('blur').value;$('thv').textContent=t;$('blv').textContent=b;drawBase($('thcanvas'),t);drawBase($('blcanvas'),null);let c=$('blcanvas').getContext('2d'),im=c.getImageData(0,0,420,180),d=im.data,copy=new Uint8ClampedArray(d);for(let y=0;y<180;y++)for(let x=0;x<420;x++){let sum=0,n=0;for(let yy=Math.max(0,y-b);yy<=Math.min(179,y+b);yy+=b)for(let xx=Math.max(0,x-b);xx<=Math.min(419,x+b);xx+=b){sum+=copy[(yy*420+xx)*4];n++}let k=(y*420+x)*4;d[k]=d[k+1]=d[k+2]=sum/n}c.putImageData(im,0,0)}
+['thresh','blur'].forEach(id=>$(id).addEventListener('input',render));render();
+function rgb(){let r=+$('rr').value,g=+$('gg').value,b=+$('bb').value;$('rv').textContent=r;$('gv').textContent=g;$('bv').textContent=b;$('swatch').style.background=`rgb(${r},${g},${b})`;$('rgbresult').textContent=`RGB(${r}, ${g}, ${b}) · təxmini grayscale Y = ${(0.299*r+0.587*g+0.114*b).toFixed(1)}`};['rr','gg','bb'].forEach(id=>$(id).addEventListener('input',rgb));rgb();
+const qs=[
+["OpenCV imread() rəngli təsviri standart olaraq hansı kanal ardıcıllığında qaytarır?",["RGB","BGR","HSV","CMYK"],1],
+["Massivin shape nəticəsi (480, 640, 3)-dür. Bu nə deməkdir?",["640 sətir, 480 sütun","480 sətir, 640 sütun, 3 kanal","3 sətir, 480 sütun","480 piksel ümumi"],1],
+["Salt-and-pepper səs-küyü üçün hansı filtr çox vaxt münasibdir?",["Median","Gaussian","Laplacian","Resize"],0],
+["Canny alqoritmi əsasən nəyi aşkarlayır?",["Rəng temperaturunu","Kənarları","Obyekt ID-sini","Fayl formatını"],1],
+["Opening əməliyyatının ardıcıllığı hansıdır?",["Dilation sonra erosion","Erosion sonra dilation","İki dəfə blur","Threshold sonra resize"],1],
+["Classification və detection arasındakı əsas fərq nədir?",["Classification yer göstərir, detection yox","Detection siniflə yanaşı obyektin yerini də verir","Heç bir fərq yoxdur","Detection yalnız boz təsvirlə işləyir"],1],
+["HSV modelində V nəyi ifadə edir?",["Hue","Saturation","Value/parlaqlıq","Video"],2],
+["Google Colab-da source=0 niyə adətən lokal kameranı açmır?",["Python qadağandır","Colab uzaq serverdə işləyir","OpenCV video oxumur","GPU tələb olunur"],1],
+["Thresholding-in əsas məqsədi nədir?",["Təsviri iki və ya daha çox intensivlik sinfinə ayırmaq","Kameranı kalibrləmək","Videonu sıxmaq","Modeli öyrətmək"],0],
+["Video kadrlarını təsadüfi train və testə bölmək hansı riski yarada bilər?",["Data leakage","Daha yüksək çözünürlük","Rəng çevrilməsi","GPU qızması"],0],
+["YOLO confidence həddini artırmaq adətən nə edə bilər?",["Zəif əminlikli aşkarlamaları azalda bilər, lakin bəzi obyektləri itirə bilər","Bütün obyektləri mütləq tapır","Video FPS-ni həmişə ikiqat artırır","Dataseti avtomatik etiketləyir"],0],
+["Tracking-in əsas məqsədi nədir?",["Kadrlar boyunca obyekt kimliyini izləmək","Yalnız bir şəkli boz rəngə çevirmək","Histogram qurmaq","Səs-küy əlavə etmək"],0]
+];
+function buildQuiz(){ $('questions').innerHTML=qs.map((q,i)=>`<div class="quizq" data-i="${i}"><b>${i+1}. ${q[0]}</b>${q[1].map((a,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${a}</label>`).join('')}<div class="small" id="fb${i}"></div></div>`).join('')}
+function gradeQuiz(){let score=0;qs.forEach((q,i)=>{let v=document.querySelector(`input[name=q${i}]:checked`),f=$('fb'+i);if(v&&+v.value===q[2]){score++;f.textContent='Doğru cavab.';f.className='correct'}else{f.textContent='Düzgün cavab: '+q[1][q[2]];f.className='wrong'}});$('quizresult').textContent=`Nəticə: ${score}/${qs.length} (${Math.round(score/qs.length*100)}%).`;}
+function resetQuiz(){document.querySelectorAll('#questions input').forEach(x=>x.checked=false);qs.forEach((q,i)=>{$('fb'+i).textContent='';$('fb'+i).className='small'});$('quizresult').textContent='Sualları cavablandırın və nəticəni yoxlayın.'}
+buildQuiz();
+
+document.querySelectorAll('pre').forEach((pre,i)=>{
+  const head=document.createElement('div'); head.className='codehead';
+  const label=document.createElement('span'); label.textContent='Python / Colab kod nümunəsi';
+  const btn=document.createElement('button'); btn.className='copybtn'; btn.textContent='Kodu köçür';
+  btn.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(pre.innerText);btn.textContent='Köçürüldü ✓';setTimeout(()=>btn.textContent='Kodu köçür',1400)}catch(e){btn.textContent='Seçib köçürün'}});
+  head.append(label,btn); pre.parentNode.insertBefore(head,pre);
+});
+</script><script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

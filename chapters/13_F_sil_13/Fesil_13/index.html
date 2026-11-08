@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="az"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fəsil 13. Neyron şəbəkələrinin öyrədilməsi və riyazi mexanizmləri</title>
+<style>
+:root{--navy:#122b50;--blue:#2563eb;--cyan:#0891b2;--purple:#7c3aed;--green:#059669;--orange:#ea580c;--red:#dc2626;--ink:#243047;--muted:#64748b;--paper:#f4f7fb;--line:#dce5f0}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.72 system-ui,"Segoe UI",sans-serif}
+header{background:linear-gradient(120deg,#10294e,#2459a6 58%,#0786a5);color:#fff;padding:40px max(20px,calc((100% - 1120px)/2))}
+header .tag{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;opacity:.85}h1{font-size:clamp(2rem,4.8vw,3.2rem);line-height:1.15;margin:.45rem 0 1rem}header p{max-width:900px;font-size:1.08rem}
+.layout{max-width:1200px;margin:auto;padding:22px;display:grid;grid-template-columns:275px minmax(0,1fr);gap:22px}
+nav{position:sticky;top:14px;align-self:start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;max-height:calc(100vh - 28px);overflow:auto}
+nav strong{display:block;color:var(--navy);margin-bottom:9px}nav a{display:block;text-decoration:none;color:#40516b;padding:5px 7px;border-radius:7px;font-size:.88rem}nav a:hover{background:#eaf2ff;color:var(--blue)}
+main{min-width:0}.card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:24px;margin:0 0 19px;box-shadow:0 5px 20px #18345b0a;min-width:0;overflow:hidden}
+h2{color:var(--navy);font-size:1.52rem;line-height:1.3;margin:0 0 13px}h3{color:#194b8c;margin:23px 0 8px;font-size:1.13rem}h4{margin:12px 0 5px;color:#334155}
+p{margin:.65rem 0}.lead{font-size:1.05rem;color:#42536b}.note{border-left:4px solid var(--cyan);background:#ecfeff;padding:13px 16px;border-radius:8px;margin:15px 0}.warn{border-left:4px solid var(--orange);background:#fff7ed;padding:13px 16px;border-radius:8px;margin:15px 0}
+.formula{background:#101d35;color:#e7f0ff;border-radius:12px;padding:15px 18px;margin:13px 0;overflow-x:auto;font:1.02rem/1.9 ui-monospace,Consolas,monospace;max-width:100%}
+.small{font-size:.9rem;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:12px}.tile{border:1px solid var(--line);border-radius:12px;padding:14px;background:linear-gradient(145deg,#fff,#f6f9ff)}
+.tile b{color:#174c91}.pill{display:inline-block;padding:3px 9px;border-radius:20px;background:#e8efff;color:#1d4ed8;font-size:.8rem;font-weight:700}
+button{border:0;background:var(--blue);color:white;padding:10px 15px;border-radius:9px;cursor:pointer;font-weight:650}button:hover{filter:brightness(.92)}button.secondary{background:#e8eef8;color:#18345b}button.green{background:var(--green)}
+input,select{padding:9px;border:1px solid #bdcbe0;border-radius:8px;font:inherit;max-width:100%}label{display:block;font-size:.9rem;color:#475569;margin:7px 0 3px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:.92rem}th,td{border:1px solid var(--line);padding:9px;text-align:left}th{background:#edf4ff;color:#18345b}
+.diagram{display:block;width:100%;max-width:100%;min-width:0;overflow:hidden;background:linear-gradient(145deg,#f8fbff,#eef5ff);border:1px solid #d8e7fb;border-radius:14px;padding:clamp(8px,2vw,14px);margin:15px 0}
+svg{display:block;width:100%;max-width:100%;height:auto;max-height:320px;margin:0 auto;overflow:hidden}.diagram svg{max-height:300px}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:end}.controls>div{min-width:125px}.result{font-weight:700;color:#047857;background:#ecfdf5;padding:10px;border-radius:9px;margin-top:10px}
+.code{background:#0c1729;color:#dbeafe;border-radius:12px;padding:17px;overflow:auto;font:.89rem/1.65 ui-monospace,Consolas,monospace;white-space:pre;max-width:100%}
+.quizq{border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}.quizq label{display:flex;gap:8px;align-items:flex-start}.feedback{font-size:.9rem;margin-top:8px}
+footer{text-align:center;color:var(--muted);padding:28px}
+@media(max-width:850px){.layout{grid-template-columns:1fr;padding:13px}nav{position:relative;top:auto;max-height:none}header{padding:28px 18px}}
+@media(max-width:600px){.card{padding:16px}body{font-size:15px}h2{font-size:1.3rem}.diagram{padding:6px}.diagram svg{max-height:230px}}
+
+.nn-figure{margin:18px 0;padding:14px;background:linear-gradient(145deg,#f8fbff,#eef5ff);border:1px solid #cfe0f5;border-radius:15px;overflow:hidden}
+.nn-figure svg{width:100%;height:auto;max-height:none;display:block}
+.nn-figure figcaption{font-size:.9rem;color:#52647d;text-align:center;line-height:1.55;margin:10px 4px 2px}
+.nn-explain{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:10px;margin:12px 0}
+.nn-explain>div{background:#f8fafc;border:1px solid #dbe5f1;border-radius:10px;padding:12px}
+.nn-explain b{color:#174c91}
+.math-step{border-left:4px solid #7c3aed;background:#f5f3ff;padding:12px 15px;border-radius:8px;margin:12px 0}
+@media(max-width:600px){.nn-figure{padding:7px}.nn-figure figcaption{font-size:.82rem}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style></head><body>
+<header><div class="tag">MDU · Riyaziyyat və İnformasiya texnologiyaları fakültəsi</div><h1>Fəsil 13. Neyron şəbəkələrinin öyrədilməsi və riyazi mexanizmləri</h1><p>Neyron şəbəkəsi necə öyrənir? Xəta necə hesablanır, gradient necə tapılır, çəkilər necə yenilənir? Bu fəsildə bütün proses sadə ədədi nümunələr, interaktiv hesablayıcılar və Python kodları ilə izah olunur.</p><div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="layout"><nav><strong>Fəsil 13 — Mündəricat</strong>
+<a href="#s131">13.1. Neyron şəbəkəsinin öyrədilməsi anlayışı</a><a href="#s132">13.2. İtki funksiyası (Loss Function)</a><a href="#s133">13.3. Mean Squared Error və Cross-Entropy</a><a href="#s134">13.4. Gradient anlayışı</a><a href="#s135">13.5. Gradient Descent alqoritmi</a><a href="#s136">13.6. Learning Rate və onun təsiri</a><a href="#s137">13.7. Backpropagation alqoritmi</a><a href="#s138">13.8. Zəncir qaydası (Chain Rule)</a><a href="#s139">13.9. Çəkilərin yenilənməsi mexanizmi</a><a href="#s1310">13.10. Epoch, Batch və Iteration</a><a href="#s1311">13.11. SGD, Momentum, RMSprop və Adam</a><a href="#s1312">13.12. Neyron şəbəkəsində overfitting</a><a href="#s1313">13.13. Dropout və digər regularization yanaşmaları</a><a href="#s1314">13.14. Öyrənmə prosesinin qrafiklə təhlili</a><a href="#tasks">Praktiki tapşırıqlar</a><a href="#quiz">Özünü yoxlama sualları</a><a href="#refs">İstifadə olunan ədəbiyyat</a><a href="#lab">Laboratoriya işi №13</a></nav>
+<main>
+<section class="card"><span class="pill">Fəslin məqsədi</span><h2>Öyrənmə nəticələri</h2><p class="lead">Bu fəslin sonunda tələbə neyron şəbəkəsinin təlim mexanizmini riyazi baxımdan izah etməli, itki funksiyasını hesablamalı, gradient descent və backpropagation addımlarını əl ilə izləməli, optimizatorları müqayisə etməli və Python-da birqatlı/çoxqatlı modelləri öyrətməlidir.</p>
+<div class="grid"><div class="tile"><b>Hesablama</b><p>MSE və Cross-Entropy itkilərini nümunə üzərində hesablayır.</p></div><div class="tile"><b>Riyaziyyat</b><p>Törəmə, gradient və zəncir qaydasının rolunu açıqlayır.</p></div><div class="tile"><b>Alqoritm</b><p>Gradient Descent və Backpropagation addımlarını izləyir.</p></div><div class="tile"><b>Təcrübə</b><p>Learning rate, batch, epoch və regularization təsirini müqayisə edir.</p></div></div></section>
+
+<section class="card" id="s131"><h2>13.1. Neyron şəbəkəsinin öyrədilməsi anlayışı</h2>
+<p>Neyron şəbəkəsinin öyrədilməsi — modelin çəkilərini (weights) və sürüşmə əmsallarını (bias) verilənlər əsasında elə tənzimləmək prosesidir ki, modelin proqnozları həqiqi hədəf qiymətlərə mümkün qədər yaxın olsun. Şəbəkə əvvəlcə ilkin parametrlərlə proqnoz yaradır, sonra proqnoz ilə düzgün cavab arasındakı fərq itki funksiyası ilə ölçülür. Bu itkinin parametrlərə görə dəyişmə istiqaməti hesablanır və parametrlər yenilənir.</p>
+<p>Öyrənmə prosesi adətən təkrarlanan dövr kimi təsvir olunur: <b>irəli yayılma → itkinin hesablanması → geriyə yayılma → parametr yenilənməsi</b>. Bu dövr çoxlu mini-batch-lər və epoch-lar boyunca təkrarlanır.</p>
+<div class="diagram"><svg viewBox="0 0 900 235" aria-label="Neyron şəbəkəsinin təlim dövrü"><defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#334155"/></marker></defs>
+<g font-size="16" text-anchor="middle" font-weight="bold"><rect x="15" y="65" width="170" height="95" rx="14" fill="#dbeafe" stroke="#2563eb"/><text x="100" y="105" fill="#1e40af">Giriş</text><text x="100" y="130" fill="#1e40af">verilənləri</text>
+<rect x="245" y="65" width="170" height="95" rx="14" fill="#ede9fe" stroke="#7c3aed"/><text x="330" y="105" fill="#5b21b6">Forward</text><text x="330" y="130" fill="#5b21b6">Propagation</text>
+<rect x="475" y="65" width="170" height="95" rx="14" fill="#ffedd5" stroke="#ea580c"/><text x="560" y="105" fill="#9a3412">Loss</text><text x="560" y="130" fill="#9a3412">hesablanır</text>
+<rect x="705" y="65" width="180" height="95" rx="14" fill="#dcfce7" stroke="#059669"/><text x="795" y="105" fill="#047857">Backprop +</text><text x="795" y="130" fill="#047857">yenilənmə</text></g>
+<g stroke="#334155" stroke-width="3" marker-end="url(#arr)"><path d="M185 112H238"/><path d="M415 112H468"/><path d="M645 112H698"/></g><path d="M795 165V205H330V168" fill="none" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arr)"/><text x="560" y="225" text-anchor="middle" font-size="13" fill="#5b21b6">Növbəti batch / iterasiya</text></svg></div>
+
+<figure class="nn-figure">
+<svg viewBox="0 0 940 390" role="img" aria-label="Üç girişli, dörd gizli neyronlu və iki çıxışlı tam əlaqəli neyron şəbəkəsi">
+<defs>
+ <marker id="nnBlueArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#2563eb"/></marker>
+ <marker id="nnRedArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#dc2626"/></marker>
+</defs>
+<rect x="12" y="12" width="205" height="360" rx="18" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+<rect x="365" y="12" width="215" height="360" rx="18" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+<rect x="730" y="12" width="198" height="360" rx="18" fill="#dcfce7" stroke="#059669" stroke-width="2"/>
+<g font-size="18" font-weight="bold" text-anchor="middle"><text x="114" y="42" fill="#075985">Giriş qatı</text><text x="472" y="42" fill="#5b21b6">Gizli qat</text><text x="829" y="42" fill="#047857">Çıxış qatı</text></g>
+<!-- connections -->
+<g stroke="#94a3b8" stroke-width="2" opacity=".9">
+<path d="M155 100L425 88M155 100L425 160M155 100L425 232M155 100L425 304"/>
+<path d="M155 195L425 88M155 195L425 160M155 195L425 232M155 195L425 304"/>
+<path d="M155 290L425 88M155 290L425 160M155 290L425 232M155 290L425 304"/>
+<path d="M475 88L790 150M475 88L790 245M475 160L790 150M475 160L790 245M475 232L790 150M475 232L790 245M475 304L790 150M475 304L790 245"/>
+</g>
+<g fill="#38bdf8" stroke="#0369a1" stroke-width="2"><circle cx="130" cy="100" r="25"/><circle cx="130" cy="195" r="25"/><circle cx="130" cy="290" r="25"/></g>
+<g fill="#a78bfa" stroke="#6d28d9" stroke-width="2"><circle cx="450" cy="88" r="25"/><circle cx="450" cy="160" r="25"/><circle cx="450" cy="232" r="25"/><circle cx="450" cy="304" r="25"/></g>
+<g fill="#34d399" stroke="#047857" stroke-width="2"><circle cx="815" cy="150" r="28"/><circle cx="815" cy="245" r="28"/></g>
+<g font-size="15" font-weight="bold" text-anchor="middle" fill="#102a43"><text x="130" y="106">x₁</text><text x="130" y="201">x₂</text><text x="130" y="296">x₃</text><text x="450" y="94">h₁</text><text x="450" y="166">h₂</text><text x="450" y="238">h₃</text><text x="450" y="310">h₄</text><text x="815" y="156">ŷ₁</text><text x="815" y="251">ŷ₂</text></g>
+<g font-size="14" fill="#334155"><text x="235" y="75">W⁽¹⁾, b⁽¹⁾</text><text x="610" y="75">W⁽²⁾, b⁽²⁾</text><text x="115" y="345" text-anchor="middle">3 əlamət</text><text x="472" y="345" text-anchor="middle">4 gizli neyron</text><text x="829" y="345" text-anchor="middle">2 çıxış</text></g>
+<path d="M230 185H340" stroke="#2563eb" stroke-width="4" marker-end="url(#nnBlueArrow)"/><path d="M595 185H700" stroke="#2563eb" stroke-width="4" marker-end="url(#nnBlueArrow)"/>
+<text x="285" y="168" text-anchor="middle" fill="#1d4ed8" font-size="13">irəli siqnal</text><text x="648" y="168" text-anchor="middle" fill="#1d4ed8" font-size="13">irəli siqnal</text>
+<text x="470" y="385" text-anchor="middle" fill="#475569" font-size="13">Hər ox öyrənilən çəki parametrini, hər neyron isə xətti birləşmə + aktivləşməni təmsil edir.</text>
+</svg>
+<figcaption>Şəkil 13.1. Çoxqatlı tam əlaqəli neyron şəbəkəsinin arxitekturası. Bu nümunədə 3 giriş xüsusiyyəti 4 gizli neyron vasitəsilə emal edilir və 2 çıxış qiyməti formalaşır.</figcaption>
+</figure>
+<div class="nn-explain">
+<div><b>Giriş qatı — x</b><p>Hər giriş neyronu bir xüsusiyyəti qəbul edir. Məsələn, tələbənin davamiyyət faizi, tapşırıq balı və aralıq imtahan balı.</p></div>
+<div><b>Gizli qat — h</b><p>Girişlər çəkilərlə vurulur, bias əlavə edilir və aktivləşmə funksiyasından keçirilir. Şəbəkə burada mürəkkəb əlaqələri öyrənir.</p></div>
+<div><b>Çıxış qatı — ŷ</b><p>Tapşırığın növünə görə bir ədəd proqnoz, sinif ehtimalı və ya bir neçə sinif üçün ehtimallar yarada bilər.</p></div>
+</div>
+<div class="math-step"><b>Bu diaqramın riyazi yazılışı:</b><br>
+z⁽¹⁾ = xW⁽¹⁾ + b⁽¹⁾; &nbsp; a⁽¹⁾ = φ(z⁽¹⁾)<br>
+z⁽²⁾ = a⁽¹⁾W⁽²⁾ + b⁽²⁾; &nbsp; ŷ = ψ(z⁽²⁾)<br>
+Burada W — çəkilər matrisi, b — bias vektoru, φ və ψ — aktivləşmə funksiyalarıdır.</div>
+
+<h3>Sadə nümunə: modelin səhvi</h3><p>Tələbənin yekun balını proqnozlaşdıran model 74 bal proqnozlaşdırıb, real nəticə 80 baldır. Səhv (proqnoz − həqiqət) = 74−80 = −6 baldır. Bu fərq modelin parametrlərini hansı istiqamətdə dəyişməyin lazım olduğunu təkbaşına demir; bunun üçün itki funksiyasının parametrə görə törəməsi — gradient hesablanmalıdır.</p>
+<div class="formula">y = 80,   ŷ = 74   ⇒   e = ŷ − y = −6</div>
+<div class="note"><b>Əsas fikir:</b> Öyrənmə zamanı model sadəcə cavabı yadda saxlamır; parametrləri dəyişərək verilənlərdəki ümumi əlaqəni öyrənməyə çalışır. Buna görə təlim, validation və test dəstləri ayrı saxlanılır.</div></section>
+
+<section class="card" id="s132"><h2>13.2. İtki funksiyası (Loss Function)</h2>
+<p>İtki funksiyası modelin proqnozunun hədəfdən nə qədər uzaq olduğunu ədədi qiymətlə ifadə edir. Təlim alqoritmi bu qiyməti azaltmağa çalışır. Seçilən loss funksiyası məsələnin növünə uyğun olmalıdır: reqressiyada davamlı qiymətlər üçün MSE və ya MAE, təsnifatda isə Cross-Entropy geniş istifadə edilir.</p>
+<p>Bir müşahidə üçün itki L(y, ŷ) kimi yazılır. Bir batch üçün itki adətən batch müşahidələrinin itkilərinin orta qiymətidir:</p><div class="formula">L_batch = (1/m) Σᵢ₌₁ᵐ L(yᵢ, ŷᵢ)</div>
+<p>Burada m batch-dəki müşahidələrin sayıdır. Orta qiymət batch ölçüsündən asılı olaraq loss miqyasının müqayisəsini asanlaşdırır. Bəzi funksiyalarda əlavə regularization termini də loss-a daxil edilir.</p>
+<h3>İnteraktiv itki kalkulyatoru</h3><p>Hədəf və proqnoz qiymətlərini daxil edin. Kalkulyator bir müşahidə üçün kvadratik xətanı göstərir.</p>
+<div class="controls"><div><label>Həqiqi qiymət (y)</label><input id="target" type="number" value="80" step=".1"></div><div><label>Proqnoz (ŷ)</label><input id="pred" type="number" value="74" step=".1"></div><div><button onclick="calcLoss()">Xətanı hesabla</button></div></div><div id="lossOut" class="result">MSE = 36</div>
+<p class="small">Bir nümunə üçün MSE = (y−ŷ)². Bu nümunədə (80−74)²=36. Bir neçə nümunədə bu qiymətlərin ortası hesablanır.</p></section>
+
+<section class="card" id="s133"><h2>13.3. Mean Squared Error və Cross-Entropy</h2>
+<h3>Mean Squared Error (MSE)</h3><p>MSE reqressiya məsələlərində tez-tez istifadə olunur. Hər proqnoz xətası kvadrata yüksəldilir və müşahidələr üzrə orta qiymət hesablanır. Kvadratlaşdırma böyük xətaları daha çox cəzalandırır və törəməsi rahat hesablanır.</p>
+<div class="formula">MSE = (1/n) Σᵢ₌₁ⁿ (yᵢ − ŷᵢ)²</div>
+<p>Məsələn, həqiqi qiymətlər [3, 5, 2], proqnozlar [2, 5, 4] olsun. Xətalar [1, 0, −2], kvadratlar [1, 0, 4], MSE=(1+0+4)/3=1.667.</p>
+<h3>Binary Cross-Entropy</h3><p>İkili təsnifatda model müsbət sinfə aid olma ehtimalı p proqnozlaşdırır. Hədəf y yalnız 0 və ya 1 olur. Binary Cross-Entropy düzgün sinif üçün yüksək ehtimal verildikdə kiçik, səhv sinifə yüksək əminlik göstərildikdə isə böyük itki yaradır.</p>
+<div class="formula">BCE = −[y ln(p) + (1−y) ln(1−p)]</div>
+<p>Əgər y=1 və p=0.8 olarsa BCE=−ln(0.8)≈0.223. Əgər y=1 və p=0.2 olarsa BCE=−ln(0.2)≈1.609. Deməli, həqiqi sinif 1 olduğu halda 0.2 ehtimalı vermək daha böyük cəza alır.</p>
+<h3>İnteraktiv müqayisə</h3><div class="controls"><div><label>Həqiqi sinif (y)</label><select id="classY"><option value="1">1 — müsbət</option><option value="0">0 — mənfi</option></select></div><div><label>Müsbət sinif ehtimalı (p)</label><input id="prob" type="number" min=".001" max=".999" step=".01" value=".8"></div><div><button onclick="calcBCE()">BCE hesabla</button></div></div><div id="bceOut" class="result">BCE = 0.2231</div>
+<table><tr><th>Funksiya</th><th>Əsas tətbiq</th><th>Model çıxışı</th><th>Həssaslıq</th></tr><tr><td>MSE</td><td>Reqressiya</td><td>Davamlı qiymət</td><td>Böyük xətaları kvadratla artırır</td></tr><tr><td>Binary Cross-Entropy</td><td>İkili təsnifat</td><td>Sigmoid ehtimalı</td><td>Səhv və əmin proqnozu ciddi cəzalandırır</td></tr><tr><td>Categorical Cross-Entropy</td><td>Çoxsinifli təsnifat</td><td>Softmax ehtimalları</td><td>Doğru sinif ehtimalına əsaslanır</td></tr></table>
+<div class="warn">Loss və metric eyni anlayış deyil. Loss optimizasiya üçün istifadə olunur; accuracy, F1 və digər metrikalar modelin keyfiyyətini şərh etmək üçün əlavə ölçülərdir.</div></section>
+
+<section class="card" id="s134"><h2>13.4. Gradient anlayışı</h2>
+<p>Törəmə bir dəyişənli funksiyanın girişindəki kiçik dəyişmənin çıxışa necə təsir etdiyini göstərir. Gradient çox dəyişənli funksiyada bütün parametrlərə görə qismən törəmələri bir vektorda birləşdirir. Neyron şəbəkəsində loss çəkilərdən və bias-lardan asılı olduğuna görə gradient parametrləri hansı istiqamətdə dəyişdirməyin itkini artıracağını göstərir.</p>
+<div class="formula">∇θ L = [∂L/∂θ₁, ∂L/∂θ₂, …, ∂L/∂θₚ]ᵀ</div>
+<p>Gradientin əks istiqaməti lokal olaraq loss-u azaltmağa yönəlir. Əgər ∂L/∂w müsbətdirsə, w-ni bir qədər azaltmaq loss-u azalda bilər. Əgər törəmə mənfidirsə, w-ni artırmaq istiqaməti loss-u azalda bilər. Dəyişmənin miqdarı learning rate ilə müəyyən edilir.</p>
+<div class="diagram"><svg viewBox="0 0 760 260" aria-label="Gradientin minimuma istiqaməti"><path d="M60 215 Q170 205 240 150 Q320 70 390 75 Q500 80 690 215" fill="none" stroke="#2563eb" stroke-width="4"/><line x1="60" y1="215" x2="690" y2="215" stroke="#64748b" stroke-width="1.5"/><line x1="60" y1="215" x2="60" y2="25" stroke="#64748b" stroke-width="1.5"/><circle cx="390" cy="75" r="8" fill="#059669"/><text x="390" y="48" text-anchor="middle" fill="#047857" font-weight="bold">Minimum</text><circle cx="165" cy="177" r="7" fill="#ea580c"/><path d="M165 177L220 145" stroke="#ea580c" stroke-width="3"/><path d="M210 145L220 145L216 155" fill="none" stroke="#ea580c" stroke-width="3"/><text x="150" y="145" fill="#9a3412">Gradientin əksi</text><text x="380" y="248" text-anchor="middle" fill="#475569">Parametr w</text><text x="20" y="25" fill="#475569">Loss</text></svg></div>
+<h3>Sadə törəmə nümunəsi</h3><p>L(w)=(w−3)² olsun. Törəmə L'(w)=2(w−3). w=5 nöqtəsində gradient 4-dür. Gradientin əks istiqamətində kiçik addım atmaq w-ni 3-ə yaxınlaşdırır.</p>
+<div class="formula">L(w)=(w−3)²   ⇒   dL/dw=2(w−3)<br>w=5   ⇒   gradient=4</div>
+<h3>İnteraktiv gradient hesablayıcısı</h3><div class="controls"><div><label>Parametr w</label><input id="gw" type="number" value="5" step=".1"></div><div><label>Minimumun yeri a</label><input id="ga" type="number" value="3" step=".1"></div><div><button onclick="calcGrad()">Gradienti tap</button></div></div><div id="gradOut" class="result">L=4, gradient=4</div></section>
+
+<section class="card" id="s135"><h2>13.5. Gradient Descent alqoritmi</h2>
+<p>Gradient Descent (qradiyent enişi) itki funksiyasını azaltmaq üçün parametrləri gradientin əks istiqamətində yeniləyən optimallaşdırma alqoritmidir. Hər addımda cari parametr qiymətində gradient hesablanır və parametr yeni qiymətə keçirilir.</p>
+<div class="formula">θₜ₊₁ = θₜ − η ∇θ L(θₜ)</div>
+<p>Burada θ parametr vektoru, η learning rate, ∇θL gradient, t isə iterasiya indeksidir. Sadə bir parametr üçün:</p><div class="formula">wₜ₊₁ = wₜ − η · dL/dw</div>
+<h3>Əl ilə hesablanan nümunə</h3><p>L(w)=(w−3)², başlanğıc w₀=5, learning rate η=0.1 olsun. Gradient 2(w−3) olduğuna görə g₀=4. Yeni parametr w₁=5−0.1×4=4.6. Növbəti addımda gradient 2(4.6−3)=3.2, w₂=4.6−0.1×3.2=4.28. Parametr minimum nöqtəsi 3-ə yaxınlaşır.</p>
+<table><tr><th>İterasiya</th><th>w</th><th>Gradient</th><th>Yeni w</th><th>Loss</th></tr><tr><td>0</td><td>5.00</td><td>4.00</td><td>4.60</td><td>4.0000</td></tr><tr><td>1</td><td>4.60</td><td>3.20</td><td>4.28</td><td>2.5600</td></tr><tr><td>2</td><td>4.28</td><td>2.56</td><td>4.024</td><td>1.6384</td></tr></table>
+<h3>İnteraktiv Gradient Descent simulyatoru</h3><div class="controls"><div><label>Başlanğıc w</label><input id="sw" type="number" value="5" step=".1"></div><div><label>Learning rate η</label><input id="sr" type="number" min=".001" max="1" step=".01" value=".1"></div><div><label>İterasiya sayı</label><input id="sn" type="number" min="1" max="20" value="5"></div><div><button onclick="simulateGD()">Simulyasiya et</button></div></div><div id="gdTable"></div></section>
+
+<section class="card" id="s136"><h2>13.6. Learning Rate və onun təsiri</h2>
+<p>Learning rate (öyrənmə sürəti) hər parametr yenilənməsində gradient istiqamətində atılan addımın ölçüsünü müəyyən edir. Kiçik learning rate daha ehtiyatlı addımlar yaradır, lakin təlimi ləngidə bilər. Böyük learning rate minimumun ətrafında sıçrayışa, loss-un artmasına və ya divergensiyaya səbəb ola bilər.</p>
+<div class="grid"><div class="tile"><b>Çox kiçik η</b><p>Stabil, lakin yavaş yaxınlaşma. Təlim üçün çoxlu iterasiya tələb oluna bilər.</p></div><div class="tile"><b>Uyğun η</b><p>Loss adətən daha sürətli və idarə olunan şəkildə azalır.</p></div><div class="tile"><b>Çox böyük η</b><p>Minimumun üzərindən keçmə, dalğalanma və qeyri-sabitlik yarana bilər.</p></div></div>
+<div class="formula">wₜ₊₁ = wₜ − ηgₜ</div>
+<p>Learning rate bütün parametrlər üçün eyni addım miqyasını təyin edən sadə optimizatorda istifadə olunur. Adam kimi adaptiv optimizatorlar isə parametr üzrə addım miqyasını gradientlərin tarixi statistikalarına əsasən dəyişdirir.</p>
+<h3>İnteraktiv addım kalkulyatoru</h3><div class="controls"><div><label>Cari parametr w</label><input id="lrw" type="number" value="5"></div><div><label>Gradient g</label><input id="lrg" type="number" value="4"></div><div><label>Learning rate η</label><input id="lrr" type="number" value=".1" step=".01"></div><div><button onclick="calcLR()">Yeni parametr</button></div></div><div id="lrOut" class="result">w yeni = 4.6</div></section>
+
+<section class="card" id="s137"><h2>13.7. Backpropagation alqoritmi</h2>
+<p>Backpropagation (geriyə yayılma) şəbəkənin çıxışındakı itkinin hər bir çəki və bias parametrinə görə törəməsini zəncir qaydası ilə hesablayan alqoritmdir. O, özü ayrıca parametr yeniləmə qaydası deyil: gradientləri hesablayır. Gradient Descent, Adam və digər optimizatorlar həmin gradientlərdən istifadə edərək parametrləri yeniləyir.</p>
+<div class="diagram"><svg viewBox="0 0 850 260" aria-label="Forward və backward istiqamətləri"><defs><marker id="fwd" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#2563eb"/></marker><marker id="bwd" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#dc2626"/></marker></defs><g><rect x="25" y="65" width="150" height="90" rx="13" fill="#dbeafe" stroke="#2563eb"/><rect x="350" y="65" width="150" height="90" rx="13" fill="#ede9fe" stroke="#7c3aed"/><rect x="675" y="65" width="150" height="90" rx="13" fill="#dcfce7" stroke="#059669"/><g font-size="17" text-anchor="middle" font-weight="bold"><text x="100" y="105" fill="#1e40af">Giriş</text><text x="100" y="130" fill="#1e40af">x</text><text x="425" y="105" fill="#5b21b6">Gizli qat</text><text x="425" y="130" fill="#5b21b6">a¹</text><text x="750" y="105" fill="#047857">Çıxış</text><text x="750" y="130" fill="#047857">ŷ</text></g><path d="M175 105H340M500 105H665" stroke="#2563eb" stroke-width="4" marker-end="url(#fwd)"/><path d="M750 165V215H425V165" fill="none" stroke="#dc2626" stroke-width="3" marker-end="url(#bwd)"/><path d="M350 215H100V165" fill="none" stroke="#dc2626" stroke-width="3" marker-end="url(#bwd)"/><text x="425" y="35" text-anchor="middle" fill="#1d4ed8" font-weight="bold">Forward: proqnozun hesablanması →</text><text x="425" y="245" text-anchor="middle" fill="#b91c1c" font-weight="bold">← Backward: gradientlərin hesablanması</text></g></svg></div>
+<p>Sadə ikiqatlı şəbəkədə əvvəlcə gizli qatın aktivləşməsi, sonra çıxış hesablanır. Loss tapıldıqdan sonra çıxış qatından başlanaraq törəmələr əvvəlki qatlara ötürülür. Beləliklə, hər parametrin loss-a təsiri hesablanır.</p>
+
+<figure class="nn-figure">
+<svg viewBox="0 0 900 300" role="img" aria-label="Eyni neyron şəbəkəsində forward propagation və backpropagation istiqamətləri">
+<defs><marker id="fwA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#2563eb"/></marker><marker id="bwA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#dc2626"/></marker></defs>
+<g font-size="16" font-weight="bold" text-anchor="middle"><rect x="25" y="70" width="160" height="100" rx="14" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><rect x="270" y="70" width="160" height="100" rx="14" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><rect x="515" y="70" width="160" height="100" rx="14" fill="#dcfce7" stroke="#059669" stroke-width="2"/><rect x="740" y="70" width="135" height="100" rx="14" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
+<text x="105" y="112" fill="#1e40af">Giriş</text><text x="105" y="137" fill="#1e40af">x</text><text x="350" y="112" fill="#5b21b6">Gizli qat</text><text x="350" y="137" fill="#5b21b6">a⁽¹⁾</text><text x="595" y="112" fill="#047857">Çıxış</text><text x="595" y="137" fill="#047857">ŷ</text><text x="807" y="112" fill="#9a3412">Loss</text><text x="807" y="137" fill="#9a3412">L(y,ŷ)</text></g>
+<g stroke="#2563eb" stroke-width="4" marker-end="url(#fwA)"><path d="M185 120H260"/><path d="M430 120H505"/><path d="M675 120H730"/></g>
+<text x="220" y="96" text-anchor="middle" font-size="13" fill="#1d4ed8">W¹,b¹</text><text x="470" y="96" text-anchor="middle" font-size="13" fill="#1d4ed8">W²,b²</text>
+<path d="M807 180V240H350V180" fill="none" stroke="#dc2626" stroke-width="3" marker-end="url(#bwA)"/><path d="M350 240H105V180" fill="none" stroke="#dc2626" stroke-width="3" marker-end="url(#bwA)"/>
+<text x="585" y="228" fill="#b91c1c" font-size="14" text-anchor="middle">∂L/∂W², ∂L/∂b²</text><text x="220" y="260" fill="#b91c1c" font-size="14" text-anchor="middle">∂L/∂W¹, ∂L/∂b¹</text>
+<text x="450" y="25" text-anchor="middle" font-size="16" font-weight="bold" fill="#1d4ed8">FORWARD: verilənlərdən proqnoza doğru</text><text x="450" y="290" text-anchor="middle" font-size="16" font-weight="bold" fill="#b91c1c">BACKWARD: loss-dan parametrlərə doğru gradientlər</text>
+</svg>
+<figcaption>Şəkil 13.2. Təlimin iki istiqamətli hesablama məntiqi: irəli yayılmada aktivləşmələr və proqnoz, geriyə yayılmada isə hər parametrə görə gradient hesablanır.</figcaption>
+</figure>
+<p><b>Oxların mənası:</b> Mavi oxlar verilənlərin şəbəkə boyunca irəli hərəkətini göstərir. Qırmızı oxlar loss-un törəmələrinin çıxış qatından əvvəlki qatlara ötürülməsini göstərir. Backpropagation zamanı giriş verilənləri geriyə daşınmır; zəncir qaydası ilə gradientlər hesablanır.</p>
+
+<h3>Backpropagation addımları</h3><ol><li>Forward propagation ilə ŷ hesablanır.</li><li>Loss funksiyası L(y, ŷ) hesablanır.</li><li>Çıxış qatında loss-un çıxışa görə törəməsi tapılır.</li><li>Zəncir qaydası ilə qat-qat geriyə keçilərək çəkilərə görə gradientlər hesablanır.</li><li>Optimizator gradientlərdən istifadə edərək W və b parametrlərini yeniləyir.</li></ol>
+<div class="note"><b>Fərqi yadda saxlayın:</b> Backpropagation — gradienti hesablayır; Gradient Descent/Adam — gradientdən istifadə edərək parametrləri yeniləyir.</div></section>
+
+<section class="card" id="s138"><h2>13.8. Zəncir qaydası (Chain Rule)</h2>
+<p>Zəncir qaydası mürəkkəb funksiyanın törəməsini onun daxili funksiyalarının törəmələri vasitəsilə hesablamağa imkan verir. Neyron şəbəkəsi qat-qat funksiyaların kompozisiyası olduğundan backpropagation-un riyazi əsası məhz bu qaydadır.</p>
+<div class="formula">Əgər y=f(u), u=g(x) olarsa:<br>dy/dx = (dy/du) · (du/dx)</div>
+<h3>Sadə ədədi nümunə</h3><p>y=(3x+1)² olsun. Daxili funksiya u=3x+1, xarici funksiya y=u²-dir. dy/du=2u, du/dx=3. Buna görə dy/dx=2(3x+1)×3=6(3x+1). x=2 üçün törəmə 6×7=42-dir.</p>
+<div class="formula">u=3x+1;   y=u²<br>dy/du=2u;   du/dx=3<br>dy/dx=2u×3=6(3x+1)<br>x=2 ⇒ dy/dx=42</div>
+
+<figure class="nn-figure">
+<svg viewBox="0 0 850 230" role="img" aria-label="Neyronun hesablama qrafiki və zəncir qaydası">
+<defs><marker id="chainArr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#64748b"/></marker></defs>
+<g font-size="16" font-weight="bold" text-anchor="middle"><rect x="20" y="65" width="125" height="78" rx="12" fill="#dbeafe" stroke="#2563eb"/><rect x="190" y="65" width="145" height="78" rx="12" fill="#ede9fe" stroke="#7c3aed"/><rect x="380" y="65" width="145" height="78" rx="12" fill="#dcfce7" stroke="#059669"/><rect x="570" y="65" width="125" height="78" rx="12" fill="#ffedd5" stroke="#ea580c"/><rect x="735" y="65" width="100" height="78" rx="12" fill="#fee2e2" stroke="#dc2626"/>
+<text x="82" y="98" fill="#1e40af">x, w, b</text><text x="82" y="122" fill="#1e40af">girişlər</text><text x="262" y="98" fill="#5b21b6">z=wx+b</text><text x="262" y="122" fill="#5b21b6">cəmləmə</text><text x="452" y="98" fill="#047857">a=φ(z)</text><text x="452" y="122" fill="#047857">aktivləşmə</text><text x="632" y="98" fill="#9a3412">ŷ=a</text><text x="632" y="122" fill="#9a3412">proqnoz</text><text x="785" y="110" fill="#b91c1c">L</text></g>
+<g stroke="#64748b" stroke-width="2.5" marker-end="url(#chainArr)"><path d="M145 104H180"/><path d="M335 104H370"/><path d="M525 104H560"/><path d="M695 104H725"/></g>
+<g fill="#334155" font-size="13" text-anchor="middle"><text x="162" y="83">∂z/∂w=x</text><text x="352" y="83">φ′(z)</text><text x="542" y="83">∂L/∂ŷ</text></g>
+<path d="M785 155V190H260V150" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6 4"/><text x="520" y="215" text-anchor="middle" fill="#b91c1c" font-size="14">Gradient bu lokal törəmələrin hasilidir: ∂L/∂w = (∂L/∂ŷ)·φ′(z)·x</text>
+</svg><figcaption>Şəkil 13.3. Bir neyronun hesablama qrafiki. Backpropagation qrafikdə sağdan sola gedərək hər əməliyyatın lokal törəməsini zəncir qaydası ilə birləşdirir.</figcaption></figure>
+
+<h3>Neyron üçün zəncir qaydası</h3><p>Bir neyron üçün z=wx+b, a=φ(z), L=L(a) olduqda:</p><div class="formula">∂L/∂w = (∂L/∂a) · (∂a/∂z) · (∂z/∂w)<br>         = (∂L/∂a) · φ'(z) · x</div>
+<p>Hər bir vuruq bir əlaqəni təsvir edir: loss-un aktivləşməyə təsiri, aktivləşmənin z-ə həssaslığı və z-nin çəkiyə həssaslığı. Bu vuruqların hasili həmin çəkinin yekun loss-a təsirini verir.</p>
+<div class="note"><b>İntuitiv izah:</b> “Loss dəyişəndə neyronun çıxışı nə qədər dəyişir?”, “çıxış z dəyişəndə nə qədər dəyişir?” və “z çəki dəyişəndə nə qədər dəyişir?” suallarının cavablarını bir-birinə vururuq.</div></section>
+
+<section class="card" id="s139"><h2>13.9. Çəkilərin yenilənməsi mexanizmi</h2>
+<p>Gradientlər hesablandıqdan sonra optimizator parametrləri yeniləyir. Sadə Gradient Descent-də hər çəki öz gradientinin əks istiqamətində dəyişir. Bias üçün də eyni prinsip tətbiq olunur.</p>
+<div class="formula">w_new = w_old − η(∂L/∂w)<br>b_new = b_old − η(∂L/∂b)</div>
+
+<figure class="nn-figure">
+<svg viewBox="0 0 850 220" role="img" aria-label="Çəkilər matrisinin giriş vektoru ilə vurulması">
+<rect x="25" y="45" width="150" height="130" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/><rect x="260" y="25" width="310" height="170" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><rect x="655" y="45" width="165" height="130" rx="12" fill="#dcfce7" stroke="#059669" stroke-width="2"/>
+<g font-size="17" font-weight="bold" text-anchor="middle"><text x="100" y="75" fill="#1e40af">Giriş vektoru</text><text x="100" y="112" fill="#1e40af">x = [x₁ x₂ x₃]</text><text x="415" y="55" fill="#5b21b6">Çəkilər matrisi</text><text x="415" y="103" fill="#5b21b6">W = [w₁₁ w₁₂</text><text x="415" y="130" fill="#5b21b6">     w₂₁ w₂₂</text><text x="415" y="157" fill="#5b21b6">     w₃₁ w₃₂]</text><text x="737" y="75" fill="#047857">Çəkili cəm</text><text x="737" y="112" fill="#047857">z = xW+b</text><text x="737" y="140" fill="#047857">[z₁ z₂]</text></g>
+<g stroke="#334155" stroke-width="3"><path d="M175 110H250"/><path d="M570 110H645"/></g><text x="212" y="95" text-anchor="middle" fill="#334155" font-size="12">×</text><text x="608" y="95" text-anchor="middle" fill="#334155" font-size="12">+</text>
+</svg><figcaption>Şəkil 13.4. Giriş vektoru ilə çəkilər matrisinin vurulması. 3 giriş xüsusiyyəti 2 neyronlu növbəti qata ötürülürsə, W matrisinin ölçüsü 3×2 olur.</figcaption></figure>
+<p>Ölçülərin uyğunluğu vacibdir: x vektoru 1×3, W matrisi 3×2 olduqda xW nəticəsi 1×2 ölçülü vektordur. Hər nəticə komponenti bir növbəti qat neyronunun çəkili cəmidir. Bias vektoru eyni sayda neyron üçün bir qiymət daşıyır.</p>
+
+<h3>Bir parametr üzrə tam nümunə</h3><p>Fərz edək w=0.5, gradient=−0.8 və η=0.1. Onda w_new=0.5−0.1×(−0.8)=0.58. Gradient mənfi olduğuna görə parametr artdı. Bu artım loss-u lokal olaraq azaltmaq istiqamətindədir.</p>
+<h3>İnteraktiv parametr yeniləmə kalkulyatoru</h3><div class="controls"><div><label>İlkin çəki</label><input id="uw" type="number" value=".5" step=".1"></div><div><label>Gradient</label><input id="ug" type="number" value="-.8" step=".1"></div><div><label>Learning rate</label><input id="ur" type="number" value=".1" step=".01"></div><div><button onclick="updateWeight()">Çəkini yenilə</button></div></div><div id="updateOut" class="result">w_new = 0.58</div>
+<p>Çoxqatlı şəbəkədə bu əməliyyat bütün çəkilər matrisi və bias vektorlarına eyni qayda ilə, lakin hər parametr üçün ayrıca gradientlə tətbiq olunur.</p></section>
+
+<section class="card" id="s1310"><h2>13.10. Epoch, Batch və Iteration</h2>
+<p>Təlim verilənlərinin necə hissələrə bölünməsi optimallaşdırmanın sürətinə və gradientin dəyişkənliyinə təsir edir. <b>Epoch</b> bütün təlim dataset-inin model tərəfindən bir dəfə işlənməsidir. <b>Batch</b> bir yeniləmə addımında istifadə olunan müşahidələr qrupudur. <b>Iteration</b> bir batch üzrə gradient hesablanıb parametr yeniləndiyi addımdır.</p>
+<div class="diagram"><svg viewBox="0 0 800 205" aria-label="Epoch batch iteration sxemi"><rect x="20" y="25" width="760" height="150" rx="15" fill="#eff6ff" stroke="#93c5fd"/><text x="400" y="50" text-anchor="middle" font-weight="bold" fill="#1e40af">Bir Epoch — bütün təlim verilənləri</text><g><rect x="50" y="75" width="205" height="65" rx="10" fill="#bfdbfe" stroke="#2563eb"/><rect x="297" y="75" width="205" height="65" rx="10" fill="#ddd6fe" stroke="#7c3aed"/><rect x="544" y="75" width="205" height="65" rx="10" fill="#bbf7d0" stroke="#059669"/><g font-size="15" text-anchor="middle" font-weight="bold"><text x="152" y="103" fill="#1e40af">Batch 1</text><text x="152" y="124" fill="#1e40af">Iteration 1</text><text x="399" y="103" fill="#5b21b6">Batch 2</text><text x="399" y="124" fill="#5b21b6">Iteration 2</text><text x="646" y="103" fill="#047857">Batch 3</text><text x="646" y="124" fill="#047857">Iteration 3</text></g></g></svg></div>
+<p>Məsələn, təlim dataset-ində 1 000 müşahidə, batch size=100 olarsa, bir epoch-da 10 iteration olur. Əgər 20 epoch təlim aparılırsa, ümumi yenilənmə sayı 20×10=200 iteration olacaq.</p>
+<div class="formula">Iteration per epoch = ⌈N / B⌉<br>Ümumi iteration = Epoch sayı × ⌈N / B⌉</div>
+<h3>İnteraktiv batch hesablayıcısı</h3><div class="controls"><div><label>Dataset ölçüsü (N)</label><input id="dsN" type="number" min="1" value="1000"></div><div><label>Batch size (B)</label><input id="dsB" type="number" min="1" value="100"></div><div><label>Epoch sayı</label><input id="dsE" type="number" min="1" value="20"></div><div><button onclick="calcBatches()">Hesabla</button></div></div><div id="batchOut" class="result">Bir epoch: 10 iteration; ümumi: 200</div>
+<p>Batch size kiçik olduqda bir epoch-da daha çox yenilənmə baş verir və gradient daha səs-küylü ola bilər. Böyük batch daha sabit gradient təxmini verə bilər, lakin daha çox yaddaş tələb edir. Optimal ölçü hardware və dataset-dən asılıdır.</p></section>
+
+<section class="card" id="s1311"><h2>13.11. SGD, Momentum, RMSprop və Adam</h2>
+<p>Optimizatorlar gradientlərdən istifadə edərək parametrləri yeniləyən qaydalardır. Onlar addımın istiqamətini və miqyasını müxtəlif üsullarla müəyyən edir.</p>
+<table><tr><th>Optimizator</th><th>Əsas ideya</th><th>Üstün cəhət</th><th>Nəzərə alınmalı məqam</th></tr><tr><td>SGD</td><td>Mini-batch gradientinin əksi istiqamətində addım</td><td>Sadə, az yaddaş</td><td>Learning rate həssasdır</td></tr><tr><td>Momentum</td><td>Əvvəlki gradient istiqamətinin sürətini saxlayır</td><td>Dalğalanmanı azalda bilər</td><td>β parametri seçilir</td></tr><tr><td>RMSprop</td><td>Gradient kvadratlarının hərəkətli ortasına görə addımı normallaşdırır</td><td>Müxtəlif miqyaslı gradientlərdə adaptivdir</td><td>Decay və learning rate sazlanır</td></tr><tr><td>Adam</td><td>Birinci və ikinci momentlərin eksponensial ortası</td><td>Praktikada geniş istifadə olunur</td><td>Həmişə ən yaxşı nəticə vermir</td></tr></table>
+<div class="formula">SGD:   θₜ₊₁ = θₜ − ηgₜ<br>Momentum:   vₜ = βvₜ₋₁ + gₜ;   θₜ₊₁ = θₜ − ηvₜ<br>RMSprop:   sₜ = ρsₜ₋₁ + (1−ρ)gₜ²;   θₜ₊₁ = θₜ − ηgₜ/(√sₜ+ε)<br>Adam:   mₜ=β₁mₜ₋₁+(1−β₁)gₜ;   vₜ=β₂vₜ₋₁+(1−β₂)gₜ²</div>
+<p>Adam-da momentlərin bias correction mərhələsi də tətbiq olunur. Sadələşdirilmiş düsturlar əsas ideyanı göstərir; real kitabxana tətbiqlərində əlavə sabitlər və düzəlişlər mövcuddur.</p>
+
+<figure class="nn-figure">
+<svg viewBox="0 0 820 250" role="img" aria-label="Optimizatorların loss səthində addım trayektoriyalarının konseptual müqayisəsi">
+<path d="M60 195 C180 185 220 45 410 42 C600 45 640 185 760 195" fill="none" stroke="#94a3b8" stroke-width="2"/>
+<path d="M60 165 C200 160 245 70 410 68 C575 70 620 160 760 165" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+<path d="M60 135 C220 130 275 95 410 94 C545 95 600 130 760 135" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="410" cy="42" r="7" fill="#059669"/><text x="430" y="38" fill="#047857" font-size="14" font-weight="bold">Minimum loss</text>
+<path d="M100 205L205 145L300 100L410 48" fill="none" stroke="#2563eb" stroke-width="4" stroke-dasharray="7 4"/>
+<path d="M100 205L180 85L285 150L365 75L410 48" fill="none" stroke="#ea580c" stroke-width="4"/>
+<path d="M100 205Q220 160 290 120T410 48" fill="none" stroke="#7c3aed" stroke-width="4"/>
+<g fill="#2563eb"><circle cx="100" cy="205" r="5"/><circle cx="205" cy="145" r="5"/><circle cx="300" cy="100" r="5"/></g><g fill="#ea580c"><circle cx="180" cy="85" r="5"/><circle cx="285" cy="150" r="5"/><circle cx="365" cy="75" r="5"/></g>
+<text x="85" y="230" fill="#475569" font-size="13">Başlanğıc</text><text x="620" y="225" fill="#2563eb" font-size="13">SGD: daha düz addımlar</text><text x="620" y="205" fill="#ea580c" font-size="13">Böyük addım: sıçrayış</text><text x="620" y="185" fill="#7c3aed" font-size="13">Adaptiv addım: miqyaslanır</text>
+</svg><figcaption>Şəkil 13.6. Loss səthində optimallaşdırma addımlarının konseptual təsviri. Real trayektoriyalar modelin ölçüsündən və parametr məkanından asılıdır; diaqram optimizatorların addım davranışını izah etmək üçündür.</figcaption></figure>
+
+<h3>Optimizator seçimi üzrə praktik yanaşma</h3><p>Adam çox vaxt ilkin sınaq üçün rahat seçimdir. SGD+Momentum bəzi dərin modellərdə yaxşı ümumiləşdirmə verə bilər. RMSprop adaptiv addım tələb olunan hallarda istifadə edilir. Yekun qərar validation nəticələri, təlim sabitliyi və hesablama xərci əsasında verilməlidir.</p></section>
+
+<section class="card" id="s1312"><h2>13.12. Neyron şəbəkəsində overfitting</h2>
+<p>Overfitting modelin təlim verilənlərinə həddən artıq uyğunlaşması və yeni, görünməmiş verilənlərdə zəif nəticə göstərməsidir. Bu zaman training loss azalmağa davam etdiyi halda validation loss müəyyən nöqtədən sonra arta bilər. Model təsadüfi səs-küyü və dataset-ə xas detalları da öyrənmiş olur.</p>
+<div class="diagram"><svg viewBox="0 0 760 260" aria-label="Overfitting training və validation loss qrafiki"><line x1="55" y1="20" x2="55" y2="220" stroke="#64748b" stroke-width="2"/><line x1="55" y1="220" x2="720" y2="220" stroke="#64748b" stroke-width="2"/><path d="M60 45 C180 110 300 155 700 190" fill="none" stroke="#2563eb" stroke-width="4"/><path d="M60 35 C180 85 260 130 360 150 C470 170 540 135 700 75" fill="none" stroke="#dc2626" stroke-width="4"/><line x1="360" y1="30" x2="360" y2="220" stroke="#059669" stroke-dasharray="6 5" stroke-width="2"/><text x="370" y="25" fill="#047857" font-size="13">Ən yaxşı validation nöqtəsi</text><text x="12" y="25" fill="#475569" font-size="12">Loss</text><text x="390" y="250" text-anchor="middle" fill="#475569">Epoch</text><text x="610" y="195" fill="#2563eb" font-size="13">Training loss</text><text x="600" y="65" fill="#dc2626" font-size="13">Validation loss</text></svg></div>
+<p>Qrafikdə qırmızı validation loss əvvəl azalır, sonra yüksəlir. Yaşıl şaquli xətt modelin validation nəticəsinin ən yaxşı olduğu nöqtəni göstərir. Bu nöqtədən sonra təlimi davam etdirmək modelin yeni verilənlərdəki keyfiyyətini pisləşdirə bilər.</p>
+<h3>Overfitting-in səbəbləri</h3><ul><li>Modelin verilənlərə nisbətən həddən artıq mürəkkəb olması;</li><li>təlim nümunələrinin az və ya təmsilçiliyinin zəif olması;</li><li>çox uzun təlim və early stopping tətbiq edilməməsi;</li><li>verilənlərdə səs-küy, etiket səhvləri və ya data leakage.</li></ul>
+<p>Azaldılması üçün daha çox və müxtəlif təlim veriləni, sadə arxitektura, regularization, dropout, data augmentation və early stopping tətbiq oluna bilər.</p></section>
+
+<section class="card" id="s1313"><h2>13.13. Dropout və digər regularization yanaşmaları</h2>
+<p>Regularization modelin həddən artıq mürəkkəbləşməsini məhdudlaşdıraraq ümumiləşdirməni yaxşılaşdırmağa yönəlmiş üsullar toplusudur. Dropout təlim zamanı neyronların müəyyən hissəsinin çıxışını təsadüfi olaraq sıfırlayır. Beləliklə, şəbəkə yalnız konkret neyron kombinasiyasına həddən artıq arxalanmamağı öyrənir.</p>
+<div class="diagram"><svg viewBox="0 0 760 230" aria-label="Dropout mexanizmi"><g font-size="14" font-weight="bold" text-anchor="middle"><text x="170" y="25" fill="#5b21b6">Adi qat</text><text x="570" y="25" fill="#047857">Dropout tətbiqindən sonra</text></g><g fill="#a78bfa"><circle cx="170" cy="65" r="15"/><circle cx="170" cy="115" r="15"/><circle cx="170" cy="165" r="15"/></g><g fill="#34d399"><circle cx="570" cy="65" r="15"/><circle cx="570" cy="115" r="15" opacity=".2"/><circle cx="570" cy="165" r="15"/></g><g stroke="#94a3b8" stroke-width="2"><path d="M185 65L555 65M185 115L555 115M185 165L555 165"/></g><path d="M555 115L585 115" stroke="#dc2626" stroke-width="2" stroke-dasharray="4 4"/><path d="M560 105L580 125M580 105L560 125" stroke="#dc2626" stroke-width="3"/><text x="570" y="205" text-anchor="middle" fill="#b91c1c" font-size="12">Neyron müvəqqəti söndürülür</text></svg></div>
+<p>Dropout rate=0.2 olduqda təlim zamanı həmin qatın aktivləşmələrinin təxminən 20%-i təsadüfi sıfırlanır. İnference mərhələsində dropout söndürülür; framework aktivləşmələrin miqyasını uyğunlaşdırır.</p>
+
+<figure class="nn-figure">
+<svg viewBox="0 0 850 250" role="img" aria-label="Dropout tətbiqindən əvvəl və sonra çoxqatlı neyron şəbəkəsi">
+<g font-size="15" font-weight="bold" text-anchor="middle"><text x="205" y="22" fill="#5b21b6">Dropout-dan əvvəl</text><text x="645" y="22" fill="#047857">Dropout tətbiqindən sonra</text></g>
+<g stroke="#a78bfa" stroke-width="2" opacity=".8"><path d="M70 70L190 55M70 70L190 125M70 70L190 195M70 125L190 55M70 125L190 125M70 125L190 195M70 180L190 55M70 180L190 125M70 180L190 195"/><path d="M220 55L340 85M220 125L340 85M220 195L340 85"/></g>
+<g fill="#bfdbfe" stroke="#2563eb" stroke-width="2"><circle cx="70" cy="70" r="15"/><circle cx="70" cy="125" r="15"/><circle cx="70" cy="180" r="15"/></g><g fill="#c4b5fd" stroke="#7c3aed" stroke-width="2"><circle cx="205" cy="55" r="15"/><circle cx="205" cy="125" r="15"/><circle cx="205" cy="195" r="15"/></g><circle cx="340" cy="85" r="18" fill="#86efac" stroke="#059669" stroke-width="2"/>
+<g stroke="#a78bfa" stroke-width="2" opacity=".8"><path d="M510 70L630 55M510 70L630 125M510 70L630 195M510 125L630 55M510 125L630 125M510 125L630 195M510 180L630 55M510 180L630 125M510 180L630 195"/><path d="M660 55L780 85M660 195L780 85"/></g>
+<g fill="#bfdbfe" stroke="#2563eb" stroke-width="2"><circle cx="510" cy="70" r="15"/><circle cx="510" cy="125" r="15"/><circle cx="510" cy="180" r="15"/></g><g fill="#c4b5fd" stroke="#7c3aed" stroke-width="2"><circle cx="645" cy="55" r="15"/><circle cx="645" cy="125" r="15" opacity=".18"/><circle cx="645" cy="195" r="15"/></g><circle cx="780" cy="85" r="18" fill="#86efac" stroke="#059669" stroke-width="2"/>
+<g stroke="#dc2626" stroke-width="3"><path d="M633 113L657 137M657 113L633 137"/></g><text x="645" y="230" text-anchor="middle" fill="#b91c1c" font-size="13">Bu iterasiyada neyron deaktivdir</text>
+</svg><figcaption>Şəkil 13.5. Dropout tətbiqində gizli qat neyronlarının bir hissəsi hər təlim addımında müvəqqəti deaktiv edilir. Şəkildə sol və sağ şəbəkələr eyni modelin iki fərqli təlim maskasını təsvir edir.</figcaption></figure>
+
+<h3>Əsas regularization metodları</h3><table><tr><th>Metod</th><th>Riyazi/texniki ideya</th><th>İstifadə məqsədi</th></tr><tr><td>L1</td><td>Loss + λΣ|wᵢ|</td><td>Bəzi çəkiləri sıfıra yaxınlaşdırmaq, seyrəklik</td></tr><tr><td>L2 / Weight decay</td><td>Loss + λΣwᵢ²</td><td>Böyük çəkiləri cəzalandırmaq</td></tr><tr><td>Dropout</td><td>Təlimdə aktivləşmələrin bir hissəsini sıfırlamaq</td><td>Neyronlararası həddən artıq asılılığı azaltmaq</td></tr><tr><td>Early stopping</td><td>Validation loss yaxşılaşmayanda təlimi dayandırmaq</td><td>Overfitting başlamazdan əvvəl dayanmaq</td></tr><tr><td>Data augmentation</td><td>Təlim nümunələrinin mənalı çevrilmələrini yaratmaq</td><td>Verilən müxtəlifliyini artırmaq</td></tr></table>
+<div class="note"><b>Vacib:</b> Regularization parametrləri validation dəstində seçilməlidir. Test dəstindən hiperparametr seçmək olmaz; test yalnız yekun, qərəzsiz qiymətləndirmə üçün saxlanılır.</div></section>
+
+<section class="card" id="s1314"><h2>13.14. Öyrənmə prosesinin qrafiklə təhlili</h2>
+<p>Training loss və validation loss qrafikləri modelin öyrənmə davranışını izləməyə kömək edir. Hər iki əyrinin azalması modelin öyrəndiyini göstərə bilər. Training loss azalarkən validation loss artmağa başlayırsa, overfitting ehtimalı yaranır. Hər iki loss yüksək qalırsa, model underfitting yaşayır, xüsusiyyətlər yetərli deyil və ya optimallaşdırma düzgün qurulmayıb.</p>
+<h3>İnteraktiv öyrənmə qrafiki</h3><div class="controls"><div><label>Epoch sayı</label><input id="epochs" type="range" min="5" max="50" value="25" oninput="drawLearning()"><span id="epochLabel">25</span></div><div><label>Overfitting başlanğıcı</label><input id="overAt" type="range" min="5" max="45" value="16" oninput="drawLearning()"><span id="overLabel">16</span></div></div><div class="diagram"><svg id="learningSvg" viewBox="0 0 760 280" aria-label="İnteraktiv training və validation loss qrafiki"></svg></div><div id="learningNote" class="result">Validation loss-un artmağa başladığı nöqtəni izləyin.</div>
+<p>Qrafik sxematik simulyasiyadır; real modelin loss trayektoriyası dataset, arxitektura, optimizator və random seed-dən asılıdır. Təcrübədə Keras History obyektindən və ya PyTorch təlim jurnalından real qiymətlər çəkilməlidir.</p>
+<h3>Qrafik təhlil üçün yoxlama siyahısı</h3><ul><li>Training və validation loss eyni istiqamətdə dəyişirmi?</li><li>Validation loss-un minimumu hansı epoch-da yaranır?</li><li>Training loss azalır, validation loss artırsa, regularization və early stopping lazımdırmı?</li><li>Loss dalğalanırsa, learning rate həddən artıq böyük ola bilərmi?</li><li>Hər iki loss yüksəkdirsə, modelin tutumu və verilənlərin keyfiyyəti uyğundurmu?</li></ul></section>
+
+<section class="card" id="tasks"><h2>Praktiki tapşırıqlar</h2>
+<div class="tile"><b>Tapşırıq 1 — Başlanğıc</b><p>y=[2,4,6], ŷ=[1,5,5] üçün MSE-ni əl ilə hesablayın. Sonra y=1, p=0.7 üçün Binary Cross-Entropy-ni hesablayın və nəticələri izah edin.</p></div>
+<div class="tile"><b>Tapşırıq 2 — Orta səviyyə</b><p>L(w)=(w−4)² funksiyası üçün w₀=0 və η=0.1 götürərək ilk 5 Gradient Descent iterasiyasını cədvəldə göstərin. Learning rate-i 0.01 və 0.5 seçərək yaxınlaşma sürətini müqayisə edin.</p></div>
+<div class="tile"><b>Tapşırıq 3 — Tədqiqat səviyyəsi</b><p>Bir dataset üzərində MLP modelini SGD, RMSprop və Adam ilə öyrədin. Eyni train/validation bölgüsü və eyni random seed saxlayın. Training/validation loss qrafiklərini, F1 və ROC-AUC nəticələrini müqayisə edin; overfitting və optimizator davranışını şərh edin.</p></div></section>
+
+<section class="card" id="quiz"><h2>Özünü yoxlama sualları</h2><p>10 sualı cavablandırın. “Nəticəni yoxla” düyməsi balı və cavab izahlarını göstərəcək.</p><div id="questions"></div><button onclick="gradeQuiz()">Nəticəni yoxla</button> <button class="secondary" onclick="resetQuiz()">Yenidən başla</button><div id="quizScore" class="result"></div></section>
+
+<section class="card" id="refs"><h2>İstifadə olunan ədəbiyyat</h2><ol>
+<li>R. R. Əliyev (2026). <i>Süni intellekt</i>. Azərnəşr. <a href="https://www.libraff.az/suni-intellekt-az/" target="_blank">Nəşr məlumatı</a>.</li>
+<li>G. Abdullayeva, Ü. Əlizadə (2026). <i>Süni intellekt və təsvirlərin tanınması: nəzəri və praktiki əsaslar</i>. Elm. <a href="https://www.preslib.az/en/elibrary/ebook/uFMEvbR" target="_blank">Prezident Kitabxanası</a>.</li>
+<li>K. R. Əliyeva (2024). <i>Süni intellekt</i>. ADNSU. <a href="https://www.preslib.az/az/book/1OZWGAzwlCXVP7H" target="_blank">Prezident Kitabxanası</a>.</li>
+<li>N. T. İsmayılova (2023). <i>Süni intellekt: maşın öyrənmə üsulları</i>. Book Print. <a href="https://www.preslib.az/az/book/e9XDu2QMjsg6A4a" target="_blank">Prezident Kitabxanası</a>.</li>
+<li>Alpaydin, E. (2021). <i>Machine Learning: The New AI</i>. MIT Press. <a href="https://mitpress.mit.edu/9780262542524/machine-learning/" target="_blank">MIT Press</a>.</li>
+<li>Chollet, F. (2021). <i>Deep Learning with Python</i>, 2nd ed. Manning. <a href="https://www.manning.com/books/deep-learning-with-python-second-edition" target="_blank">Manning</a>.</li>
+<li>Géron, A. (2022). <i>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</i>, 3rd ed. O’Reilly. <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/" target="_blank">O’Reilly</a>.</li>
+<li>Murphy, K. P. (2022). <i>Probabilistic Machine Learning: An Introduction</i>. MIT Press. <a href="https://probml.github.io/pml-book/book1.html" target="_blank">Açıq kitab</a>.</li>
+<li>Goodfellow, I., Bengio, Y., Courville, A. (2016). <i>Deep Learning</i>. MIT Press. <a href="https://www.deeplearningbook.org/" target="_blank">Açıq kitab</a>.</li>
+<li>TensorFlow: <a href="https://www.tensorflow.org/guide/keras/train_and_evaluate" target="_blank">Training and evaluation</a>; <a href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers" target="_blank">Keras optimizers</a>.</li>
+<li>PyTorch: <a href="https://pytorch.org/tutorials/beginner/basics/optimization_tutorial.html" target="_blank">Optimization tutorial</a>.</li>
+<li>Scikit-learn: <a href="https://scikit-learn.org/stable/modules/neural_networks_supervised.html" target="_blank">Neural network models</a>.</li>
+</ol></section>
+
+<section class="card" id="lab"><span class="pill">Laboratoriya işi №13</span><h2>Bir və çoxqatlı neyron şəbəkəsində Forward Propagation, Backpropagation və Gradient Descent mexanizmlərinin hesablanması və proqramlaşdırılması.</h2>
+<h3>1. İşin məqsədi</h3><p>Birqatlı və çoxqatlı neyron şəbəkəsində irəli yayılma, loss hesablanması, zəncir qaydası ilə gradientlərin tapılması və Gradient Descent vasitəsilə çəkilərin yenilənməsini həm əl ilə, həm Python proqramı ilə həyata keçirmək.</p>
+<h3>2. Nəzəri əsas</h3><p>Laboratoriyanın birinci hissəsində bir neyronlu reqressiya modeli, ikinci hissəsində isə bir gizli qatlı MLP istifadə edilir. Birinci modeldə gradientin analitik hesablanması asandır; ikinci modeldə isə backpropagation-un qatlar üzrə ötürülməsi müşahidə olunur.</p>
+<h3>3. Bir neyronlu model — əl ilə hesablanma</h3><p>Model ŷ=wx+b, loss L=½(ŷ−y)² olsun. Onda ∂L/∂w=(ŷ−y)x və ∂L/∂b=(ŷ−y). x=2, y=5, w=1, b=0 olduqda ŷ=2, xəta −3, gradientlər ∂L/∂w=−6 və ∂L/∂b=−3 alınır. η=0.1 ilə w_new=1.6, b_new=0.3.</p>
+<div class="formula">ŷ=wx+b=1×2+0=2<br>L=½(2−5)²=4.5<br>∂L/∂w=(ŷ−y)x=(−3)×2=−6<br>∂L/∂b=ŷ−y=−3<br>w_new=1−0.1(−6)=1.6; b_new=0−0.1(−3)=0.3</div>
+<h3>4. Çoxqatlı model — NumPy ilə backpropagation</h3><p>Aşağıdakı nümunə bir gizli qatlı, sigmoid aktivləşməli kiçik şəbəkəni öyrədir. Kodda bir nümunəlik batch üçün gradientlər açıq hesablanır. Sadəlik üçün başlanğıc parametrlər sabit verilib.</p>
+<div class="code">import numpy as np
+
+# XOR verilənləri
+X = np.array([[0., 0.], [0., 1.],
+              [1., 0.], [1., 1.]])
+y = np.array([[0.], [1.], [1.], [0.]])
+
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+def sigmoid_grad(a):
+    # a = sigmoid(z), buna görə törəmə a(1-a)
+    return a * (1 - a)
+
+rng = np.random.default_rng(7)
+W1 = rng.normal(0, 0.5, (2, 4))
+b1 = np.zeros((1, 4))
+W2 = rng.normal(0, 0.5, (4, 1))
+b2 = np.zeros((1, 1))
+
+lr = 0.8
+for epoch in range(10000):
+    # FORWARD
+    z1 = X @ W1 + b1
+    a1 = sigmoid(z1)
+    z2 = a1 @ W2 + b2
+    y_hat = sigmoid(z2)
+
+    # Binary cross-entropy üçün sigmoid çıxışının
+    # sadələşdirilmiş delta ifadəsi:
+    m = len(X)
+    dz2 = (y_hat - y) / m
+
+    # BACKPROPAGATION
+    dW2 = a1.T @ dz2
+    db2 = np.sum(dz2, axis=0, keepdims=True)
+
+    da1 = dz2 @ W2.T
+    dz1 = da1 * sigmoid_grad(a1)
+    dW1 = X.T @ dz1
+    db1 = np.sum(dz1, axis=0, keepdims=True)
+
+    # GRADIENT DESCENT
+    W2 -= lr * dW2
+    b2 -= lr * db2
+    W1 -= lr * dW1
+    b1 -= lr * db1
+
+    if epoch % 2000 == 0:
+        eps = 1e-9
+        loss = -np.mean(y*np.log(y_hat+eps) +
+                        (1-y)*np.log(1-y_hat+eps))
+        print(epoch, round(loss, 4))
+
+print("Yekun ehtimallar:")
+print(np.round(y_hat, 3))
+print("Sinif proqnozları:")
+print((y_hat >= 0.5).astype(int))</div>
+<p><b>Kodun izahı:</b> z1 gizli qatın xətti birləşməsidir, a1 sigmoid-dən sonrakı aktivləşmədir. z2 çıxış qatının xətti birləşməsi, y_hat isə proqnoz ehtimalıdır. dz2 çıxış qatında loss-un xətti birləşməyə görə törəməsidir. Sonra dW2 və db2 hesablanır, gradient gizli qata ötürülür, sigmoid törəməsi ilə vurulur və dW1/db1 tapılır. Sonda bütün parametrlər gradientin əks istiqamətində yenilənir.</p>
+<div class="warn">Bu kiçik XOR nümunəsi tədris məqsədlidir. Neyron şəbəkəsinin nəticəsi başlanğıc parametrlərdən və learning rate-dən asılı ola bilər. Təcrübədə seed-ləri dəyişərək bir neçə dəfə yoxlayın və loss trayektoriyasını izləyin.</div>
+<h3>5. TensorFlow/Keras ilə müqayisəli quruluş</h3><div class="code">import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+
+model = keras.Sequential([
+    layers.Input(shape=(2,)),
+    layers.Dense(4, activation="sigmoid"),
+    layers.Dense(1, activation="sigmoid")
+])
+model.compile(
+    optimizer=keras.optimizers.SGD(learning_rate=0.8),
+    loss="binary_crossentropy",
+    metrics=["accuracy"]
+)
+history = model.fit(X, y, epochs=3000, verbose=0)
+print(model.predict(X).round(3))</div>
+<h3>6. Təcrübə mərhələləri</h3><ol><li>Bir neyronlu model üçün verilən x, y, w, b və η ilə əl hesablamalarını aparın.</li><li>NumPy MLP kodunu icra edin və loss-un epoch-lar üzrə azalmasını yoxlayın.</li><li>Learning rate-i 0.1, 0.8 və 1.5 seçərək nəticələri müqayisə edin.</li><li>Gizli qatdakı neyron sayını 2, 4 və 8 edin.</li><li>NumPy və Keras modellərinin proqnozlarını müqayisə edin.</li><li>Hər sınaq üçün nəticə cədvəli və qrafik hazırlayın.</li></ol>
+<h3>7. Hesabatın strukturu</h3><ol><li>İşin adı və məqsədi</li><li>İstifadə edilən riyazi düsturlar</li><li>Bir neyronlu modelin əl ilə hesablanması</li><li>MLP arxitekturası və parametr ölçüləri</li><li>Forward və backward hesablamalarının izahı</li><li>Learning rate üzrə müqayisə cədvəli/qrafiki</li><li>Nəticə və elmi şərh</li></ol>
+<h3>8. Yoxlama sualları</h3><ol><li>Loss funksiyasının təlimdə rolu nədir?</li><li>MSE və Binary Cross-Entropy nə ilə fərqlənir?</li><li>Gradient hansı məlumatı verir?</li><li>Learning rate çox böyük seçilərsə nə baş verə bilər?</li><li>Backpropagation və Gradient Descent arasındakı fərq nədir?</li><li>Zəncir qaydası neyron şəbəkəsində nə üçün vacibdir?</li><li>Epoch, batch və iteration anlayışlarını izah edin.</li><li>Adam optimizatoru hansı iki momentdən istifadə edir?</li><li>Overfitting-i loss qrafikində necə tanımaq olar?</li><li>Dropout təlim və inference mərhələlərində necə fərqlənir?</li></ol></section>
+</main></div><footer>MDU · Süni intellekt və maşın öyrənməsi · Fəsil 13</footer>
+<script>
+const $=id=>document.getElementById(id), n=id=>Number($(id).value)||0;
+function calcLoss(){let e=n('target')-n('pred');$('lossOut').textContent=`Xəta = ${(-e).toFixed(4)}; MSE (bir nümunə) = ${(e*e).toFixed(4)}`}
+function calcBCE(){let y=n('classY'),p=Math.min(.999,Math.max(.001,n('prob'))),l=-(y*Math.log(p)+(1-y)*Math.log(1-p));$('bceOut').textContent=`BCE = ${l.toFixed(6)} | y=${y}, p=${p}`}
+function calcGrad(){let w=n('gw'),a=n('ga'),loss=(w-a)**2,g=2*(w-a);$('gradOut').textContent=`L(w) = ${loss.toFixed(4)}; gradient = ${g.toFixed(4)}. Gradient ${g>0?'müsbətdir':g<0?'mənfidir':'sıfırdır'}.`}
+function simulateGD(){let w=n('sw'),lr=n('sr'),steps=Math.min(20,Math.max(1,n('sn'))),rows='<table><tr><th>t</th><th>wₜ</th><th>Gradient</th><th>wₜ₊₁</th><th>Loss</th></tr>';for(let i=0;i<steps;i++){let g=2*(w-3),nw=w-lr*g,loss=(w-3)**2;rows+=`<tr><td>${i}</td><td>${w.toFixed(4)}</td><td>${g.toFixed(4)}</td><td>${nw.toFixed(4)}</td><td>${loss.toFixed(4)}</td></tr>`;w=nw}rows+='</table>'; $('gdTable').innerHTML=rows}
+function calcLR(){let w=n('lrw'),g=n('lrg'),r=n('lrr');$('lrOut').textContent=`w_new = ${w-r*g} ( ${w} − ${r} × ${g} )`}
+function updateWeight(){let w=n('uw'),g=n('ug'),r=n('ur');$('updateOut').textContent=`w_new = ${w-r*g} ( ${w} − ${r} × ${g} )`}
+function calcBatches(){let N=Math.max(1,n('dsN')),B=Math.max(1,n('dsB')),E=Math.max(1,n('dsE')),it=Math.ceil(N/B);$('batchOut').textContent=`Bir epoch: ${it} iteration; ${E} epoch üçün ümumi: ${it*E} iteration`}
+function drawLearning(){let E=n('epochs'),O=n('overAt');$('epochLabel').textContent=E;$('overLabel').textContent=O;let svg=$('learningSvg'),p1=[],p2=[];for(let i=0;i<E;i++){let x=55+i*(650/(E-1||1)),train=1.8*Math.exp(-i/10)+.12,val=1.65*Math.exp(-i/9)+.16+(i>O?.012*(i-O)**1.35:0),y1=220-train*90,y2=220-val*90;p1.push(`${i?'L':'M'}${x.toFixed(1)},${y1.toFixed(1)}`);p2.push(`${i?'L':'M'}${x.toFixed(1)},${y2.toFixed(1)}`)}let ox=55+O*(650/(E-1||1));svg.innerHTML=`<line x1="55" y1="20" x2="55" y2="220" stroke="#64748b" stroke-width="2"/><line x1="55" y1="220" x2="720" y2="220" stroke="#64748b" stroke-width="2"/><path d="${p1.join(' ')}" fill="none" stroke="#2563eb" stroke-width="4"/><path d="${p2.join(' ')}" fill="none" stroke="#dc2626" stroke-width="4"/><line x1="${ox}" y1="25" x2="${ox}" y2="220" stroke="#059669" stroke-width="2" stroke-dasharray="6 5"/><text x="12" y="25" fill="#475569" font-size="12">Loss</text><text x="390" y="255" text-anchor="middle" fill="#475569">Epoch</text><text x="575" y="195" fill="#2563eb" font-size="13">Training</text><text x="575" y="50" fill="#dc2626" font-size="13">Validation</text>`;$('learningNote').textContent=O<E?`Təxmini overfitting başlanğıcı: ${O}-cı epoch. Validation əyrisini izləyin.`:'Göstərilən epoch aralığında overfitting başlanğıcı seçilməyib.'}
+const qs=[
+{q:"Neyron şəbəkəsi təlimində əsas məqsəd nədir?",o:["Qatların sayını sonsuz artırmaq","Loss-u azaltmaq üçün parametrləri öyrənmək","Test dataset-ini dəyişmək"],a:1,e:"Təlim çəkiləri və bias-ları verilənlərə əsasən optimallaşdırır."},
+{q:"MSE hansı tip məsələdə daha çox istifadə olunur?",o:["Reqressiya","Yalnız klasterləşdirmə","Mətn tokenləşdirmə"],a:0,e:"MSE davamlı hədəflə proqnoz arasındakı kvadrat fərqlərin ortasıdır."},
+{q:"y=1, p=0.8 olduqda BCE düsturu hansıdır?",o:["−ln(0.8)","(1−0.8)²","ln(0.8)"],a:0,e:"y=1 üçün BCE=−ln(p)."},
+{q:"Doğru/Yanlış: Gradient loss-un parametrlərə görə qismən törəmələrini birləşdirir.",o:["Doğru","Yanlış"],a:0,e:"Gradient parametr vektorunun bütün qismən törəmələridir."},
+{q:"Gradient Descent parametrə hansı istiqamətdə addım atır?",o:["Gradientin eyni istiqamətində","Gradientin əks istiqamətində","Təsadüfi istiqamətdə həmişə"],a:1,e:"θ yeni = θ köhnə − η×gradient."},
+{q:"Learning rate həddən artıq böyük olduqda nə baş verə bilər?",o:["Həmişə ən yaxşı minimum tapılar","Loss dalğalana və ya arta bilər","Gradient sıfıra çevrilər"],a:1,e:"Böyük addımlar minimumu keçə və təlimi qeyri-sabit edə bilər."},
+{q:"Backpropagation-un əsas funksiyası nədir?",o:["Gradientləri zəncir qaydası ilə hesablamaq","Dataset-i qarışdırmaq","Yeni neyronlar yaratmaq"],a:0,e:"Backpropagation loss-un parametrlərə görə gradientlərini hesablayır."},
+{q:"Boşluğu doldurun: θₜ₊₁ = θₜ − ____ × ∇L",o:["η","epoch","batch"],a:0,e:"η learning rate-dir."},
+{q:"1000 nümunə və batch size 100 olduqda bir epoch-da neçə iteration olur?",o:["1","10","100"],a:1,e:"1000/100=10 batch, yəni 10 iteration."},
+{q:"Training loss azalır, validation loss isə artır. Bu hansı halın əlaməti ola bilər?",o:["Overfitting","Mütləq underfitting","Normalizasiya"],a:0,e:"Training yaxşılaşdığı halda validation pisləşirsə overfitting ehtimalı var."}
+];
+function renderQuiz(){$('questions').innerHTML=qs.map((q,i)=>`<div class="quizq"><b>${i+1}. ${q.q}</b>${q.o.map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join('')}<div class="feedback" id="fb${i}"></div></div>`).join('')}
+function gradeQuiz(){let s=0;qs.forEach((q,i)=>{let a=document.querySelector(`input[name="q${i}"]:checked`),fb=$('fb'+i);if(a&&+a.value===q.a){s++;fb.innerHTML='<span style="color:#047857">Düzgün.</span> '+q.e}else fb.innerHTML='<span style="color:#dc2626">Yanlış və ya cavab seçilməyib.</span> '+q.e});$('quizScore').textContent=`Nəticə: ${s}/${qs.length} (${Math.round(s/qs.length*100)}%)`}
+function resetQuiz(){document.querySelectorAll('#questions input').forEach(x=>x.checked=false);document.querySelectorAll('.feedback').forEach(x=>x.textContent='');$('quizScore').textContent=''}
+calcLoss();calcBCE();calcGrad();simulateGD();calcLR();updateWeight();calcBatches();drawLearning();renderQuiz();
+</script><script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

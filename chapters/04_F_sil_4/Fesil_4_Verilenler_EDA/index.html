@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fəsil 4. Verilənlər və onların ilkin təhlili</title>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{--bg:#f4f7fb;--panel:#fff;--ink:#182334;--muted:#607087;--line:#dce4ef;--accent:#2457a7;--teal:#087f8c;--soft:#eaf1fb;--code:#101a2a;--good:#16794b;--bad:#b42318}
+[data-theme=dark]{--bg:#111827;--panel:#1c2738;--ink:#edf3fb;--muted:#aab8ca;--line:#34445a;--accent:#8db7ff;--teal:#64d4dc;--soft:#26364d;--code:#0a101a;--good:#68d6a0;--bad:#ff8f86}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.68 system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c);color:white;padding:38px max(22px,calc((100% - 1180px)/2))}
+header .eyebrow{letter-spacing:.13em;text-transform:uppercase;font-size:.78rem;opacity:.85}h1{font-size:clamp(1.8rem,4vw,3rem);line-height:1.15;margin:.5rem 0}header p{max-width:900px;color:#e4edfa}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.toolbar button,.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 12px;border-radius:9px;cursor:pointer;font-weight:650}.toolbar button{background:#ffffff18;color:white;border-color:#ffffff55}
+.layout{max-width:1180px;margin:24px auto;padding:0 18px;display:grid;grid-template-columns:270px minmax(0,1fr);gap:22px}nav{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+nav h3{margin:0 0 10px}nav a{display:block;padding:6px 8px;color:var(--muted);text-decoration:none;border-radius:7px;font-size:.91rem}nav a:hover{background:var(--soft);color:var(--accent)}
+main{min-width:0}section,.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:clamp(18px,3vw,30px);margin-bottom:18px;box-shadow:0 4px 18px #162c4a0a}
+h2{font-size:1.55rem;margin:0 0 14px;color:var(--accent)}h3{font-size:1.15rem;margin:22px 0 8px}h4{margin:14px 0 5px}p{margin:8px 0 13px}.muted{color:var(--muted)}.tag{display:inline-block;background:var(--soft);color:var(--accent);border-radius:30px;padding:3px 10px;font-size:.8rem;font-weight:700}
+.callout{border-left:4px solid var(--teal);background:var(--soft);padding:13px 16px;border-radius:8px;margin:14px 0}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.mini{border:1px solid var(--line);border-radius:11px;padding:14px;background:var(--panel)}
+.diagram{border:1px solid var(--line);border-radius:12px;background:var(--soft);padding:15px;margin:16px 0;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.caption{font-size:.88rem;color:var(--muted);text-align:center;margin-top:8px}
+pre{background:var(--code);color:#e7efff;padding:16px;border-radius:10px;overflow:auto;line-height:1.55;font-size:.91rem}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.codebox{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:15px 0}.codehead{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 12px;background:var(--soft);font-weight:700}.codebox pre{margin:0;border-radius:0}.runarea{padding:12px;background:var(--panel);border-top:1px solid var(--line)}.output{background:var(--code);color:#b8f3d0;padding:11px;border-radius:8px;min-height:42px;white-space:pre-wrap;font:.9rem/1.5 ui-monospace,monospace}
+input,select{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:8px;border-radius:8px;max-width:100%}
+.quiz-q{border:1px solid var(--line);border-radius:12px;padding:15px;margin:13px 0}.quiz-q label{display:block;margin:7px 0;cursor:pointer}.feedback{margin-top:8px;font-weight:650}.correct{color:var(--good)}.wrong{color:var(--bad)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.94rem}th,td{padding:9px;border:1px solid var(--line);text-align:left}th{background:var(--soft)}
+footer{text-align:center;color:var(--muted);padding:28px}.chart-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:8px 0}.chart-controls label{display:flex;gap:6px;align-items:center}
+@media(max-width:850px){.layout{grid-template-columns:1fr}nav{position:relative;top:auto;max-height:330px}.grid2,.grid3{grid-template-columns:1fr}}
+@media print{nav,.toolbar,.btn{display:none!important}.layout{display:block;max-width:none}section{break-inside:avoid;box-shadow:none}body{background:white;color:black}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style></head>
+<body>
+<header><div class="eyebrow">Mingəçevir Dövlət Universiteti · Riyaziyyat və İnformasiya texnologiyaları fakültəsi</div>
+<h1>Fəsil 4. Verilənlər və onların ilkin təhlili</h1>
+<p>Süni intellekt layihəsinin keyfiyyətini müəyyən edən əsas mərhələlərdən biri verilənləri tanımaq, strukturunu araşdırmaq, təmizləmək və ilkin statistik təhlil aparmaqdır. Bu fəsildə real layihələrdə istifadə olunan EDA yanaşması interaktiv qrafiklər və Python nümunələri ilə izah edilir.</p>
+<div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="layout"><nav><h3>Mündəricat</h3>
+<a href="#goals">Təlim məqsədləri</a><a href="#s41">4.1 Verilən anlayışı</a><a href="#s42">4.2 Verilənlərin növləri</a><a href="#s43">4.3 Dataset və anlayışlar</a><a href="#s44">4.4 Feature və Label</a><a href="#s45">4.5 Strukturlaşdırılmış/strukturlaşdırılmamış</a><a href="#s46">4.6 Mənbələr və açıq datasetlər</a><a href="#s47">4.7 Datasetin statistik təsviri</a><a href="#s48">4.8 EDA</a><a href="#s49">4.9 Korrelyasiya</a><a href="#s410">4.10 Missing və duplicate</a><a href="#s411">4.11 Kənar qiymətlər</a><a href="#s412">4.12 Vizual təhlil</a><a href="#practice">Praktiki tapşırıqlar</a><a href="#quiz">7 tipli quiz</a><a href="#lab">Laboratoriya işi №4</a><a href="#glossary">Lüğət</a><a href="#refs">Ədəbiyyat</a>
+</nav><main>
+<section id="goals"><span class="tag">Fəslə giriş</span><h2>Təlim məqsədləri və nəticələri</h2>
+<p>Bu fəsildə tələbə verilənləri modelə ötürüləcək xam material kimi deyil, mənşəyi, strukturu, keyfiyyəti və məhdudiyyətləri araşdırılmalı olan elmi obyekt kimi nəzərdən keçirir.</p>
+<div class="grid2"><div class="mini"><h4>Fəslin sonunda tələbə bacarmalıdır</h4><ul><li>dataset, müşahidə, feature və target anlayışlarını fərqləndirmək;</li><li>strukturlaşdırılmış və strukturlaşdırılmamış verilənləri təsnif etmək;</li><li>açıq verilənlər mənbələrini seçmək və lisenziyanı yoxlamaq;</li><li>Pandas ilə datasetin ölçüsünü, tiplərini və statistik təsvirini araşdırmaq;</li><li>EDA aparmaq və uyğun qrafik seçmək;</li><li>korrelyasiyanı hesablamaq və düzgün şərh etmək;</li><li>çatışmayan, təkrarlanan və kənar qiymətləri aşkarlamaq.</li></ul></div><div class="mini"><h4>İlkin biliklər və metodik qeyd</h4><p>Fəsil 3-dəki Python, NumPy, Pandas və vizuallaşdırma anlayışları tələb olunur. Nümunələrdə istifadə edilən kiçik datasetlər tədris məqsədilə sintetik yaradılıb; real elmi nəticə kimi təqdim edilmir.</p><p><b>Əsas prinsip:</b> əvvəlcə verilənləri anla, sonra təmizlə, yalnız bundan sonra model qur.</p></div></div>
+<div class="diagram"><svg viewBox="0 0 720 170" role="img" aria-label="Verilənlərin AI layihəsindəki rolu"><g font-family="Arial" text-anchor="middle" font-size="14"><rect x="10" y="45" width="125" height="65" rx="9" fill="#d8e7fa" stroke="#2457a7"/><text x="72" y="72" fill="#182334">Mənbə</text><text x="72" y="92" fill="#182334">verilənlər</text><rect x="165" y="45" width="125" height="65" rx="9" fill="#d7f0ed" stroke="#087f8c"/><text x="227" y="72" fill="#182334">Keyfiyyət</text><text x="227" y="92" fill="#182334">yoxlaması</text><rect x="320" y="45" width="125" height="65" rx="9" fill="#d8e7fa" stroke="#2457a7"/><text x="382" y="72" fill="#182334">EDA</text><text x="382" y="92" fill="#182334">təhlil</text><rect x="475" y="45" width="105" height="65" rx="9" fill="#d7f0ed" stroke="#087f8c"/><text x="527" y="82" fill="#182334">Model</text><rect x="610" y="45" width="100" height="65" rx="9" fill="#d8e7fa" stroke="#2457a7"/><text x="660" y="82" fill="#182334">Qiymət</text><g stroke="#2457a7" stroke-width="2"><path d="M135 77H160M290 77H315M445 77H470M580 77H605"/></g><text x="360" y="145" fill="currentColor">Mərhələlər iterativdir: təhlil zamanı mənbəyə və emal strategiyasına yenidən qayıtmaq mümkündür.</text></g></svg><div class="caption">Şəkil 4.1. Verilənlərdən model qiymətləndirilməsinə gedən əsas mərhələlər.</div></div></section>
+
+<section id="s41"><h2>4.1. Verilən anlayışı və süni intellektdə verilənlərin əhəmiyyəti</h2>
+<p><b>Verilən (data)</b> müşahidə, ölçmə, qeydiyyat və ya hesablama nəticəsində əldə olunan faktların simvol, rəqəm, mətn, səs, şəkil və digər formalarda təqdimatıdır. Verilənlər kontekstə və şərh qaydasına qoşulduqda informasiya yaradır. Süni intellekt sistemi verilənlərdəki nümunə və qanunauyğunluqları öyrənərək proqnoz, təsnifat və ya qərar dəstəyi yarada bilər.</p>
+<h3>Verilən → informasiya → bilik</h3><div class="diagram"><svg viewBox="0 0 680 190" role="img" aria-label="Data information knowledge zənciri"><g font-family="Arial" text-anchor="middle"><rect x="18" y="40" width="180" height="85" rx="12" fill="#d8e7fa" stroke="#2457a7"/><text x="108" y="72" font-size="18" fill="#182334">Verilən</text><text x="108" y="98" font-size="13" fill="#182334">72, 81, 65, 90</text><rect x="250" y="40" width="180" height="85" rx="12" fill="#d7f0ed" stroke="#087f8c"/><text x="340" y="72" font-size="18" fill="#182334">İnformasiya</text><text x="340" y="98" font-size="13" fill="#182334">Orta bal = 77</text><rect x="482" y="40" width="180" height="85" rx="12" fill="#d8e7fa" stroke="#2457a7"/><text x="572" y="72" font-size="18" fill="#182334">Bilik</text><text x="572" y="98" font-size="13" fill="#182334">Nəticənin şərhi</text><path d="M198 82H245M430 82H477" stroke="#2457a7" stroke-width="2.5"/><text x="340" y="160" font-size="12" fill="currentColor">Kontekst və təhlil xam rəqəmlərin mənasını aydınlaşdırır</text></g></svg><div class="caption">Şəkil 4.2. Xam veriləndən şərh edilən biliyə keçid.</div></div>
+<p>AI modelinin performansı verilənlərin həcmi ilə yanaşı, təmsilçilik, etiketlərin keyfiyyəti, ölçmə xətası, sinif balansı və məlumatların zaman/məkan uyğunluğundan asılıdır. Böyük dataset avtomatik olaraq keyfiyyətli dataset demək deyil.</p>
+<div class="callout"><b>Nümunə:</b> “23” rəqəmi təkbaşına məna daşımır. “Tələbənin yaşı 23” və “sensorun temperatur göstəricisi 23 °C” fərqli dəyişənlərdir. Ölçü vahidi, mənbə və kontekst mütləq saxlanmalıdır.</div></section>
+
+<section id="s42"><h2>4.2. Verilənlərin növləri və strukturları</h2>
+<p>Verilənlər müxtəlif meyarlara görə təsnif olunur. Analitik işdə ən faydalı bölgülərdən biri ölçmə şkalası, təqdimat forması və struktur səviyyəsidir.</p>
+<table><tr><th>Təsnifat</th><th>Növ</th><th>Nümunə</th><th>Qeyd</th></tr><tr><td>Ölçmə şkalası</td><td>Nominal</td><td>Şəhər, ixtisas, rəng</td><td>Kateqoriyalar arasında sıralama yoxdur</td></tr><tr><td>Ölçmə şkalası</td><td>Ordinal</td><td>Aşağı, orta, yüksək</td><td>Sıra var, intervallar bərabər olmaya bilər</td></tr><tr><td>Ölçmə şkalası</td><td>Interval</td><td>°C temperatur</td><td>Fərqlər mənalıdır, mütləq sıfır yoxdur</td></tr><tr><td>Ölçmə şkalası</td><td>Ratio</td><td>Kütlə, məsafə, müddət</td><td>Mütləq sıfır mövcuddur</td></tr><tr><td>Təqdimat</td><td>Ədədi</td><td>Yaş, gəlir, sensor dəyəri</td><td>Diskret və ya kəsilməz ola bilər</td></tr><tr><td>Təqdimat</td><td>Kateqorial</td><td>Sinif, status</td><td>Nominal və ya ordinal ola bilər</td></tr></table>
+<p>Ədədi dəyişən diskret (sayılabilən qiymətlər) və kəsilməz (intervalda istənilən qiymət) ola bilər. Məsələn, tələbə sayı diskret, temperatur isə ölçmə dəqiqliyinə uyğun olaraq kəsilməz dəyişən kimi modelləşdirilir.</p>
+<div class="diagram"><svg viewBox="0 0 650 230" role="img" aria-label="Verilənlərin təsnifat ağacı"><g font-family="Arial" text-anchor="middle" font-size="14"><rect x="225" y="8" width="200" height="40" rx="8" fill="#d8e7fa" stroke="#2457a7"/><text x="325" y="33" fill="#182334">Verilənlər</text><path d="M325 48V72H160V94M325 72H490V94" stroke="#2457a7" stroke-width="2" fill="none"/><rect x="65" y="94" width="190" height="45" rx="8" fill="#d7f0ed" stroke="#087f8c"/><text x="160" y="122" fill="#182334">Ədədi</text><rect x="395" y="94" width="190" height="45" rx="8" fill="#d7f0ed" stroke="#087f8c"/><text x="490" y="122" fill="#182334">Kateqorial</text><path d="M160 139V164H80V180M160 164H240V180M490 139V164H410V180M490 164H570V180" stroke="#2457a7" stroke-width="1.8" fill="none"/><g fill="#182334" font-size="12"><text x="80" y="199">Diskret</text><text x="240" y="199">Kəsilməz</text><text x="410" y="199">Nominal</text><text x="570" y="199">Ordinal</text></g></g></svg><div class="caption">Şəkil 4.3. Ədədi və kateqorial verilənlərin sadələşdirilmiş təsnifatı.</div></div>
+<div class="callout"><b>Diqqət:</b> “diskret/kəsilməz” və “nominal/ordinal” eyni təsnifat meyarı deyil. Birincisi ədədi dəyişənin qiymət xarakterini, ikincisi kateqoriyaların ölçmə şkalasını təsvir edir.</div></section>
+
+<section id="s43"><h2>4.3. Dataset, müşahidə, xüsusiyyət və hədəf dəyişəni</h2>
+<p><b>Dataset</b> müəyyən tədqiqat və ya analitik məqsəd üçün toplanmış müşahidələr toplusudur. Cədvəl formasında hər sətir müşahidəni, sütun isə dəyişəni ifadə edə bilər. Bu, bütün verilənlərə aid universal qayda deyil; şəkil, audio və mətn datasetlərində struktur fərqli ola bilər.</p>
+<div class="diagram"><svg viewBox="0 0 700 240" role="img" aria-label="Dataset cədvəlində müşahidə və xüsusiyyətlər"><g font-family="Arial" font-size="13"><text x="350" y="20" text-anchor="middle" fill="currentColor">Tələbə nəticələri datasetinin nümunəsi</text><g stroke="#2457a7"><rect x="80" y="38" width="540" height="145" fill="#fff" stroke-width="1.5"/><path d="M80 74H620M80 110H620M80 146H620M188 38V183M296 38V183M404 38V183M512 38V183" stroke-width="1"/></g><g fill="#182334" text-anchor="middle"><text x="134" y="61">ID</text><text x="242" y="61">Saat</text><text x="350" y="61">Davamiyyət</text><text x="458" y="61">Bal</text><text x="566" y="61">Nəticə</text><text x="134" y="97">S01</text><text x="242" y="97">3.5</text><text x="350" y="97">90%</text><text x="458" y="97">82</text><text x="566" y="97">Keçdi</text><text x="134" y="133">S02</text><text x="242" y="133">1.0</text><text x="350" y="133">65%</text><text x="458" y="133">48</text><text x="566" y="133">Kəsildi</text><text x="134" y="169">S03</text><text x="242" y="169">4.0</text><text x="350" y="169">95%</text><text x="458" y="169">91</text><text x="566" y="169">Keçdi</text></g><path d="M80 195H620" stroke="#087f8c" stroke-width="2"/><text x="350" y="218" text-anchor="middle" fill="currentColor">Hər sətir = müşahidə; hər sütun = dəyişən / xüsusiyyət</text></g></svg><div class="caption">Şəkil 4.4. Cədvəl datasetində müşahidə və dəyişən anlayışları.</div></div>
+<p>Datasetin ölçüsü çox vaxt \(n\times p\) kimi yazılır: \(n\) müşahidələrin, \(p\) xüsusiyyətlərin sayıdır. Hədəf sütunu ayrıca saxlanırsa, \(X\in\mathbb{R}^{n\times p}\) xüsusiyyət matrisi, \(y\in\mathbb{R}^{n}\) isə hədəf vektoru kimi göstərilə bilər (hədəfin kateqorial olması halında \(y\) kateqoriyalar ardıcıllığıdır).</p>
+<div class="callout">Məsələn, 500 tələbə və 12 xüsusiyyət varsa, xüsusiyyət matrisi 500×12 ölçülüdür. Hədəf “imtahandan keçdi/keçmədi” olduqda 500 etiketdən ibarət vektor alınır.</div></section>
+
+<section id="s44"><h2>4.4. Feature və Label anlayışları</h2>
+<p><b>Feature (xüsusiyyət)</b> modelin girişində istifadə olunan dəyişəndir. <b>Label/target (etiket/hədəf)</b> nəzarətli öyrənmədə modelin proqnozlaşdırmalı olduğu cavabdır. Bir dəyişənin feature və ya label olması tədqiqat sualından asılıdır.</p>
+<div class="diagram"><svg viewBox="0 0 700 190" role="img" aria-label="Feature və label modelə ötürülməsi"><g font-family="Arial" text-anchor="middle"><rect x="15" y="35" width="205" height="115" rx="10" fill="#d8e7fa" stroke="#2457a7"/><text x="117" y="60" font-size="16" fill="#182334">Feature-lər (X)</text><text x="117" y="88" font-size="13" fill="#182334">Təlim saatı</text><text x="117" y="109" font-size="13" fill="#182334">Davamiyyət</text><text x="117" y="130" font-size="13" fill="#182334">Aralıq balı</text><rect x="260" y="55" width="160" height="75" rx="10" fill="#d7f0ed" stroke="#087f8c"/><text x="340" y="86" font-size="16" fill="#182334">ML modeli</text><text x="340" y="108" font-size="12" fill="#182334">öyrənmə</text><rect x="480" y="35" width="205" height="115" rx="10" fill="#fff0c7" stroke="#a66b00"/><text x="582" y="60" font-size="16" fill="#182334">Label (y)</text><text x="582" y="91" font-size="13" fill="#182334">Keçdi / Kəsildi</text><text x="582" y="119" font-size="12" fill="#182334">təlim zamanı məlum cavab</text><path d="M220 92H255M420 92H475" stroke="#2457a7" stroke-width="2.5"/><text x="340" y="174" font-size="12" fill="currentColor">Təlim zamanı X və y birlikdə istifadə olunur; proqnoz zamanı yeni X verilir.</text></g></svg><div class="caption">Şəkil 4.5. Nəzarətli öyrənmədə feature və label əlaqəsi.</div></div>
+<p>Modelin hədəfi dolayı yolla açıqlayan sütun (məsələn, imtahan nəticəsi artıq hesablandıqdan sonra yaradılan “keçdi” statusunu müəyyən edən yekun qərar sütunu) feature kimi daxil edilərsə, <b>target leakage</b> yarana bilər. Feature seçimi yalnız korrelyasiyaya deyil, zaman ardıcıllığına, mövcudluq anına və tətbiq ssenarisinə əsaslanmalıdır.</p>
+<div class="codebox"><div class="codehead">İnteraktiv kod pəncərəsi · X və y seçimi</div><pre><code>feature_columns = ["study_hours", "attendance", "midterm"]
+target_column = "passed"
+
+X = df[feature_columns]
+y = df[target_column]
+
+print(X.shape)
+print(y.shape)</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out44','X.shape → (n, 3)\\ny.shape → (n,)\\nBurada n datasetdəki müşahidələrin sayıdır.')">Çıxışı izah et</button><div class="output" id="out44">Düyməni seçin.</div></div></div></section>
+
+<section id="s45"><h2>4.5. Strukturlaşdırılmış və strukturlaşdırılmamış verilənlər</h2>
+<p><b>Strukturlaşdırılmış verilənlər</b> əvvəlcədən müəyyən edilmiş sxemə malik cədvəl və ya verilənlər bazasında saxlanır. <b>Strukturlaşdırılmamış verilənlər</b> sabit sətir-sütun sxeminə birbaşa uyğun gəlməyən mətn, şəkil, audio və video kimi obyektlərdir. JSON və XML kimi formatlar çox vaxt yarı-strukturlaşdırılmış verilənlər sayılır.</p>
+<div class="grid3"><div class="mini"><h4>Strukturlaşdırılmış</h4><p>SQL cədvəli, CSV, sensor cədvəli.</p><span class="tag">Sətir / sütun</span></div><div class="mini"><h4>Yarı-strukturlaşdırılmış</h4><p>JSON, XML, log faylları.</p><span class="tag">Açar / etiket</span></div><div class="mini"><h4>Strukturlaşdırılmamış</h4><p>Şəkil, audio, video, sərbəst mətn.</p><span class="tag">Media / mətn</span></div></div>
+<div class="callout"><b>AI tətbiqi:</b> şəkil təsnifatında xam şəkillər strukturlaşdırılmamış obyektlərdir. Onlar modelə ötürülməzdən əvvəl ölçü, kanal, piksel dəyərləri və etiketlər üzrə uyğunlaşdırılmış tensorlara çevrilir.</div></section>
+
+<section id="s46"><h2>4.6. Verilənlərin mənbələri və açıq verilənlər bazaları</h2>
+<p>Dataset tədqiqat, dövlət statistikası, sensor/IoT, universitet informasiya sistemləri, sorğu, eksperiment, veb API və açıq repozitoriyalardan əldə oluna bilər. Mənbə seçərkən mənşə, toplanma metodu, lisenziya, yenilənmə tarixi, məxfilik və təmsilçilik qiymətləndirilməlidir.</p>
+<table><tr><th>Mənbə</th><th>İstifadə sahəsi</th><th>Yoxlanmalı məsələ</th></tr><tr><td><a href="https://archive.ics.uci.edu/" target="_blank">UCI Machine Learning Repository</a></td><td>Akademik ML datasetləri</td><td>Dataset təsviri və lisenziya</td></tr><tr><td><a href="https://www.kaggle.com/datasets" target="_blank">Kaggle Datasets</a></td><td>Müxtəlif praktik datasetlər</td><td>Müəllif, mənbə, lisenziya, versiya</td></tr><tr><td><a href="https://datasetsearch.research.google.com/" target="_blank">Google Dataset Search</a></td><td>Dataset axtarışı</td><td>Orijinal mənbəni izləmək</td></tr><tr><td><a href="https://data.gov/" target="_blank">Data.gov</a></td><td>ABŞ dövlət açıq məlumatları</td><td>Yenilənmə və istifadə şərtləri</td></tr><tr><td><a href="https://data.europa.eu/" target="_blank">data.europa.eu</a></td><td>Avropa açıq məlumatları</td><td>Metadata və lisenziya</td></tr><tr><td><a href="https://data.gov.az/" target="_blank">Azərbaycan açıq məlumat portalı</a></td><td>Azərbaycan üzrə açıq məlumatlar</td><td>Datasetin mövcudluğu və yenilənmə tarixi</td></tr></table>
+<p>Datasetin açıq olması onun istənilən məqsədlə məhdudiyyətsiz istifadə edilə bilməsi demək deyil. Lisenziya, atributlaşdırma, kommersiya istifadəsi, törəmə işlər və fərdi məlumatların qorunması ayrıca yoxlanmalıdır.</p>
+<h3>Dataset kartı (Data Card)</h3><ul><li>Datasetin adı və versiyası;</li><li>müəllif və ilkin mənbə;</li><li>toplanma vaxtı, coğrafiyası və metodologiyası;</li><li>müşahidə sayı, xüsusiyyətlər və etiketlər;</li><li>məlum məhdudiyyətlər, qərəzlər və çatışmayan məlumatlar;</li><li>lisenziya və məxfilik şərtləri.</li></ul></section>
+
+<section id="s47"><h2>4.7. Datasetin strukturu və statistik təsviri</h2>
+<p>EDA-dan əvvəl datasetin ölçüsü, sütun adları, verilən tipləri, yaddaş istifadəsi, unikal qiymət sayı və çatışmayan dəyərlər araşdırılır. Pandas-da <code>shape</code>, <code>info()</code>, <code>describe()</code>, <code>nunique()</code> və <code>isna().sum()</code> bu mərhələnin əsas alətləridir.</p>
+<div class="codebox"><div class="codehead">Pandas ilkin yoxlama kodu <button class="btn" onclick="copyText('print(df.shape)\\ndf.info()\\ndisplay(df.describe(include=\"all\"))\\nprint(df.nunique())\\nprint(df.isna().sum())')">Kodu köçür</button></div><pre><code>print(df.shape)
+df.info()
+display(df.describe(include="all"))
+print(df.nunique())
+print(df.isna().sum())</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out47','shape → (müşahidə sayı, sütun sayı)\\ninfo() → sütun tipləri və non-null sayları\\ndescribe() → ədədi sütunlar üçün count, mean, std, min, kvartillər, max\\nnunique() → unikal qiymət sayı\\nisna().sum() → sütun üzrə çatışmayan qiymət sayı')">Hər əmrin nəticəsini izah et</button><div class="output" id="out47">Nəticəni görmək üçün seçin.</div></div></div>
+<h3>İnteraktiv dataset cədvəli</h3><p>Aşağıdakı sintetik müşahidələrdə sətrə klikləyərək qeydi seçin; sütun başlığına klikləməklə artan/azalan sıralama aparın.</p>
+<div class="mini"><div class="chart-controls"><label>Filtr: <select id="groupFilter" onchange="renderDataTable()"><option value="all">Bütün qruplar</option><option value="A">A</option><option value="B">B</option></select></label><span class="muted" id="rowCount">6 müşahidə</span></div><div style="overflow:auto"><table id="dataTable"><thead><tr><th onclick="sortData('id')">ID ↕</th><th onclick="sortData('hours')">Təlim saatı ↕</th><th onclick="sortData('attendance')">Davamiyyət (%) ↕</th><th onclick="sortData('score')">Bal ↕</th><th onclick="sortData('group')">Qrup ↕</th></tr></thead><tbody></tbody></table></div><div id="rowInfo" class="callout">Cədvəldə sətri seçin.</div></div></section>
+
+<section id="s48"><h2>4.8. Exploratory Data Analysis (EDA)</h2>
+<p><b>Exploratory Data Analysis</b> (kəşfiyyat xarakterli verilən təhlili) datasetin strukturunu, paylanmalarını, dəyişənlərarası əlaqələri, qeyri-adi müşahidələri və mümkün keyfiyyət problemlərini araşdıran iterativ prosesdir. EDA yekun hipotez testini əvəz etmir və qrafikdə görünən əlaqəni səbəbiyyət kimi sübut etmir.</p>
+<div class="diagram"><svg viewBox="0 0 700 235" role="img" aria-label="EDA iterativ dövrü"><g font-family="Arial" text-anchor="middle" font-size="14"><rect x="265" y="8" width="170" height="42" rx="9" fill="#d8e7fa" stroke="#2457a7"/><text x="350" y="34" fill="#182334">Sualı müəyyən et</text><rect x="490" y="92" width="170" height="42" rx="9" fill="#d7f0ed" stroke="#087f8c"/><text x="575" y="118" fill="#182334">Strukturu yoxla</text><rect x="265" y="176" width="170" height="42" rx="9" fill="#d8e7fa" stroke="#2457a7"/><text x="350" y="202" fill="#182334">Qrafik və statistika</text><rect x="40" y="92" width="170" height="42" rx="9" fill="#d7f0ed" stroke="#087f8c"/><text x="125" y="118" fill="#182334">Təmizlə / yenidən bax</text><path d="M435 29H555V87M575 134V160H435M265 197H125V139M125 92V60H265" fill="none" stroke="#2457a7" stroke-width="2" stroke-dasharray="5 4"/><text x="350" y="112" fill="currentColor" font-size="12">Təkrarlanan araşdırma</text></g></svg><div class="caption">Şəkil 4.6. EDA-nın iterativ təhlil dövrü.</div></div>
+<h3>EDA üçün praktik yoxlama ardıcıllığı</h3><ol><li>Datasetin mənbəyini və tədqiqat sualını müəyyənləşdirin.</li><li>Ölçü, sütun tipləri, unikal qiymətlər və etiket paylanmasını yoxlayın.</li><li>Çatışmayan və təkrarlanan qeydləri araşdırın.</li><li>Ədədi dəyişənlərin histogram və boxplot-larını qurun.</li><li>Kateqorial dəyişənlərin tezliklərini müqayisə edin.</li><li>Korrelyasiya və qruplar arasındakı əlaqələri araşdırın.</li><li>Müşahidələri kontekstlə şərh edin və emal qərarlarını sənədləşdirin.</li></ol>
+<div class="callout"><b>EDA nəticəsi:</b> “dataset təmizdir” kimi ümumi hökm deyil, konkret müşahidə və sübut olmalıdır: məsələn, “attendance sütununda 6 qeyddən 1-də qiymət yoxdur; bu qeyd ilkin mənbə ilə tutuşdurulacaq”.</div></section>
+
+<section id="s49"><h2>4.9. Korrelyasiya və dəyişənlərarası əlaqələr</h2>
+<p>Korrelyasiya iki dəyişənin birlikdə dəyişmə dərəcəsini ölçür. Pearson korrelyasiya əmsalı xətti əlaqəni ölçür və \(-1\le r\le 1\) intervalındadır. \(r&gt;0\) müsbət, \(r&lt;0\) mənfi xətti əlaqəni, \(r\approx0\) isə xətti əlaqənin zəifliyini göstərir; bu, heç bir əlaqənin olmaması demək deyil.</p>
+<div class="callout">\[r_{XY}=\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}}\]</div>
+<p>Spearman korrelyasiyası qiymətlərin özündən deyil, sıralarından istifadə edərək monoton əlaqəni qiymətləndirir. Korrelyasiya səbəbiyyət demək deyil: üçüncü dəyişən, seçim qərəzi və zaman amili əlaqəni izah edə bilər.</p>
+<h3>İnteraktiv korrelyasiya nöqtə qrafiki</h3><p>“Təlim saatı” və “imtahan balı” sintetik nümunəsinin nöqtələrini müşahidə edin. Slider ilə bir neçə nöqtənin balını dəyişdirin; Pearson r yenidən hesablanacaq.</p>
+<div class="mini"><div class="chart-controls"><label>Son müşahidənin balı <input id="lastScore" type="range" min="40" max="100" value="91" oninput="updateScatter()"><b id="lastScoreVal">91</b></label></div><div id="scatterChart" class="diagram"><svg id="scatterSvg" viewBox="0 0 620 340" role="img" aria-label="Təlim saatı və bal üzrə scatter plot"></svg><div class="caption">Nöqtələr sintetik nümunədir. Oxların vahidlərinə diqqət edin.</div></div><div class="grid2"><div class="mini"><span class="muted">Pearson korrelyasiyası</span><div id="pearsonVal" style="font-size:1.7rem;font-weight:800">—</div></div><div class="mini"><span class="muted">Şərh</span><div id="pearsonText">—</div></div></div></div>
+<div class="codebox"><div class="codehead">Python · korrelyasiya matrisi</div><pre><code>corr = df[["study_hours", "attendance", "score"]].corr(method="pearson")
+print(corr.round(2))
+
+import seaborn as sns
+sns.heatmap(corr, annot=True, cmap="coolwarm",
+            vmin=-1, vmax=1, center=0)
+plt.title("Pearson korrelyasiya matrisi")
+plt.show()</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out49','Korrelyasiya matrisi simmetrikdir; diaqonal elementlər 1 olur.\\nPearson yalnız xətti əlaqəni ölçür.\\nKorrelyasiya səbəbiyyət sübutu deyil.')">Nəticəni izah et</button><div class="output" id="out49">Nəticəni görmək üçün seçin.</div></div></div>
+<h3>Korrelyasiya xəritəsini necə oxumalı?</h3><ul><li>Hüceyrənin rəngi və rəqəmi əmsalın istiqamətini və gücünü göstərir.</li><li>Diaqonalda hər dəyişənin özü ilə korrelyasiyası 1-dir.</li><li>Simmetrik matrisdə \(r_{XY}=r_{YX}\).</li><li>Çatışmayan qiymətlərin emal üsulu hesablanan korrelyasiyaya təsir edə bilər.</li><li>Kateqorial dəyişənlər üçün Pearson əmsalını avtomatik tətbiq etmək düzgün olmaya bilər.</li></ul></section>
+
+<section id="s410"><h2>4.10. Çatışmayan qiymətlər və təkrarlanan qeydlər</h2>
+<p>Çatışmayan qiymət (missing value) ölçmənin aparılmaması, ötürülmə xətası, sensor nasazlığı və ya məlumatın paylaşılmaması səbəbindən yarana bilər. Pandas-da <code>NaN</code> ədədi çatışmayan qiymətləri, <code>None</code> isə obyekt sütunlarında çatışmayan dəyərləri təmsil edə bilər.</p>
+<h3>Çatışmayanlığın mexanizmləri</h3><ul><li><b>MCAR:</b> çatışmazlıq müşahidə olunan və müşahidə olunmayan dəyişənlərdən asılı deyil.</li><li><b>MAR:</b> çatışmazlıq müşahidə olunan dəyişənlərlə əlaqəlidir.</li><li><b>MNAR:</b> çatışmazlıq çatışmayan qiymətin özündən və ya müşahidə olunmayan amildən asılı ola bilər.</li></ul>
+<p>Bu mexanizmlərin fərqləndirilməsi emal strategiyasına təsir edir. Sətiri silmək, orta/medianla doldurmaq və ya model əsaslı imputasiya seçmək kontekstdən asılıdır. Hədəf dəyişəninin çatışmayan qiymətlərini kor-koranə doldurmaq olmaz.</p>
+<div class="codebox"><div class="codehead">Pandas · missing və duplicate yoxlaması</div><pre><code>missing_count = df.isna().sum()
+missing_rate = df.isna().mean() * 100
+duplicate_count = df.duplicated().sum()
+
+print(missing_count)
+print(missing_rate.round(1))
+print("Duplicates:", duplicate_count)</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out410','isna().sum() → hər sütunda boş dəyərlərin sayı\\nisna().mean()*100 → boş dəyərlərin faizi\\nduplicated().sum() → tam təkrarlanan sətirlərin sayı')">Əmrləri izah et</button><div class="output" id="out410">Düyməni seçin.</div></div></div>
+<div class="callout"><b>Data leakage-dən qorunma:</b> median/orta ilə doldurma parametrini yalnız təlim hissəsində öyrənin; sonra həmin parametr train və test çevirməsinə tətbiq edilsin. Scikit-learn Pipeline və SimpleImputer bu iş üçün uyğundur.</div></section>
+
+<section id="s411"><h2>4.11. Kənar qiymətlərin ilkin aşkarlanması</h2>
+<p>Kənar qiymət (outlier) müşahidələrin əsas hissəsindən nəzərəçarpacaq dərəcədə fərqlənən qiymətdir. Kənar müşahidə səhv ölçmə, məlumat daxil etmə xətası və ya real nadir hadisə ola bilər. Buna görə outlier-i avtomatik silmək düzgün yanaşma deyil.</p>
+<h3>IQR üsulu</h3>
+<div class="callout">\[IQR=Q_3-Q_1\]<br>\[\text{Aşağı sərhəd}=Q_1-1.5\times IQR\]<br>\[\text{Yuxarı sərhəd}=Q_3+1.5\times IQR\]</div>
+<p>Bu sərhədlər Tukey qaydasına əsaslanan ilkin aşkarlama meyarıdır; universal “səhv qiymət” sərhədi deyil.</p>
+<div class="diagram"><svg viewBox="0 0 700 200" role="img" aria-label="Boxplot və kənar qiymətlər"><g font-family="Arial" font-size="13"><path d="M70 100H630" stroke="currentColor" stroke-width="1.5"/><path d="M150 65V135M550 65V135M150 100H550" stroke="#2457a7" stroke-width="2"/><rect x="260" y="65" width="170" height="70" fill="#d8e7fa" stroke="#2457a7" stroke-width="2"/><path d="M350 65V135" stroke="#087f8c" stroke-width="3"/><g fill="#182334"><text x="150" y="158" text-anchor="middle">Aşağı whisker</text><text x="260" y="52" text-anchor="middle">Q1</text><text x="350" y="52" text-anchor="middle">Median</text><text x="430" y="52" text-anchor="middle">Q3</text><text x="550" y="158" text-anchor="middle">Yuxarı whisker</text></g><g fill="#b42318" stroke="#b42318"><circle cx="90" cy="100" r="6"/><circle cx="610" cy="100" r="6"/></g><text x="90" y="82" text-anchor="middle" fill="#b42318">Outlier</text><text x="610" y="82" text-anchor="middle" fill="#b42318">Outlier</text></g></svg><div class="caption">Şəkil 4.7. Boxplot-un əsas hissələri və mümkün kənar müşahidələr.</div></div>
+<div class="codebox"><div class="codehead">Python · IQR ilə kənar qiymətləri tap</div><pre><code>Q1 = df["score"].quantile(0.25)
+Q3 = df["score"].quantile(0.75)
+IQR = Q3 - Q1
+
+lower = Q1 - 1.5 * IQR
+upper = Q3 + 1.5 * IQR
+
+outliers = df[(df["score"] < lower) |
+              (df["score"] > upper)]
+print(outliers)</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out411','Q1 və Q3 kvartilləri hesablanır.\\nIQR = Q3 − Q1.\\nSərhədlərdən kənarda qalan sətirlər namizəd outlier kimi işarələnir.\\nNövbəti addım: ilkin mənbə və domen konteksti ilə yoxlama.')">Hesablama addımlarını göstər</button><div class="output" id="out411">Düyməni seçin.</div></div></div>
+<p>Alternativ olaraq z-score istifadə edilə bilər: \(z=(x-\mu)/\sigma\). Paylanma normal deyilsə və ya outlier-lər orta və standart kənarlaşmanı ciddi dəyişirsə, z-score həssas ola bilər.</p></section>
+
+<section id="s412"><h2>4.12. Verilənlərin qrafik və vizual təhlili</h2>
+<p>Qrafik seçimi dəyişənin tipinə və tədqiqat sualına uyğun olmalıdır. Histogram ədədi dəyişənin paylanmasını, bar chart kateqoriyaların sayını, boxplot qruplar üzrə paylanmanı, scatter plot iki ədədi dəyişənin birgə dəyişməsini, heatmap isə matris tipli göstəriciləri təqdim edir.</p>
+<table><tr><th>Sual</th><th>Qrafik</th><th>Nəyi göstərir?</th></tr><tr><td>Qiymətlər necə paylanıb?</td><td>Histogram / KDE</td><td>Tezlik, forma, çoxmodallıq</td></tr><tr><td>Kateqoriyalarda neçə qeyd var?</td><td>Bar chart</td><td>Kateqoriyaların tezliyi</td></tr><tr><td>Qrupların paylanması fərqlənirmi?</td><td>Boxplot / violin</td><td>Median, kvartillər, yayılma</td></tr><tr><td>İki dəyişən necə əlaqəlidir?</td><td>Scatter plot</td><td>Trend, klaster, qeyri-xəttilik</td></tr><tr><td>Çoxsaylı əlaqələr necə görünür?</td><td>Correlation heatmap</td><td>Korrelyasiya əmsalları</td></tr></table>
+<h3>İnteraktiv qrafik seçici</h3><div class="mini"><div class="chart-controls"><label>Qrafik növü <select id="chartType" onchange="drawDemoChart()"><option value="hist">Histogram</option><option value="bar">Kateqoriyalar üzrə say</option><option value="box">Qrupların bal müqayisəsi</option></select></label><label>Qrup <select id="chartGroup" onchange="drawDemoChart()"><option value="all">Hamısı</option><option value="A">A qrupu</option><option value="B">B qrupu</option></select></label></div><svg id="demoChart" viewBox="0 0 620 300" role="img" aria-label="Seçilmiş tipdə interaktiv verilən qrafiki"></svg><div id="demoCaption" class="caption">Sintetik tədris datasetinə əsaslanan qrafik.</div></div>
+<p>Vizual təqdimatda qrafikin adı, oxların adı, ölçü vahidi, legend və mənbə qeyd edilməlidir. Ox miqyasını kəsmək, 3D effektlərdən istifadə və uyğun olmayan rəng seçimi oxucuda yanlış təəssürat yarada bilər.</p>
+<div class="codebox"><div class="codehead">Python · Seaborn ilə EDA qrafikləri</div><pre><code>import matplotlib.pyplot as plt
+import seaborn as sns
+
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+sns.histplot(data=df, x="score", hue="group",
+             bins=6, kde=True, ax=axes[0])
+sns.boxplot(data=df, x="group", y="score",
+            ax=axes[1])
+axes[0].set_title("Bal paylanması")
+axes[1].set_title("Qruplar üzrə bal")
+plt.tight_layout()
+plt.show()</code></pre><div class="runarea"><button class="btn" onclick="showOutput('out412','Birinci panel histogramdır: bal intervalı üzrə müşahidə tezliyini göstərir.\\nİkinci panel boxplot-dur: qrupların medianını və kvartillərini müqayisə edir.\\nHəqiqi qrafik Colab/Jupyter-də yaradılır.')">Qrafiklərin izahını göstər</button><div class="output" id="out412">Düyməni seçin.</div></div></div></section>
+
+<section id="practice"><h2>Praktiki tapşırıqlar</h2>
+<div class="mini"><span class="tag">Başlanğıc</span><h3>Tapşırıq 1. Datasetin pasportu</h3><p>UCI və ya Azərbaycan açıq məlumat portalından kiçik dataset seçin. Mənbə, lisenziya, müşahidə/sütun sayı, dəyişən tipləri və hədəf dəyişəni barədə dataset kartı hazırlayın.</p><p><b>Təhvil:</b> bir səhifəlik dataset pasportu və Pandas ilə ilkin yoxlama kodu.</p></div>
+<div class="mini"><span class="tag">Orta</span><h3>Tapşırıq 2. EDA və keyfiyyət yoxlaması</h3><p>Datasetdə çatışmayan qiymətləri, tam təkrarlanan qeydləri və mümkün kənar qiymətləri aşkarlayın. Ən azı 3 qrafik qurun və hər qrafikdən çıxan müşahidəni yazın.</p><p><b>Təhvil:</b> Notebook, nəticə cədvəli və qısa analitik hesabat.</p></div>
+<div class="mini"><span class="tag">Tədqiqat səviyyəsi</span><h3>Tapşırıq 3. Korrelyasiya və dəyişən seçimi</h3><p>Ən azı 4 ədədi dəyişən üzrə Pearson korrelyasiya matrisi qurun. Əgər məlumatın xarakteri uyğundursa Spearman nəticələri ilə müqayisə edin. Korrelyasiya əsasında feature seçiminin məhdudiyyətlərini müzakirə edin.</p><p><b>Təhvil:</b> heatmap, müqayisə cədvəli, metodoloji əsaslandırma və məhdudiyyətlər.</p></div>
+</section>
+
+<section id="quiz"><h2>Özünü yoxlama sualları · 7 interaktiv quiz tipi</h2><p>10 sual 7 müxtəlif formatı əhatə edir. Hər cavabdan sonra izahlı rəy, sonda ümumi bal göstərilir.</p>
+<div id="quizArea">
+<div class="quiz-q" data-answer="b" data-explain="Dataset cədvəlində sətir müşahidəni, sütun dəyişəni və ya xüsusiyyəti ifadə edir."><b>1. Tək düzgün cavab.</b><p>Cədvəl datasetində adətən bir sətir nəyi ifadə edir?</p><label><input type="radio" name="q1" value="a"> Bir kitabxananı</label><label><input type="radio" name="q1" value="b"> Bir müşahidəni</label><label><input type="radio" name="q1" value="c"> Bir qrafiki</label><label><input type="radio" name="q1" value="d"> Bir proqram modulunu</label><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="a,c" data-explain="Feature giriş dəyişənidir, label isə nəzarətli öyrənmədə modelin öyrənəcəyi hədəf cavabdır."><b>2. Çox düzgün cavab.</b><p>Feature və label haqqında doğru fikirləri seçin.</p><label><input type="checkbox" name="q2" value="a"> Feature modelin giriş dəyişənidir</label><label><input type="checkbox" name="q2" value="b"> Label həmişə ID sütunudur</label><label><input type="checkbox" name="q2" value="c"> Label proqnozlaşdırılan hədəf ola bilər</label><label><input type="checkbox" name="q2" value="d"> Feature yalnız şəkil ola bilər</label><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="false" data-explain="Korrelyasiya birlikdə dəyişməni ölçür; səbəb-nəticə əlaqəsini təkbaşına sübut etmir."><b>3. Doğru / yanlış.</b><p>Yüksək korrelyasiya bir dəyişənin digərinə səbəb olduğunu sübut edir.</p><label><input type="radio" name="q3" value="true"> Doğru</label><label><input type="radio" name="q3" value="false"> Yanlış</label><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="a1,b2,c3" data-explain="Histogram ədədi paylanma, bar chart kateqoriya sayı, scatter plot iki ədədi dəyişənin birgə dəyişməsi üçündür."><b>4. Uyğunlaşdırma.</b><p>Qrafiki uyğun məqsədlə birləşdirin.</p><div class="grid2"><div><p>1. Histogram</p><p>2. Bar chart</p><p>3. Scatter plot</p></div><div><label>1 → <select name="q4a"><option value="">Seçin</option><option value="a1">Ədədi paylanma</option><option value="a2">Kateqoriya sayı</option><option value="a3">İki ədədi dəyişən</option></select></label><label>2 → <select name="q4b"><option value="">Seçin</option><option value="b1">Ədədi paylanma</option><option value="b2">Kateqoriya sayı</option><option value="b3">İki ədədi dəyişən</option></select></label><label>3 → <select name="q4c"><option value="">Seçin</option><option value="c1">Ədədi paylanma</option><option value="c2">Kateqoriya sayı</option><option value="c3">İki ədədi dəyişən</option></select></label></div><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="feature" data-explain="Feature modelin girişində istifadə edilən xüsusiyyət dəyişənidir."><b>5. Boşluğu doldur.</b><p>Modelin girişində istifadə olunan dəyişən ______ adlanır.</p><input name="q5" placeholder="Termin"><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="b,a,c,d" data-explain="Əvvəl datasetin mənbə və strukturunu tanımaq, sonra keyfiyyəti yoxlamaq, EDA aparmaq və yalnız bundan sonra emal/model qərarı vermək daha düzgündür."><b>6. Addımları ardıcıllığa düzün.</b><p>İlkin dataset təhlilinin məntiqli ardıcıllığını seçin.</p><select name="q6"><option value="">Seçin</option><option value="a,b,c,d">EDA → mənbə → model → keyfiyyət</option><option value="b,a,c,d">Mənbə/struktur → keyfiyyət yoxlaması → EDA → qərar</option><option value="b,c,a,d">Mənbə → model → EDA → keyfiyyət</option></select><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="12" data-explain="Dataset ölçüsü 120 müşahidə və 5 feature olduqda X matrisinin ölçüsü 120×5-dir."><b>7. Hesablama.</b><p>Datasetdə 120 müşahidə və 5 feature varsa, X xüsusiyyət matrisində neçə element var?</p><input name="q7" type="number" placeholder="Ədədi cavab"><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="c" data-explain="Tam təkrarlanan sətirləri Pandas-da duplicated() ilə yoxlamaq mümkündür."><b>8. Tək düzgün cavab.</b><p>Pandas-da təkrarlanan sətirləri aşkarlamaq üçün hansı metod uyğundur?</p><label><input type="radio" name="q8" value="a"> describe()</label><label><input type="radio" name="q8" value="b"> corr()</label><label><input type="radio" name="q8" value="c"> duplicated()</label><label><input type="radio" name="q8" value="d"> plot()</label><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="a,b,d" data-explain="IQR kvartillər fərqinə əsaslanır; boxplot paylanmanın median və kvartillərini göstərir; outlier real müşahidə də ola bilər."><b>9. Çox düzgün cavab.</b><p>Kənar qiymətlərin təhlili haqqında doğru fikirləri seçin.</p><label><input type="checkbox" name="q9" value="a"> IQR = Q3 − Q1</label><label><input type="checkbox" name="q9" value="b"> Boxplot kvartilləri vizuallaşdırır</label><label><input type="checkbox" name="q9" value="c"> Bütün outlier-lər silinməlidir</label><label><input type="checkbox" name="q9" value="d"> Kənar qiymət real hadisə ola bilər</label><div class="feedback"></div></div>
+<div class="quiz-q" data-answer="0.8" data-explain="r=0.8 müsbət xətti əlaqənin güclü ola biləcəyini göstərir; səbəbiyyət sübutu deyil."><b>10. Əmsalın şərhi.</b><p>Pearson korrelyasiya əmsalı r = 0.8 olduqda, əmsalın qiyməti neçədir? (0–1 aralığında yazın.)</p><input name="q10" type="number" min="-1" max="1" step=".1" placeholder="Məsələn, 0.8"><div class="feedback"></div></div>
+</div><button class="btn" onclick="gradeQuiz()">Yoxla və balı hesabla</button> <button class="btn" onclick="resetQuiz()">Yenidən başla</button><div id="quizScore" class="callout">Cavabları seçdikdən sonra “Yoxla” düyməsini basın.</div></section>
+
+<section id="lab"><h2>Laboratoriya işi №4</h2><span class="tag">Real dataset · Statistik təsvir · EDA · Korrelyasiya heatmap</span>
+<h3>Mövzu</h3><p>Real dataset əsasında ilkin statistik təhlil, EDA və korrelyasiya xəritəsinin yaradılması.</p>
+<h3>Məqsəd</h3><p>Real açıq dataset seçmək, onun mənşəyini və strukturunu sənədləşdirmək, Pandas ilə ilkin təhlil aparmaq, keyfiyyət problemlərini aşkarlamaq, uyğun qrafiklər və korrelyasiya heatmap-i qurmaq.</p>
+<h3>Proqram təminatı</h3><ul><li>Google Colab və ya Jupyter Notebook;</li><li>Python, Pandas, NumPy;</li><li>Matplotlib və Seaborn;</li><li>UCI Repository və ya başqa lisenziyası aydın açıq dataset.</li></ul>
+<h3>Dataset seçimi</h3><p>İlk icra üçün UCI Iris datasetindən istifadə etmək olar: <a href="https://archive.ics.uci.edu/dataset/53/iris" target="_blank" rel="noopener">UCI Iris dataset səhifəsi</a>. Iris datasetində dörd ədədi ölçü və növ etiketi mövcuddur. Datasetin öz səhifəsindəki mənbə və lisenziya məlumatını hesabatda qeyd edin.</p>
+<h3>İcra addımları</h3><ol><li>Colab-da yeni Notebook yaradın.</li><li>Kitabxanaları import edin və datasetin mənbəsini qeyd edin.</li><li>Datasetin ölçüsünü, sütunlarını və tiplərini yoxlayın.</li><li>Missing və duplicate qeydləri araşdırın.</li><li>Təsviri statistika və sinif tezliklərini hesablayın.</li><li>Histogram, boxplot və scatter plot qurun.</li><li>Ədədi dəyişənlər üçün Pearson korrelyasiya heatmap-i yaradın.</li><li>Nəticələri, məhdudiyyətləri və istifadə olunan lisenziyanı hesabatda yazın.</li></ol>
+<h3>Laboratoriya kodu</h3><pre><code>import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+
+# Açıq Iris datasetini sklearn vasitəsilə yükləyirik
+iris = load_iris(as_frame=True)
+df = iris.frame.copy()
+df["species"] = df["target"].map(
+    dict(enumerate(iris.target_names))
+)
+
+# 1. Struktur
+print("Ölçü:", df.shape)
+print(df.head())
+df.info()
+
+# 2. Keyfiyyət yoxlaması
+print("Missing:")
+print(df.isna().sum())
+print("Duplicate rows:", df.duplicated().sum())
+
+# 3. Statistik təsvir
+display(df.describe())
+
+# 4. Sinif tezlikləri
+print(df["species"].value_counts())
+
+# 5. Histogramlar
+df[iris.feature_names].hist(figsize=(10, 7), bins=15)
+plt.tight_layout()
+plt.show()
+
+# 6. Boxplot
+plt.figure(figsize=(9, 5))
+sns.boxplot(data=df[iris.feature_names])
+plt.xticks(rotation=25)
+plt.title("Iris ölçülərinin boxplot-u")
+plt.tight_layout()
+plt.show()
+
+# 7. Scatter plot
+sns.scatterplot(data=df, x="sepal length (cm)",
+                y="petal length (cm)", hue="species")
+plt.title("Sepal length və petal length")
+plt.show()
+
+# 8. Korrelyasiya xəritəsi: yalnız ədədi feature-lər
+corr = df[iris.feature_names].corr(method="pearson")
+plt.figure(figsize=(8, 6))
+sns.heatmap(corr, annot=True, cmap="coolwarm",
+            vmin=-1, vmax=1, center=0, fmt=".2f")
+plt.title("Iris: Pearson korrelyasiya matrisi")
+plt.tight_layout()
+plt.show()</code></pre>
+<h3>Metodoloji izah</h3><ul><li><code>load_iris(as_frame=True)</code> datasetin Pandas formatında əldə edilməsini asanlaşdırır.</li><li><code>target</code> ədədi kodunu növ adları ilə ayrıca <code>species</code> sütununa çeviririk.</li><li>Korrelyasiya hesabında target kodunu daxil etmirik, çünki sinif kodlarının ədədi sırası nominal siniflər arasında məsafə mənası daşımır.</li><li>Histogramlar hər ədədi dəyişənin paylanmasını, scatter plot iki xüsusiyyətin birgə dəyişməsini, heatmap isə Pearson əlaqələrini göstərir.</li></ul>
+<h3>Hesabatın strukturu</h3><ol><li>Laboratoriya işinin adı və məqsədi;</li><li>datasetin adı, mənbə linki, lisenziyası və təsviri;</li><li>struktur və statistik təsvir;</li><li>missing/duplicate yoxlamasının nəticələri;</li><li>ən azı üç qrafik və şərhi;</li><li>korrelyasiya heatmap və əlaqələrin şərhi;</li><li>məhdudiyyətlər, nəticə və istifadə olunan mənbələr.</li></ol>
+<h3>Nəzarət sualları</h3><ol><li>EDA hansı məqsədlə aparılır?</li><li>Feature matrisi ilə target vektoru arasında fərq nədir?</li><li>Pearson və Spearman korrelyasiyası hansı hallarda fərqlənir?</li><li>Çatışmayan qiymətin mexanizmi niyə vacibdir?</li><li>IQR üsulu ilə aşkarlanan qiymət niyə dərhal silinməməlidir?</li><li>Nominal siniflərə 0, 1, 2 kodu verildikdə bu kodlar arasındakı fərq niyə kəmiyyət məsafəsi sayılmır?</li></ol></section>
+
+<section id="glossary"><h2>Əsas terminlər lüğəti</h2><table><tr><th>English term</th><th>Azərbaycan dilində</th><th>İzah</th></tr>
+<tr><td>Dataset</td><td>Verilənlər toplusu</td><td>Tədqiqat məqsədi üçün toplanmış müşahidələr toplusu.</td></tr><tr><td>Observation / Record</td><td>Müşahidə / qeyd</td><td>Datasetdə bir obyektə və ya hadisəyə aid məlumat vahidi.</td></tr><tr><td>Feature</td><td>Xüsusiyyət</td><td>Modelin girişində istifadə olunan dəyişən.</td></tr><tr><td>Label / Target</td><td>Etiket / hədəf</td><td>Nəzarətli öyrənmədə proqnozlaşdırılan cavab.</td></tr><tr><td>Structured data</td><td>Strukturlaşdırılmış verilən</td><td>Əvvəlcədən müəyyən edilmiş sxemə uyğun məlumat.</td></tr><tr><td>Unstructured data</td><td>Strukturlaşdırılmamış verilən</td><td>Sabit cədvəl sxeminə birbaşa uyğun gəlməyən məlumat.</td></tr><tr><td>EDA</td><td>Kəşfiyyat xarakterli verilən təhlili</td><td>Datasetin struktur və nümunələrinin ilkin araşdırılması.</td></tr><tr><td>Correlation</td><td>Korrelyasiya</td><td>Dəyişənlərin birlikdə dəyişmə dərəcəsi.</td></tr><tr><td>Missing value</td><td>Çatışmayan qiymət</td><td>Verilən sahəsində müşahidə olunmayan və ya qeydə alınmayan qiymət.</td></tr><tr><td>Duplicate</td><td>Təkrarlanan qeyd</td><td>Datasetdə eyni və ya təkrarlanan müşahidə.</td></tr><tr><td>Outlier</td><td>Kənar qiymət</td><td>Paylanmanın əsas hissəsindən fərqlənən müşahidə.</td></tr><tr><td>Imputation</td><td>Qiymətin bərpası / doldurulması</td><td>Çatışmayan qiymət üçün əsaslandırılmış əvəzetmə üsulu.</td></tr><tr><td>Data leakage</td><td>Verilən sızması</td><td>Qiymətləndirmə məlumatının təlim prosesinə dolayı yolla qarışması.</td></tr></table></section>
+
+<section id="refs"><h2>İstifadə olunan ədəbiyyat və rəsmi resurslar</h2>
+<h3>Kitablar</h3><ol><li>McKinney, W. (2022). <i>Python for Data Analysis</i>, 3rd ed. O’Reilly. <a href="https://wesmckinney.com/book/" target="_blank" rel="noopener">Onlayn kitab</a>.</li><li>VanderPlas, J. (2023). <i>Python Data Science Handbook</i>, 2nd ed. O’Reilly. <a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">Onlayn kitab</a>.</li><li>Bruce, P., Bruce, A., & Gedeck, P. (2020). <i>Practical Statistics for Data Scientists</i>, 2nd ed. O’Reilly. <a href="https://www.oreilly.com/library/view/practical-statistics-for/9781492072935/" target="_blank" rel="noopener">Nəşriyyat səhifəsi</a>.</li><li>Géron, A. (2022). <i>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</i>, 3rd ed. O’Reilly. <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/" target="_blank" rel="noopener">Nəşriyyat səhifəsi</a>.</li></ol>
+<h3>Rəsmi sənədlər və dataset resursları</h3><ul><li><a href="https://pandas.pydata.org/docs/" target="_blank">Pandas documentation</a></li><li><a href="https://seaborn.pydata.org/tutorial.html" target="_blank">Seaborn tutorial</a></li><li><a href="https://matplotlib.org/stable/tutorials/" target="_blank">Matplotlib tutorials</a></li><li><a href="https://scikit-learn.org/stable/" target="_blank">Scikit-learn documentation</a></li><li><a href="https://archive.ics.uci.edu/" target="_blank">UCI Machine Learning Repository</a></li><li><a href="https://www.kaggle.com/datasets" target="_blank">Kaggle Datasets</a></li><li><a href="https://data.gov.az/" target="_blank">Azərbaycan açıq məlumat portalı</a></li></ul>
+<div class="callout"><b>Tədqiqat sualı:</b> Datasetdə çatışmayan qiymətlərin və kənar müşahidələrin emal üsulu seçilmiş ML modelinin performansına, sabitliyinə və ümumiləşdirmə qabiliyyətinə necə təsir edir?</div></section>
+</main></div><footer>MDU · Riyaziyyat və İnformasiya texnologiyaları fakültəsi · Elektron dərslik · Fəsil 4</footer>
+<script>
+const rows=[{id:"S01",hours:1.5,attendance:70,score:48,group:"A"},{id:"S02",hours:2,attendance:75,score:55,group:"A"},{id:"S03",hours:3,attendance:82,score:67,group:"A"},{id:"S04",hours:3.5,attendance:88,score:72,group:"B"},{id:"S05",hours:4,attendance:92,score:81,group:"B"},{id:"S06",hours:5,attendance:96,score:91,group:"B"}];let sortKey="id",sortAsc=true;
+function toggleTheme(){document.documentElement.dataset.theme=document.documentElement.dataset.theme==="dark"?"light":"dark"}let fs=16;function changeFont(d){fs=Math.max(14,Math.min(21,fs+d));document.body.style.fontSize=fs+"px"}
+function showOutput(id,t){document.getElementById(id).textContent=t}
+function copyText(t){if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>alert("Kod köçürüldü")).catch(()=>alert("Kodu seçərək köçürün."));else alert("Kodu seçərək köçürün.")}
+function renderDataTable(){let g=document.getElementById("groupFilter").value;let arr=rows.filter(r=>g==="all"||r.group===g).sort((a,b)=>String(a[sortKey]).localeCompare(String(b[sortKey]),undefined,{numeric:true})*(sortAsc?1:-1));let tb=document.querySelector("#dataTable tbody");tb.innerHTML="";arr.forEach(r=>{let tr=document.createElement("tr");tr.style.cursor="pointer";[r.id,r.hours,r.attendance,r.score,r.group].forEach(v=>{let td=document.createElement("td");td.textContent=v;tr.appendChild(td)});tr.onclick=()=>document.getElementById("rowInfo").textContent=`${r.id}: təlim saatı ${r.hours}, davamiyyət ${r.attendance}%, bal ${r.score}, qrup ${r.group}.`;tb.appendChild(tr)});document.getElementById("rowCount").textContent=arr.length+" müşahidə"}
+function sortData(k){if(sortKey===k)sortAsc=!sortAsc;else{sortKey=k;sortAsc=true}renderDataTable()}
+function pearson(x,y){let mx=x.reduce((a,b)=>a+b,0)/x.length,my=y.reduce((a,b)=>a+b,0)/y.length;let num=0,dx=0,dy=0;for(let i=0;i<x.length;i++){num+=(x[i]-mx)*(y[i]-my);dx+=(x[i]-mx)**2;dy+=(y[i]-my)**2}return num/Math.sqrt(dx*dy)}
+function updateScatter(){let s=Number(document.getElementById("lastScore").value);document.getElementById("lastScoreVal").textContent=s;let data=rows.map((r,i)=>({x:r.hours,y:i===5?s:r.score}));let x0=1,x1=5,y0=40,y1=100;let X=x=>75+(x-x0)/(x1-x0)*500,Y=y=>280-(y-y0)/(y1-y0)*240;let svg=`<path d="M75 25V280H575" fill="none" stroke="currentColor"/><g stroke="#cbd5e1" stroke-dasharray="3 4">`;[40,50,60,70,80,90,100].forEach(v=>svg+=`<path d="M75 ${Y(v)}H575"/>`);svg+=`</g><g fill="currentColor" font-size="11">`;[40,50,60,70,80,90,100].forEach(v=>svg+=`<text x="48" y="${Y(v)+4}">${v}</text>`);[1,2,3,4,5].forEach(v=>svg+=`<text x="${X(v)}" y="301" text-anchor="middle">${v}</text>`);svg+=`<text x="325" y="328" text-anchor="middle">Təlim saatı</text><text transform="translate(15 165) rotate(-90)" text-anchor="middle">İmtahan balı</text></g>`;data.forEach((d,i)=>svg+=`<circle cx="${X(d.x)}" cy="${Y(d.y)}" r="6" fill="${i<3?'#2457a7':'#087f8c'}"><title>${rows[i].id}: ${d.x} saat, ${d.y} bal</title></circle>`);document.getElementById("scatterSvg").innerHTML=svg;let r=pearson(data.map(d=>d.x),data.map(d=>d.y));document.getElementById("pearsonVal").textContent=r.toFixed(3);document.getElementById("pearsonText").textContent=r>.7?"Müsbət xətti əlaqə güclüdür. Səbəbiyyət demək deyil.":r>.3?"Müsbət xətti əlaqə orta səviyyədədir.":r>-.3?"Xətti əlaqə zəifdir.":"Mənfi xətti əlaqə müşahidə olunur."}
+function drawDemoChart(){let type=document.getElementById("chartType").value,g=document.getElementById("chartGroup").value,arr=rows.filter(r=>g==="all"||r.group===g),svg="",x=70,ybase=250;let scores=arr.map(r=>r.score);if(type==="hist"){let bins=[0,0,0,0,0,0];scores.forEach(s=>bins[Math.min(5,Math.floor(s/20))]++);let max=Math.max(...bins,1);svg=`<path d="M55 20V250H585" stroke="currentColor" fill="none"/>`;bins.forEach((n,i)=>{let h=n/max*185;svg+=`<rect x="${75+i*82}" y="${250-h}" width="55" height="${h}" fill="#2457a7" rx="4"/><text x="${102+i*82}" y="272" text-anchor="middle" fill="currentColor" font-size="12">${i*20}–${i*20+19}</text><text x="${102+i*82}" y="${240-h}" text-anchor="middle" fill="currentColor" font-size="12">${n}</text>`});document.getElementById("demoCaption").textContent="Histogram: bal intervalları üzrə müşahidə sayı."}
+else if(type==="bar"){let groups=["A","B"];let vals=groups.map(k=>rows.filter(r=>r.group===k).length);svg=`<path d="M55 20V250H585" stroke="currentColor" fill="none"/>`;groups.forEach((k,i)=>{let h=vals[i]*55;svg+=`<rect x="${180+i*180}" y="${250-h}" width="85" height="${h}" fill="#087f8c" rx="5"/><text x="${222+i*180}" y="${272}" text-anchor="middle" fill="currentColor">${k} qrupu</text><text x="${222+i*180}" y="${240-h}" text-anchor="middle" fill="currentColor">${vals[i]}</text>`});document.getElementById("demoCaption").textContent="Bar chart: hər qrupdakı müşahidələrin sayı."}
+else{let sorted=scores.slice().sort((a,b)=>a-b),q1=sorted[Math.floor((sorted.length-1)*.25)],med=sorted[Math.floor((sorted.length-1)*.5)],q3=sorted[Math.floor((sorted.length-1)*.75)],lo=sorted[0],hi=sorted[sorted.length-1],Y=v=>250-(v-40)/60*210;svg=`<path d="M55 20V250H585" stroke="currentColor" fill="none"/><path d="M310 ${Y(lo)}V${Y(hi)}M260 ${Y(lo)}H360M260 ${Y(hi)}H360" stroke="#2457a7" stroke-width="2"/><rect x="235" y="${Y(q3)}" width="150" height="${Y(q1)-Y(q3)}" fill="#d8e7fa" stroke="#2457a7" stroke-width="2"/><path d="M235 ${Y(med)}H385" stroke="#087f8c" stroke-width="4"/>`;document.getElementById("demoCaption").textContent=`Boxplot xülasəsi (sadələşdirilmiş kvartil seçimi): min=${lo}, Q1≈${q1}, median≈${med}, Q3≈${q3}, max=${hi}.`;}
+document.getElementById("demoChart").innerHTML=svg}
+function getAnswer(q){let n=q.querySelector(".feedback"),inputs=q.querySelectorAll("input");if(q.dataset.answer==="a1,b2,c3")return ["a","b","c"].map(k=>q.querySelector(`[name=q4${k}]`).value).join(",");if(q.querySelector('input[type="checkbox"]'))return [...q.querySelectorAll('input[type="checkbox"]:checked')].map(x=>x.value).sort().join(",");if(q.querySelector('input[type="radio"]'))return q.querySelector('input[type="radio"]:checked')?.value||"";if(q.querySelector("select"))return q.querySelector("select").value;return q.querySelector("input")?.value.trim().toLowerCase()||""}
+function gradeQuiz(){let qs=[...document.querySelectorAll(".quiz-q")],score=0;qs.forEach(q=>{let v=getAnswer(q),a=q.dataset.answer,ok=v===a;if(ok)score++;let f=q.querySelector(".feedback");f.className="feedback "+(ok?"correct":"wrong");f.textContent=(ok?"Düzgündür. ":"Düzgün deyil. ")+q.dataset.explain});document.getElementById("quizScore").textContent=`Nəticə: ${score} / ${qs.length} (${Math.round(score/qs.length*100)}%). Hər sual 1 baldır.`}
+function resetQuiz(){document.querySelectorAll("#quizArea input").forEach(x=>{if(["radio","checkbox"].includes(x.type))x.checked=false;else x.value=""});document.querySelectorAll("#quizArea select").forEach(x=>x.selectedIndex=0);document.querySelectorAll(".feedback").forEach(x=>{x.textContent="";x.className="feedback"});document.getElementById("quizScore").textContent="Cavabları seçdikdən sonra “Yoxla” düyməsini basın."}
+renderDataTable();updateScatter();drawDemoChart();
+</script><script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

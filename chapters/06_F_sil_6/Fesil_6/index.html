@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fəsil 6 — Maşın öyrənməsinin nəzəri əsasları | MDU</title>
+<style>
+:root{--navy:#14243a;--blue:#2463a6;--cyan:#0f8b8d;--gold:#d99b25;--ink:#263445;--muted:#637184;--bg:#f3f6fa;--line:#dce4ee;--white:#fff;--green:#25845b;--red:#b84a4a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.72 "Segoe UI",Arial,sans-serif}
+header{background:linear-gradient(120deg,#13263e,#1e5482 65%,#117d80);color:white;padding:38px max(22px,calc((100% - 1180px)/2)) 34px}
+header .tag{letter-spacing:2px;text-transform:uppercase;font-size:12px;opacity:.8}h1{font-size:clamp(28px,4vw,43px);line-height:1.15;margin:12px 0}header p{max-width:850px;color:#e4eef8;margin:10px 0}
+.shell{max-width:1180px;margin:auto;padding:22px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px}
+nav{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto;background:white;border:1px solid var(--line);border-radius:14px;padding:16px}
+nav b{display:block;color:var(--navy);margin-bottom:8px}nav a{display:block;color:#4a5e73;text-decoration:none;padding:5px 8px;border-radius:7px;font-size:13px}nav a:hover{background:#edf4fb;color:var(--blue)}
+main{min-width:0}.card,.section{background:white;border:1px solid var(--line);border-radius:15px;padding:23px;margin-bottom:19px;box-shadow:0 4px 16px #14243a08}
+h2{font-size:25px;color:var(--navy);margin:0 0 15px;border-bottom:2px solid #eaf0f6;padding-bottom:10px}h3{color:#1e527e;font-size:19px;margin:24px 0 8px}h4{color:#235b72;margin:16px 0 5px}
+p{margin:9px 0}ul,ol{padding-left:24px}li{margin:5px 0}.lead{font-size:17px;color:#41566d}.note{border-left:4px solid var(--cyan);background:#eef8f7;padding:13px 16px;border-radius:8px;margin:14px 0}.warn{border-left-color:var(--gold);background:#fff8e9}.formula{background:#f2f5fa;border:1px solid var(--line);padding:12px;border-radius:9px;text-align:center;font-family:Georgia,serif;font-size:18px;overflow:auto}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.tile{border:1px solid var(--line);background:#fbfcfe;border-radius:11px;padding:14px}.tile strong{color:var(--navy)}.pill{display:inline-block;border-radius:30px;padding:3px 10px;background:#eaf2fb;color:#225b91;font-size:12px;font-weight:700}
+table{width:100%;border-collapse:collapse;margin:13px 0;font-size:14px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:#edf3f8;color:#193b5b}tr:nth-child(even) td{background:#fafbfd}
+button,select,input{font:inherit}button{border:0;background:var(--blue);color:white;border-radius:8px;padding:9px 14px;cursor:pointer;font-weight:600}button:hover{filter:brightness(.93)}button.secondary{background:#e8eff7;color:#244c73}button.green{background:var(--green)}input,select{border:1px solid #cbd6e2;border-radius:7px;padding:8px;max-width:100%}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}.result{padding:10px 13px;background:#f0f6fc;border-radius:8px;margin-top:10px;min-height:38px}
+svg.diagram{width:100%;height:auto;max-height:320px;background:#fbfdff;border:1px solid var(--line);border-radius:12px;margin:10px 0}
+.node{fill:#e9f2fb;stroke:#3976a8;stroke-width:1.5}.node2{fill:#e8f6f2;stroke:#26917c;stroke-width:1.5}.node3{fill:#fff4df;stroke:#c58b27;stroke-width:1.5}.dtext{font:14px Arial;fill:#18334e;text-anchor:middle}.arrow{stroke:#58728b;stroke-width:2;fill:none;marker-end:url(#arr)}
+pre{background:#142338;color:#e6f0fb;padding:17px;border-radius:10px;overflow:auto;font:13px/1.6 Consolas,monospace;white-space:pre}
+.codehead{display:flex;justify-content:space-between;align-items:center;color:#47617a;font-size:13px;margin-top:14px}
+.small{font-size:13px;color:var(--muted)}.quizq{border:1px solid var(--line);border-radius:10px;padding:15px;margin:13px 0}.quizq label{display:block;margin:6px 0}.feedback{font-weight:600;margin-top:8px}.correct{color:var(--green)}.incorrect{color:var(--red)}
+.bar{height:14px;background:#e8edf3;border-radius:10px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,#2463a6,#0f9b91)}
+footer{text-align:center;color:#6b7a8b;padding:25px}
+@media(max-width:850px){.shell{grid-template-columns:1fr}nav{position:relative;top:0;max-height:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}nav b{grid-column:1/-1}.grid2,.grid3{grid-template-columns:1fr}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style>
+</head>
+<body>
+<header><div class="tag">Mingəçevir Dövlət Universiteti · Riyaziyyat və İnformasiya Texnologiyaları fakültəsi</div>
+<h1>Fəsil 6. Maşın öyrənməsinin nəzəri əsasları</h1>
+<p>Maşın öyrənməsinin konseptual, riyazi və alqoritmik əsasları: öyrənmə paradiqmalarından modelin ümumiləşdirməsinə qədər interaktiv elektron mühazirə.</p>
+<div class="pill">Magistratura səviyyəsi</div> <div class="pill">İnteraktiv dərs</div> <div class="pill">Laboratoriya №6</div><div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="shell">
+<nav><b>Fəsil üzrə naviqasiya</b>
+<a href="#outcomes">Məqsəd və nəticələr</a><a href="#s61">6.1. Anlayış və prinsiplər</a><a href="#s62">6.2. Ənənəvi proqramlaşdırma</a><a href="#s63">6.3. Öyrənmə növləri</a><a href="#s64">6.4. Nəzarətli öyrənmə</a><a href="#s65">6.5. Nəzarətsiz öyrənmə</a><a href="#s66">6.6. Yarı nəzarətli öyrənmə</a><a href="#s67">6.7. Möhkəmləndirmə</a><a href="#s68">6.8. Model və parametrlər</a><a href="#s69">6.9. Təlim və proqnoz</a><a href="#s610">6.10. Məsələlərin təsnifatı</a><a href="#s611">6.11. Layihə həyat dövrü</a><a href="#s612">6.12. Ümumiləşdirmə</a><a href="#practice">Praktiki tapşırıqlar</a><a href="#quiz">Özünü yoxla — 7 tip</a><a href="#lab">Laboratoriya işi №6</a><a href="#glossary">Terminlər</a><a href="#refs">Ədəbiyyat</a></nav>
+<main>
+<section class="card" id="outcomes"><h2>Fəslin məqsədi və təlim nəticələri</h2><p class="lead">Bu fəsil maşın öyrənməsini verilənlərdən qanunauyğunluqların çıxarılması və həmin qanunauyğunluqların yeni müşahidələrə tətbiqi prosesi kimi sistemli şəkildə izah edir.</p>
+<div class="grid2"><div class="tile"><strong>Məqsəd</strong><p>Öyrənmə paradiqmalarını, model qurulmasını, təlim və qiymətləndirməni, ümumiləşdirmə problemini nəzəri və praktiki səviyyədə mənimsətmək.</p></div><div class="tile"><strong>İlkin biliklər</strong><p>Python əsasları, ehtimal-statistika, xətti cəbrin elementləri, verilənlərin hazırlanması və EDA.</p></div></div>
+<p>Fəsli tamamlayan tələbə:</p><ul><li>ənənəvi proqramlaşdırma ilə ML yanaşmasını fərqləndirir;</li><li>nəzarətli, nəzarətsiz, yarı nəzarətli və möhkəmləndirmə öyrənməsini müqayisə edir;</li><li>model, alqoritm, parametr və hiperparametr terminlərini düzgün tətbiq edir;</li><li>təlim, validasiya və test mərhələlərini əsaslandırır;</li><li>təsnifat, reqressiya, klasterləşdirmə və qərarvermə məsələlərini ayırd edir;</li><li>overfitting, underfitting və ümumiləşdirmə risklərini təhlil edir.</li></ul></section>
+
+<section class="section" id="s61"><h2>6.1. Maşın öyrənməsi anlayışı və əsas prinsipləri</h2>
+<p>Maşın öyrənməsi (Machine Learning, ML) kompüter sistemlərinin hər bir mümkün vəziyyət üçün qaydaların proqramçı tərəfindən ayrıca yazılmasına ehtiyac qalmadan, verilənlərdəki nümunələri öyrənərək proqnoz və ya qərar verməsini təmin edən süni intellekt istiqamətidir. Model müşahidələrdən statistik əlaqələr öyrənir; öyrəndiyi əlaqəni əvvəllər görmədiyi nümunələrə tətbiq edir.</p>
+<p>ML-in klassik tərifində Tom Mitchell öyrənməni tapşırıq (T), təcrübə (E) və performans ölçüsü (P) ilə əlaqələndirir: kompüter proqramının T tapşırıqları üzrə P performansı E təcrübəsi ilə yaxşılaşırsa, proqram öyrənmiş hesab olunur. Məsələn, spam filtri üçün T — e-poçtları spam/spam deyil kimi təsnif etmək, E — etiketlənmiş məktublar, P — düzgün təsnifat göstəricisidir.</p>
+<div class="formula">Model:  f<sub>θ</sub>: X → Ŷ &nbsp;&nbsp; və &nbsp;&nbsp; θ* = arg min<sub>θ</sub> (1/n) Σ L(f<sub>θ</sub>(xᵢ), yᵢ)</div>
+<p>Burada X giriş xüsusiyyətləri, Ŷ proqnoz, θ model parametrləri, L itki funksiyası, n müşahidələrin sayıdır. Təlimin məqsədi seçilmiş itki funksiyasını verilənlər üzərində azaltmaqdır. Lakin yalnız təlim itkisini azaltmaq kifayət deyil: əsas meyar modelin yeni verilənlərdə davranışıdır.</p>
+<h3>ML-in əsas prinsipləri</h3><div class="grid3"><div class="tile"><strong>Verilənlər</strong><p>Keyfiyyət, təmsilçilik, etiketlərin etibarlılığı.</p></div><div class="tile"><strong>Model fərziyyəsi</strong><p>Alqoritmin öyrənə biləcəyi funksiyalar sinfi.</p></div><div class="tile"><strong>Optimallaşdırma</strong><p>İtkinin minimallaşdırılması və ya mükafatın maksimallaşdırılması.</p></div><div class="tile"><strong>Qiymətləndirmə</strong><p>Uyğun metrik və müstəqil test.</p></div><div class="tile"><strong>Ümumiləşdirmə</strong><p>Yeni nümunələrdə sabit performans.</p></div><div class="tile"><strong>Etik və məsuliyyətli istifadə</strong><p>Qərəz, məxfilik, izaholunma və təhlükəsizlik.</p></div></div>
+<div class="note"><b>Elmi qeyd:</b> ML “kompüterin insan kimi düşünməsi” demək deyil. Model konkret verilənlər, məqsəd funksiyası və qiymətləndirmə çərçivəsi daxilində nümunələri öyrənir. Nəticə verilənlərin paylanması dəyişdikdə zəifləyə bilər.</div>
+<h3>Sadə öyrənmə nümunəsi: xətti reqressiya</h3><p>Tələbənin həftəlik çalışma saatı ilə imtahan balı arasında əlaqəni sadə model ilə təsvir edək: ŷ = w·x + b. Təlim zamanı w və b verilənlərə uyğun seçilir. Modelin proqnozu səbəb-nəticə sübutu deyil; korrelyasiya və müşahidə olunan əlaqə səbəbiyyət kimi təqdim edilməməlidir.</p>
+<div class="controls"><label>Çalışma saatı: <input id="hours" type="number" min="0" max="20" value="6"></label><button onclick="predictScore()">Proqnozlaşdır</button></div><div class="result" id="predResult">Proqnoz burada görünəcək.</div>
+<div class="codehead"><b>Python — ən sadə xətti model</b><span>scikit-learn</span></div><pre><code>import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# X: həftəlik çalışma saatları, y: imtahan balları
+X = np.array([[1], [2], [3], [4], [5], [6]])
+y = np.array([42, 48, 55, 61, 67, 73])
+
+model = LinearRegression()
+model.fit(X, y)                 # parametrləri verilənlərdən öyrənir
+y_pred = model.predict([[7]])   # yeni müşahidə üçün proqnoz
+print("Əmsal:", model.coef_[0])
+print("Sərbəst hədd:", model.intercept_)
+print("7 saat üçün bal:", y_pred[0])</code></pre>
+</section>
+
+<section class="section" id="s62"><h2>6.2. Ənənəvi proqramlaşdırma və maşın öyrənməsinin fərqi</h2>
+<p>Ənənəvi proqramlaşdırmada proqramçı giriş verilənləri və qaydaları müəyyən edir, proqram nəticəni hesablayır. ML-də isə girişlər və nümunə nəticələr (etiketlər) təqdim olunur, alqoritm qaydanın/modelin parametrlərini verilənlərdən öyrənir.</p>
+<svg class="diagram" viewBox="0 0 760 240" role="img" aria-label="Ənənəvi proqramlaşdırma və maşın öyrənməsi axın sxemi"><defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#58728b"/></marker></defs>
+<text x="190" y="25" class="dtext" font-weight="bold">Ənənəvi proqramlaşdırma</text><rect x="25" y="55" width="145" height="55" rx="9" class="node"/><text x="97" y="87" class="dtext">Giriş verilənləri</text><rect x="205" y="55" width="145" height="55" rx="9" class="node3"/><text x="277" y="87" class="dtext">Proqramçı qaydaları</text><rect x="385" y="55" width="145" height="55" rx="9" class="node2"/><text x="457" y="87" class="dtext">Proqram</text><rect x="565" y="55" width="165" height="55" rx="9" class="node"/><text x="647" y="87" class="dtext">Nəticə</text><path d="M170 82 H200 M350 82 H380 M530 82 H560" class="arrow"/>
+<text x="190" y="151" class="dtext" font-weight="bold">Maşın öyrənməsi</text><rect x="25" y="170" width="145" height="52" rx="9" class="node"/><text x="97" y="201" class="dtext">Giriş + etiket</text><rect x="205" y="170" width="145" height="52" rx="9" class="node3"/><text x="277" y="201" class="dtext">Öyrənmə alqoritmi</text><rect x="385" y="170" width="145" height="52" rx="9" class="node2"/><text x="457" y="201" class="dtext">Öyrənilmiş model</text><rect x="565" y="170" width="165" height="52" rx="9" class="node"/><text x="647" y="201" class="dtext">Yeni giriş → proqnoz</text><path d="M170 196 H200 M350 196 H380 M530 196 H560" class="arrow"/></svg>
+<table><tr><th>Meyar</th><th>Ənənəvi proqramlaşdırma</th><th>Maşın öyrənməsi</th></tr><tr><td>Qayda</td><td>İnsan tərəfindən açıq yazılır</td><td>Verilənlərdən model parametrləri öyrənilir</td></tr><tr><td>Əsas resurs</td><td>Alqoritm və domen qaydaları</td><td>Verilənlər, model, hesablama resursu</td></tr><tr><td>Uyğun problem</td><td>Qaydaları dəqiq müəyyən edilən məsələlər</td><td>Qanunauyğunluğu nümunələrdən çıxarılan məsələlər</td></tr><tr><td>Risk</td><td>Qaydaların natamam və ya kövrək olması</td><td>Qərəz, overfitting, paylanma sürüşməsi</td></tr><tr><td>Nümunə</td><td>Vergi qaydasına əsasən məbləğ hesablanması</td><td>Şəkildə pişiyin tanınması</td></tr></table>
+<div class="note warn"><b>Vacib fərq:</b> Hər proqramın içində qaydalar var, ML modeli də proqram kodu ilə işləyir. Fərq kompüterin “kod yazması” deyil, proqnoz funksiyasının parametrlərinin nümunə verilənlərdən öyrənilməsidir.</div></section>
+
+<section class="section" id="s63"><h2>6.3. Maşın öyrənməsinin əsas növləri</h2>
+<p>Öyrənmə paradiqması modelin hansı siqnaldan istifadə etməsi ilə müəyyən olunur: etiket, etiketsiz müşahidələr, qismən etiket və ya mühitdən alınan mükafat. Yarı nəzarətli öyrənmə nəzarətli və nəzarətsiz üsullar arasında hibrid yanaşmadır; bəzi mənbələr əsas üç paradiqmanı (nəzarətli, nəzarətsiz, möhkəmləndirmə) vurğulayır.</p>
+<svg class="diagram" viewBox="0 0 760 310" role="img" aria-label="Maşın öyrənməsi paradiqmalarının taksonomiyası"><defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#58728b"/></marker></defs><rect x="265" y="12" width="230" height="48" rx="12" class="node3"/><text x="380" y="42" class="dtext" font-weight="bold">Maşın öyrənməsi</text><path d="M380 60 V91 M95 91 H665 M95 91 V115 M285 91 V115 M475 91 V115 M665 91 V115" class="arrow"/><rect x="15" y="115" width="160" height="68" rx="10" class="node"/><text x="95" y="141" class="dtext">Nəzarətli</text><text x="95" y="161" class="dtext">X, y etiketli</text><rect x="205" y="115" width="160" height="68" rx="10" class="node2"/><text x="285" y="141" class="dtext">Nəzarətsiz</text><text x="285" y="161" class="dtext">yalnız X</text><rect x="395" y="115" width="160" height="68" rx="10" class="node3"/><text x="475" y="141" class="dtext">Yarı nəzarətli</text><text x="475" y="161" class="dtext">X + az sayda y</text><rect x="585" y="115" width="160" height="68" rx="10" class="node"/><text x="665" y="141" class="dtext">Möhkəmləndirmə</text><text x="665" y="161" class="dtext">agent + mükafat</text><path d="M95 183 V213 M285 183 V213 M475 183 V213 M665 183 V213" class="arrow"/><text x="95" y="238" class="dtext">Təsnifat / reqressiya</text><text x="285" y="238" class="dtext">Klaster / ölçü azaltma</text><text x="475" y="238" class="dtext">Pseudo-label / yayılma</text><text x="665" y="238" class="dtext">Siyasət / hərəkət</text><text x="380" y="286" class="dtext">Paradiqma seçimi problemin məqsədindən və mövcud siqnaldan asılıdır</text></svg>
+<table><tr><th>Paradiqma</th><th>Təlim siqnalı</th><th>Tipik tapşırıq</th><th>Alqoritm nümunəsi</th></tr><tr><td>Nəzarətli</td><td>Etiketli (X, y)</td><td>Təsnifat, reqressiya</td><td>Linear/Logistic Regression, Random Forest, SVM</td></tr><tr><td>Nəzarətsiz</td><td>Etiketsiz X</td><td>Klasterləşdirmə, struktur aşkarlanması</td><td>K-Means, DBSCAN, PCA</td></tr><tr><td>Yarı nəzarətli</td><td>Az etiketli + çox etiketsiz X</td><td>Etiket xərci yüksək olduqda təsnifat</td><td>Self-training, label propagation</td></tr><tr><td>Möhkəmləndirmə</td><td>Mükafat/cərimə və mühit geribildirimi</td><td>Ardıcıl qərarvermə</td><td>Q-learning, SARSA, policy gradient</td></tr></table>
+<div class="note">Eyni real sistemdə bir neçə paradiqma birləşdirilə bilər. Məsələn, klasterləşdirmə ilə istifadəçi qrupları tapılır, sonra nəzarətli model hər qrupda davranışı proqnozlaşdırır.</div></section>
+
+<section class="section" id="s64"><h2>6.4. Nəzarətli öyrənmə (Supervised Learning)</h2>
+<p>Nəzarətli öyrənmədə hər təlim nümunəsi giriş xüsusiyyətləri və gözlənilən cavabdan ibarətdir: D = {(xᵢ, yᵢ)}. Alqoritm X-dən y-yə uyğunlaşdırma funksiyasını öyrənir. Hədəf dəyişənin növünə görə iki əsas məsələ ayrılır.</p>
+<div class="grid2"><div class="tile"><strong>Təsnifat (Classification)</strong><p>Hədəf kateqoriyadır: spam/spam deyil, riskli/riskli deyil, bitki növü.</p><p class="small">Metriklər: accuracy, precision, recall, F1, ROC-AUC.</p></div><div class="tile"><strong>Reqressiya (Regression)</strong><p>Hədəf kəmiyyət qiymətidir: enerji sərfi, qiymət, temperatur, tələbə balı.</p><p class="small">Metriklər: MAE, MSE, RMSE, R².</p></div></div>
+<h3>İnteraktiv qərar: hansı tapşırıqdır?</h3><div class="controls"><select id="taskType"><option value="class">“Tələbə imtahandan keçəcək / keçməyəcək”</option><option value="reg">“Gələn ay enerji sərfi neçə kWh olacaq?”</option><option value="class">“E-poçt spamdır / deyil”</option><option value="reg">“Mənzilin satış qiymətini hesabla”</option></select><button onclick="classifyTask()">Təsnif et</button></div><div class="result" id="taskResult">Tapşırıq növünü seçin.</div>
+<h3>İtki funksiyası və öyrənmə</h3><p>Reqressiyada kvadratik xəta funksiyası tez-tez istifadə olunur:</p><div class="formula">MSE = (1/n) Σ (yᵢ − ŷᵢ)²</div><p>İkili təsnifatda log-loss ehtimal proqnozunun keyfiyyətini qiymətləndirir. Optimallaşdırma alqoritmi (məsələn, gradient descent) parametrləri elə yeniləyir ki, təlim itkisi azalsın.</p>
+<div class="codehead"><b>Python — Iris verilənlərində təsnifat</b><span>scikit-learn</span></div><pre><code>from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, stratify=y, random_state=42
+)
+model = make_pipeline(StandardScaler(),
+                      LogisticRegression(max_iter=1000))
+model.fit(X_train, y_train)
+pred = model.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, pred))
+print(classification_report(y_test, pred))</code></pre>
+<p class="small">İzah: stratify=y sinif nisbətlərinin bölmələrdə qorunmasına kömək edir; StandardScaler yalnız Pipeline daxilində fit edilir və test məlumatından statistik məlumat sızmasının qarşısını alır.</p></section>
+
+<section class="section" id="s65"><h2>6.5. Nəzarətsiz öyrənmə (Unsupervised Learning)</h2>
+<p>Nəzarətsiz öyrənmədə hədəf etiket əvvəlcədən verilmir. Alqoritm müşahidələrin daxili strukturunu, oxşarlıq və fərqlərini, aşağıölçülü təsvirini və ya qeyri-adi nümunələri araşdırır. Nəticədə alınan klasterlər avtomatik olaraq “doğru siniflər” hesab edilmir; onların mənası domen biliyi ilə şərh edilməlidir.</p>
+<h3>Klasterləşdirmə: K-Means ideyası</h3><p>K-Means hər müşahidəni ən yaxın mərkəzə aid edir və klasterdaxili kvadrat məsafələrin cəmini minimallaşdırmağa çalışır:</p><div class="formula">J = Σ<sub>k=1</sub><sup>K</sup> Σ<sub>xᵢ∈Cₖ</sub> ||xᵢ − μₖ||²</div>
+<p>Alqoritmin əsas addımları: K mərkəzi seçilir → nümunələr ən yaxın mərkəzə təyin edilir → mərkəzlər yenilənir → dəyişiklik dayanana qədər təkrarlanır. K əvvəlcədən seçilməlidir; miqyas fərqləri məsafə hesabına təsir etdiyindən standartlaşdırma çox vaxt vacibdir.</p>
+<svg class="diagram" viewBox="0 0 700 235" role="img" aria-label="K-Means iterasiya mərhələləri"><rect x="20" y="25" width="190" height="175" rx="12" class="node"/><text x="115" y="50" class="dtext">1. Başlanğıc</text><g fill="#2b78b7"><circle cx="65" cy="90" r="5"/><circle cx="95" cy="120" r="5"/><circle cx="150" cy="95" r="5"/><circle cx="170" cy="150" r="5"/><circle cx="80" cy="165" r="5"/></g><g fill="#d58c20"><circle cx="75" cy="80" r="8"/><circle cx="165" cy="165" r="8"/></g><path d="M215 110 H245" class="arrow"/><rect x="250" y="25" width="190" height="175" rx="12" class="node2"/><text x="345" y="50" class="dtext">2. Təyinat</text><g fill="#267db6"><circle cx="295" cy="90" r="5"/><circle cx="325" cy="120" r="5"/><circle cx="310" cy="165" r="5"/></g><g fill="#d58c20"><circle cx="390" cy="95" r="5"/><circle cx="410" cy="150" r="5"/></g><g fill="#1d5d92"><circle cx="320" cy="90" r="8"/></g><g fill="#bd7a12"><circle cx="400" cy="160" r="8"/></g><path d="M445 110 H475" class="arrow"/><rect x="480" y="25" width="200" height="175" rx="12" class="node3"/><text x="580" y="50" class="dtext">3. Mərkəz yenilənir</text><g fill="#267db6"><circle cx="530" cy="90" r="5"/><circle cx="555" cy="120" r="5"/><circle cx="540" cy="165" r="5"/></g><g fill="#d58c20"><circle cx="620" cy="95" r="5"/><circle cx="635" cy="150" r="5"/></g><path d="M550 115 L545 125 M625 120 L630 130" stroke="#c24" stroke-width="2"/><text x="350" y="222" class="dtext">Təyinat və mərkəzlərin yenilənməsi konvergensiyaya qədər təkrarlanır</text></svg>
+<h3>İnteraktiv K-Means ideya laboratoriyası</h3><p class="small">Aşağıdakı nöqtələr iki xüsusiyyətə görə klasterləşdirilmiş sintetik müşahidələrdir. K sayını dəyişin; nümayiş sadələşdirilmiş vizual simulyasiyadır, elmi nəticə kimi qəbul edilməməlidir.</p><div class="controls"><label>Klaster sayı K: <input id="kval" type="range" min="2" max="4" value="2" oninput="document.getElementById('kout').textContent=this.value"></label><b id="kout">2</b><button onclick="runClusters()">Klasterləri yenilə</button></div><svg id="clusterSvg" class="diagram" viewBox="0 0 600 300"></svg><div class="result" id="clusterInfo">K-Means simulyasiyasını başladın.</div>
+<p>Nəzarətsiz öyrənmənin digər istiqamətləri: PCA ilə ölçülərin azaldılması, DBSCAN ilə sıxlıq əsaslı klasterləşdirmə, anomaliya aşkarlanması və assosiasiya qaydaları. Klaster keyfiyyəti üçün silhouette score kimi daxili metriklərdən istifadə edilə bilər, lakin heç bir daxili metrik biznes mənasını təkbaşına təsdiqləmir.</p>
+<div class="codehead"><b>Python — K-Means klasterləşdirmə</b><span>scikit-learn</span></div><pre><code>from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+
+X, _ = load_iris(return_X_y=True)  # etiketlər klasterləşdirməyə verilmir
+X_scaled = StandardScaler().fit_transform(X)
+km = KMeans(n_clusters=3, n_init=10, random_state=42)
+clusters = km.fit_predict(X_scaled)
+print("Silhouette:", silhouette_score(X_scaled, clusters))</code></pre></section>
+
+<section class="section" id="s66"><h2>6.6. Yarı nəzarətli öyrənmə (Semi-Supervised Learning)</h2>
+<p>Yarı nəzarətli öyrənmə az sayda etiketli, çox sayda etiketsiz nümunənin olduğu şəraitdə tətbiq edilir. Etiketləmə ekspert vaxtı və maliyyə tələb etdikdə — tibbi görüntülər, peyk təsvirləri, sənədlərin təsnifatı — bu yanaşma faydalı ola bilər.</p>
+<div class="formula">D = D<sub>L</sub> ∪ D<sub>U</sub>, &nbsp; |D<sub>L</sub>| ≪ |D<sub>U</sub>|</div>
+<p>Əsas metodlar: self-training (modelin yüksək əminlikli proqnozlarını pseudo-label kimi istifadə etməsi), label propagation (qonşuluq qrafında etiketin yayılması), consistency regularization (müxtəlif çevrilmələrdə sabit proqnoz təşviqi). Pseudo-label səhvləri dövr ərzində güclənə bilər; etibarlılıq həddi və insan yoxlaması vacibdir.</p>
+<svg class="diagram" viewBox="0 0 720 220" role="img" aria-label="Yarı nəzarətli öyrənmə axını"><rect x="15" y="35" width="145" height="58" rx="10" class="node2"/><text x="87" y="60" class="dtext">Az etiketli</text><text x="87" y="78" class="dtext">nümunələr</text><rect x="15" y="130" width="145" height="58" rx="10" class="node"/><text x="87" y="155" class="dtext">Çox etiketsiz</text><text x="87" y="173" class="dtext">nümunələr</text><rect x="225" y="80" width="155" height="65" rx="10" class="node3"/><text x="302" y="108" class="dtext">İlkin model</text><text x="302" y="126" class="dtext">təlimi</text><rect x="445" y="80" width="125" height="65" rx="10" class="node"/><text x="507" y="108" class="dtext">Pseudo-label</text><text x="507" y="126" class="dtext">seçimi</text><rect x="625" y="80" width="80" height="65" rx="10" class="node2"/><text x="665" y="108" class="dtext">Yenilənmiş</text><text x="665" y="126" class="dtext">model</text><path d="M160 64 L220 98 M160 159 L220 128 M380 112 H440 M570 112 H620" class="arrow"/><path d="M665 150 V195 H300 V150" class="arrow"/><text x="470" y="213" class="dtext">təkrar təlim və yoxlama dövrü</text></svg>
+<div class="note warn"><b>Risk:</b> Modelin öz səhv proqnozlarını etiket kimi qəbul etməsi “confirmation bias” yarada bilər. Pseudo-label-lər yalnız etibarlılıq həddi, balans və müstəqil qiymətləndirmə ilə tətbiq edilməlidir.</div>
+<div class="codehead"><b>Python — Self-training nümunəsi</b><span>scikit-learn</span></div><pre><code>from sklearn.datasets import load_iris
+from sklearn.semi_supervised import SelfTrainingClassifier
+from sklearn.svm import SVC
+import numpy as np
+
+X, y = load_iris(return_X_y=True)
+rng = np.random.default_rng(7)
+y_partial = y.copy()
+# Nümunələrin yalnız 20%-nin etiketi saxlanılır
+keep = rng.choice(len(y), size=int(0.2 * len(y)), replace=False)
+mask = np.ones(len(y), dtype=bool)
+mask[keep] = False
+y_partial[mask] = -1  # scikit-learn: -1 etiketsiz nümunə
+
+base = SVC(probability=True, gamma="scale")
+semi = SelfTrainingClassifier(base, threshold=0.80)
+semi.fit(X, y_partial)
+print("Etiketsiz nümunələrdən qəbul edilənlər:",
+      np.sum(semi.transduction_ != -1))</code></pre></section>
+
+<section class="section" id="s67"><h2>6.7. Möhkəmləndirmə yolu ilə öyrənmə (Reinforcement Learning)</h2>
+<p>Möhkəmləndirmə öyrənməsində agent mühitlə ardıcıl qarşılıqlı əlaqədə olur. Agent vəziyyəti (state) müşahidə edir, hərəkət (action) seçir, mühitdən mükafat (reward) və növbəti vəziyyət alır. Məqsəd tək addımda ən böyük mükafatı deyil, uzunmüddətli yığılmış mükafatı maksimallaşdıran siyasəti (policy) tapmaqdır.</p>
+<svg class="diagram" viewBox="0 0 700 230" role="img" aria-label="Agent və mühit arasında möhkəmləndirmə dövrü"><rect x="45" y="75" width="190" height="85" rx="13" class="node"/><text x="140" y="110" class="dtext" font-weight="bold">Agent</text><text x="140" y="132" class="dtext">siyasət π(a|s)</text><rect x="465" y="75" width="190" height="85" rx="13" class="node2"/><text x="560" y="110" class="dtext" font-weight="bold">Mühit</text><text x="560" y="132" class="dtext">dinamika və mükafat</text><path d="M235 92 H460" class="arrow"/><text x="347" y="80" class="dtext">Hərəkət aₜ</text><path d="M465 145 H240" class="arrow"/><text x="350" y="177" class="dtext">Vəziyyət sₜ₊₁ və mükafat rₜ₊₁</text><text x="350" y="218" class="dtext">Agent təcrübə toplayır və siyasətini yeniləyir</text></svg>
+<p>Markov qərar prosesi (MDP) adətən (S, A, P, R, γ) beşliyi ilə təsvir edilir: S — vəziyyətlər, A — hərəkətlər, P — keçid ehtimalları, R — mükafat funksiyası, γ — gələcək mükafatların diskont əmsalı.</p>
+<div class="formula">Gₜ = Rₜ₊₁ + γRₜ₊₂ + γ²Rₜ₊₃ + …</div>
+<p>Q-learning üçün əsas yenilənmə qaydası:</p><div class="formula">Q(s,a) ← Q(s,a) + α [r + γ max<sub>a′</sub> Q(s′,a′) − Q(s,a)]</div>
+<p>α — öyrənmə sürəti, γ — diskont əmsalı. Q(s,a) vəziyyət-hərəkət cütü üçün gözlənilən gələcək faydanı qiymətləndirir. Exploration (yeni hərəkətləri yoxlama) və exploitation (indiyə qədər ən yaxşı bilinən hərəkəti seçmə) arasında tarazlıq vacibdir.</p>
+<h3>İnteraktiv Q-learning mini-simulyatoru</h3><p class="small">Sadələşdirilmiş xətti mühitdə agent başlanğıcdan hədəfə çatmağa çalışır. “Təlim et” düyməsi ε-greedy seçimlə Q-cədvəlini yeniləyir.</p><div class="controls"><label>Epizod: <input id="episodes" type="number" min="10" max="1000" step="10" value="200"></label><button onclick="trainRL()">Agentə təlim ver</button><button class="secondary" onclick="resetRL()">Sıfırla</button></div><div class="result" id="rlResult">Agent hələ təlim keçməyib.</div><div id="rlPath" class="small"></div>
+<div class="codehead"><b>Python — Q-learning-in əsas yenilənməsi</b><span>psevdokod / NumPy</span></div><pre><code>q[state, action] += alpha * (
+    reward
+    + gamma * np.max(q[next_state])
+    - q[state, action]
+)
+# epsilon-greedy:
+if rng.random() < epsilon:
+    action = rng.choice(actions)       # exploration
+else:
+    action = np.argmax(q[state])       # exploitation</code></pre>
+<p>RL tətbiqləri robototexnika, resurs bölgüsü, enerji idarəetməsi, oyunlar və dinamik marşrut planlaşdırılmasını əhatə edir. Təhlükəsizlik-kritik sistemlərdə simulyasiya, məhdudiyyətlər və təhlükəsiz sınaq protokolları tələb olunur.</p></section>
+
+<section class="section" id="s68"><h2>6.8. Model, alqoritm və parametrlər</h2>
+<p>Bu anlayışlar çox vaxt qarışdırılır, lakin fərqli məna daşıyır:</p><table><tr><th>Anlayış</th><th>İzah</th><th>Nümunə</th></tr><tr><td>Alqoritm</td><td>Modelin verilənlərdən necə öyrənəcəyini müəyyən edən prosedur</td><td>Gradient descent, K-Means, CART</td></tr><tr><td>Model</td><td>Öyrənilmiş funksional təsvir və ya struktur</td><td>Təlim edilmiş qərar ağacı</td></tr><tr><td>Parametr</td><td>Təlim zamanı verilənlərdən öyrənilən daxili qiymət</td><td>Xətti reqressiyada w və b</td></tr><tr><td>Hiperparametr</td><td>Təlimdən əvvəl və ya validasiya ilə seçilən idarəetmə parametri</td><td>max_depth, learning_rate, K</td></tr><tr><td>İtki funksiyası</td><td>Proqnoz xətasını ölçən məqsəd funksiyası</td><td>MSE, cross-entropy</td></tr><tr><td>Optimallaşdırıcı</td><td>Parametrləri yeniləmə qaydası</td><td>SGD, Adam</td></tr></table>
+<h3>İnteraktiv parametr kalkulyatoru</h3><p>Xətti model ŷ = wx + b üçün w, b və x dəyərlərini dəyişin.</p><div class="controls"><label>w <input id="wval" type="number" value="4" step=".5"></label><label>b <input id="bval" type="number" value="35" step="1"></label><label>x <input id="xval" type="number" value="7" step="1"></label><button onclick="calcLinear()">Hesabla</button></div><div class="result" id="linearResult">ŷ = 4×7 + 35 = 63</div>
+<div class="note">Məsələn, w və b parametrdir; model ailəsi “xətti funksiya”dır; xətti reqressiya alqoritmi həmin parametrləri təlim verilənlərindən hesablayır. learning_rate isə gradient descent seçildikdə hiperparametrdir.</div></section>
+
+<section class="section" id="s69"><h2>6.9. Təlim prosesi və proqnozlaşdırma</h2>
+<p>Modelin təlimi verilənlərin təqdim edilməsi, proqnozun hesablanması, itkinin ölçülməsi və parametrlərin yenilənməsi dövrüdür. Təlim bitdikdən sonra model yeni giriş üçün proqnoz verir. Təlim və inferensiya (prediction/inference) fərqli mərhələlərdir.</p>
+<svg class="diagram" viewBox="0 0 740 190" role="img" aria-label="Modelin təlim və proqnoz mərhələləri"><rect x="10" y="50" width="125" height="65" rx="9" class="node"/><text x="72" y="77" class="dtext">Təlim</text><text x="72" y="96" class="dtext">verilənləri</text><rect x="175" y="50" width="125" height="65" rx="9" class="node3"/><text x="237" y="77" class="dtext">Model</text><text x="237" y="96" class="dtext">proqnozu</text><rect x="340" y="50" width="125" height="65" rx="9" class="node"/><text x="402" y="77" class="dtext">İtki</text><text x="402" y="96" class="dtext">hesabı</text><rect x="505" y="50" width="125" height="65" rx="9" class="node2"/><text x="567" y="77" class="dtext">Parametr</text><text x="567" y="96" class="dtext">yenilənməsi</text><path d="M135 82 H170 M300 82 H335 M465 82 H500" class="arrow"/><path d="M567 115 V155 H237 V120" class="arrow"/><text x="400" y="178" class="dtext">Təlim dövrü: dayanma meyarına qədər təkrarlanır</text></svg>
+<div class="grid2"><div class="tile"><strong>Training set</strong><p>Model parametrlərini öyrənmək üçün.</p></div><div class="tile"><strong>Validation set</strong><p>Hiperparametrləri seçmək və model variantlarını müqayisə etmək üçün.</p></div><div class="tile"><strong>Test set</strong><p>Yekun, mümkün qədər qərəzsiz performans qiymətləndirilməsi üçün.</p></div><div class="tile"><strong>Cross-validation</strong><p>Məlumat az olduqda bir neçə bölünmə üzrə daha sabit qiymətləndirmə üçün.</p></div></div>
+<p>Tipik bölünmə 70/15/15 və ya 80/10/10 ola bilər, lakin bu universal qanun deyil. Zaman sıralarında təsadüfi qarışdırma əvəzinə zaman ardıcıllığını qorumaq, qruplaşdırılmış məlumatlarda isə eyni subyektin nümunələrinin müxtəlif bölmələrə düşməməsi vacibdir.</p>
+<div class="codehead"><b>Python — təlim və qiymətləndirmə axını</b><span>scikit-learn</span></div><pre><code>from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import roc_auc_score
+
+X, y = load_breast_cancer(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=42
+)
+model = RandomForestClassifier(
+    n_estimators=300, max_depth=6, random_state=42
+)
+model.fit(X_train, y_train)
+prob = model.predict_proba(X_test)[:, 1]
+print("ROC-AUC:", roc_auc_score(y_test, prob))</code></pre>
+<p class="small">Tibbi məlumat nümunəsi yalnız tədris üçündür; model klinik qərar üçün təsdiqlənmiş tibbi vasitə hesab edilmir.</p></section>
+
+<section class="section" id="s610"><h2>6.10. Maşın öyrənməsi məsələlərinin təsnifatı</h2>
+<p>ML tapşırığı hədəfin növünə, verilənlərin quruluşuna və qərarın xarakterinə görə təsnif edilir. Eyni domen problemi müxtəlif formalarda qurula bilər: enerji sərfinin proqnozu reqressiya, enerji istifadəçilərinin qruplaşdırılması klasterləşdirmə, avadanlıq nasazlığının “var/yox” aşkarlanması təsnifat, enerji sisteminin dinamik idarəsi isə RL ola bilər.</p>
+<table><tr><th>Tapşırıq</th><th>Çıxış</th><th>Nümunə</th><th>Mümkün metrik</th></tr><tr><td>İkili təsnifat</td><td>2 sinif</td><td>Nasazlıq / normal</td><td>Precision, Recall, F1, ROC-AUC</td></tr><tr><td>Çoxsinifli təsnifat</td><td>3+ sinif</td><td>Bitki növü</td><td>Macro-F1, accuracy</td></tr><tr><td>Reqressiya</td><td>Davamlı ədəd</td><td>Gündəlik enerji (kWh)</td><td>MAE, RMSE, R²</td></tr><tr><td>Klasterləşdirmə</td><td>Qrup identifikatoru</td><td>İstehlakçı seqmentləri</td><td>Silhouette, Davies–Bouldin</td></tr><tr><td>Ölçülərin azaldılması</td><td>Aşağıölçülü təsvir</td><td>Vizualizasiya, sıxlaşdırma</td><td>Explained variance</td></tr><tr><td>Anomaliya aşkarlanması</td><td>Anomaliya balı/etiketi</td><td>Sensor nasazlığı</td><td>Precision/Recall, PR-AUC</td></tr><tr><td>Ardıcıl qərarvermə</td><td>Siyasət/hərəkət</td><td>Robotun marşrut seçməsi</td><td>Yığılmış mükafat, uğur faizi</td></tr></table>
+<div class="note"><b>Problem quruluşu metrik seçimini müəyyən edir.</b> Siniflər balanssız olduqda accuracy yüksək görünsə də azsaylı kritik sinfi aşkarlamaya bilər. Reqressiyada RMSE böyük xətaları daha çox cəzalandırır; MAE isə orta mütləq xətanı birbaşa şərh etməyə imkan verir.</div></section>
+
+<section class="section" id="s611"><h2>6.11. Maşın öyrənməsi layihəsinin həyat dövrü</h2>
+<p>ML layihəsi yalnız alqoritm seçməkdən ibarət deyil. Problem tərifi, verilənlərin idarə olunması, təlim, qiymətləndirmə, yerləşdirmə və monitorinq bir-biri ilə əlaqəli mərhələlərdir.</p>
+<svg class="diagram" viewBox="0 0 740 320" role="img" aria-label="Maşın öyrənməsi layihəsinin həyat dövrü"><defs><marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#58728b"/></marker></defs><rect x="250" y="10" width="240" height="48" rx="10" class="node3"/><text x="370" y="39" class="dtext">1. Problem və uğur meyarı</text><rect x="250" y="85" width="240" height="48" rx="10" class="node"/><text x="370" y="114" class="dtext">2. Verilənlərin toplanması</text><rect x="250" y="160" width="240" height="48" rx="10" class="node2"/><text x="370" y="189" class="dtext">3. EDA və hazırlıq</text><rect x="250" y="235" width="240" height="48" rx="10" class="node"/><text x="370" y="264" class="dtext">4. Model və qiymətləndirmə</text><path d="M370 58 V80 M370 133 V155 M370 208 V230" class="arrow"/><rect x="20" y="235" width="175" height="48" rx="10" class="node3"/><text x="107" y="264" class="dtext">5. Yerləşdirmə</text><rect x="545" y="235" width="175" height="48" rx="10" class="node2"/><text x="632" y="264" class="dtext">6. Monitorinq</text><path d="M250 259 H200 M490 259 H540" class="arrow"/><path d="M632 235 V20 H495" class="arrow"/><text x="610" y="16" class="dtext">Geribildirim / yeniləmə</text></svg>
+<ol><li><b>Problem tərifi:</b> istifadəçi ehtiyacı, hədəf dəyişən, məhdudiyyətlər və uğur meyarı müəyyən edilir.</li><li><b>Verilənlərin toplanması:</b> mənbə, hüquqi əsas, məxfilik, reprezentativlik və etiket keyfiyyəti yoxlanılır.</li><li><b>EDA və hazırlıq:</b> çatışmayan qiymətlər, anomaliyalar, kodlaşdırma, miqyaslama və data leakage riskləri araşdırılır.</li><li><b>Model qurulması:</b> sadə baseline yaradılır, bir neçə alqoritm müqayisə edilir, hiperparametrlər validasiya ilə seçilir.</li><li><b>Yerləşdirmə:</b> API, batch və ya edge mühitinə inteqrasiya; versiyalaşdırma və geri dönüş planı.</li><li><b>Monitorinq:</b> performans, data drift, concept drift, gecikmə, xərc və ədalətlilik göstəriciləri izlənilir.</li></ol>
+<div class="note warn">Modelin laboratoriyada yüksək nəticə göstərməsi istehsalatda eyni nəticəyə zəmanət vermir. Verilənlərin paylanması, istifadəçi davranışı və proseslər zamanla dəyişə bilər; monitorinq və yenidən təlim həyat dövrünün ayrılmaz hissəsidir.</div></section>
+
+<section class="section" id="s612"><h2>6.12. Modelin ümumiləşdirmə qabiliyyəti</h2>
+<p>Ümumiləşdirmə (generalization) modelin təlimdə iştirak etməmiş yeni müşahidələrdə düzgün işləmək qabiliyyətidir. Model yalnız təlim nümunələrini əzbərləyirsə, təlim nəticəsi yüksək olsa da real tətbiqdə zəif ola bilər.</p>
+<div class="grid3"><div class="tile"><strong>Underfitting</strong><p>Model çox sadədir; həm təlim, həm test xətası yüksəkdir.</p></div><div class="tile"><strong>Yaxşı uyğunlaşma</strong><p>Təlim və test xətaları münasib səviyyədə, aralarındakı fərq məqbuldur.</p></div><div class="tile"><strong>Overfitting</strong><p>Təlim xətası çox aşağı, test/validasiya xətası xeyli yüksəkdir.</p></div></div>
+<h3>İnteraktiv ümumiləşdirmə qrafiki</h3><p>Model mürəkkəbliyini dəyişin. Qrafik konseptualdır: real ölçmələr deyil, bias–variance münasibətini göstərir.</p><div class="controls"><label>Mürəkkəblik: <input id="complexity" type="range" min="1" max="10" value="5" oninput="drawGeneralization()"></label><b id="complexityVal">5</b></div><svg id="genSvg" class="diagram" viewBox="0 0 640 270"></svg><div class="result" id="genInfo"></div>
+<p>Bias–variance tarazlığı modelin sadələşdirilməsi və ya mürəkkəbləşdirilməsi zamanı yaranan kompromisi izah edir. Yüksək bias modelin əsas əlaqəni tuta bilməməsi, yüksək variance isə verilənlərdəki təsadüfi dəyişikliklərə həddindən artıq həssaslıq deməkdir.</p>
+<h3>Ümumiləşdirməni yaxşılaşdırma üsulları</h3><ul><li>reprezentativ və kifayət qədər böyük verilənlər toplamaq;</li><li>train/validation/test bölmələrini düzgün qurmaq;</li><li>çarpaz validasiya və uyğun hiperparametr axtarışından istifadə etmək;</li><li>regularization (L1/L2), pruning, dropout və early stopping tətbiq etmək;</li><li>data leakage və dublikat müşahidələri aradan qaldırmaq;</li><li>məlumat paylanmasının zamanla dəyişməsini monitorinq etmək.</li></ul>
+<div class="formula">E<sub>test</sub> ≈ E<sub>train</sub> + ümumiləşdirmə boşluğu</div>
+<p class="small">Bu ifadə konseptualdır, dəqiq universal bərabərlik deyil. Test xətası yalnız seçilmiş test nümunəsi və qiymətləndirmə proseduru çərçivəsində ümumiləşdirmə qabiliyyətinin təxmini göstəricisidir.</p>
+</section>
+
+<section class="section" id="practice"><h2>Praktiki tapşırıqlar</h2>
+<div class="tile"><span class="pill">Başlanğıc</span><h3>Tapşırıq 1. Öyrənmə paradiqmasını müəyyən edin</h3><p>Aşağıdakı ssenariləri uyğun paradiqma ilə əlaqələndirin: (a) etiketli e-poçtlarda spam aşkarlanması; (b) müştərilərin alış davranışına görə qruplaşdırılması; (c) robotun mükafat əsasında maneələrdən yayınması; (d) az sayda etiketli və çoxlu etiketsiz tibbi təsvirlərdən istifadə.</p><p><b>Tələb:</b> hər ssenari üçün giriş verilənini, öyrənmə siqnalını və mümkün alqoritmi qeyd edin.</p></div>
+<div class="tile"><span class="pill">Orta</span><h3>Tapşırıq 2. Eyni verilənlərdə nəzarətli və nəzarətsiz yanaşma</h3><p>Iris datasetində Logistic Regression ilə təsnifat, K-Means ilə klasterləşdirmə qurun. Nəzarətli modeldə etiketdən istifadə edin, K-Means mərhələsində isə y etiketini modelə ötürməyin. Nəticələri accuracy və silhouette score baxımından fərqli məqsədlər kimi şərh edin.</p></div>
+<div class="tile"><span class="pill">Tədqiqat</span><h3>Tapşırıq 3. Ümumiləşdirmə və paylanma sürüşməsi</h3><p>Günəş enerjisi laboratoriyasının sensor məlumatları əsasında enerji gücünü proqnozlaşdıran model layihələndirin. Mövsümi dəyişiklik, sensor xətası və zaman ardıcıllığını nəzərə alan test strategiyası qurun. Random split ilə time-based split nəticələrinin fərqini təhlil edin.</p><p><b>Tədqiqat sualı:</b> Zaman üzrə paylanma dəyişməsi modelin ümumiləşdirmə qabiliyyətinə necə təsir edir?</p></div></section>
+
+<section class="section" id="quiz"><h2>Özünü yoxlama — 10 sual, 7 quiz tipi</h2><p>Hər sualı cavablandırın və “Nəticəni yoxla” düyməsini basın. Çoxsaylı seçim suallarında bütün düzgün variantlar seçilməlidir.</p>
+<div id="quizArea"></div><button class="green" onclick="gradeQuiz()">Nəticəni yoxla</button> <button class="secondary" onclick="resetQuiz()">Yenidən başla</button><div class="result" id="quizScore">Cavablarınızı seçin.</div></section>
+
+<section class="section" id="lab"><h2>Laboratoriya işi №6. Müxtəlif maşın öyrənməsi yanaşmalarının nümunə verilənlər üzərində tətbiqi və müqayisəsi</h2>
+<div class="grid2"><div class="tile"><strong>İşin məqsədi</strong><p>Nəzarətli, nəzarətsiz, yarı nəzarətli və möhkəmləndirmə yanaşmalarının iş prinsipini kiçik eksperimentlərlə araşdırmaq, nəticələri uyğun metriklər və məhdudiyyətlərlə müqayisə etmək.</p></div><div class="tile"><strong>Proqram təminatı</strong><p>Python 3.10+, Jupyter Notebook/Google Colab, NumPy, Pandas, Matplotlib, scikit-learn.</p></div></div>
+<h3>İşin nəzəri bazası və verilənlər</h3><p>Əsas müqayisə üçün Iris datasetindən istifadə edilir: 150 müşahidə, 4 ədədi xüsusiyyət, 3 bitki sinfi. Nəzarətli sınaqda sinif etiketləri, nəzarətsiz sınaqda isə yalnız xüsusiyyətlər istifadə edilir. Yarı nəzarətli sınaqda etiketlərin kiçik hissəsi saxlanılır. RL hissəsində Iris datasetindən deyil, ayrıca kiçik diskret mühitdən istifadə edilir; çünki RL ardıcıl qərarvermə problemidir və statik cədvəl təsnifatı ilə eyni eksperiment deyil.</p>
+<h3>Addım 1. Mühitin hazırlanması</h3><pre><code>!pip install -q numpy pandas matplotlib scikit-learn</code></pre>
+<h3>Addım 2. Verilənlərin yüklənməsi və bölünməsi</h3><pre><code>import numpy as np
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+iris = load_iris(as_frame=True)
+X = iris.data
+y = iris.target
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42, stratify=y
+)
+scaler = StandardScaler()
+X_train_s = scaler.fit_transform(X_train)
+X_test_s = scaler.transform(X_test)
+
+print("Təlim:", X_train.shape, "Test:", X_test.shape)
+print("Sinif payları:", y.value_counts(normalize=True).sort_index())</code></pre>
+<h3>Addım 3. Nəzarətli öyrənmə — Logistic Regression</h3><pre><code>from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, f1_score, classification_report
+
+sup = LogisticRegression(max_iter=1000, random_state=42)
+sup.fit(X_train_s, y_train)
+pred_sup = sup.predict(X_test_s)
+
+print("Accuracy:", accuracy_score(y_test, pred_sup))
+print("Macro F1:", f1_score(y_test, pred_sup, average="macro"))
+print(classification_report(y_test, pred_sup, target_names=iris.target_names))</code></pre>
+<h3>Addım 4. Nəzarətsiz öyrənmə — K-Means</h3><pre><code>from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score, adjusted_rand_score
+
+unsup = KMeans(n_clusters=3, n_init=20, random_state=42)
+cluster_id = unsup.fit_predict(X_train_s)
+
+print("Silhouette:", silhouette_score(X_train_s, cluster_id))
+# ARI yalnız sonrakı xarici təhlildə, həqiqi etiketlərlə müqayisə üçün:
+print("ARI (təhlil üçün):", adjusted_rand_score(y_train, cluster_id))</code></pre>
+<p class="small">ARI hesablanarkən y_train K-Means modelinin təliminə daxil edilmir; yalnız klaster nəticələrinin sonrakı xarici müqayisəsi üçün istifadə edilir. Bu fərq nəzarətsiz öyrənmənin düzgün nümayişi baxımından vacibdir.</p>
+<h3>Addım 5. Yarı nəzarətli öyrənmə — Self-training</h3><pre><code>from sklearn.semi_supervised import SelfTrainingClassifier
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+
+rng = np.random.default_rng(21)
+y_partial = y_train.to_numpy().copy()
+labeled_idx = rng.choice(len(y_partial), size=25, replace=False)
+unlabeled_mask = np.ones(len(y_partial), dtype=bool)
+unlabeled_mask[labeled_idx] = False
+y_partial[unlabeled_mask] = -1
+
+base = SVC(probability=True, random_state=21)
+semi = SelfTrainingClassifier(base, threshold=0.80)
+semi.fit(X_train_s, y_partial)
+pred_semi = semi.predict(X_test_s)
+print("Self-training accuracy:", accuracy_score(y_test, pred_semi))
+print("Etiketsizdən qəbul edilən pseudo-label:",
+      np.sum(semi.transduction_ != -1))</code></pre>
+<h3>Addım 6. Möhkəmləndirmə öyrənməsi — Q-learning mini-mühiti</h3><p>Bu nümunədə agent 5 vəziyyətli xətti mühitdə 4-cü vəziyyətə çatmağa çalışır. Hədəfə çatmaq mükafat, digər addımlar kiçik cərimə verir.</p><pre><code>import numpy as np
+
+n_states, n_actions = 5, 2  # 0: sola, 1: sağa
+Q = np.zeros((n_states, n_actions))
+alpha, gamma, epsilon = 0.2, 0.95, 0.15
+rng = np.random.default_rng(3)
+
+def step(state, action):
+    nxt = max(0, min(4, state + (1 if action == 1 else -1)))
+    done = (nxt == 4)
+    reward = 10 if done else -1
+    return nxt, reward, done
+
+for episode in range(500):
+    state = 0
+    for _ in range(20):
+        action = (rng.integers(2) if rng.random() < epsilon
+                  else np.argmax(Q[state]))
+        nxt, reward, done = step(state, action)
+        target = reward if done else reward + gamma * np.max(Q[nxt])
+        Q[state, action] += alpha * (target - Q[state, action])
+        state = nxt
+        if done:
+            break
+
+# Öyrənilmiş siyasət
+policy = np.argmax(Q, axis=1)
+print("Siyasət (0=sol, 1=sağ):", policy)
+print("Q cədvəli:\\n", np.round(Q, 2))</code></pre>
+<h3>Addım 7. Nəticələrin müqayisəsi</h3><table><tr><th>Yanaşma</th><th>Öyrənmə siqnalı</th><th>Qiymətləndirmə</th><th>Şərh</th></tr><tr><td>Supervised</td><td>Etiketli y</td><td>Accuracy, Macro-F1</td><td>Proqnoz sinifləri və səhvlər</td></tr><tr><td>Unsupervised</td><td>Etiketsiz X</td><td>Silhouette; xarici ARI ayrıca</td><td>Klaster quruluşu və etiketlə uyğunluq</td></tr><tr><td>Semi-supervised</td><td>Az etiket + çox etiketsiz</td><td>Accuracy, Macro-F1</td><td>Etiket qənaəti və pseudo-label riski</td></tr><tr><td>Reinforcement</td><td>Mükafat və keçid</td><td>Yığılmış mükafat, hədəfə çatma</td><td>Siyasətin ardıcıl qərar keyfiyyəti</td></tr></table>
+<h3>Laboratoriya hesabatı</h3><ol><li>İşin adı, məqsədi və istifadə olunan mühit.</li><li>Datasetin təsviri və ilkin statistik təhlili.</li><li>Hər paradiqmanın tətbiq addımları və kodu.</li><li>İstifadə olunan metriklərin riyazi izahı.</li><li>Nəticələr cədvəli və qrafiklər.</li><li>Yanaşmaların üstünlükləri, məhdudiyyətləri və seçilmə meyarları.</li><li>Data leakage, etiket azlığı və ümumiləşdirmə üzrə müzakirə.</li><li>Nəticə və fərdi qənaət.</li></ol>
+<h3>Nəzarət sualları</h3><ol><li>Supervised və unsupervised təlimdə y dəyişəni hansı rolu oynayır?</li><li>Klaster nömrəsi niyə avtomatik olaraq sinif etiketi hesab edilmir?</li><li>Pseudo-label mexanizminin əsas riski nədir?</li><li>Q-learning düsturunda α və γ nəyi ifadə edir?</li><li>Niyə RL üçün ayrıca mühit və mükafat mexanizmi qurulur?</li><li>Test məlumatına əsasən hiperparametr seçmək hansı metodoloji problemi yaradır?</li></ol>
+</section>
+
+<section class="section" id="glossary"><h2>Əsas terminlər və qısaltmalar</h2><table><tr><th>Termin</th><th>Azərbaycan dilində qarşılığı və izahı</th></tr><tr><td>Machine Learning (ML)</td><td>Maşın öyrənməsi — verilənlərdən nümunə və əlaqələrin öyrənilməsi.</td></tr><tr><td>Feature</td><td>Xüsusiyyət — müşahidəni təsvir edən giriş dəyişəni.</td></tr><tr><td>Label / Target</td><td>Etiket / hədəf — modelin öyrənməli olduğu cavab.</td></tr><tr><td>Model</td><td>Öyrənilmiş proqnoz və ya qərar funksiyası.</td></tr><tr><td>Algorithm</td><td>Alqoritm — modelin qurulması və parametrlərin öyrənilməsi proseduru.</td></tr><tr><td>Parameter</td><td>Parametr — təlim zamanı verilənlərdən öyrənilən daxili qiymət.</td></tr><tr><td>Hyperparameter</td><td>Hiperparametr — təlimdən əvvəl/validasiya ilə seçilən sazlama dəyəri.</td></tr><tr><td>Classification</td><td>Təsnifat — obyektin sinfə aid edilmə tapşırığı.</td></tr><tr><td>Regression</td><td>Reqressiya — kəmiyyət qiymətinin proqnozlaşdırılması.</td></tr><tr><td>Clustering</td><td>Klasterləşdirmə — oxşar müşahidələrin qruplaşdırılması.</td></tr><tr><td>Reinforcement Learning</td><td>Möhkəmləndirmə yolu ilə öyrənmə — mükafat geribildirimi ilə siyasətin öyrənilməsi.</td></tr><tr><td>Reward</td><td>Mükafat — agentin hərəkətindən sonra aldığı siqnal.</td></tr><tr><td>Policy</td><td>Siyasət — vəziyyətə uyğun hərəkət seçmə strategiyası.</td></tr><tr><td>Overfitting</td><td>Həddindən artıq uyğunlaşma — təlim nümunələrinə həddən artıq uyğunlaşma.</td></tr><tr><td>Underfitting</td><td>Yetərsiz uyğunlaşma — modelin əsas əlaqəni öyrənə bilməməsi.</td></tr><tr><td>Generalization</td><td>Ümumiləşdirmə — yeni nümunələrdə performansı qoruma qabiliyyəti.</td></tr><tr><td>Data leakage</td><td>Verilən sızması — təlim zamanı modelə əlçatmaz olması gərəkən məlumatın daxil olması.</td></tr><tr><td>Data drift</td><td>Verilən paylanmasının zamanla dəyişməsi.</td></tr><tr><td>Inference</td><td>Öyrədilmiş modeldən yeni giriş üçün nəticə alma prosesi.</td></tr></table></section>
+
+<section class="section" id="refs"><h2>İstifadə olunan ədəbiyyat və elektron resurslar</h2><ol>
+<li>Mitchell, T. M. (1997). <i>Machine Learning</i>. McGraw-Hill. Müəllifin T–E–P öyrənmə tərifi üçün klassik mənbə.</li>
+<li>Hastie, T., Tibshirani, R., Friedman, J. (2009). <i>The Elements of Statistical Learning</i>, 2nd ed. Springer. <a href="https://hastie.su.domains/ElemStatLearn/" target="_blank">Elektron resurs</a>.</li>
+<li>Murphy, K. P. (2022). <i>Probabilistic Machine Learning: An Introduction</i>. MIT Press. <a href="https://probml.github.io/pml-book/book1.html" target="_blank">Kitab və materiallar</a>.</li>
+<li>Goodfellow, I., Bengio, Y., Courville, A. (2016). <i>Deep Learning</i>. MIT Press. <a href="https://www.deeplearningbook.org/" target="_blank">Açıq elektron kitab</a>.</li>
+<li>Sutton, R. S., Barto, A. G. (2018). <i>Reinforcement Learning: An Introduction</i>, 2nd ed. MIT Press. <a href="https://mitpress.mit.edu/9780262039246/reinforcement-learning/" target="_blank">Nəşriyyat səhifəsi</a>.</li>
+<li>scikit-learn developers. <i>User Guide</i>: Supervised learning, Unsupervised learning, Semi-supervised learning, Model selection. <a href="https://scikit-learn.org/stable/user_guide.html" target="_blank">Rəsmi sənədləşmə</a>.</li>
+<li>Google for Developers. <i>Machine Learning Crash Course</i>. <a href="https://developers.google.com/machine-learning/crash-course/" target="_blank">İnteraktiv kurs</a>.</li>
+<li>Google for Developers. <i>Overfitting and generalization</i>. <a href="https://developers.google.com/machine-learning/crash-course/overfitting/overfitting" target="_blank">Mövzu</a>.</li>
+<li>IBM. <i>What is Machine Learning?</i> <a href="https://www.ibm.com/think/topics/machine-learning" target="_blank">İcmal və paradiqmalar</a>.</li>
+</ol><div class="note"><b>İstinad qeydi:</b> Kitablar nəzəri çərçivə, scikit-learn rəsmi sənədləri proqram nümunələri, Google ML Crash Course isə ümumiləşdirmə və təlim prosesinin didaktik izahı üçün istifadə edilmişdir. Kitabların nəşr ili ilə onlayn sənədlərin yenilənmə tarixi fərqli ola bilər.</div></section>
+<footer>MDU · Riyaziyyat və İnformasiya Texnologiyaları fakültəsi · Elektron mühazirə materialı</footer>
+</main></div>
+<script>
+function predictScore(){let x=Number(document.getElementById('hours').value);let y=6.15*x+36.1;document.getElementById('predResult').textContent=`Modelin təxmini proqnozu: ${y.toFixed(1)} bal. Bu, nümunəvi tədris modelidir; real tələbə nəticəsi üçün istifadə edilməməlidir.`}
+function classifyTask(){let v=document.getElementById('taskType').value;document.getElementById('taskResult').textContent=v==='class'?'Bu, təsnifat məsələsidir: model kateqoriya/sinif proqnozlaşdırır.':'Bu, reqressiya məsələsidir: model davamlı ədədi qiymət proqnozlaşdırır.'}
+function calcLinear(){let w=+wval.value,b=+bval.value,x=+xval.value;linearResult.textContent=`ŷ = ${w} × ${x} + ${b} = ${(w*x+b).toFixed(2)}. w və b model parametrləridir; x yeni girişdir.`}
+const pts=[[80,70],[100,90],[120,55],[150,80],[180,100],[380,180],[410,210],[440,170],[470,190],[420,150],[300,80],[320,110],[340,70],[360,100]];
+function runClusters(){let k=+kval.value,svg=document.getElementById('clusterSvg'),cols=['#2878b8','#db9228','#279477','#9b6ab0'];let centers=[[110,85],[430,185],[320,85],[230,210]];let out='';for(let i=0;i<pts.length;i++){let p=pts[i],best=0,dist=1e9;for(let c=0;c<k;c++){let d=(p[0]-centers[c][0])**2+(p[1]-centers[c][1])**2;if(d<dist){dist=d;best=c}}out+=`<circle cx="${p[0]}" cy="${p[1]}" r="7" fill="${cols[best]}"><title>Müşahidə ${i+1}, klaster ${best+1}</title></circle>`}for(let c=0;c<k;c++)out+=`<path d="M${centers[c][0]-10} ${centers[c][1]} h20 M${centers[c][0]} ${centers[c][1]-10} v20" stroke="${cols[c]}" stroke-width="4"/>`;svg.innerHTML=out;document.getElementById('clusterInfo').textContent=`Vizual simulyasiya: K=${k}. Rənglər klaster təyinatını, xaçlar konseptual mərkəzləri göstərir. Bu sabit nöqtə dəsti və sxematik mərkəzlərlə öyrədici nümayişdir; sklearn nəticəsi deyil.`}
+let qtable=Array.from({length:5},()=>[0,0]),rlPolicy='';function trainRL(){let n=Math.max(10,Math.min(1000,+episodes.value||200)),alpha=.2,gamma=.9,eps=.2; qtable=Array.from({length:5},()=>[0,0]);let rng=()=>Math.random();for(let ep=0;ep<n;ep++){let s=0;for(let t=0;t<15;t++){let a=rng()<eps?Math.floor(rng()*2):(qtable[s][0]>qtable[s][1]?0:1);let ns=Math.max(0,Math.min(4,s+(a===1?1:-1)));let done=ns===4,r=done?10:-1;let target=r+(done?0:gamma*Math.max(...qtable[ns]));qtable[s][a]+=alpha*(target-qtable[s][a]);s=ns;if(done)break}}let path=[0],s=0;for(let i=0;i<8&&s!==4;i++){let a=qtable[s][1]>=qtable[s][0]?1:0;s=Math.max(0,Math.min(4,s+(a?1:-1)));path.push(s)}rlPath='Öyrənilmiş siyasət üzrə yol: '+path.join(' → ');rlResult.textContent=`${n} epizoddan sonra Q-cədvəli yeniləndi. Hədəfə çatma siyasəti: ${path[path.length-1]===4?'tapıldı':'tam sabitləşməyib'}.`;document.getElementById('rlPath').textContent=rlPath}
+function resetRL(){qtable=Array.from({length:5},()=>[0,0]);rlResult.textContent='Q-cədvəli sıfırlandı.';rlPath.textContent=''}
+function drawGeneralization(){let c=+complexity.value;complexityVal.textContent=c;let svg=document.getElementById('genSvg'),train=[],test=[];for(let x=1;x<=10;x++){train.push(210-16*x+1.3*x*x);test.push(195-22*x+2.5*x*x)}function path(a){return a.map((v,i)=>(i?'L':'M')+(45+i*58)+','+v).join(' ')}svg.innerHTML=`<path d="M40 20 V225 H615" stroke="#64788b" fill="none"/><path d="${path(train)}" fill="none" stroke="#2878b8" stroke-width="3"/><path d="${path(test)}" fill="none" stroke="#d28b20" stroke-width="3"/><line x1="${45+(c-1)*58}" y1="20" x2="${45+(c-1)*58}" y2="225" stroke="#278d75" stroke-dasharray="5 4" stroke-width="2"/><text x="48" y="16" font-size="12" fill="#2878b8">Təlim xətası</text><text x="500" y="16" font-size="12" fill="#d28b20">Test xətası</text><text x="250" y="255" font-size="12" fill="#445">Model mürəkkəbliyi →</text>`;let msg=c<4?'Model sadədir: underfitting riski — həm təlim, həm test xətası yüksək ola bilər.':c<7?'Tarazlı mürəkkəblik: model əsas əlaqəni öyrənir və ümumiləşdirmə nisbətən yaxşıdır.':'Model həddən artıq mürəkkəbləşir: overfitting riski yüksəlir; təlim xətası azalarkən test xətası arta bilər.';genInfo.textContent=msg}
+const quiz=[
+{t:'single',q:'Mitchell-in klassik tərifində öyrənmənin qiymətləndirilməsi hansı üç anlayışla bağlıdır?',o:['T, E, P','X, y, θ','CPU, RAM, GPU'],a:[0],e:'T — tapşırıq, E — təcrübə, P — performans ölçüsüdür.'},
+{t:'multi',q:'Nəzarətli öyrənməyə aid olanları seçin.',o:['Etiketli təlim nümunələri','Təsnifat','Reqressiya','Mütləq mükafat siqnalı'],a:[0,1,2],e:'Nəzarətli öyrənmədə giriş və hədəf etiketi mövcuddur; təsnifat və reqressiya tipik tapşırıqlardır.'},
+{t:'tf',q:'K-Means təlimi üçün sinif etiketlərinin verilməsi mütləqdir.',o:['Doğru','Yanlış'],a:[1],e:'K-Means nəzarətsiz klasterləşdirmədir; etiketlər modelə verilmədən işləyir.'},
+{t:'match',q:'Anlayışları uyğunlaşdırın.',pairs:[['Model parametri','Təlimdən öyrənilən w və b'],['Hiperparametr','Əvvəlcədən seçilən max_depth'],['Mükafat','RL agentinə geribildirim'],['Etiket','Nəzarətli hədəf cavabı']],e:'Parametr təlimdə öyrənilir, hiperparametr sazlanır; reward RL siqnalı, label isə hədəf cavabdır.'},
+{t:'fill',q:'Modelin təlimdə görmədiyi nümunələrdə işləmə qabiliyyəti ______ adlanır.',aText:'ümumiləşdirmə',e:'Bu anlayış ingiliscə generalization adlanır.'},
+{t:'order',q:'ML layihəsinin əsas mərhələlərini düzgün ardıcıllığa düzün.',items:['Problem və uğur meyarı','Verilənlərin toplanması','EDA və hazırlıq','Modelin təlimi və qiymətləndirilməsi','Yerləşdirmə və monitorinq'],e:'Əvvəl problem müəyyən edilir, sonra verilənlər hazırlanır, model qurulur və istehsalatda izlənilir.'},
+{t:'code',q:'Kodun çıxışında hansı nəticə alınır? <code>from sklearn.cluster import KMeans<br>km = KMeans(n_clusters=3)<br>km.fit(X)</code>',o:['3 sinif etiketinə nəzarətli təlim','3 klaster mərkəzi əsasında nəzarətsiz klasterləşdirmə','3 qatlı neyron şəbəkə'],a:[1],e:'n_clusters=3 üç klaster istənildiyini bildirir; bu, etiketli təsnifat deyil.'},
+{t:'single',q:'Hiperparametr seçimi üçün hansı bölmə istifadə olunmalıdır?',o:['Test','Validation','Yalnız istehsalat məlumatı'],a:[1],e:'Validasiya hiperparametr seçimi üçündür; test yekun qiymətləndirmə üçün qorunmalıdır.'},
+{t:'multi',q:'Overfitting riskini azaltmağa kömək edə bilən üsulları seçin.',o:['Regularization','Early stopping','Daha reprezentativ təlim məlumatı','Test dəstinə görə təkrar-təkrar sazlama'],a:[0,1,2],e:'Test dəstinə görə sazlama test məlumatına uyğunlaşma və qiymətləndirmə qərəzi yaradır.'},
+{t:'tf',q:'Reinforcement Learning-də agentin məqsədi uzunmüddətli yığılmış mükafatı maksimallaşdırmaq ola bilər.',o:['Doğru','Yanlış'],a:[0],e:'RL-in əsas məqsədi mühitlə qarşılıqlı əlaqədə yığılmış gəliri/mükafatı optimallaşdıran siyasət öyrənməkdir.'}
+];
+function renderQuiz(){let area=document.getElementById('quizArea');area.innerHTML='';quiz.forEach((q,i)=>{let d=document.createElement('div');d.className='quizq';let s=`<b>${i+1}. [${({single:'Tək cavab',multi:'Çoxsaylı cavab',tf:'Doğru/yanlış',match:'Uyğunlaşdırma',fill:'Boşluğu doldur',order:'Ardıcıllıq',code:'Kod təhlili'})[q.t]}]</b><p>${q.q}</p>`;if(['single','multi','tf','code'].includes(q.t)){q.o.forEach((o,j)=>s+=`<label><input type="${q.t==='multi'?'checkbox':'radio'}" name="q${i}" value="${j}"> ${o}</label>`)}if(q.t==='match'){q.pairs.forEach((p,j)=>s+=`<label>${p[0]} → <select id="m${i}_${j}"><option value="">Seçin</option>${q.pairs.map((x,k)=>`<option value="${k}">${x[1]}</option>`).join('')}</select></label>`)}if(q.t==='fill')s+=`<input id="fill${i}" placeholder="Cavabı yazın">`;if(q.t==='order')q.items.forEach((it,j)=>s+=`<label>${j+1}. <select id="o${i}_${j}"><option value="">Sıra</option>${q.items.map((x,k)=>`<option value="${k}">${k+1}</option>`).join('')}</select> ${it}</label>`);s+=`<div id="fb${i}" class="feedback"></div>`;d.innerHTML=s;area.appendChild(d)})}
+function gradeQuiz(){let score=0;quiz.forEach((q,i)=>{let ok=false;if(['single','multi','tf','code'].includes(q.t)){let chosen=[...document.querySelectorAll(`input[name="q${i}"]:checked`)].map(x=>+x.value);ok=chosen.length===q.a.length&&q.a.every(x=>chosen.includes(x))}if(q.t==='match')ok=q.pairs.every((p,j)=>document.getElementById(`m${i}_${j}`).value==j);if(q.t==='fill')ok=document.getElementById(`fill${i}`).value.trim().toLowerCase()===q.aText;if(q.t==='order')ok=q.items.every((p,j)=>document.getElementById(`o${i}_${j}`).value==j);if(ok)score++;let f=document.getElementById(`fb${i}`);f.className='feedback '+(ok?'correct':'incorrect');f.textContent=(ok?'Düzgün. ':'Yanlış və ya natamam. ')+q.e});let pct=Math.round(score/quiz.length*100);quizScore.innerHTML=`Nəticə: <b>${score}/${quiz.length} (${pct}%)</b><div class="bar"><span style="width:${pct}%"></span></div>${pct>=80?'Əla nəticə — mövzunu yaxşı mənimsəmisiniz.':pct>=60?'Yaxşı başlanğıcdır; izahları təkrar edin.':'Mövzunun müvafiq bölmələrini yenidən oxuyun.'}`}
+function resetQuiz(){renderQuiz();quizScore.textContent='Cavablarınızı seçin.'}
+renderQuiz();runClusters();drawGeneralization();predictScore();classifyTask();calcLinear();
+</script>
+<script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>

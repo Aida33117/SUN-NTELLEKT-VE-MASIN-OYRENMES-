@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="az"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fəsil 7. Reqressiya modelləri və proqnozlaşdırma | MDU</title>
+<style>
+:root{--navy:#14263e;--blue:#2866a5;--teal:#13857f;--gold:#d69a2c;--ink:#263649;--muted:#637489;--bg:#f3f6fa;--line:#dce4ed;--green:#25845b;--red:#b74b4b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.72 "Segoe UI",Arial,sans-serif}
+header{background:linear-gradient(120deg,#14263e,#245c91 65%,#11817d);color:white;padding:38px max(22px,calc((100% - 1200px)/2))}header .tag{font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.85}h1{font-size:clamp(28px,4vw,44px);line-height:1.15;margin:12px 0}header p{max-width:900px;color:#e5eef8}
+.shell{max-width:1200px;margin:auto;padding:22px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px}nav{position:sticky;top:14px;align-self:start;max-height:calc(100vh - 28px);overflow:auto;background:white;border:1px solid var(--line);border-radius:14px;padding:15px}nav b{display:block;margin-bottom:8px;color:var(--navy)}nav a{display:block;text-decoration:none;color:#4b6178;padding:5px 8px;border-radius:7px;font-size:13px}nav a:hover{background:#edf4fb;color:var(--blue)}
+main{min-width:0}.card,.section{background:white;border:1px solid var(--line);border-radius:15px;padding:23px;margin-bottom:19px;box-shadow:0 4px 16px #14243a08}h2{font-size:25px;color:var(--navy);margin:0 0 15px;border-bottom:2px solid #eaf0f6;padding-bottom:10px}h3{font-size:19px;color:#20547d;margin:23px 0 8px}h4{color:#23616e;margin:16px 0 5px}p{margin:9px 0}.lead{font-size:17px;color:#435a72}.pill{display:inline-block;background:#eaf2fb;color:#245b8d;border-radius:30px;padding:3px 10px;font-size:12px;font-weight:700}.note{background:#eef8f7;border-left:4px solid var(--teal);padding:13px 16px;border-radius:8px;margin:14px 0}.warn{background:#fff8e9;border-left-color:var(--gold)}.formula{background:#f2f5fa;border:1px solid var(--line);padding:13px;border-radius:9px;text-align:center;font:18px Georgia,serif;overflow:auto}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.tile{border:1px solid var(--line);background:#fbfcfe;border-radius:11px;padding:14px}.tile strong{color:var(--navy)}
+table{width:100%;border-collapse:collapse;margin:13px 0;font-size:14px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:#edf3f8;color:#1a3d5e}tr:nth-child(even) td{background:#fafbfd}
+button,input,select{font:inherit}button{border:0;background:var(--blue);color:white;border-radius:8px;padding:9px 14px;cursor:pointer;font-weight:600}button:hover{filter:brightness(.94)}button.secondary{background:#e8eff7;color:#244d74}button.green{background:var(--green)}input,select{border:1px solid #cbd6e2;border-radius:7px;padding:8px;max-width:100%}.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}.result{padding:11px 13px;background:#f0f6fc;border-radius:8px;margin-top:10px;min-height:38px}.small{font-size:13px;color:var(--muted)}svg.diagram{width:100%;height:auto;max-height:340px;background:#fbfdff;border:1px solid var(--line);border-radius:12px;margin:10px 0}.node{fill:#e9f2fb;stroke:#3976a8;stroke-width:1.5}.node2{fill:#e8f6f2;stroke:#26917c;stroke-width:1.5}.node3{fill:#fff4df;stroke:#c58b27;stroke-width:1.5}.dtext{font:14px Arial;fill:#18334e;text-anchor:middle}.arrow{stroke:#58728b;stroke-width:2;fill:none;marker-end:url(#arr)}
+pre{background:#142338;color:#e6f0fb;padding:17px;border-radius:10px;overflow:auto;font:13px/1.6 Consolas,monospace;white-space:pre}.codehead{display:flex;justify-content:space-between;align-items:center;color:#47617a;font-size:13px;margin-top:14px}.bar{height:14px;background:#e8edf3;border-radius:10px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,#2866a5,#138f85)}.quizq{border:1px solid var(--line);border-radius:10px;padding:15px;margin:13px 0}.quizq label{display:block;margin:6px 0}.feedback{font-weight:600;margin-top:8px}.correct{color:var(--green)}.incorrect{color:var(--red)}footer{text-align:center;color:#718093;padding:25px}
+@media(max-width:850px){.shell{grid-template-columns:1fr}nav{position:relative;top:0;max-height:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}nav b{grid-column:1/-1}.grid2,.grid3{grid-template-columns:1fr}}
+
+/* MDU unified chapter hero — matched to Chapter 3 reference design */
+body > header:not(.top){
+  background:linear-gradient(120deg,#142e54,#2457a7 60%,#087f8c)!important;
+  color:#fff!important;
+  padding:38px max(22px,calc((100% - 1180px)/2))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-height:0!important;
+}
+body > header:not(.top) h1{
+  color:#fff!important;
+  font-size:clamp(2rem,4vw,3.5rem)!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  margin:.5rem 0!important;
+  max-width:1100px!important;
+}
+body > header:not(.top) p{
+  color:#e4edfa!important;
+  font-size:1.08rem!important;
+  line-height:1.65!important;
+  max-width:1050px!important;
+  margin:8px 0!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .tag,
+body > header:not(.top) .pill,
+body > header:not(.top) .uni,
+body > header:not(.top) .chapter,
+body > header:not(.top) .author,
+body > header:not(.top) .meta,
+body > header:not(.top) .hero-meta{
+  color:#f2f6ff!important;
+}
+body > header:not(.top) .eyebrow,
+body > header:not(.top) .kicker,
+body > header:not(.top) .uni{
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  font-size:.78rem!important;
+  opacity:.9!important;
+}
+body > header:not(.top) .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+body > header:not(.top) .toolbar button,
+body > header:not(.top) button,
+body > header:not(.top) .btn{
+  background:#ffffff18!important;
+  color:#fff!important;
+  border:1px solid #ffffff55!important;
+  padding:9px 14px!important;
+  border-radius:11px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+}
+body > header:not(.top) .toolbar button:hover,
+body > header:not(.top) button:hover{background:#ffffff2b!important;border-color:#ffffffaa!important}
+body > header:not(.top) .pill,
+body > header:not(.top) .tag{
+  display:inline-block!important;
+  background:#ffffff18!important;
+  border:1px solid #ffffff40!important;
+  border-radius:30px!important;
+  padding:4px 10px!important;
+  margin:5px 5px 0 0!important;
+}
+body > header:not(.top) .author,
+body > header:not(.top) .chapter{font-size:.82rem!important;letter-spacing:.06em!important}
+body > header.top{z-index:30}
+body > .shell, body > .layout{
+  max-width:1180px!important;
+  margin:24px auto!important;
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+body > .shell nav, body > .layout nav, body > .layout aside{
+  min-width:0;
+}
+@media(max-width:850px){
+ body > header:not(.top){padding:28px 20px!important}
+ body > header:not(.top) h1{font-size:clamp(1.8rem,6vw,2.7rem)!important}
+ body > .shell,body > .layout{margin:16px auto!important;padding-left:14px!important;padding-right:14px!important}
+}
+@media(max-width:520px){
+ body > header:not(.top){padding:24px 16px!important}
+ body > header:not(.top) h1{font-size:1.85rem!important}
+ body > header:not(.top) p{font-size:1rem!important}
+}
+@media print{
+ body > header:not(.top){print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+
+
+/* MDU — unified reader controls for every chapter */
+.book-tools{display:flex!important;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px!important}
+.book-tools .book-tool{appearance:none!important;background:#ffffff18!important;color:#fff!important;border:1px solid #ffffff66!important;border-radius:11px!important;padding:10px 15px!important;min-height:42px!important;font:700 14px/1.2 system-ui,-apple-system,Segoe UI,Arial,sans-serif!important;cursor:pointer!important;box-shadow:none!important;transition:background .18s,border-color .18s,transform .18s!important}
+.book-tools .book-tool:hover{background:#ffffff30!important;border-color:#fff!important;transform:translateY(-1px)}
+.book-tools .book-tool:focus-visible{outline:3px solid #ffd66b!important;outline-offset:2px!important}
+.book-tools .book-tool[aria-pressed="true"]{background:#fff!important;color:#17345d!important;border-color:#fff!important}
+body.reading-mode .shell,body.reading-mode .layout{display:block!important;max-width:980px!important;margin:22px auto!important}
+body.reading-mode .shell>nav,body.reading-mode .layout>nav,body.reading-mode .layout>aside,
+body.reading-mode nav.sidebar,body.reading-mode aside.sidebar,body.reading-mode .side,
+body.reading-mode .toc,body.reading-mode .contents{display:none!important}
+body.reading-mode main{width:100%!important;max-width:980px!important;margin:0 auto!important}
+body.reading-mode main>section,body.reading-mode main>.card{margin-left:0!important;margin-right:0!important}
+body.reading-mode .shell main,body.reading-mode .layout main{min-width:0!important;width:100%!important}
+@media(max-width:850px){.book-tools{gap:7px!important}.book-tools .book-tool{padding:9px 11px!important;font-size:13px!important}}
+@media print{
+ .book-tools,body>header.top,.top,.progress,nav,aside,.sidebar,.side,.toc,
+ button,.toolbar{display:none!important}
+ body{background:#fff!important;color:#111!important;font-size:11pt!important}
+ body.reading-mode .shell,body.reading-mode .layout{max-width:none!important;margin:0!important;padding:0!important}
+ section,.card,.mini{break-inside:avoid;box-shadow:none!important}
+ a{color:#111!important;text-decoration:none!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+</style></head>
+<body>
+<header><div class="tag">Mingəçevir Dövlət Universiteti · Riyaziyyat və İnformasiya Texnologiyaları fakültəsi</div><h1>Fəsil 7. Reqressiya modelləri və proqnozlaşdırma</h1><p>Reqressiyanın riyazi əsasları, ən kiçik kvadratlar üsulu, çoxdəyişənli və polinomial modellər, regularizasiya və elmi qiymətləndirmə meyarları üzrə interaktiv elektron mühazirə.</p><span class="pill">Magistratura səviyyəsi</span> <span class="pill">İnteraktiv dərs</span> <span class="pill">Laboratoriya №7</span><div class="book-tools" role="toolbar" aria-label="Kitabın oxu və çap parametrləri">
+<button type="button" class="book-tool" id="bookReadMode" aria-pressed="false" onclick="bookToggleReading()">◉ Oxu rejimi</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(1)" aria-label="Şrifti böyüt">A+</button>
+<button type="button" class="book-tool" onclick="bookChangeFont(-1)" aria-label="Şrifti kiçilt">A−</button>
+<button type="button" class="book-tool" id="bookTheme" onclick="bookToggleTheme()">◐ Görünüş</button>
+<button type="button" class="book-tool" onclick="bookPrint()">Çap / PDF</button>
+</div></header>
+<div class="shell"><nav><b>Fəsil üzrə naviqasiya</b>
+<a href="#outcomes">Məqsəd və nəticələr</a><a href="#s71">7.1. Reqressiya anlayışı</a><a href="#s72">7.2. Riyazi model</a><a href="#s73">7.3. Bir dəyişənli reqressiya</a><a href="#s74">7.4. Çoxdəyişənli reqressiya</a><a href="#s75">7.5. Ən kiçik kvadratlar</a><a href="#s76">7.6. Əmsallar</a><a href="#s77">7.7. Polinomial reqressiya</a><a href="#s78">7.8. Ridge və Lasso</a><a href="#s79">7.9. Python modeli</a><a href="#s710">7.10. Qiymətləndirmə metrikləri</a><a href="#s711">7.11. Vizualizasiya</a><a href="#s712">7.12. Məhdudiyyətlər</a><a href="#practice">Praktiki tapşırıqlar</a><a href="#quiz">7 tip üzrə quiz</a><a href="#lab">Laboratoriya №7</a><a href="#glossary">Terminlər</a><a href="#refs">Ədəbiyyat</a></nav>
+<main>
+<section class="card" id="outcomes"><h2>Fəslin məqsədi və təlim nəticələri</h2><p class="lead">Reqressiya modeli giriş dəyişənləri ilə kəmiyyət xarakterli hədəf arasında əlaqəni öyrənir və yeni müşahidələr üçün ədədi proqnoz yaradır. Bu fəsildə tələbə həm modelin riyazi quruluşunu, həm də real verilənlərdə tətbiqini mənimsəyir.</p>
+<div class="grid2"><div class="tile"><strong>Fəslin məqsədi</strong><p>Bir dəyişənli və çoxdəyişənli xətti reqressiyanı, ən kiçik kvadratlar üsulunu, regularizasiya yanaşmalarını və proqnoz keyfiyyətinin ölçülməsini izah etmək.</p></div><div class="tile"><strong>İlkin biliklər</strong><p>Fəsil 4 — EDA; Fəsil 5 — verilənlərin hazırlanması; Fəsil 6 — nəzarətli öyrənmə, model və ümumiləşdirmə.</p></div></div>
+<p>Fəsli tamamlayan tələbə:</p><ul><li>reqressiya problemini təsnifatdan fərqləndirir;</li><li>xətti reqressiyanın skalyar və matris formasını izah edir;</li><li>OLS əmsallarını hesablama məntiqini nümayiş etdirir;</li><li>çoxdəyişənli və polinomial modelləri qurur;</li><li>Ridge və Lasso regularizasiyasının fərqini əsaslandırır;</li><li>MAE, MSE, RMSE və R² göstəricilərini düzgün şərh edir;</li><li>modelin məhdudiyyətlərini, fərziyyələrini və data leakage riskini qiymətləndirir.</li></ul></section>
+
+<section class="section" id="s71"><h2>7.1. Reqressiya anlayışı və tətbiq sahələri</h2>
+<p>Reqressiya (Regression) — bir və ya bir neçə giriş xüsusiyyətindən istifadə etməklə kəmiyyət xarakterli hədəf dəyişənin şərti gözlənilən qiymətini modelləşdirən nəzarətli öyrənmə metodları ailəsidir. Məsələn, günəş panelinin gücü, elektrik enerjisi sərfi, hava temperaturu, evin qiyməti və ya tələbənin imtahan balı reqressiya hədəfi ola bilər.</p>
+<p>Reqressiya yalnız “iki dəyişən arasında düz xətt çəkmək” deyil. O, verilənlərdəki əlaqənin formasını seçmək, parametrləri təxmin etmək, qeyri-müəyyənliyi nəzərə almaq və modelin yeni müşahidələrdə proqnoz keyfiyyətini yoxlamaq prosesidir.</p>
+<div class="grid3"><div class="tile"><strong>Energetika</strong><p>Günlük/aylıq enerji istehsalı və istehlakının proqnozu.</p></div><div class="tile"><strong>Təhsil analitikası</strong><p>Öyrənmə fəaliyyəti göstəricilərindən nəticə balının proqnozu.</p></div><div class="tile"><strong>İqtisadiyyat</strong><p>Tələb, satış, qiymət və gəlir göstəricilərinin proqnozu.</p></div><div class="tile"><strong>Ətraf mühit</strong><p>Temperatur, çirklənmə və su səviyyəsinin modelləşdirilməsi.</p></div><div class="tile"><strong>Sənaye</strong><p>Avadanlığın qalan faydalı ömrü və proses parametrləri.</p></div><div class="tile"><strong>Rəqəmsal əkiz</strong><p>Fiziki sistemin sensor müşahidələrindən davranış proqnozu.</p></div></div>
+<h3>Reqressiya və təsnifatın fərqi</h3><table><tr><th>Meyar</th><th>Reqressiya</th><th>Təsnifat</th></tr><tr><td>Hədəf</td><td>Davamlı ədədi qiymət</td><td>Kateqoriya və ya sinif</td></tr><tr><td>Nümunə</td><td>Sabah istehsal ediləcək enerji: 125.4 kWh</td><td>Sabah istehsal yüksək/aşağı olacaq</td></tr><tr><td>Tipik metrik</td><td>MAE, MSE, RMSE, R²</td><td>Accuracy, Precision, Recall, F1</td></tr><tr><td>Çıxış</td><td>Ədədi qiymət və ya interval</td><td>Sinif və ya sinif ehtimalı</td></tr></table>
+<div class="note"><b>Modelin proqnozu səbəbiyyət demək deyil.</b> Reqressiya dəyişənlər arasında statistik əlaqə öyrənə bilər, lakin müşahidə verilənlərindən alınan əmsallar öz-özlüyündə bir dəyişənin digərinə səbəb olduğunu sübut etmir.</div></section>
+
+<section class="section" id="s72"><h2>7.2. Xətti reqressiyanın riyazi modeli</h2>
+<p>Xətti reqressiyada hədəf dəyişənin şərti orta qiyməti giriş xüsusiyyətlərinin xətti kombinasiyası ilə təsvir edilir. Bir xüsusiyyət üçün model:</p><div class="formula">ŷ = β₀ + β₁x</div>
+<p>Çox xüsusiyyət üçün:</p><div class="formula">ŷ = β₀ + β₁x₁ + β₂x₂ + … + βₚxₚ</div>
+<p>Burada ŷ proqnozlaşdırılan hədəf, β₀ sərbəst hədd (intercept), βⱼ isə j-ci xüsusiyyətin reqressiya əmsalıdır. “Xətti” sözü modelin parametrlər üzrə xətti olmasını bildirir; xüsusiyyətlər polinom, logaritm və ya qarşılıqlı təsir kimi çevrilə bilər.</p>
+<h3>Matris forması</h3><div class="formula">y = Xβ + ε &nbsp;&nbsp;&nbsp; ; &nbsp;&nbsp;&nbsp; ŷ = Xβ̂</div>
+<p>X — dizayn matrisi, β — parametrlər vektoru, ε — müşahidə olunmayan xəta komponentidir. Birinci sütuna 1-lər əlavə edildikdə β₀ sərbəst həddi matris yazılışına daxil edilir.</p>
+<svg class="diagram" viewBox="0 0 720 220" role="img" aria-label="Xətti reqressiya modeli"><defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#58728b"/></marker></defs><rect x="20" y="65" width="145" height="75" rx="10" class="node"/><text x="92" y="95" class="dtext">Giriş X</text><text x="92" y="116" class="dtext">x₁, x₂, …, xₚ</text><rect x="220" y="65" width="145" height="75" rx="10" class="node3"/><text x="292" y="95" class="dtext">Əmsallar β</text><text x="292" y="116" class="dtext">β₀, β₁, …, βₚ</text><rect x="420" y="65" width="115" height="75" rx="10" class="node2"/><text x="477" y="95" class="dtext">Xβ</text><text x="477" y="116" class="dtext">xətti hissə</text><rect x="590" y="65" width="110" height="75" rx="10" class="node"/><text x="645" y="95" class="dtext">ŷ</text><text x="645" y="116" class="dtext">proqnoz</text><path d="M165 102 H215 M365 102 H415 M535 102 H585" class="arrow"/><text x="360" y="185" class="dtext">Təlim zamanı β əmsalları verilənlərə uyğun qiymətləndirilir</text></svg>
+<h3>Model fərziyyələri</h3><ul><li><b>Xəttilik:</b> hədəfin şərti orta qiyməti parametrlər üzrə xətti model ilə təsvir edilə bilir.</li><li><b>Müşahidələrin müstəqilliyi:</b> xətalar arasında sistematik asılılıq olmamalıdır (dizayndan asılıdır).</li><li><b>Homoskedastiklik:</b> xətaların dispersiyası proqnoz səviyyəsi boyunca təxminən sabitdir.</li><li><b>Multikollinearlığın idarəsi:</b> xüsusiyyətlər arasında güclü xətti asılılıq əmsalların qeyri-sabitliyini artıra bilər.</li><li><b>Xətaların normallığı:</b> əmsalların klassik inferensiyası və intervallar üçün müəyyən şəraitdə əhəmiyyətlidir; proqnoz qurmaq üçün hər zaman mütləq şərt deyil.</li></ul>
+<div class="note warn">Xətti reqressiyanın fərziyyələri “məlumat mütləq normal paylanmalıdır” demək deyil. Klassik xətti modeldə normallıq fərziyyəsi əsasən xəta terminlərinə və inferensiyaya aiddir, bütün X dəyişənlərinə yox.</div></section>
+
+<section class="section" id="s73"><h2>7.3. Bir dəyişənli xətti reqressiya</h2>
+<p>Bir dəyişənli (sadə) xətti reqressiyada bir giriş dəyişəni x ilə hədəf y arasındakı xətti əlaqə modelləşdirilir. Məsələn, günəş panelinə düşən şüalanma intensivliyi artdıqca çıxış gücü də arta bilər. Bu əlaqə temperatur, panelin bucağı, kölgələnmə və avadanlıq səmərəliliyi kimi digər amillərdən də asılıdır; tək dəyişənli model həmin amilləri nəzərə almır.</p>
+<h3>Əl ilə hesablama nümunəsi</h3><p>Kiçik tədris verilənləri: həftəlik çalışma saatı x və imtahan balı y.</p><table><tr><th>x (saat)</th><th>y (bal)</th><th>x²</th><th>xy</th></tr><tr><td>1</td><td>50</td><td>1</td><td>50</td></tr><tr><td>2</td><td>55</td><td>4</td><td>110</td></tr><tr><td>3</td><td>65</td><td>9</td><td>195</td></tr><tr><td>4</td><td>70</td><td>16</td><td>280</td></tr><tr><td>5</td><td>80</td><td>25</td><td>400</td></tr><tr><th>Σx=15</th><th>Σy=320</th><th>Σx²=55</th><th>Σxy=1035</th></tr></table>
+<p>Əmsallar:</p><div class="formula">β̂₁ = Σ(xᵢ−x̄)(yᵢ−ȳ) / Σ(xᵢ−x̄)² &nbsp;&nbsp; ; &nbsp;&nbsp; β̂₀ = ȳ − β̂₁x̄</div>
+<p>Bu nümunədə x̄=3, ȳ=64; β̂₁=7.5, β̂₀=41.5. Deməli, model ŷ=41.5+7.5x. Bu model daxilində çalışma vaxtının bir saat artması proqnoz balını orta hesabla 7.5 vahid artırır; bu, müşahidə verilənlərinin xətti assosiasiyasıdır, səbəbiyyət sübutu deyil.</p>
+<h3>İnteraktiv bir dəyişənli model</h3><div class="controls"><label>β₀ <input id="b0" type="number" value="41.5" step=".5"></label><label>β₁ <input id="b1" type="number" value="7.5" step=".5"></label><label>x <input id="xone" type="number" value="6" step=".5"></label><button onclick="simplePredict()">Proqnozlaşdır</button></div><div class="result" id="simpleResult">ŷ = 41.5 + 7.5×6 = 86.5</div>
+<svg id="simplePlot" class="diagram" viewBox="0 0 620 260"></svg>
+<div class="note">Modeli yalnız müşahidə olunan diapazondan kənara tətbiq etmək (ekstrapolyasiya) risklidir. 1–5 saat aralığında qurulmuş xətti əlaqə 20 saatda da eyni qalacaq deyə zəmanət yoxdur.</div></section>
+
+<section class="section" id="s74"><h2>7.4. Çoxdəyişənli xətti reqressiya</h2>
+<p>Çoxdəyişənli xətti reqressiya (Multiple Linear Regression) bir neçə xüsusiyyətdən istifadə etməklə kəmiyyət hədəfi proqnozlaşdırır. Günəş panelinin gücünü şüalanma, panel temperaturu, külək sürəti və panel bucağı ilə modelləşdirmək olar:</p><div class="formula">P̂ = β₀ + β₁G + β₂T + β₃V + β₄A</div>
+<p>Burada G — şüalanma, T — temperatur, V — külək sürəti, A — panel bucağıdır. βⱼ əmsalı digər daxil edilmiş xüsusiyyətlər sabit saxlanıldıqda xⱼ-də bir vahid dəyişməyə uyğun proqnoz fərqini ifadə edir.</p>
+<h3>Əmsalın düzgün şərhi</h3><p>Çoxdəyişənli modeldə β₁-in şərhi “G ilə P arasında sadə korrelyasiya” deyil. Bu, modelə daxil edilmiş digər xüsusiyyətlər sabit olduqda G-də bir vahid artım üçün gözlənilən P dəyişməsidir. Güclü multikollinearlıq olduqda əmsalların işarəsi və böyüklüyü qeyri-sabit ola bilər.</p>
+<table><tr><th>Xüsusiyyət</th><th>Nümunə vahid</th><th>Əmsalın şərhi</th></tr><tr><td>Şüalanma G</td><td>W/m²</td><td>Digər dəyişənlər sabit ikən G-də 1 W/m² artımın model proqnozuna təsiri.</td></tr><tr><td>Temperatur T</td><td>°C</td><td>Digər dəyişənlər sabit ikən temperaturun 1°C artmasına uyğun fərq.</td></tr><tr><td>Külək V</td><td>m/s</td><td>Külək sürətində 1 m/s artım üçün modelin şərti dəyişməsi.</td></tr><tr><td>Bucaq A</td><td>dərəcə</td><td>Panel bucağında 1° dəyişmə üçün proqnoz fərqi.</td></tr></table>
+<h3>İnteraktiv çoxdəyişənli kalkulyator</h3><div class="controls"><label>β₀ <input id="mb0" type="number" value="5"></label><label>β₁ <input id="mb1" type="number" value=".8" step=".1"></label><label>β₂ <input id="mb2" type="number" value="-.15" step=".05"></label><label>G <input id="mg" type="number" value="600"></label><label>T <input id="mt" type="number" value="35"></label><button onclick="multiPredict()">Hesabla</button></div><div class="result" id="multiResult"></div>
+<div class="codehead"><b>Python — çoxdəyişənli model</b><span>scikit-learn</span></div><pre><code>import pandas as pd
+from sklearn.linear_model import LinearRegression
+
+# X-də bir neçə giriş xüsusiyyəti, y-də kəmiyyət hədəf
+X = df[["irradiance", "panel_temp", "wind_speed"]]
+y = df["power_kw"]
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+print("Intercept:", model.intercept_)
+print("Əmsallar:", dict(zip(X.columns, model.coef_)))
+prediction = model.predict(X_new)
+print("Proqnoz:", prediction)</code></pre></section>
+
+<section class="section" id="s75"><h2>7.5. Ən kiçik kvadratlar üsulu</h2>
+<p>Ən kiçik kvadratlar (Ordinary Least Squares, OLS) müşahidə olunan yᵢ qiymətləri ilə modelin proqnozu ŷᵢ arasındakı qalıqların kvadratları cəmini minimum edən əmsalları seçir.</p><div class="formula">SSE(β) = Σᵢ₌₁ⁿ (yᵢ − ŷᵢ)² = ||y − Xβ||²₂</div>
+<p>Qalıq (residual) eᵢ = yᵢ − ŷᵢ-dir. Kvadratlaşdırma müsbət və mənfi xətaların bir-birini ləğv etməsinin qarşısını alır və böyük xətalara daha çox çəki verir.</p>
+<h3>Geometrik məna</h3><svg class="diagram" viewBox="0 0 680 280" role="img" aria-label="Reqressiya xətti və qalıqlar"><path d="M55 235 V25 M55 235 H635" stroke="#60758a" stroke-width="2" fill="none"/><path d="M90 205 L590 55" stroke="#2874ad" stroke-width="3" fill="none"/><g fill="#d28a22" stroke="#a76b12"><circle cx="110" cy="190" r="6"/><circle cx="210" cy="165" r="6"/><circle cx="310" cy="145" r="6"/><circle cx="410" cy="105" r="6"/><circle cx="520" cy="80" r="6"/></g><g stroke="#bd5656" stroke-dasharray="5 4" stroke-width="2"><path d="M110 190 L110 199"/><path d="M210 165 L210 169"/><path d="M310 145 L310 139"/><path d="M410 105 L410 109"/><path d="M520 80 L520 76"/></g><text x="350" y="265" class="dtext">Giriş dəyişəni x</text><text x="20" y="20" class="dtext">y</text><text x="495" y="35" class="dtext">Reqressiya xətti</text><text x="500" y="115" class="dtext">Qalıq = y − ŷ</text></svg>
+<h3>Normal tənlik</h3><p>Əgər XᵀX tərs çevriləndirsə, OLS həlli:</p><div class="formula">β̂ = (XᵀX)⁻¹Xᵀy</div>
+<p>Praktik hesablamada birbaşa matris tərsini hesablamaq əvəzinə QR/SVD parçalanmaları və ya sabit ədədi alqoritmlərdən istifadə etmək daha məqsədəuyğundur. XᵀX pis şərtlənmiş olduqda ədədi qeyri-sabitlik yarana bilər.</p>
+<div class="note warn"><b>OLS və MSE:</b> OLS adətən kvadrat qalıqlar cəmini minimallaşdırır. MSE = SSE/n olduğundan eyni verilənlər və eyni model üçün minimizator dəyişmir; lakin optimallaşdırmada sabit əmsal və normallaşdırma konvensiyaları fərqlənə bilər.</div>
+</section>
+
+<section class="section" id="s76"><h2>7.6. Reqressiya əmsalları və onların hesablanması</h2>
+<p>Bir dəyişənli modeldə β̂₁ meyl əmsalı, β̂₀ isə sərbəst həddir. Orta qiymətlərdən istifadə etməklə β̂₀=ȳ−β̂₁x̄ hesablanır. Çoxdəyişənli modeldə əmsallar bütün xüsusiyyətlərin birgə təsirini nəzərə alaraq qiymətləndirilir.</p>
+<h3>Əl ilə hesablama kalkulyatoru</h3><p>İstənilən üç və ya daha çox (x,y) nöqtəsini daxil edin. Kalkulyator meyl, sərbəst hədd və R²-ni sadə OLS düsturu ilə hesablayır.</p><div class="controls"><label>x siyahısı <input id="xs" value="1,2,3,4,5" size="22"></label><label>y siyahısı <input id="ys" value="50,55,65,70,80" size="22"></label><button onclick="calcOLS()">OLS hesabla</button></div><div class="result" id="olsResult">β₀=41.5; β₁=7.5 nümunəsini yoxlayın.</div>
+<p>Əmsalın ölçü vahidi xüsusiyyətin vahidindən asılıdır. Məsələn, temperatur °C əvəzinə K ilə ölçülərsə, sərbəst hədd dəyişə bilər; meylin interpretasiyası da vahid çevrilməsinə uyğun dəyişər. Standartlaşdırılmış xüsusiyyətlərdən istifadə ediləndə əmsalların ölçü miqyası dəyişir və müqayisə asanlaşa bilər, lakin standartlaşdırılmış əmsal avtomatik olaraq səbəb təsiri deyil.</p>
+<h3>Multikollinearlıq</h3><p>İki və ya daha çox xüsusiyyət güclü xətti əlaqədə olduqda əmsalların dispersiyası arta, işarələri dəyişə və şərhi çətinləşə bilər. VIF, korrelyasiya matrisi, condition number və domen biliyi diaqnostikada istifadə olunur. Sadəcə yüksək korrelyasiyalı xüsusiyyəti silmək həmişə düzgün qərar deyil; proqnoz məqsədi və nəzəri məna nəzərə alınmalıdır.</section>
+
+<section class="section" id="s77"><h2>7.7. Polinomial reqressiya</h2>
+<p>Əgər x ilə y arasındakı əlaqə düz xətt deyil, əyri xarakterlidirsə, polinomial xüsusiyyətlər əlavə edilə bilər:</p><div class="formula">ŷ = β₀ + β₁x + β₂x² + … + βₘxᵐ</div>
+<p>Model x-in polinomu üzrə qeyri-xətti əyri yaratsa da, β parametrləri üzrə xətti qalır. Buna görə polinomial reqressiya xətti model ailəsinin xüsusiyyət çevrilməsi ilə genişləndirilməsidir.</p>
+<h3>İnteraktiv polinom dərəcəsi</h3><div class="controls"><label>Polinom dərəcəsi: <input id="degree" type="range" min="1" max="6" value="2" oninput="drawPoly()"></label><b id="degreeVal">2</b></div><svg id="polySvg" class="diagram" viewBox="0 0 650 280"></svg><div class="result" id="polyInfo"></div>
+<p>Dərəcə artdıqca modelin elastikliyi artır, lakin yüksək dərəcəli polinom təlim nöqtələrinə həddən artıq uyğunlaşa və kənar nöqtələrdə qeyri-sabit ekstrapolyasiya verə bilər. Polinom dərəcəsi validasiya və ya çarpaz validasiya ilə seçilməlidir.</p>
+<div class="codehead"><b>Python — PolynomialFeatures + LinearRegression</b><span>scikit-learn</span></div><pre><code>from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
+from sklearn.linear_model import LinearRegression
+
+poly_model = make_pipeline(
+    PolynomialFeatures(degree=2, include_bias=False),
+    StandardScaler(),
+    LinearRegression()
+)
+poly_model.fit(X_train, y_train)
+y_pred = poly_model.predict(X_test)</code></pre>
+<p class="small">Praktikada Pipeline tətbiqi çevrilmələrin yalnız təlim məlumatında öyrənilməsini təmin etməyə kömək edir və data leakage riskini azaldır.</p></section>
+
+<section class="section" id="s78"><h2>7.8. Ridge və Lasso reqressiyası</h2>
+<p>Adi OLS xüsusiyyətlər çox olduqda, xüsusiyyətlər arasında güclü asılılıq olduqda və ya model həddən artıq uyğunlaşdıqda qeyri-sabit əmsallar verə bilər. Regularizasiya əmsalların böyüklüyünə cərimə əlavə edərək modelin mürəkkəbliyini nəzarətdə saxlayır.</p>
+<div class="grid2"><div class="tile"><strong>Ridge — L2 regularizasiya</strong><div class="formula">SSE + αΣβⱼ²</div><p>Əmsalları sıfıra doğru kiçildir, lakin adətən tam sıfırlamır. Multikollinearlıq və çoxsaylı zəif xüsusiyyətlər olduqda faydalıdır.</p></div><div class="tile"><strong>Lasso — L1 regularizasiya</strong><div class="formula">SSE + αΣ|βⱼ|</div><p>Bəzi əmsalları dəqiq sıfıra endirə bilər; xüsusiyyət seçimi effekti yaradır. Güclü korrelyasiyalı xüsusiyyətlər arasında seçim qeyri-sabit ola bilər.</p></div></div>
+<p>α (alpha) cərimənin gücünü idarə edir: α artdıqca əmsallar daha çox sıxılır. α=0 halı uyğun normallaşdırma konvensiyasında OLS-ə yaxınlaşır. Intercept adətən cərimələnmir; tətbiq detallarını kitabxana sənədləri müəyyən edir.</p>
+<table><tr><th>Meyar</th><th>OLS</th><th>Ridge</th><th>Lasso</th></tr><tr><td>Cərimə</td><td>Yoxdur</td><td>L2</td><td>L1</td></tr><tr><td>Əmsallar</td><td>Böyük və qeyri-sabit ola bilər</td><td>Sıfıra doğru kiçilir</td><td>Bəzilərini sıfır edə bilər</td></tr><tr><td>Xüsusiyyət seçimi</td><td>Avtomatik deyil</td><td>Adətən sıfırdan fərqli saxlayır</td><td>Seyrək həll yarada bilər</td></tr><tr><td>Hiperparametr</td><td>Yoxdur</td><td>α</td><td>α</td></tr></table>
+<h3>Regularizasiya təsirinin interaktiv nümayişi</h3><div class="controls"><label>α <input id="alpha" type="range" min="0" max="10" step=".5" value="2" oninput="drawReg()"></label><b id="alphaVal">2</b><button onclick="drawReg()">Yenilə</button></div><svg id="regSvg" class="diagram" viewBox="0 0 650 230"></svg><div class="result" id="regInfo"></div>
+<div class="note warn"><b>Ölçüləmə vacibdir:</b> Ridge və Lasso xüsusiyyət əmsallarını cərimələdiyindən dəyişənlərin ölçü miqyası nəticəyə təsir edir. Əksər hallarda xüsusiyyətləri StandardScaler ilə standartlaşdırmaq, çevrilməni Pipeline daxilində yalnız train bölməsində fit etmək lazımdır.</div>
+<div class="codehead"><b>Python — OLS, Ridge və Lasso müqayisəsi</b><span>scikit-learn</span></div><pre><code>from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+
+models = {
+    "OLS": make_pipeline(StandardScaler(), LinearRegression()),
+    "Ridge": make_pipeline(StandardScaler(), Ridge(alpha=1.0)),
+    "Lasso": make_pipeline(StandardScaler(), Lasso(alpha=0.05, max_iter=10000))
+}
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    pred = model.predict(X_test)
+    print(name, mean_absolute_error(y_test, pred))</code></pre></section>
+
+<section class="section" id="s79"><h2>7.9. Reqressiya modelinin Python ilə qurulması</h2>
+<p>Scikit-learn kitabxanasında <code>LinearRegression</code> OLS xətti reqressiyasını qurur. Əsas ardıcıllıq: verilənlərin seçilməsi → train/test bölgüsü → modelin fit edilməsi → proqnoz → metriklərin hesablanması → qalıqların təhlili.</p>
+<div class="codehead"><b>Tam minimal nümunə</b><span>Python 3 · scikit-learn</span></div><pre><code>import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import numpy as np
+
+# df: hazırlanmış DataFrame
+features = ["irradiance", "panel_temp", "wind_speed"]
+target = "power_kw"
+
+X = df[features]
+y = df[target]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42
+)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+mae = mean_absolute_error(y_test, y_pred)
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+r2 = r2_score(y_test, y_pred)
+
+print("Intercept:", model.intercept_)
+print("Coefficients:", dict(zip(features, model.coef_)))
+print(f"MAE={mae:.3f}, RMSE={rmse:.3f}, R2={r2:.3f}")</code></pre>
+<h3>Hər sətirin metodoloji mənası</h3><ol><li><code>features</code> giriş dəyişənlərini, <code>target</code> proqnozlaşdırılacaq kəmiyyət hədəfi müəyyən edir.</li><li><code>train_test_split</code> test müşahidələrini modelin təlimindən kənarda saxlayır.</li><li><code>fit()</code> parametrləri təlim məlumatlarından qiymətləndirir.</li><li><code>predict()</code> modelə əvvəldən göstərilməmiş test girişləri üçün proqnoz verir.</li><li>Metriklər proqnozları faktiki hədəflərlə müqayisə edir.</li></ol>
+<div class="note">Əgər verilənlər zaman sırasıdırsa, təsadüfi bölünmə əvəzinə zaman ardıcıllığına əsaslanan bölünmə tətbiq edin. Eyni cihazın və ya subyektin çoxsaylı ölçmələri varsa, qrup əsaslı bölünmə də tələb oluna bilər.</div></section>
+
+<section class="section" id="s710"><h2>7.10. MAE, MSE, RMSE və R² göstəriciləri</h2>
+<p>Reqressiya metrikləri model xətasını müxtəlif cəhətlərdən ölçür. Heç bir metrik bütün problemlər üçün universal seçim deyil; hədəfin vahidi, böyük xətaların riski, kənar qiymətlər və biznes məqsədi nəzərə alınmalıdır.</p>
+<table><tr><th>Metrik</th><th>Düstur</th><th>Şərh</th><th>Məhdudiyyət</th></tr><tr><td>MAE</td><td>(1/n)Σ|y−ŷ|</td><td>Orta mütləq xəta; hədəflə eyni vahiddədir.</td><td>Böyük xətaları MSE qədər güclü cəzalandırmır.</td></tr><tr><td>MSE</td><td>(1/n)Σ(y−ŷ)²</td><td>Kvadrat xəta; böyük yayınmalara yüksək çəki verir.</td><td>Vahidi hədəf vahidinin kvadratıdır.</td></tr><tr><td>RMSE</td><td>√MSE</td><td>Hədəflə eyni vahiddə; böyük xətalara həssasdır.</td><td>Kənar qiymətlərdən güclü təsirlənir.</td></tr><tr><td>R²</td><td>1−SSE/SST</td><td>Modelin orta proqnoz baseline-ına nisbətən uyğunluğunu ölçür.</td><td>Yüksək R² avtomatik yaxşı proqnoz və ya səbəbiyyət demək deyil.</td></tr></table>
+<div class="formula">SST = Σ(yᵢ−ȳ)² &nbsp;&nbsp; ; &nbsp;&nbsp; SSE = Σ(yᵢ−ŷᵢ)²</div>
+<p>R² test dəstində mənfi də ola bilər: bu, modelin həmin test nümunələrində hədəfin orta qiymətini proqnozlaşdıran baseline-dan daha zəif olduğunu göstərir. R²-ni “model bütün dəyişkənliyin bu qədər faizini səbəb olaraq izah edir” kimi şərh etmək düzgün deyil.</p>
+<h3>İnteraktiv metrik kalkulyatoru</h3><p>Faktiki və proqnoz qiymətlərini eyni sayda, vergüllə ayrılmış şəkildə daxil edin.</p><div class="controls"><label>Faktiki y <input id="actual" value="10,12,14,16,18" size="25"></label><label>Proqnoz ŷ <input id="pred" value="11,11,13,17,16" size="25"></label><button onclick="calcMetrics()">Metrikləri hesabla</button></div><div class="grid2"><div class="tile"><strong>MAE</strong><div id="maeVal">—</div></div><div class="tile"><strong>MSE</strong><div id="mseVal">—</div></div><div class="tile"><strong>RMSE</strong><div id="rmseVal">—</div></div><div class="tile"><strong>R²</strong><div id="r2Val">—</div></div></div><div class="result" id="metricExplain">Hesablamaq üçün düyməni basın.</div>
+<div class="note warn"><b>Qiymətləndirmə intizamı:</b> Metriklər model seçimi zamanı validasiya və ya çarpaz validasiya nəticələrində müqayisə edilir. Test dəsti yekun qiymətləndirmə üçün qorunur; test nəticəsinə baxaraq dəfələrlə model sazlamaq testin müstəqilliyini pozur.</div></section>
+
+<section class="section" id="s711"><h2>7.11. Proqnoz nəticələrinin vizuallaşdırılması</h2>
+<p>Reqressiya modelinin qiymətləndirilməsi təkcə bir ədəd metriklə bitməməlidir. Actual vs Predicted qrafiki sistematik yayınmanı, residual plot isə xətaların strukturunu göstərir. Qalıqların təsadüfi səpələnməsi xətti model üçün müsbət əlamətdir; əyri naxış xəttiliyin pozulmasına, artan yayılma heteroskedastikliyə işarə edə bilər.</p>
+<div class="grid2"><div class="tile"><strong>Actual vs Predicted</strong><p>Nöqtələr y=x diaqonalına yaxın olduqda proqnozlar faktiki qiymətlərə yaxındır.</p></div><div class="tile"><strong>Residual plot</strong><p>Qalıqların proqnoz qiymətinə görə sistematik strukturu modelin çatışmazlığını göstərə bilər.</p></div></div>
+<h3>İnteraktiv proqnoz qrafiki</h3><div class="controls"><button onclick="drawActual()">Actual vs Predicted</button><button class="secondary" onclick="drawResidual()">Qalıqlar qrafiki</button></div><svg id="vizSvg" class="diagram" viewBox="0 0 650 300"></svg><div class="result" id="vizInfo">Qrafik növünü seçin.</div>
+<div class="codehead"><b>Python — qrafiklər</b><span>Matplotlib</span></div><pre><code>import matplotlib.pyplot as plt
+residuals = y_test - y_pred
+
+# Actual vs Predicted
+plt.scatter(y_test, y_pred, alpha=0.7)
+lo, hi = min(y_test.min(), y_pred.min()), max(y_test.max(), y_pred.max())
+plt.plot([lo, hi], [lo, hi], "r--")
+plt.xlabel("Faktiki qiymət")
+plt.ylabel("Proqnoz")
+plt.title("Actual vs Predicted")
+plt.show()
+
+# Residual plot
+plt.scatter(y_pred, residuals, alpha=0.7)
+plt.axhline(0, color="red", linestyle="--")
+plt.xlabel("Proqnoz qiyməti")
+plt.ylabel("Qalıq")
+plt.title("Residual analysis")
+plt.show()</code></pre></section>
+
+<section class="section" id="s712"><h2>7.12. Reqressiya modelinin məhdudiyyətləri</h2>
+<p>Xətti reqressiya sadə, sürətli və şərh edilə bilən modeldir, lakin onun proqnoz keyfiyyəti verilənlərin quruluşundan və model fərziyyələrindən asılıdır.</p>
+<table><tr><th>Məhdudiyyət</th><th>Nəticə</th><th>Yoxlama və mümkün tədbir</th></tr><tr><td>Qeyri-xətti əlaqə</td><td>Sistematik qalıqlar və aşağı uyğunluq</td><td>Polinom, spline, çevrilmə və ya qeyri-xətti model</td></tr><tr><td>Kənar qiymətlər</td><td>OLS əmsalları və RMSE həssaslaşır</td><td>Qrafik diaqnostika, robust metodlar, məlumatın mənbəyini yoxlamaq</td></tr><tr><td>Multikollinearlıq</td><td>Əmsallar qeyri-sabit və şərhi çətin olur</td><td>VIF, Ridge, xüsusiyyət seçimi və domen biliyi</td></tr><tr><td>Heteroskedastiklik</td><td>Standart xətalar və inferensiya etibarsızlaşa bilər</td><td>Residual plot, robust standart xətalar, uyğun çevrilmə</td></tr><tr><td>Avtokorrelyasiya</td><td>Zaman müşahidələrinin xətaları əlaqəli olur</td><td>Vaxt sırası diaqnostikası və zaman modeli</td></tr><tr><td>Ekstrapolyasiya</td><td>Öyrənilmiş diapazondan kənarda qeyri-real proqnoz</td><td>Fiziki məhdudiyyətlər və diapazon yoxlaması</td></tr><tr><td>Data leakage</td><td>Test performansı süni şəkildə yüksəlir</td><td>Pipeline və düzgün bölünmə</td></tr><tr><td>Paylanma sürüşməsi</td><td>Zamanla proqnoz keyfiyyəti azalır</td><td>Monitorinq, yenidən təlim, drift analizi</td></tr></table>
+<div class="note"><b>Elmi yanaşma:</b> Ən mürəkkəb model həmişə ən yaxşı model deyil. Sadə baseline, interpretasiya, ölçmə xətası, proqnoz intervalı və tətbiq riskləri birlikdə nəzərdən keçirilməlidir.</div></section>
+
+<section class="section" id="practice"><h2>Praktiki tapşırıqlar</h2>
+<div class="tile"><span class="pill">Başlanğıc</span><h3>Tapşırıq 1. Sadə xətti reqressiya</h3><p>Çalışma saatı və imtahan balı verilənləri əsasında β₀ və β₁ əmsallarını əl ilə hesablayın. Python <code>LinearRegression</code> ilə nəticəni yoxlayın. Modeldən 6 saat üçün proqnoz alın və ekstrapolyasiya riskini izah edin.</p></div>
+<div class="tile"><span class="pill">Orta</span><h3>Tapşırıq 2. Çoxdəyişənli reqressiya</h3><p>Enerji istehsalı datasetində şüalanma, panel temperaturu və külək sürətindən istifadə etməklə enerji gücünü proqnozlaşdırın. OLS, Ridge və Lasso modellərini eyni train/test bölgüsündə müqayisə edin. Əmsalların işarəsini və miqyasını şərh edin.</p></div>
+<div class="tile"><span class="pill">Tədqiqat</span><h3>Tapşırıq 3. Modelin ümumiləşdirməsi</h3><p>Real sensor verilənlərində random split və zaman əsaslı split nəticələrini müqayisə edin. Polinom dərəcəsini və Ridge/Lasso α parametrini çarpaz validasiya ilə seçin. Qalıqların strukturunu, MAE/RMSE fərqini və modelin istehsalatda istifadəyə yararlılığını müzakirə edin.</p><p><b>Tədqiqat sualı:</b> Günəş enerjisi sistemində temperatur və şüalanma dəyişkənliyi reqressiya modelinin ümumiləşdirmə qabiliyyətinə necə təsir edir?</p></div></section>
+
+<section class="section" id="quiz"><h2>Özünü yoxlama — 10 sual, 7 quiz tipi</h2><p>Suallar nəzəri anlayış, düstur, interpretasiya, kod və metodoloji qərarları yoxlayır. Hər suala cavab verin, sonra nəticəni yoxlayın.</p><div id="quizArea"></div><button class="green" onclick="gradeQuiz()">Nəticəni yoxla</button> <button class="secondary" onclick="resetQuiz()">Yenidən başla</button><div class="result" id="quizScore">Cavablarınızı seçin.</div></section>
+
+<section class="section" id="lab"><h2>Laboratoriya işi №7. Real dataset əsasında xətti və çoxdəyişənli reqressiya modelinin qurulması və qiymətləndirilməsi</h2>
+<div class="grid2"><div class="tile"><strong>İşin məqsədi</strong><p>Real müşahidə verilənləri əsasında bir dəyişənli və çoxdəyişənli reqressiya qurmaq, OLS əmsallarını şərh etmək, Ridge/Lasso ilə müqayisə aparmaq və proqnoz keyfiyyətini metriklərlə qiymətləndirmək.</p></div><div class="tile"><strong>Proqram təminatı</strong><p>Python 3.10+, Google Colab/Jupyter, NumPy, Pandas, Matplotlib, scikit-learn.</p></div></div>
+<h3>Dataset seçimi: Diabetes dataset</h3><p>Laboratoriyada scikit-learn kitabxanasında mövcud olan Diabetes datasetindən istifadə edilir. Bu, 442 müşahidə və 10 giriş xüsusiyyəti olan real tədqiqat verilənləridir. Hədəf dəyişən xəstəliyin inkişafı ilə bağlı kəmiyyət göstəricisidir. Tədris məqsədilə uyğundur; klinik diaqnostika və ya fərdi tibbi qərar üçün istifadə edilməməlidir. Dataset xüsusiyyətləri standartlaşdırılmış formada təqdim olunur.</p>
+<h3>Addım 1. Kitabxanaların quraşdırılması və datasetin yüklənməsi</h3><pre><code>!pip install -q numpy pandas matplotlib scikit-learn
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_diabetes
+
+data = load_diabetes(as_frame=True)
+X = data.data
+y = data.target
+
+df = X.copy()
+df["target"] = y
+print(df.shape)
+display(df.head())
+display(df.describe().T)</code></pre>
+<h3>Addım 2. İlkin təhlil və korrelyasiya</h3><pre><code>print("Çatışmayan qiymətlər:\\n", df.isna().sum())
+corr = df.corr(numeric_only=True)["target"].sort_values(ascending=False)
+print(corr)
+
+plt.figure(figsize=(9, 6))
+plt.barh(corr.index, corr.values)
+plt.title("Xüsusiyyətlərin hədəflə korrelyasiyası")
+plt.xlabel("Pearson korrelyasiya əmsalı")
+plt.tight_layout()
+plt.show()</code></pre>
+<h3>Addım 3. Təlim və test bölgüsü</h3><pre><code>from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42
+)
+print(X_train.shape, X_test.shape)</code></pre>
+<h3>Addım 4. Bir dəyişənli xətti reqressiya</h3><p>Əvvəlcə hədəflə korrelyasiyası daha yüksək olan xüsusiyyət seçilir. Seçim yalnız təlim məlumatı və ya əvvəlcədən müəyyən edilmiş metodoloji qayda əsasında aparılmalıdır; test nəticəsinə baxaraq xüsusiyyət seçmək olmaz.</p><pre><code>from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
+feature = "bmi"  # əvvəlcədən seçilmiş nümunə xüsusiyyət
+simple = LinearRegression()
+simple.fit(X_train[[feature]], y_train)
+pred_simple = simple.predict(X_test[[feature]])
+
+def regression_metrics(y_true, y_pred):
+    mse = mean_squared_error(y_true, y_pred)
+    return {
+        "MAE": mean_absolute_error(y_true, y_pred),
+        "MSE": mse,
+        "RMSE": np.sqrt(mse),
+        "R2": r2_score(y_true, y_pred)
+    }
+
+print("Intercept:", simple.intercept_)
+print("Slope:", simple.coef_[0])
+print(regression_metrics(y_test, pred_simple))</code></pre>
+<h3>Addım 5. Çoxdəyişənli xətti reqressiya</h3><pre><code>multiple = LinearRegression()
+multiple.fit(X_train, y_train)
+pred_multiple = multiple.predict(X_test)
+
+coef_table = pd.DataFrame({
+    "feature": X.columns,
+    "coefficient": multiple.coef_
+}).sort_values("coefficient", key=abs, ascending=False)
+
+display(coef_table)
+print("Intercept:", multiple.intercept_)
+print(regression_metrics(y_test, pred_multiple))</code></pre>
+<h3>Addım 6. Ridge və Lasso müqayisəsi</h3><pre><code>from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import Ridge, Lasso
+
+ridge = make_pipeline(StandardScaler(), Ridge(alpha=1.0))
+lasso = make_pipeline(StandardScaler(), Lasso(alpha=0.05, max_iter=20000))
+
+ridge.fit(X_train, y_train)
+lasso.fit(X_train, y_train)
+
+pred_ridge = ridge.predict(X_test)
+pred_lasso = lasso.predict(X_test)
+
+results = pd.DataFrame([
+    {"Model": "Simple OLS", **regression_metrics(y_test, pred_simple)},
+    {"Model": "Multiple OLS", **regression_metrics(y_test, pred_multiple)},
+    {"Model": "Ridge", **regression_metrics(y_test, pred_ridge)},
+    {"Model": "Lasso", **regression_metrics(y_test, pred_lasso)}
+])
+display(results.round(3))</code></pre>
+<h3>Addım 7. Faktiki və proqnoz qiymətlərinin vizuallaşdırılması</h3><pre><code>plt.figure(figsize=(6, 6))
+plt.scatter(y_test, pred_multiple, alpha=0.7)
+lo = min(y_test.min(), pred_multiple.min())
+hi = max(y_test.max(), pred_multiple.max())
+plt.plot([lo, hi], [lo, hi], "r--")
+plt.xlabel("Faktiki hədəf")
+plt.ylabel("Proqnoz")
+plt.title("Multiple Linear Regression: Actual vs Predicted")
+plt.tight_layout()
+plt.show()
+
+residuals = y_test - pred_multiple
+plt.figure(figsize=(7, 4))
+plt.scatter(pred_multiple, residuals, alpha=0.7)
+plt.axhline(0, color="red", linestyle="--")
+plt.xlabel("Proqnoz")
+plt.ylabel("Qalıq")
+plt.title("Residual plot")
+plt.tight_layout()
+plt.show()</code></pre>
+<h3>Addım 8. Nəticələrin elmi şərhi</h3><ol><li>Bir dəyişənli və çoxdəyişənli modelin MAE, RMSE və R² göstəricilərini müqayisə edin.</li><li>Çoxdəyişənli modelin yaxşılaşmasının əlavə xüsusiyyətlərdən, yoxsa overfitting-dən qaynaqlandığını müzakirə edin.</li><li>Ridge və Lasso əmsallarının OLS-dən necə fərqləndiyini araşdırın.</li><li>Qalıqlar qrafikində sistematik naxış, dəyişən dispersiya və kənar nöqtə olub-olmadığını qiymətləndirin.</li><li>Test nəticəsini yalnız bu bölgü və dataset çərçivəsində şərh edin; nəticəni başqa populyasiyaya avtomatik ümumiləşdirməyin.</li></ol>
+<h3>Laboratoriya hesabatının strukturu</h3><ol><li>İşin adı, məqsədi və nəzəri əsasları.</li><li>Datasetin mənşəyi, ölçüsü, xüsusiyyətləri və hədəf dəyişən.</li><li>İlkin təhlil və verilənlərin hazırlanması.</li><li>Bir dəyişənli OLS modelinin düsturu, əmsalları və metrikləri.</li><li>Çoxdəyişənli modelin əmsal cədvəli və nəticələri.</li><li>Ridge/Lasso müqayisəsi və α seçiminin izahı.</li><li>Actual vs Predicted və residual qrafiklərinin təhlili.</li><li>Məhdudiyyətlər, etik istifadə və yekun nəticə.</li></ol>
+<h3>Nəzarət sualları</h3><ol><li>OLS hansı kəmiyyət funksiyasını minimallaşdırır?</li><li>β₁ əmsalı bir dəyişənli və çoxdəyişənli modellərdə necə şərh olunur?</li><li>Ridge və Lasso-nun cərimə terminləri nə ilə fərqlənir?</li><li>RMSE niyə MAE-dən daha çox böyük xətalara həssasdır?</li><li>R²-nin mənfi olması nə deməkdir?</li><li>Niyə test dəstindən hiperparametr seçmək olmaz?</li><li>Residual plot hansı model problemlərini aşkar etməyə kömək edir?</li></ol>
+</section>
+
+<section class="section" id="glossary"><h2>Əsas terminlər və qısaltmalar</h2><table><tr><th>Termin</th><th>Azərbaycan dilində izahı</th></tr><tr><td>Regression</td><td>Reqressiya — kəmiyyət hədəfin proqnozlaşdırılması.</td></tr><tr><td>Predictor / Feature</td><td>Proqnozlaşdırıcı / xüsusiyyət — giriş dəyişəni.</td></tr><tr><td>Target</td><td>Hədəf — modelin proqnozlaşdırdığı dəyişən.</td></tr><tr><td>Intercept</td><td>Sərbəst hədd — bütün girişlər sıfır olduqda modelin proqnozu.</td></tr><tr><td>Coefficient</td><td>Əmsal — giriş dəyişəninin modeldəki xətti çəkisi.</td></tr><tr><td>Residual</td><td>Qalıq — faktiki və proqnoz qiyməti arasındakı fərq.</td></tr><tr><td>Ordinary Least Squares (OLS)</td><td>Ən kiçik kvadratlar üsulu.</td></tr><tr><td>Polynomial Regression</td><td>Polinomial reqressiya — polinom xüsusiyyətlərdən istifadə edən model.</td></tr><tr><td>Regularization</td><td>Regularizasiya — model əmsallarına cərimə əlavə etməklə mürəkkəbliyə nəzarət.</td></tr><tr><td>Ridge</td><td>L2 cəriməli reqressiya.</td></tr><tr><td>Lasso</td><td>L1 cəriməli, seyrək əmsal yarada bilən reqressiya.</td></tr><tr><td>MAE</td><td>Orta mütləq xəta.</td></tr><tr><td>MSE</td><td>Orta kvadrat xəta.</td></tr><tr><td>RMSE</td><td>Orta kvadrat xətanın kvadrat kökü.</td></tr><tr><td>R²</td><td>Determinasiya əmsalı; baseline-a nisbətən uyğunluq göstəricisi.</td></tr><tr><td>Multicollinearity</td><td>Multikollinearlıq — giriş dəyişənləri arasında güclü xətti asılılıq.</td></tr><tr><td>Homoscedasticity</td><td>Homoskedastiklik — xətaların təxminən sabit dispersiyası.</td></tr><tr><td>Extrapolation</td><td>Ekstrapolyasiya — müşahidə diapazonundan kənar proqnoz.</td></tr><tr><td>Data leakage</td><td>Verilən sızması — modelə təlimdə olmamalı məlumatın təsir etməsi.</td></tr></table></section>
+
+<section class="section" id="refs"><h2>İstifadə olunan ədəbiyyat və elektron resurslar</h2><p class="small">Bu fəsildə əsas ədəbiyyat Fəsil 1-də seçilmiş müasir mənbələrdən götürülmüşdür. Köhnə klassik nəşrlər əlavə edilməyib. Texniki API və metrik tərifləri aktual rəsmi sənədlərlə yoxlanılıb.</p><ol>
+<li>Alpaydın, E. (2021). <i>Machine Learning: The New AI</i>. 2nd ed. MIT Press. <a href="https://mitpress.mit.edu/9780262542524/machine-learning/" target="_blank">MIT Press</a>.</li>
+<li>Géron, A. (2022). <i>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</i>. 3rd ed. O’Reilly Media. <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/" target="_blank">O’Reilly</a>.</li>
+<li>Murphy, K. P. (2022). <i>Probabilistic Machine Learning: An Introduction</i>. MIT Press. Xətti reqressiya, OLS, Ridge və Lasso mövzuları, fəsil 11. <a href="https://probml.github.io/book1" target="_blank">Rəsmi kitab resursu</a>.</li>
+<li>Chollet, F. (2021). <i>Deep Learning with Python</i>. 2nd ed. Manning Publications. <a href="https://www.manning.com/books/deep-learning-with-python-second-edition" target="_blank">Manning</a>.</li>
+<li>Martinez-Ramon, M., Ajith, P. M., &amp; Kurup, U. (2024). <i>Deep Learning: A Practical Introduction</i>. Wiley. <a href="https://onlinelibrary.wiley.com/doi/book/10.1002/9781119861898" target="_blank">Wiley</a>.</li>
+<li>scikit-learn Developers. <i>Linear Models</i> — LinearRegression, Ridge, Lasso və optimallaşdırma tərifləri. <a href="https://scikit-learn.org/stable/modules/linear_model.html" target="_blank">Rəsmi sənədləşmə</a>.</li>
+<li>scikit-learn Developers. <i>Regression metrics</i> — MAE, MSE, RMSE və R². <a href="https://scikit-learn.org/stable/modules/model_evaluation.html#regression-metrics" target="_blank">Rəsmi sənədləşmə</a>.</li>
+<li>scikit-learn Developers. <i>Diabetes dataset</i>. <a href="https://scikit-learn.org/stable/datasets/toy_dataset.html#diabetes-dataset" target="_blank">Dataset sənədləşməsi</a>.</li>
+</ol><div class="note">Mənbələr nəzəri izah, Python tətbiqi və qiymətləndirmə tərifləri üçün istifadə olunub. Kitabların nəşr ili ilə onlayn texniki sənədlərin yenilənmə tarixi fərqlidir.</div></section>
+<footer>MDU · Riyaziyyat və İnformasiya Texnologiyaları fakültəsi · Elektron mühazirə materialı</footer>
+</main></div>
+<script>
+function simplePredict(){let a=+b0.value,b=+b1.value,x=+xone.value,y=a+b*x;simpleResult.textContent=`ŷ = ${a} + ${b} × ${x} = ${y.toFixed(3)}. Bu qiymət daxil edilmiş model əmsallarına əsaslanan proqnozdur.`;drawSimplePlot()}
+function drawSimplePlot(){let a=+b0.value,b=+b1.value,svg=document.getElementById('simplePlot');let pts=[[1,50],[2,55],[3,65],[4,70],[5,80]];let line=`M ${65} ${220-(a+b*0.5)*2.0} L ${570} ${220-(a+b*8)*2.0}`;let s=`<path d="M45 225 V20 M45 225 H600" stroke="#60758a" fill="none"/><path d="${line}" stroke="#2878b8" stroke-width="3" fill="none"/>`;pts.forEach(p=>{let cx=45+p[0]*65,cy=220-p[1]*2;s+=`<circle cx="${cx}" cy="${cy}" r="5" fill="#d58d20"/>`});s+=`<text x="320" y="255" class="dtext">Çalışma saatı</text><text x="20" y="18" class="dtext">Bal</text>`;svg.innerHTML=s}
+function multiPredict(){let b0=+mb0.value,b1=+mb1.value,b2=+mb2.value,g=+mg.value,t=+mt.value;multiResult.textContent=`ŷ = ${b0} + ${b1}×${g} + (${b2})×${t} = ${(b0+b1*g+b2*t).toFixed(3)}. Nümunəvi əmsallardır; real sistem üçün təlim edilməlidir.`}
+function parseList(id){return document.getElementById(id).value.split(',').map(x=>Number(x.trim()))}
+function calcOLS(){let x=parseList('xs'),y=parseList('ys');if(x.length!==y.length||x.length<2||x.some(Number.isNaN)||y.some(Number.isNaN)){olsResult.textContent='X və Y siyahıları eyni uzunluqda olmalı, ən azı iki ədədi qiymət daxil edilməlidir.';return}let xm=x.reduce((a,b)=>a+b,0)/x.length,ym=y.reduce((a,b)=>a+b,0)/y.length;let sxx=x.reduce((s,v)=>s+(v-xm)**2,0),sxy=x.reduce((s,v,i)=>s+(v-xm)*(y[i]-ym),0),b1=sxy/sxx,b0=ym-b1*xm;let pred=x.map(v=>b0+b1*v),sse=y.reduce((s,v,i)=>s+(v-pred[i])**2,0),sst=y.reduce((s,v)=>s+(v-ym)**2,0),r2=1-sse/sst;olsResult.textContent=`β̂₁ = ${b1.toFixed(4)}; β̂₀ = ${b0.toFixed(4)}; R² = ${r2.toFixed(4)}. Model: ŷ = ${b0.toFixed(3)} + ${b1.toFixed(3)}x.`}
+function calcMetrics(){let y=parseList('actual'),p=parseList('pred');if(y.length!==p.length||!y.length||y.some(Number.isNaN)||p.some(Number.isNaN)){metricExplain.textContent='Faktiki və proqnoz siyahıları eyni sayda ədədi qiymət saxlamalıdır.';return}let n=y.length,mae=y.reduce((s,v,i)=>s+Math.abs(v-p[i]),0)/n,mse=y.reduce((s,v,i)=>s+(v-p[i])**2,0)/n,rmse=Math.sqrt(mse),mean=y.reduce((a,b)=>a+b,0)/n,sst=y.reduce((s,v)=>s+(v-mean)**2,0),sse=y.reduce((s,v,i)=>s+(v-p[i])**2,0),r2=sst===0?NaN:1-sse/sst;maeVal.textContent=mae.toFixed(4);mseVal.textContent=mse.toFixed(4);rmseVal.textContent=rmse.toFixed(4);r2Val.textContent=Number.isNaN(r2)?'Müəyyən edilmir':r2.toFixed(4);metricExplain.textContent=`${n} müşahidə üzrə MAE ${mae.toFixed(3)}, RMSE ${rmse.toFixed(3)}. R² ${Number.isNaN(r2)?'müəyyən edilmir':r2.toFixed(3)}. Metrikləri hədəfin vahidi və tətbiq məqsədi ilə birlikdə şərh edin.`}
+function drawPoly(){let d=+degree.value;degreeVal.textContent=d;let svg=document.getElementById('polySvg'),s=`<path d="M45 235 V20 M45 235 H610" stroke="#60758a" fill="none"/>`;let path='';for(let i=0;i<=100;i++){let x=i/10-5,y=0.035*x*x*x-0.4*x*x+1.5*x+5;let flexibility=d===1?1.5*x+5:d===2?0.12*x*x+1.5*x+5:d===3?y:y+0.18*Math.sin(x*d)*d;let px=50+i*5.5,py=160-flexibility*7;path+=(i?'L':'M')+px.toFixed(1)+','+py.toFixed(1)+' '}s+=`<path d="${path}" stroke="#2878b8" stroke-width="3" fill="none"/>`;for(let i=0;i<9;i++){let x=i-4,y=0.035*x*x*x-0.4*x*x+1.5*x+5;s+=`<circle cx="${50+(i*12.5+50)}" cy="${160-y*7}" r="4" fill="#d58d20"/>`}svg.innerHTML=s;polyInfo.textContent=`Dərəcə ${d}: modelin elastikliyi artır. Dərəcə çox yüksəldikdə overfitting və ekstrapolyasiya riski arta bilər. Qrafik konseptual nümayişdir.`}
+function drawReg(){let a=+alpha.value;alphaVal.textContent=a;let svg=document.getElementById('regSvg'),vals=[5.2,-3.8,2.9,-1.7,0.9],s=`<path d="M45 25 V195 H615" stroke="#60758a" fill="none"/>`;vals.forEach((v,i)=>{let ridge=v/(1+a*.18),lasso=Math.sign(v)*Math.max(0,Math.abs(v)-a*.25);let x=105+i*105;s+=`<rect x="${x-24}" y="${95-Math.abs(ridge)*12}" width="20" height="${Math.abs(ridge)*12}" fill="#2878b8"/><rect x="${x+2}" y="${95-Math.abs(lasso)*12}" width="20" height="${Math.abs(lasso)*12}" fill="#d18b25"/><text x="${x}" y="220" class="dtext">β${i+1}</text>`});s+=`<text x="135" y="18" class="dtext">Mavi: Ridge əmsal modulu · Narıncı: Lasso əmsal modulu</text>`;svg.innerHTML=s;regInfo.textContent=`α=${a.toFixed(1)}: cərimə gücü artdıqca əmsallar sıfıra doğru sıxılır. Bu, prinsipin konseptual simulyasiyasıdır, faktiki model təlimi deyil.`}
+const actualDemo=[10,12,14,16,18,20,22,24],predDemo=[11,11,13,17,16,21,21,25];
+function drawActual(){let svg=vizSvg,s=`<path d="M45 255 V20 M45 255 H610" stroke="#60758a" fill="none"/>`;actualDemo.forEach((v,i)=>{let x=70+i*68,y=245-v*8,yp=245-predDemo[i]*8;s+=`<circle cx="${x}" cy="${y}" r="5" fill="#d58d20"/><circle cx="${x}" cy="${yp}" r="5" fill="#2878b8"/>`});s+=`<path d="M70 165 L546 5" stroke="#13857f" stroke-dasharray="5 4" fill="none"/><text x="320" y="285" class="dtext">Müşahidə indeksi · narıncı faktiki, mavi proqnoz</text>`;svg.innerHTML=s;vizInfo.textContent='Nöqtələrin faktiki qiymətə yaxınlığı modelin proqnoz dəqiqliyini vizual göstərir. Diaqonal ideal uyğunluq xəttidir.'}
+function drawResidual(){let svg=vizSvg,s=`<path d="M45 145 V20 M45 145 H610" stroke="#60758a" fill="none"/><path d="M45 80 H610" stroke="#b74b4b" stroke-dasharray="5 4"/>`;actualDemo.forEach((v,i)=>{let r=v-predDemo[i],x=70+i*68,y=80-r*12;s+=`<circle cx="${x}" cy="${y}" r="5" fill="#2878b8"/>`});s+=`<text x="320" y="185" class="dtext">Proqnoz indeksi</text>`;svg.innerHTML=s;vizInfo.textContent='Qalıqlar sıfır xətti ətrafında sistematik naxışsız səpələnməlidir. Nümunədəki demo nöqtələri yalnız diaqnostikanın oxunuşunu göstərir.'}
+const quiz=[
+{t:'single',q:'Reqressiya modelinin əsas hədəfi hansıdır?',o:['Kateqoriyanı proqnozlaşdırmaq','Kəmiyyət xarakterli dəyişəni proqnozlaşdırmaq','Müşahidələri mütləq klasterlərə ayırmaq'],a:[1],e:'Reqressiya davamlı və ya kəmiyyət xarakterli hədəfi modelləşdirir.'},
+{t:'multi',q:'Xətti reqressiya ilə bağlı düzgün fikirləri seçin.',o:['Əmsallar xüsusiyyətlərin xətti kombinasiyasını müəyyən edir','OLS qalıqların kvadratları cəmini minimallaşdırır','Yüksək R² səbəbiyyət sübutudur','Çoxdəyişənli model bir neçə xüsusiyyət istifadə edir'],a:[0,1,3],e:'R² uyğunluq göstəricisidir, səbəbiyyət sübutu deyil.'},
+{t:'tf',q:'Xətti reqressiyada normallıq fərziyyəsi bütün giriş xüsusiyyətlərinin normal paylanmasını tələb edir.',o:['Doğru','Yanlış'],a:[1],e:'Klassik inferensiyada normallıq fərziyyəsi əsasən xəta terminlərinə aiddir; bütün X dəyişənlərinə yox.'},
+{t:'match',q:'Metriki düzgün izahla uyğunlaşdırın.',pairs:[['MAE','Orta mütləq xəta'],['MSE','Orta kvadrat xəta'],['RMSE','MSE-nin kvadrat kökü'],['R²','Baseline-a nisbətən uyğunluq göstəricisi']],e:'Metriklərin tərifləri cədvəldəki kimidir; R²-ni səbəbiyyət kimi şərh etmək olmaz.'},
+{t:'fill',q:'Xətti reqressiyada faktiki y ilə proqnoz ŷ arasındakı fərq ______ adlanır.',aText:'qalıq',e:'Residual — qalıq, y−ŷ fərqidir.'},
+{t:'order',q:'Reqressiya modelinin qurulması üçün düzgün ardıcıllığı seçin.',items:['Hədəf və xüsusiyyətlərin müəyyən edilməsi','Train/test bölgüsü','Modelin train məlumatında fit edilməsi','Test üçün proqnozun alınması','Metriklərin hesablanması'],e:'Test məlumatı fit mərhələsində istifadə edilməməlidir.'},
+{t:'code',q:'Aşağıdakı kod hansı regularizasiya növünü tətbiq edir? <code>Ridge(alpha=2.0)</code>',o:['L1','L2','Heç bir cərimə'],a:[1],e:'Ridge L2 norm cəriməsi tətbiq edir.'},
+{t:'single',q:'Lasso-nun Ridge-dən əsas fərqi nədir?',o:['Əmsalları heç vaxt dəyişmir','Bəzi əmsalları sıfıra endirə bilər','Yalnız təsnifat üçün istifadə olunur'],a:[1],e:'L1 cəriməsi seyrək əmsal vektoru yarada bilər.'},
+{t:'multi',q:'Residual plot hansı problemlərə işarə edə bilər?',o:['Qeyri-xətti struktur','Heteroskedastiklik','Sıfırdan uzaq sistematik qalıq','Modelin mütləq səbəbiyyət qurması'],a:[0,1,2],e:'Residual diaqnostikası model fərziyyələrinin pozulmasını aşkar etməyə kömək edir.'},
+{t:'tf',q:'R² test dəstində mənfi qiymət ala bilər.',o:['Doğru','Yanlış'],a:[0],e:'Model test müşahidələrində orta qiymət baseline-dan zəifdirsə R² mənfi ola bilər.'}
+];
+function renderQuiz(){let area=document.getElementById('quizArea');area.innerHTML='';quiz.forEach((q,i)=>{let d=document.createElement('div');d.className='quizq';let names={single:'Tək cavab',multi:'Çoxsaylı cavab',tf:'Doğru/yanlış',match:'Uyğunlaşdırma',fill:'Boşluğu doldur',order:'Ardıcıllıq',code:'Kod təhlili'};let s=`<b>${i+1}. [${names[q.t]}]</b><p>${q.q}</p>`;if(['single','multi','tf','code'].includes(q.t))q.o.forEach((o,j)=>s+=`<label><input type="${q.t==='multi'?'checkbox':'radio'}" name="q${i}" value="${j}"> ${o}</label>`);if(q.t==='match')q.pairs.forEach((p,j)=>s+=`<label>${p[0]} → <select id="m${i}_${j}"><option value="">Seçin</option>${q.pairs.map((x,k)=>`<option value="${k}">${x[1]}</option>`).join('')}</select></label>`);if(q.t==='fill')s+=`<input id="fill${i}" placeholder="Cavabı yazın">`;if(q.t==='order')q.items.forEach((it,j)=>s+=`<label>${it} <select id="o${i}_${j}"><option value="">Sıra</option>${q.items.map((x,k)=>`<option value="${k}">${k+1}</option>`).join('')}</select></label>`);s+=`<div id="fb${i}" class="feedback"></div>`;d.innerHTML=s;area.appendChild(d)})}
+function gradeQuiz(){let score=0;quiz.forEach((q,i)=>{let ok=false;if(['single','multi','tf','code'].includes(q.t)){let c=[...document.querySelectorAll(`input[name="q${i}"]:checked`)].map(x=>+x.value);ok=c.length===q.a.length&&q.a.every(x=>c.includes(x))}if(q.t==='match')ok=q.pairs.every((p,j)=>document.getElementById(`m${i}_${j}`).value==j);if(q.t==='fill')ok=document.getElementById(`fill${i}`).value.trim().toLowerCase()==q.aText;if(q.t==='order')ok=q.items.every((p,j)=>document.getElementById(`o${i}_${j}`).value==j);if(ok)score++;let f=document.getElementById(`fb${i}`);f.className='feedback '+(ok?'correct':'incorrect');f.textContent=(ok?'Düzgün. ':'Yanlış və ya natamam. ')+q.e});let pct=Math.round(score/quiz.length*100);quizScore.innerHTML=`Nəticə: <b>${score}/${quiz.length} (${pct}%)</b><div class="bar"><span style="width:${pct}%"></span></div>${pct>=80?'Əla nəticə — mövzunu yaxşı mənimsəmisiniz.':pct>=60?'Yaxşıdır; izahları bir daha nəzərdən keçirin.':'Müvafiq bölmələri yenidən oxuyub quiz-i təkrarlayın.'}`}
+function resetQuiz(){renderQuiz();quizScore.textContent='Cavablarınızı seçin.'}
+simplePredict();drawPoly();drawReg();drawActual();multiPredict();calcOLS();calcMetrics();renderQuiz();
+</script><script>
+/* Accessible, independent reader controls — does not replace chapter scripts */
+(function(){
+ let bookScale=1;
+ window.bookToggleReading=function(){
+   const active=document.body.classList.toggle('reading-mode');
+   const b=document.getElementById('bookReadMode');
+   if(b){b.setAttribute('aria-pressed',String(active));b.textContent=active?'◉ Oxu rejimi: aktiv':'◉ Oxu rejimi';}
+ };
+ window.bookChangeFont=function(delta){
+   bookScale=Math.max(.85,Math.min(1.4,Math.round((bookScale+delta*.1)*100)/100));
+   document.documentElement.style.fontSize=(16*bookScale)+'px';
+   document.body.style.fontSize=(16*bookScale)+'px';
+ };
+ window.bookToggleTheme=function(){
+   const dark=document.documentElement.getAttribute('data-theme')!=='dark';
+   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+   const b=document.getElementById('bookTheme');
+   if(b)b.textContent=dark?'☀ Gündüz görünüşü':'◐ Görünüş';
+ };
+ window.bookPrint=function(){window.print();};
+})();
+</script>
+</body></html>
